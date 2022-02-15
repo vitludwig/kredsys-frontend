@@ -1,0 +1,38 @@
+<button mat-icon-button
+	class="close-btn"
+	mat-dialog-close
+>
+	<mat-icon class="close-icon">close</mat-icon>
+</button>
+
+<h2 mat-dialog-title>Nabít kredit</h2>
+
+<div mat-dialog-content>
+	<mat-form-field appearance="standard"
+		class="w-100">
+		<mat-label>Částka</mat-label>
+		<input matInput
+			[(ngModel)]="amount"
+			type="number">
+		<div matSuffix>Kč</div>
+	</mat-form-field>
+
+	<div class="btn-group predefined"
+		role="group"
+		aria-label="Basic example">
+		<button mat-stroked-button
+			*ngFor="let value of predefinedAmounts"
+			(click)="amount = value"
+		>{{ value }} Kč
+		</button>
+	</div>
+
+	<button mat-raised-button
+		color="primary"
+		class="submit-btn"
+		mat-dialog-close
+		(click)="chargeMoney()"
+	>
+		Dobít
+	</button>
+</div>

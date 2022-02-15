@@ -1,0 +1,20 @@
+<app-top-menu></app-top-menu>
+
+<mat-drawer-container class="main-content">
+	<mat-drawer #drawer
+		class="sale-sidebar"
+		mode="side"
+		position="end"
+		opened
+	>
+		<app-sale-summary></app-sale-summary>
+	</mat-drawer>
+
+	<div class="sale-content p-3">
+		<app-dashboard></app-dashboard>
+		<!--			<button type="button" mat-button (click)="drawer.toggle()">-->
+		<!--				Toggle sidenav-->
+		<!--			</button>-->
+	</div>
+
+</mat-drawer-container>

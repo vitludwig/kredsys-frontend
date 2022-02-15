@@ -1,0 +1,27 @@
+.dashboard-grid {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.dashboard-grid .dashboard-item {
+  flex: 1;
+  width: 200px;
+  height: 200px;
+  margin: 1rem;
+  cursor: pointer;
+}
+.dashboard-grid .dashboard-item .item-image {
+  padding: 0 1rem;
+  margin-bottom: 0.5rem;
+  text-align: center;
+}
+.dashboard-grid .dashboard-item .item-image img {
+  width: auto;
+  height: 100px;
+}
+.dashboard-grid .dashboard-item mat-card-content {
+  text-align: center;
+}
+
+/*# sourceMappingURL=dashboard.component.css.map */

@@ -1,0 +1,18 @@
+<mat-toolbar class="mat-elevation-z6"
+	color="primary">
+	<!--	<button mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon">-->
+	<!--		<mat-icon>menu</mat-icon>-->
+	<!--	</button>-->
+	<span>{{ (userService.user$ | async)?.name }}</span>
+	<div class="ms-auto">
+		<small class="me-3">Zůstatek: {{(userService.user$ | async)?.credit ?? 0 }} Kč</small>
+		<button mat-button
+			mat-raised-button
+			class="example-icon favorite-icon"
+			color="basic"
+			(click)="openChargeDialog()"
+		>
+			Dobít
+		</button>
+	</div>
+</mat-toolbar>

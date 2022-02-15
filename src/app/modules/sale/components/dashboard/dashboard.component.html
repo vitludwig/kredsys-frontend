@@ -1,0 +1,18 @@
+<div class="dashboard">
+	<div class="dashboard-grid">
+		<div *ngFor="let item of items">
+			<mat-card class="dashboard-item mat-elevation-z4"
+				mat-ripple
+				(click)="openAddDialog(item)"
+			>
+				<div class="item-image">
+					<img [src]="'assets/images/' + item.image + '.jpg'">
+				</div>
+				<mat-card-content>
+					<h2 class="mb-0">{{ item.name }}</h2>
+					<small>{{ item.price }} Kč</small>
+				</mat-card-content>
+			</mat-card>
+		</div>
+	</div>
+</div>

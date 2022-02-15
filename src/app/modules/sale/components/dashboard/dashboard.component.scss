@@ -1,0 +1,31 @@
+@import "../../../../../assets/styles/sizes";
+
+.dashboard-grid {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+
+  .dashboard-item {
+    flex: 1;
+    width: $sale-card-size;
+    height: $sale-card-size;
+    margin: 1rem;
+    cursor: pointer;
+
+    .item-image {
+      padding: 0 1rem;
+      margin-bottom: .5rem;
+      text-align: center;
+
+      img {
+        width: auto;
+        height: 100px;
+      }
+    }
+
+    mat-card-content {
+      text-align: center;
+    }
+  }
+}
