@@ -1,6 +1,9 @@
-import {Component, OnDestroy, OnInit, Renderer2} from '@angular/core';
+import {Component, OnDestroy, OnInit, Renderer2, ViewChild} from '@angular/core';
 import {Subject, takeUntil} from 'rxjs';
 import {UserService} from './common/services/user/user.service';
+import {NavigationEnd, Router} from '@angular/router';
+import {MatDrawer} from '@angular/material/sidenav';
+
 
 @Component({
 	selector: 'app-root',
@@ -8,6 +11,9 @@ import {UserService} from './common/services/user/user.service';
 	styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit, OnDestroy {
+	@ViewChild('sideMenu')
+	protected sideMenu: MatDrawer;
+
 	protected unsubscribe: Subject<void> = new Subject();
 	protected keydownListener: any;
 	protected userId: string = '';
@@ -15,11 +21,20 @@ export class AppComponent implements OnInit, OnDestroy {
 	constructor(
 		protected userService: UserService,
 		protected renderer: Renderer2,
+		protected router: Router,
 	) {
 	}
 
 	public ngOnInit(): void {
-		this.initLoginListener();
+		this.router.events
+			.pipe(takeUntil(this.unsubscribe))
+			.subscribe((event) => {
+			if (event instanceof NavigationEnd) {
+				this.sideMenu.close();
+			}
+		});
+
+		// this.initLoginListener();
 	}
 
 	protected initLoginListener(): void {

@@ -1,0 +1,19 @@
+.side-menu {
+  width: 15rem;
+
+  .mat-list-item {
+    &.active {
+      background: #eee;
+    }
+
+    &:not(.expandable) {
+      padding-left: 1.5rem; // due to expand icon
+    }
+  }
+
+  .sub-menu {
+    a[mat-list-item] {
+      padding-left: 3rem;
+    }
+  }
+}

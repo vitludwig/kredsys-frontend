@@ -1,4 +1,5 @@
+@import "../assets/styles/sizes";
 .main-content {
-  width: 100vw;
-  height: 100vw;
+  height: calc(100vh - #{$mat-toolbar-height});
+  padding: 15px;
 }

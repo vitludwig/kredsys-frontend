@@ -1,0 +1,37 @@
+<div class="side-menu">
+	<mat-nav-list>
+		<a mat-list-item
+			[routerLink]="ERoute.SALE"
+			[class.active]="router.url === '/' + ERoute.SALE">
+			Sale
+		</a>
+		<mat-list-item class="expandable"
+			(click)="adminMenuOpened = !adminMenuOpened">
+			<mat-icon> {{ adminMenuOpened ? 'expand_more' : 'chevron_right' }}</mat-icon>
+			Admin
+		</mat-list-item>
+
+		<div class="sub-menu"
+			*ngIf="adminMenuOpened">
+			<a mat-list-item
+				[class.active]="router.url === '/' + ERoute.ADMIN + '/' + ERoute.ADMIN_SALES"
+				[routerLink]="[ERoute.ADMIN, ERoute.ADMIN_SALES]"
+			>
+				Prodej
+			</a>
+			<a mat-list-item
+				[class.active]="router.url === '/' + ERoute.ADMIN + '/' + ERoute.ADMIN_USERS"
+				[routerLink]="[ERoute.ADMIN, ERoute.ADMIN_USERS]"
+			>
+				Uživatelé
+			</a>
+			<a mat-list-item
+				[class.active]="router.url === '/' + ERoute.ADMIN + '/' + ERoute.ADMIN_CARDS"
+				[routerLink]="[ERoute.ADMIN, ERoute.ADMIN_CARDS]"
+			>
+				Karty
+			</a>
+
+		</div>
+	</mat-nav-list>
+</div>

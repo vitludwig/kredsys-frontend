@@ -1,7 +1,8 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
-import {ChargeDialogComponent} from '../charge-dialog/charge-dialog.component';
-import {UserService} from '../../../../common/services/user/user.service';
+import {ChargeDialogComponent} from '../../../../../modules/sale/components/charge-dialog/charge-dialog.component';
+import {UserService} from '../../../../services/user/user.service';
+import {MatDrawer} from '@angular/material/sidenav';
 
 @Component({
 	selector: 'app-top-menu',
@@ -9,6 +10,8 @@ import {UserService} from '../../../../common/services/user/user.service';
 	styleUrls: ['./top-menu.component.scss']
 })
 export class TopMenuComponent implements OnInit {
+	@Input('side-menu')
+	public sideMenu: MatDrawer
 
 	constructor(
 		public userService: UserService,

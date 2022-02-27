@@ -1,2 +1,16 @@
+<app-top-menu [side-menu]="sideMenu"></app-top-menu>
 
-<app-sale></app-sale>
+<mat-drawer-container>
+	<mat-drawer #sideMenu
+		class="menu-sidebar"
+		mode="over"
+		position="start"
+	>
+		<app-side-menu></app-side-menu>
+	</mat-drawer>
+
+	<div class="main-content">
+		<router-outlet></router-outlet>
+	</div>
+
+</mat-drawer-container>

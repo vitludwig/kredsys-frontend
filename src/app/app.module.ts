@@ -4,15 +4,21 @@ import {BrowserModule} from '@angular/platform-browser';
 import {AppComponent} from './app.component';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {SaleModule} from './modules/sale/sale.module';
+import {AppRoutingModule} from './app-routing.module';
+import {MenuModule} from './common/modules/menu/menu.module';
+import {MatSidenavModule} from '@angular/material/sidenav';
 
 @NgModule({
 	declarations: [
-		AppComponent
+		AppComponent,
 	],
 	imports: [
 		BrowserModule,
+		AppRoutingModule,
 		NoopAnimationsModule,
-		SaleModule
+		MatSidenavModule,
+		MenuModule,
+		SaleModule,
 	],
 	providers: [],
 	bootstrap: [AppComponent]

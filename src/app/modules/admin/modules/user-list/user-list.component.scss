@@ -1,0 +1,32 @@
+.mat-table {
+  width: 100%;
+  display: table;
+
+  .table-row {
+    &:not(.expanded-row) {
+      &:hover {
+        background: #eee;
+      }
+      &:active {
+        background: #efefef;
+      }
+    }
+
+    &.expanded-row {
+      background: #eee;
+    }
+
+    td {
+      border-bottom-width: 0;
+    }
+  }
+
+  .detail-row {
+    height: 0;
+  }
+
+  .element-detail {
+    overflow: hidden;
+    display: flex;
+  }
+}

@@ -1,7 +1,10 @@
-@import "../../../assets/styles/sizes";
+.sale-container {
+  height: 100%;
+  margin: -15px;
 
-.main-content {
-  height: calc(100vh - #{$mat-toolbar-height});
+  .sale-content {
+    height: 100%;
+  }
 
   .sale-sidebar {
     width: 300px;

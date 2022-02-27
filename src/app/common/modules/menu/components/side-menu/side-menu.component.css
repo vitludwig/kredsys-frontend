@@ -1,0 +1,14 @@
+.side-menu {
+  width: 15rem;
+}
+.side-menu .mat-list-item.active {
+  background: #eee;
+}
+.side-menu .mat-list-item:not(.expandable) {
+  padding-left: 1.5rem;
+}
+.side-menu .sub-menu a[mat-list-item] {
+  padding-left: 3rem;
+}
+
+/*# sourceMappingURL=side-menu.component.css.map */
