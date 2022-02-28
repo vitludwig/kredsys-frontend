@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {IUser} from '../../../../common/types/IUser';
+import {EUserRole, IUser} from '../../../../common/types/IUser';
 import {IPaginatedResponse} from '../../../../common/types/IPaginatedResponse';
 
 @Injectable({
@@ -32,6 +32,13 @@ export class UsersService {
 		};
 	}
 
+	public async editUser(user: IUser): Promise<void> {
+		let u = this.users.find((u) => u.id === user.id);
+		if(u) {
+			u = user;
+		}
+	}
+
 	protected createNewUser(id: number): IUser {
 		const name =
 			NAMES[Math.round(Math.random() * (NAMES.length - 1))] +
@@ -43,7 +50,7 @@ export class UsersService {
 			id: id,
 			name: name,
 			credit: 100,
-			role: 'user'
+			role: EUserRole.VISITOR
 		};
 	}
 }

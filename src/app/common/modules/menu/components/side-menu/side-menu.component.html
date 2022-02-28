@@ -3,7 +3,7 @@
 		<a mat-list-item
 			[routerLink]="ERoute.SALE"
 			[class.active]="router.url === '/' + ERoute.SALE">
-			Sale
+			Prodej
 		</a>
 		<mat-list-item class="expandable"
 			(click)="adminMenuOpened = !adminMenuOpened">
@@ -14,10 +14,10 @@
 		<div class="sub-menu"
 			*ngIf="adminMenuOpened">
 			<a mat-list-item
-				[class.active]="router.url === '/' + ERoute.ADMIN + '/' + ERoute.ADMIN_SALES"
-				[routerLink]="[ERoute.ADMIN, ERoute.ADMIN_SALES]"
+				[class.active]="router.url === '/' + ERoute.ADMIN + '/' + ERoute.ADMIN_PLACES"
+				[routerLink]="[ERoute.ADMIN, ERoute.ADMIN_PLACES]"
 			>
-				Prodej
+				Místa
 			</a>
 			<a mat-list-item
 				[class.active]="router.url === '/' + ERoute.ADMIN + '/' + ERoute.ADMIN_USERS"

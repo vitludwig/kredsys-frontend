@@ -1,31 +1,31 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {MatPaginator} from '@angular/material/paginator';
-import {MatSort} from '@angular/material/sort';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {MatTableDataSource} from '@angular/material/table';
 import {IUser} from '../../../../common/types/IUser';
-import {UsersService} from '../../services/user/users.service';
+import {MatPaginator} from '@angular/material/paginator';
+import {MatSort} from '@angular/material/sort';
 import {map, merge, startWith, Subject, switchMap, takeUntil} from 'rxjs';
-import {debounce} from '../../../../common/decorators/debounce';
-import {ERoute} from '../../../../common/types/ERoute';
 import {ActivatedRoute} from '@angular/router';
+import {UsersService} from '../../services/user/users.service';
 import {MatDialog} from '@angular/material/dialog';
-import {UserEditComponent} from './components/user-edit/user-edit.component';
+import {debounce} from '../../../../common/decorators/debounce';
+import {UserEditComponent} from '../user-list/components/user-edit/user-edit.component';
+import {ERoute} from 'src/app/common/types/ERoute';
 import {Animations} from '../../../../common/utils/animations';
 
 @Component({
-	selector: 'app-user-list',
-	templateUrl: './user-list.component.html',
-	styleUrls: ['./user-list.component.scss'],
+	selector: 'app-place-list',
+	templateUrl: './place-list.component.html',
+	styleUrls: ['./place-list.component.scss'],
 	animations: [
 		Animations.expandableTable
 	],
 })
-export class UserListComponent implements OnInit, OnDestroy {
-	public displayedColumns: string[] = ['id', 'name', 'role', 'actions'];
+export class PlaceListComponent implements OnInit {
+	public displayedColumns: string[] = ['name', 'role', 'actions'];
 	public dataSource: MatTableDataSource<IUser>;
-	public usersTotal: number = 0;
-	public usersData: IUser[];
-	public isUsersLoading: boolean = false;
+	public placesTotal: number = 0;
+	public placesData: IUser[];
+	public isPlacesLoading: boolean = false;
 	public expandedRow: IUser | null;
 
 	@ViewChild(MatPaginator)
@@ -47,7 +47,7 @@ export class UserListComponent implements OnInit, OnDestroy {
 	}
 
 	public async ngOnInit(): Promise<void> {
-		await this.loadUsers();
+		await this.loadPlaces();
 
 		// If the user changes the sort order, reset back to the first page.
 		this.sort.sortChange
@@ -58,7 +58,7 @@ export class UserListComponent implements OnInit, OnDestroy {
 			.pipe(
 				startWith({}),
 				switchMap(() => {
-					this.isUsersLoading = true;
+					this.isPlacesLoading = true;
 					return this.usersService.getUsers(
 						'',
 						this.paginator.pageIndex + 1,
@@ -66,33 +66,33 @@ export class UserListComponent implements OnInit, OnDestroy {
 				}),
 				map((data) => {
 					// Flip flag to show that loading has finished.
-					this.isUsersLoading = false;
+					this.isPlacesLoading = false;
 
 					if (data === null) {
 						return [];
 					}
 
-					this.usersTotal = data.total;
+					this.placesTotal = data.total;
 					return data.data;
 				}),
 				takeUntil(this.unsubscribe)
 			)
 			.subscribe((data) => {
 				console.log('new data: ', data);
-				this.usersData = data
+				this.placesData = data
 			});
 	}
 
 	@debounce()
 	public onSearch(value: string): void {
-		this.loadUsers(value);
+		this.loadPlaces(value);
 	}
 
-	protected async loadUsers(search: string = '', page: number = 1): Promise<void> {
+	protected async loadPlaces(search: string = '', page: number = 1): Promise<void> {
 		const users = await this.usersService.getUsers(search, page);
 
-		this.usersData = users.data;
-		this.usersTotal = users.total;
+		this.placesData = users.data;
+		this.placesTotal = users.total;
 	}
 
 	public applyFilter(event: Event): void {
@@ -116,4 +116,5 @@ export class UserListComponent implements OnInit, OnDestroy {
 	public ngOnDestroy(): void {
 		this.unsubscribe.next();
 	}
+
 }

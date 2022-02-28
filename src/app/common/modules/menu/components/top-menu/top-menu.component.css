@@ -3,5 +3,11 @@ mat-toolbar {
   position: relative;
   z-index: 2;
 }
+mat-toolbar .toolbar-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
 
 /*# sourceMappingURL=top-menu.component.css.map */

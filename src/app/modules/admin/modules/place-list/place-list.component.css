@@ -1,0 +1,28 @@
+.places-table .mat-table {
+  width: 100%;
+  display: table;
+}
+.places-table .mat-table .table-row:not(.expanded-row):hover {
+  background: #eee;
+}
+.places-table .mat-table .table-row:not(.expanded-row):active {
+  background: #efefef;
+}
+.places-table .mat-table .table-row.expanded-row {
+  background: #eee;
+}
+.places-table .mat-table .table-row td {
+  border-bottom-width: 0;
+}
+.places-table .mat-table .detail-row {
+  height: 0;
+}
+.places-table .mat-table .element-detail {
+  overflow: hidden;
+  display: flex;
+}
+.places-table .mat-table .element-detail .detail-content {
+  padding: 1rem 0.5rem;
+}
+
+/*# sourceMappingURL=place-list.component.css.map */

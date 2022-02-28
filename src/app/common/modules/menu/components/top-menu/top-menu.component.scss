@@ -4,4 +4,11 @@ mat-toolbar {
   height: $mat-toolbar-height;
   position: relative;
   z-index: 2;
+
+  .toolbar-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+  }
 }

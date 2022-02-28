@@ -1,24 +1,30 @@
 <mat-toolbar class="mat-elevation-z6"
 	color="primary"
 >
-	<button mat-icon-button
-		class="example-icon"
-		(click)="sideMenu.toggle()"
-	>
+	<div class="toolbar-content">
+		<div class="d-flex align-items-center">
+			<button mat-icon-button
+				class="example-icon"
+				(click)="sideMenu.toggle()"
+			>
 
-		<mat-icon>menu</mat-icon>
-	</button>
-	<span>{{ (userService.user$ | async)?.name }}</span>
+				<mat-icon>menu</mat-icon>
+			</button>
+			{{ pageName }}
+		</div>
 
-	<div class="ms-auto">
-		<small class="me-3">Zůstatek: {{(userService.user$ | async)?.credit ?? 0 }} Kč</small>
-		<button mat-button
-			mat-raised-button
-			class="example-icon favorite-icon"
-			color="basic"
-			(click)="openChargeDialog()"
-		>
-			Dobít
-		</button>
+		<div>{{ (userService.user$ | async)?.name }}</div>
+
+		<div>
+			<small class="me-3">Zůstatek: {{(userService.user$ | async)?.credit ?? 0 }} Kč</small>
+			<button mat-button
+				mat-raised-button
+				class="example-icon favorite-icon"
+				color="basic"
+				(click)="openChargeDialog()"
+			>
+				Dobít
+			</button>
+		</div>
 	</div>
 </mat-toolbar>
