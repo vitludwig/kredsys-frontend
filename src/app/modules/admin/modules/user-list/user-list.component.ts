@@ -3,13 +3,13 @@ import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
 import {MatTableDataSource} from '@angular/material/table';
 import {IUser} from '../../../../common/types/IUser';
-import {UsersService} from '../../services/user/users.service';
+import {UsersService} from '../../services/users/users.service';
 import {map, merge, startWith, Subject, switchMap, takeUntil} from 'rxjs';
 import {debounce} from '../../../../common/decorators/debounce';
 import {ERoute} from '../../../../common/types/ERoute';
 import {ActivatedRoute} from '@angular/router';
 import {MatDialog} from '@angular/material/dialog';
-import {UserEditComponent} from './components/user-edit/user-edit.component';
+import {UserDetailComponent} from './components/user-detail/user-detail.component';
 import {Animations} from '../../../../common/utils/animations';
 
 @Component({
@@ -105,7 +105,7 @@ export class UserListComponent implements OnInit, OnDestroy {
 	}
 
 	public openUserEditDialog(data: IUser): void {
-		this.dialog.open<UserEditComponent, IUser>(UserEditComponent, {
+		this.dialog.open<UserDetailComponent, IUser>(UserDetailComponent, {
 			width: '300px',
 			minWidth: '250px',
 			autoFocus: 'dialog',

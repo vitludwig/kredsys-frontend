@@ -1,5 +1,5 @@
 export interface IUser {
-	id: number;
+	id?: number;
 	name: string;
 	credit: number;
 	role?: EUserRole; // basic, band, org...
@@ -8,4 +8,5 @@ export interface IUser {
 export enum EUserRole {
 	ADMIN = 'admin',
 	VISITOR = 'visitor',
+	MERCHANT = 'merchant',
 }

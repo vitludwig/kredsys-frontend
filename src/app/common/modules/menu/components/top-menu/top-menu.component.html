@@ -13,9 +13,9 @@
 			{{ pageName }}
 		</div>
 
-		<div>{{ (userService.user$ | async)?.name }}</div>
+		<div *ngIf="userService.isLogged">{{ (userService.user$ | async)?.name }}</div>
 
-		<div>
+		<div *ngIf="userService.isLogged">
 			<small class="me-3">Zůstatek: {{(userService.user$ | async)?.credit ?? 0 }} Kč</small>
 			<button mat-button
 				mat-raised-button

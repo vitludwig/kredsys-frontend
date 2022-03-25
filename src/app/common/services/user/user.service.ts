@@ -6,12 +6,15 @@ import {BehaviorSubject, Observable} from 'rxjs';
 	providedIn: 'root'
 })
 export class UserService {
+	public isLogged: boolean = false;
+
 	public get user(): IUser | null {
 		return this.#userSubject.getValue();
 	}
 
 	public set user(value: IUser | null) {
 		this.#userSubject.next(value);
+		this.isLogged = value !== null;
 	}
 
 	public user$: Observable<IUser | null>;

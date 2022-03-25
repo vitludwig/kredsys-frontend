@@ -1,0 +1,11 @@
+.mat-list-item:not(:last-child) {
+  border-bottom: 1px solid #DDDDDD;
+}
+.mat-list-item .card-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+/*# sourceMappingURL=user-detail.component.css.map */

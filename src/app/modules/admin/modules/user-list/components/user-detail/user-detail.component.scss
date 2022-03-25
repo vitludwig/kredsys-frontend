@@ -1,0 +1,14 @@
+@import '../../../../../../../assets/styles/colors';
+
+.mat-list-item {
+  &:not(:last-child) {
+    border-bottom: 1px solid $border-primary;
+  }
+
+  .card-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+  }
+}

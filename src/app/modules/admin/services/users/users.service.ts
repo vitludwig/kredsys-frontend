@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import {EUserRole, IUser} from '../../../../common/types/IUser';
 import {IPaginatedResponse} from '../../../../common/types/IPaginatedResponse';
+import {ECardType, ICard} from '../../types/ICard';
 
 @Injectable({
 	providedIn: 'root'
@@ -21,7 +22,7 @@ export class UsersService {
 		};
 		let data = this.users.slice(params.offset, params.offset + params.limit)
 		if (search !== '') {
-			data = data.filter((item) => (item.name.toLowerCase()).includes(search.toLowerCase()) || (item.id.toString()).includes(search))
+			data = data.filter((item) => (item.name.toLowerCase()).includes(search.toLowerCase()) || (item.id!.toString()).includes(search))
 		}
 
 		return {
@@ -32,28 +33,65 @@ export class UsersService {
 		};
 	}
 
+	public async getUser(id: number): Promise<IUser | undefined> {
+		return this.users.find((user) => user.id === id);
+	}
+
 	public async editUser(user: IUser): Promise<void> {
 		let u = this.users.find((u) => u.id === user.id);
-		if(u) {
+		if (u) {
 			u = user;
 		}
 	}
 
-	protected createNewUser(id: number): IUser {
-		const name =
-			NAMES[Math.round(Math.random() * (NAMES.length - 1))] +
-			' ' +
-			NAMES[Math.round(Math.random() * (NAMES.length - 1))].charAt(0) +
-			'.';
+	public async addUser(user: IUser): Promise<void> {
+		this.users.push(user);
+	}
 
-		return {
-			id: id,
-			name: name,
-			credit: 100,
-			role: EUserRole.VISITOR
-		};
+	public async getUserCards(userId: number): Promise<ICard[]> {
+		return cards;
+	}
+
+	public createNewUser(id?: number): IUser {
+		if (!id) {
+			return {
+				name: '',
+				credit: 0,
+				role: EUserRole.VISITOR
+			};
+		} else {
+
+
+			const name =
+				NAMES[Math.round(Math.random() * (NAMES.length - 1))] +
+				' ' +
+				NAMES[Math.round(Math.random() * (NAMES.length - 1))].charAt(0) +
+				'.';
+
+			return {
+				id: id,
+				name: name,
+				credit: 100,
+				role: EUserRole.VISITOR
+			};
+		}
 	}
 }
+
+const cards: ICard[] = [
+	{
+		id: 1,
+		userId: 1,
+		type: ECardType.BASIC,
+		blocked: false,
+	},
+	{
+		id: 1,
+		userId: 1,
+		type: ECardType.BASIC,
+		blocked: false,
+	},
+]
 
 
 const NAMES: string[] = [

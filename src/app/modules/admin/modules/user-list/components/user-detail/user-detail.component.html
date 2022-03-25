@@ -1,0 +1,75 @@
+<div class="row mb-4">
+	<div class="col-12">
+		<button backButton
+			mat-raised-button>
+			<mat-icon>keyboard_arrow_left</mat-icon>
+			Zpět
+		</button>
+	</div>
+</div>
+
+<div class="row"
+	*ngIf="!isLoading"
+>
+	<div class="col-sx-12 col-md-6">
+		<h2>{{ isEdit ? user.name : 'Nový uživatel' }}</h2>
+
+		<form #userForm="ngForm"
+			(ngSubmit)="userForm.valid && onSubmit()"
+		>
+			<mat-form-field appearance="standard"
+				class="w-100">
+				<mat-label>Jméno</mat-label>
+				<input matInput
+					placeholder="Jméno"
+					name="userName"
+					required
+					[(ngModel)]="user.name"
+				>
+			</mat-form-field>
+
+			<mat-form-field appearance="standard"
+				required
+				class="w-100">
+				<mat-label>Role</mat-label>
+				<mat-select name="role"
+					[(ngModel)]="user.role">
+					<mat-option [value]="EUserRole.ADMIN">Admin</mat-option>
+					<mat-option [value]="EUserRole.VISITOR">Návštěvník</mat-option>
+					<mat-option [value]="EUserRole.MERCHANT">Prodavač</mat-option>
+				</mat-select>
+			</mat-form-field>
+
+			<div>
+				<button mat-raised-button
+					class="w-100"
+					color="primary"
+					type="submit"
+				>
+					Potvrdit
+				</button>
+			</div>
+		</form>
+	</div>
+	<div class="col-sx-12 col-md-6">
+		<h2 class="d-flex justify-content-between">
+			<span>Napárované karty</span>
+			<button mat-button
+				color="primary">
+				<mat-icon>add</mat-icon>
+				Přidat kartu
+			</button>
+		</h2>
+		<mat-list role="list">
+			<mat-list-item role="listitem"
+				*ngFor="let card of cards">
+				<div class="card-item">
+					<span>{{ card.type }} (id:{{ card.id }})</span>
+					<button mat-raised-button
+						color="warn">Zablokovat
+					</button>
+				</div>
+			</mat-list-item>
+		</mat-list>
+	</div>
+</div>

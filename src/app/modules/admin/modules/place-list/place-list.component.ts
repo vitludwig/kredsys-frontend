@@ -1,16 +1,14 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {MatTableDataSource} from '@angular/material/table';
-import {IUser} from '../../../../common/types/IUser';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
 import {map, merge, startWith, Subject, switchMap, takeUntil} from 'rxjs';
 import {ActivatedRoute} from '@angular/router';
-import {UsersService} from '../../services/user/users.service';
-import {MatDialog} from '@angular/material/dialog';
 import {debounce} from '../../../../common/decorators/debounce';
-import {UserEditComponent} from '../user-list/components/user-edit/user-edit.component';
 import {ERoute} from 'src/app/common/types/ERoute';
 import {Animations} from '../../../../common/utils/animations';
+import {PlaceService} from '../../services/place/place/place.service';
+import {IPlace} from '../../../../common/types/IPlace';
 
 @Component({
 	selector: 'app-place-list',
@@ -20,13 +18,13 @@ import {Animations} from '../../../../common/utils/animations';
 		Animations.expandableTable
 	],
 })
-export class PlaceListComponent implements OnInit {
+export class PlaceListComponent implements OnInit, OnDestroy {
 	public displayedColumns: string[] = ['name', 'role', 'actions'];
-	public dataSource: MatTableDataSource<IUser>;
+	public dataSource: MatTableDataSource<IPlace>;
 	public placesTotal: number = 0;
-	public placesData: IUser[];
+	public placesData: IPlace[];
 	public isPlacesLoading: boolean = false;
-	public expandedRow: IUser | null;
+	public expandedRow: IPlace | null;
 
 	@ViewChild(MatPaginator)
 	public paginator: MatPaginator;
@@ -40,8 +38,7 @@ export class PlaceListComponent implements OnInit {
 
 	constructor(
 		public route: ActivatedRoute,
-		protected usersService: UsersService,
-		protected dialog: MatDialog
+		protected placeService: PlaceService,
 	) {
 
 	}
@@ -59,7 +56,7 @@ export class PlaceListComponent implements OnInit {
 				startWith({}),
 				switchMap(() => {
 					this.isPlacesLoading = true;
-					return this.usersService.getUsers(
+					return this.placeService.getPlaces(
 						'',
 						this.paginator.pageIndex + 1,
 					)
@@ -89,7 +86,7 @@ export class PlaceListComponent implements OnInit {
 	}
 
 	protected async loadPlaces(search: string = '', page: number = 1): Promise<void> {
-		const users = await this.usersService.getUsers(search, page);
+		const users = await this.placeService.getPlaces(search, page);
 
 		this.placesData = users.data;
 		this.placesTotal = users.total;
@@ -102,15 +99,6 @@ export class PlaceListComponent implements OnInit {
 		if (this.dataSource.paginator) {
 			this.dataSource.paginator.firstPage();
 		}
-	}
-
-	public openUserEditDialog(data: IUser): void {
-		this.dialog.open<UserEditComponent, IUser>(UserEditComponent, {
-			width: '300px',
-			minWidth: '250px',
-			autoFocus: 'dialog',
-			data: Object.assign({}, data),
-		});
 	}
 
 	public ngOnDestroy(): void {

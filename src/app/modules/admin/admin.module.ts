@@ -1,17 +1,17 @@
 import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
 import {AdminComponent} from './admin.component';
 import {UserListModule} from './modules/user-list/user-list.module';
 import {AdminRoutingModule} from './admin-routing.module';
 import {PlaceListModule} from './modules/place-list/place-list.module';
+import {SharedModule} from '../../shared.module';
 
 
 @NgModule({
 	declarations: [
-		AdminComponent
+		AdminComponent,
 	],
 	imports: [
-		CommonModule,
+		SharedModule,
 		AdminRoutingModule,
 		UserListModule,
 		PlaceListModule,
