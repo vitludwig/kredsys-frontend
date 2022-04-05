@@ -1,11 +1,9 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {ISaleItem} from '../../types/ISaleItem';
 import {SaleService} from '../../services/sale/sale.service';
 import {ESaleItemType} from '../../types/ESaleItemType';
 import {OrderService} from '../../services/order/order.service';
-import {MatDialog} from '@angular/material/dialog';
-import {SaleDialogComponent} from '../sale-dialog/sale-dialog.component';
-import {ISaleDialogData} from '../sale-dialog/types/ISaleDialogData';
+import {IPlace} from '../../../../common/types/IPlace';
 
 @Component({
 	selector: 'app-dashboard',
@@ -13,6 +11,9 @@ import {ISaleDialogData} from '../sale-dialog/types/ISaleDialogData';
 	styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent implements OnInit {
+	@Input()
+	public place: IPlace;
+
 	public items: ISaleItem[] = [];
 
 	constructor(
@@ -22,11 +23,12 @@ export class DashboardComponent implements OnInit {
 	}
 
 	public async ngOnInit(): Promise<void> {
-		const items = await this.saleService.getSaleItems();
-		for (const item of items) {
-			item.image = this.getItemImage(item.type);
+		for(const item of this.place.goods) {
+			this.items.push({
+				...item,
+				image: this.getItemImage(item.type),
+			})
 		}
-		this.items = items;
 	}
 
 	public openAddDialog(item: ISaleItem): void {
@@ -37,7 +39,7 @@ export class DashboardComponent implements OnInit {
 	}
 
 	protected getItemImage(type: ESaleItemType): string {
-		switch (type) {
+		switch(type) {
 			case ESaleItemType.BEER:
 				return 'beer'
 			case ESaleItemType.SHOT:

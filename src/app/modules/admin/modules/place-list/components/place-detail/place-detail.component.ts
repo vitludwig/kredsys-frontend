@@ -6,6 +6,7 @@ import {PlaceService} from '../../../../services/place/place/place.service';
 import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
 import {MatDialog} from '@angular/material/dialog';
 import {SortimentDetailComponent} from './components/sortiment-detail/sortiment-detail.component';
+import {ESaleItemType} from '../../../../../sale/types/ESaleItemType';
 
 @Component({
 	selector: 'app-place-detail',
@@ -16,7 +17,6 @@ export class PlaceDetailComponent implements OnInit {
 	public place: IPlace;
 	public isLoading: boolean = false;
 	public isEdit: boolean = false;
-	public sortiment: IPlaceSortimentItem[] = [];
 
 	public readonly EPlaceRole = EPlaceRole;
 
@@ -35,12 +35,11 @@ export class PlaceDetailComponent implements OnInit {
 			if (placeId) {
 				console.log('is edit');
 				this.place = Object.assign({}, await this.placeService.getPlace(placeId));
-				await this.loadSortiment();
-				this.isEdit = false;
+				this.isEdit = true;
 			} else {
 				console.log('is new');
 				this.place = Object.assign({}, this.placeService.createNewPlace());
-				this.isEdit = true;
+				this.isEdit = false;
 			}
 		} catch (e) {
 			// TODO: handle
@@ -50,9 +49,6 @@ export class PlaceDetailComponent implements OnInit {
 		}
 	}
 
-	protected async loadSortiment(): Promise<void> {
-		this.sortiment = await this.placeService.getSortiment();
-	}
 
 	public async onSubmit(): Promise<void> {
 		// TODO: pridat osetren erroru, globalne
@@ -65,20 +61,25 @@ export class PlaceDetailComponent implements OnInit {
 	}
 
 	public drop(event: CdkDragDrop<string[]>): void {
-		moveItemInArray(this.sortiment, event.previousIndex, event.currentIndex);
-		this.placeService.editSortiment(this.sortiment);
+		moveItemInArray(this.place.goods, event.previousIndex, event.currentIndex);
 	}
 
 	public openSortimentDetailDialog(data?: IPlaceSortimentItem): void {
+		let newItem = data ?? {
+			name: '',
+			price: null,
+			currency: 'Kč',
+			type: ESaleItemType.FOOD,
+		};
 		const dialog = this.dialog.open<SortimentDetailComponent, IPlaceSortimentItem>(SortimentDetailComponent, {
 			width: '300px',
 			minWidth: '250px',
 			autoFocus: 'dialog',
-			data: Object.assign({}, data),
+			data: newItem,
 		});
 
 		dialog.afterClosed().subscribe((result) => {
-			this.loadSortiment();
+			this.place.goods.push(result)
 		});
 	}
 

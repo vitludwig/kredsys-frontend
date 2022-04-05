@@ -3,7 +3,7 @@ import {UsersService} from '../../../../services/users/users.service';
 import {EUserRole, IUser} from '../../../../../../common/types/IUser';
 import {ActivatedRoute, Router} from '@angular/router';
 import {ERoute} from '../../../../../../common/types/ERoute';
-import {ICard} from '../../../../types/ICard';
+import {ICard} from '../../../card-list/types/ICard';
 
 @Component({
 	selector: 'app-user-detail',

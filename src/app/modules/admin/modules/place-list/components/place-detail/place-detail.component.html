@@ -64,7 +64,7 @@
 		</h2>
 
 		<div cdkDropList class="sortiment-list" (cdkDropListDropped)="drop($event)">
-			<div class="sortiment-item" *ngFor="let item of sortiment" cdkDrag>
+			<div class="sortiment-item" *ngFor="let item of place.goods" cdkDrag>
 				<span>{{ item.name }}</span>
 				<span>{{ item.price }}Kč</span>
 			</div>

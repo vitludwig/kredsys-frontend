@@ -1,5 +1,5 @@
 import {Component, Inject, OnInit} from '@angular/core';
-import {MAT_DIALOG_DATA} from '@angular/material/dialog';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {IPlaceSortimentItem} from '../../../../../../../../common/types/IPlace';
 import {PlaceService} from '../../../../../../services/place/place/place.service';
 import {ESaleItemType} from '../../../../../../../sale/types/ESaleItemType';
@@ -16,6 +16,7 @@ export class SortimentDetailComponent implements OnInit {
 
 	constructor(
 		public placeService: PlaceService,
+		protected dialogRef: MatDialogRef<SortimentDetailComponent>,
 		@Inject(MAT_DIALOG_DATA) public data: IPlaceSortimentItem
 	) {
 	}
@@ -35,7 +36,7 @@ export class SortimentDetailComponent implements OnInit {
 	}
 
 	public async onSubmit(): Promise<void> {
-		await this.placeService.addSortimentItem(this.data);
+		this.dialogRef.close(this.data);
 	}
 
 }

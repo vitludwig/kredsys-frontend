@@ -16,6 +16,7 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {FormsModule} from '@angular/forms';
 import {SaleRoutingModule} from './sale-routing.module';
+import {SharedModule} from '../../shared.module';
 
 
 @NgModule({
@@ -31,9 +32,8 @@ import {SaleRoutingModule} from './sale-routing.module';
 		SaleComponent
 	],
 	imports: [
-		CommonModule,
+		SharedModule,
 		SaleRoutingModule,
-		FormsModule,
 		MatSidenavModule,
 		MatButtonModule,
 		MatIconModule,

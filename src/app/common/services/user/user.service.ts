@@ -34,7 +34,7 @@ export class UserService {
 		user.credit += amount;
 	}
 
-	public login(userId: number): void {
+	public loadUser(userId: number): void {
 		this.user = {
 			id: userId,
 			name: 'John doe',

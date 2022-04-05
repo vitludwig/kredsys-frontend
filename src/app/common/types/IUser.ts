@@ -1,7 +1,7 @@
 export interface IUser {
 	id?: number;
 	name: string;
-	credit: number;
+	credit?: number;
 	role?: EUserRole; // basic, band, org...
 }
 

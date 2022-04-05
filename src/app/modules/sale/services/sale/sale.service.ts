@@ -14,11 +14,11 @@ export class SaleService {
 	constructor(
 		protected dialog: MatDialog
 	) {
-		const types = Object.values(ESaleItemType);
 		for (let i = 1; i <= 20; i++) {
 			this.saleItems.push({
 				id: i,
 				name: 'Polozka ' + i,
+				currency: 'Kč',
 				price: 30,
 				type: i <= 5 ? ESaleItemType.BEER : i > 5 && i < 10 ? ESaleItemType.SHOT : i >= 10 && i < 13 ? ESaleItemType.FOOD : ESaleItemType.OTHER,
 			})

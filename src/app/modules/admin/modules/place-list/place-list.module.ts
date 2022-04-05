@@ -26,7 +26,6 @@ import {MatDialogModule} from '@angular/material/dialog';
 	imports: [
 		SharedModule,
 		RouterModule,
-		FormsModule,
 		MatTableModule,
 		MatSortModule,
 		MatPaginatorModule,

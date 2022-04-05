@@ -5,6 +5,8 @@ import {UserListComponent} from './modules/user-list/user-list.component';
 import {PlaceListComponent} from './modules/place-list/place-list.component';
 import {UserDetailComponent} from './modules/user-list/components/user-detail/user-detail.component';
 import {PlaceDetailComponent} from './modules/place-list/components/place-detail/place-detail.component';
+import {CardListComponent} from './modules/card-list/card-list.component';
+import {CardDetailComponent} from './modules/card-list/components/card-detail/card-detail.component';
 
 const routes: Routes = [
 	{
@@ -55,6 +57,32 @@ const routes: Routes = [
 				component: PlaceDetailComponent,
 				data: {
 					name: 'Přidat místo'
+				}
+			}
+		]
+	},
+	{
+		path: ERoute.ADMIN_CARDS,
+		children: [
+			{
+				path: '',
+				component: CardListComponent,
+				data: {
+					name: 'Správa karet'
+				}
+			},
+			{
+				path: ':id/' + ERoute.EDIT,
+				component: CardDetailComponent,
+				data: {
+					name: 'Upravit kartu'
+				}
+			},
+			{
+				path: ERoute.NEW,
+				component: CardDetailComponent,
+				data: {
+					name: 'Přidat kartu'
 				}
 			}
 		]

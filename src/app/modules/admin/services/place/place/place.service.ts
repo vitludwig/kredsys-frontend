@@ -6,13 +6,37 @@ import {EPlaceRole, IPlace, IPlaceSortimentItem} from '../../../../../common/typ
 	providedIn: 'root'
 })
 export class PlaceService {
+	#selectedPlace: IPlace | null;
+
+	public get selectedPlace(): IPlace | null {
+		const placeId = localStorage.getItem('selectedPlaceId')
+		if(placeId) {
+			return this.places.find((place) => place.id === Number(placeId)) ?? null;
+		}
+		return this.#selectedPlace;
+	}
+
+	public set selectedPlace(value: IPlace | null) {
+		this.#selectedPlace = value;
+		localStorage.setItem('selectedPlaceId', value?.id + '');
+	}
+
 	protected places: IPlace[] = [];
 	protected sortiment: IPlaceSortimentItem[] = [];
 	protected limit = 5;
 
 	constructor() {
 		// Create 100 users
-		this.places = Array.from({length: 100}, (_, k) => this.createNewPlace(k + 1));
+		this.places = Array.from({length: 2}, (_, k) => this.createNewPlace(k + 1));
+	}
+
+	public async getAllPlaces(search: string = ''): Promise<IPaginatedResponse<IPlace>> {
+		return {
+			total: this.places.length,
+			offset: 0,
+			limit: 100,
+			data: this.places,
+		};
 	}
 
 	public async getPlaces(search: string = '', page: number = 1, limit = this.limit): Promise<IPaginatedResponse<IPlace>> {
@@ -46,18 +70,7 @@ export class PlaceService {
 
 	public async addPlace(place: IPlace): Promise<void> {
 		this.places.push(place);
-	}
-
-	public async getSortiment(): Promise<IPlaceSortimentItem[]> {
-		return this.sortiment;
-	}
-
-	public async editSortiment(data: IPlaceSortimentItem[]): Promise<void> {
-		this.sortiment = Object.assign({}, data);
-	}
-
-	public async addSortimentItem(item: IPlaceSortimentItem): Promise<void> {
-		this.sortiment.push(item);
+		console.log('place added');
 	}
 
 	public createNewPlace(id?: number): IPlace {
@@ -65,6 +78,7 @@ export class PlaceService {
 			id: id,
 			name: id ? 'New Place ' + id : '',
 			role: EPlaceRole.BAR,
+			goods: [],
 		};
 	}
 }

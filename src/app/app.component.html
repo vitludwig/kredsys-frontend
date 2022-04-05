@@ -1,4 +1,4 @@
-<app-top-menu [side-menu]="sideMenu"></app-top-menu>
+<app-top-menu *ngIf="authService.isLogged" [side-menu]="sideMenu"></app-top-menu>
 
 <mat-drawer-container>
 	<mat-drawer #sideMenu

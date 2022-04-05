@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {EUserRole, IUser} from '../../../../common/types/IUser';
 import {IPaginatedResponse} from '../../../../common/types/IPaginatedResponse';
-import {ECardType, ICard} from '../../types/ICard';
+import {ICard} from '../../modules/card-list/types/ICard';
 
 @Injectable({
 	providedIn: 'root'
@@ -82,14 +82,18 @@ const cards: ICard[] = [
 	{
 		id: 1,
 		userId: 1,
-		type: ECardType.BASIC,
+		type: 'Card',
+		description: 'karta1',
 		blocked: false,
+		expirationDate: '',
 	},
 	{
 		id: 1,
 		userId: 1,
-		type: ECardType.BASIC,
+		type: 'Card',
+		description: 'karta1',
 		blocked: false,
+		expirationDate: '',
 	},
 ]
 

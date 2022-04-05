@@ -1,6 +1,7 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {BackButtonDirective} from './common/components/back-button/back-button.directive';
+import {FormsModule} from '@angular/forms';
 
 
 @NgModule({
@@ -8,10 +9,12 @@ import {BackButtonDirective} from './common/components/back-button/back-button.d
 		BackButtonDirective,
 	],
 	imports: [
-		CommonModule
+		CommonModule,
+		FormsModule,
 	],
 	exports: [
 		CommonModule,
+		FormsModule,
 		BackButtonDirective,
 	]
 })

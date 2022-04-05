@@ -3,6 +3,7 @@ import {Subject, takeUntil} from 'rxjs';
 import {UserService} from './common/services/user/user.service';
 import {NavigationEnd, Router} from '@angular/router';
 import {MatDrawer} from '@angular/material/sidenav';
+import {AuthService} from './modules/login/services/auth/auth.service';
 
 
 @Component({
@@ -19,6 +20,7 @@ export class AppComponent implements OnInit, OnDestroy {
 	protected userId: string = '';
 
 	constructor(
+		public authService: AuthService,
 		protected userService: UserService,
 		protected renderer: Renderer2,
 		protected router: Router,
@@ -47,7 +49,7 @@ export class AppComponent implements OnInit, OnDestroy {
 						console.log('event: ', event);
 						if (event.keyCode === 13) {
 							this.removeKeydownListener();
-							this.userService.login(Number(this.userId));
+							this.userService.loadUser(Number(this.userId));
 							console.log('user id: ', this.userId);
 						} else {
 							this.userId += event.key

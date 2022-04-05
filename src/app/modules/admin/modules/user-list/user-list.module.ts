@@ -10,7 +10,6 @@ import {MatIconModule} from '@angular/material/icon';
 import {UserDetailComponent} from './components/user-detail/user-detail.component';
 import {RouterModule} from '@angular/router';
 import {MatDialogModule} from '@angular/material/dialog';
-import {FormsModule} from '@angular/forms';
 import {MatSelectModule} from '@angular/material/select';
 import {MatListModule} from '@angular/material/list';
 import {SharedModule} from '../../../../shared.module';
@@ -24,7 +23,6 @@ import {SharedModule} from '../../../../shared.module';
 	imports: [
 		SharedModule,
 		RouterModule,
-		FormsModule,
 		MatTableModule,
 		MatSortModule,
 		MatPaginatorModule,

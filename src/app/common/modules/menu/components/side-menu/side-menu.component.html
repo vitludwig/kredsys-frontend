@@ -31,7 +31,12 @@
 			>
 				Karty
 			</a>
-
 		</div>
+
+		<a mat-list-item
+			[routerLink]="ERoute.SALE"
+			[class.active]="router.url === '/' + ERoute.SALE">
+			Vybrat místo
+		</a>
 	</mat-nav-list>
 </div>
