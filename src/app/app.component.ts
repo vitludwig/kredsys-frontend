@@ -22,7 +22,6 @@ export class AppComponent implements OnInit, OnDestroy {
 	constructor(
 		public authService: AuthService,
 		protected userService: UserService,
-		protected renderer: Renderer2,
 		protected router: Router,
 	) {
 	}
@@ -35,39 +34,10 @@ export class AppComponent implements OnInit, OnDestroy {
 				this.sideMenu.close();
 			}
 		});
-
-		// this.initLoginListener();
 	}
 
-	protected initLoginListener(): void {
-		this.userService.user$
-			.pipe(takeUntil(this.unsubscribe))
-			.subscribe((user) => {
-				// user was unlogged, listen for new id
-				if (user === null) {
-					this.keydownListener = this.renderer.listen('document', 'keydown', (event) => {
-						console.log('event: ', event);
-						if (event.keyCode === 13) {
-							this.removeKeydownListener();
-							this.userService.loadUser(Number(this.userId));
-							console.log('user id: ', this.userId);
-						} else {
-							this.userId += event.key
-						}
-					})
-				}
-			})
-	}
-
-	protected removeKeydownListener(): void {
-		if (this.keydownListener) {
-			this.keydownListener();
-			this.keydownListener = undefined;
-		}
-	}
 
 	public ngOnDestroy(): void {
 		this.unsubscribe.next();
-		this.removeKeydownListener();
 	}
 }

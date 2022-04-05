@@ -6,6 +6,9 @@ import {BehaviorSubject, Observable} from 'rxjs';
 	providedIn: 'root'
 })
 export class UserService {
+	#userSubject: BehaviorSubject<IUser | null>;
+	public user$: Observable<IUser | null>;
+
 	public isLogged: boolean = false;
 
 	public get user(): IUser | null {
@@ -17,9 +20,6 @@ export class UserService {
 		this.isLogged = value !== null;
 	}
 
-	public user$: Observable<IUser | null>;
-	#userSubject: BehaviorSubject<IUser | null>;
-
 	constructor() {
 		this.#userSubject = new BehaviorSubject<IUser | null>(null);
 		this.user$ = this.#userSubject.asObservable();
@@ -30,15 +30,19 @@ export class UserService {
 			console.error('Load user first');
 			return;
 		}
-
+		user.credit = user.credit ?? 0;
 		user.credit += amount;
 	}
 
-	public loadUser(userId: number): void {
+	public loadUser(userId: string): void {
 		this.user = {
-			id: userId,
+			id: Number(userId),
 			name: 'John doe',
 			credit: 500,
 		}
+	}
+
+	public logout(): void {
+		this.user = null;
 	}
 }

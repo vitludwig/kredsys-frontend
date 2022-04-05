@@ -1,39 +1,48 @@
 <div class="summary">
-	<div class="summary-list">
-		<div class="summary-item"
-			*ngFor="let item of orderService.items"
-		>
-			<div class="item-info" (click)="openEditDialog(item)">
-				<button mat-icon-button
-					color="primary"
-					aria-label="Edit item"
-				>
-					<mat-icon>edit</mat-icon>
-				</button>
-				<div class="item-count">{{ item.count }}&times;</div>
-				<div class="item-name">{{ item.item.name }}</div>
-			</div>
-
-			<div class="item-actions">
-				<button mat-icon-button
-					color="warn"
-					aria-label="Delete item"
-					(click)="orderService.removeItem(item.item.id)"
-				>
-					<mat-icon>delete</mat-icon>
-				</button>
-			</div>
-		</div>
+	<div class="p-5 h-100 d-flex align-items-center">
+		<app-card-loader (userId)="loadUserId($event)"></app-card-loader>
 	</div>
 
-	<div class="summary-actions">
-		<div class="total">
-			{{ orderService.total }} Kč
+	<ng-container *ngIf="(userService.user$ | async)">
+		<div class="summary-list">
+
+
+			<div class="summary-item"
+				*ngFor="let item of orderService.items"
+			>
+				<div class="item-info"
+					(click)="openEditDialog(item)">
+					<button mat-icon-button
+						color="primary"
+						aria-label="Edit item"
+					>
+						<mat-icon>edit</mat-icon>
+					</button>
+					<div class="item-count">{{ item.count }}&times;</div>
+					<div class="item-name">{{ item.item.name }}</div>
+				</div>
+
+				<div class="item-actions">
+					<button mat-icon-button
+						color="warn"
+						aria-label="Delete item"
+						(click)="orderService.removeItem(item.item.id)"
+					>
+						<mat-icon>delete</mat-icon>
+					</button>
+				</div>
+			</div>
 		</div>
 
-		<button mat-raised-button
-			class="submit-btn"
-			color="primary">Potvrdit
-		</button>
-	</div>
+		<div class="summary-actions">
+			<div class="total">
+				{{ orderService.total }} Kč
+			</div>
+
+			<button mat-raised-button
+				class="submit-btn"
+				color="primary">Potvrdit
+			</button>
+		</div>
+	</ng-container>
 </div>

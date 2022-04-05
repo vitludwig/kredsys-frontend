@@ -12,19 +12,28 @@
 			</button>
 			{{ pageName }}
 		</div>
+		<ng-container *ngIf="userService.isLogged">
+			<div>{{ (userService.user$ | async)?.name }}</div>
 
-		<div *ngIf="userService.isLogged">{{ (userService.user$ | async)?.name }}</div>
+			<div>
+				<small class="me-3">Zůstatek: {{(userService.user$ | async)?.credit ?? 0 }} Kč</small>
+				<button mat-button
+					mat-raised-button
+					color="accent"
+					(click)="openChargeDialog()"
+				>
+					Dobít
+				</button>
 
-		<div *ngIf="userService.isLogged">
-			<small class="me-3">Zůstatek: {{(userService.user$ | async)?.credit ?? 0 }} Kč</small>
-			<button mat-button
-				mat-raised-button
-				class="example-icon favorite-icon"
-				color="basic"
-				(click)="openChargeDialog()"
-			>
-				Dobít
-			</button>
-		</div>
+				<button mat-button
+					mat-raised-button
+					color="basic"
+					class="ms-5"
+					(click)="userService.logout()"
+				>
+					Odhlásit
+				</button>
+			</div>
+		</ng-container>
 	</div>
 </mat-toolbar>

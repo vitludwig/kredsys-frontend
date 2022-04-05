@@ -3,6 +3,7 @@ import {OrderService} from '../../services/order/order.service';
 import {SaleService} from '../../services/sale/sale.service';
 import {IOrderItem} from '../../types/IOrderItem';
 import {IPlace} from '../../../../common/types/IPlace';
+import {UserService} from '../../../../common/services/user/user.service';
 
 @Component({
 	selector: 'app-sale-summary',
@@ -13,9 +14,12 @@ export class SaleSummaryComponent {
 	@Input()
 	public place: IPlace;
 
+	public userId: string;
+
 	constructor(
 		public orderService: OrderService,
 		public saleService: SaleService,
+		public userService: UserService,
 	) {
 	}
 
@@ -25,5 +29,10 @@ export class SaleSummaryComponent {
 			edit: true,
 			count: item.count
 		});
+	}
+
+	public loadUserId(id: string): void {
+		this.userService.loadUser(id);
+		console.log('id', id);
 	}
 }
