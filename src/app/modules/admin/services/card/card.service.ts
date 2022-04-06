@@ -33,6 +33,10 @@ export class CardService {
 		};
 	}
 
+	public async addCard(card: ICard): Promise<void> {
+		// TODO: implement
+	}
+
 	public createNewCard(id?: number): ICard {
 		return {
 			id: id,

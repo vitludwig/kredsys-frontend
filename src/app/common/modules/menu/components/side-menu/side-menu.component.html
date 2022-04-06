@@ -34,9 +34,17 @@
 		</div>
 
 		<a mat-list-item
-			[routerLink]="ERoute.SALE"
-			[class.active]="router.url === '/' + ERoute.SALE">
+			[routerLink]="ERoute.PLACE_SELECT"
+			[class.active]="router.url === '/' + ERoute.PLACE_SELECT">
 			Vybrat místo
+		</a>
+
+		<a mat-list-item
+			href="#"
+			*ngIf="authService.isLogged"
+			(click)="authService.logout()"
+		>
+			Odhlásit
 		</a>
 	</mat-nav-list>
 </div>

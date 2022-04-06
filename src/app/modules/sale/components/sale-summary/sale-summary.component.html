@@ -1,6 +1,6 @@
 <div class="summary">
 	<div class="p-5 h-100 d-flex align-items-center">
-		<app-card-loader (userId)="loadUserId($event)"></app-card-loader>
+		<app-card-loader (cardId)="loadUserId($event)"></app-card-loader>
 	</div>
 
 	<ng-container *ngIf="(userService.user$ | async)">

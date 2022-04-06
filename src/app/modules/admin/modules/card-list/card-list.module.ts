@@ -1,8 +1,6 @@
 import {NgModule} from '@angular/core';
-import {CardDetailComponent} from './components/card-detail/card-detail.component';
 import {SharedModule} from '../../../../shared.module';
 import {RouterModule} from '@angular/router';
-import {FormsModule} from '@angular/forms';
 import {MatTableModule} from '@angular/material/table';
 import {MatSortModule} from '@angular/material/sort';
 import {MatPaginatorModule} from '@angular/material/paginator';
@@ -18,7 +16,6 @@ import {CardListComponent} from './card-list.component';
 @NgModule({
 	declarations: [
 		CardListComponent,
-		CardDetailComponent
 	],
 	imports: [
 		SharedModule,

@@ -12,7 +12,7 @@ export class CardLoaderComponent implements OnInit, OnDestroy {
 	public hidden: boolean = false;
 
 	@Output()
-	public userId: EventEmitter<string> = new EventEmitter<string>();
+	public cardId: EventEmitter<string> = new EventEmitter<string>();
 
 	protected unsubscribe: Subject<void> = new Subject();
 	protected keydownListener: any;
@@ -42,8 +42,8 @@ export class CardLoaderComponent implements OnInit, OnDestroy {
 			if(event.keyCode === 13) {
 				this.removeKeydownListener();
 				// this.userService.loadUser(Number(this.userId));
-				this.userId.emit(userId);
-				console.log('user id: ', this.userId);
+				this.cardId.emit(userId);
+				console.log('user id: ', this.cardId);
 			} else {
 				userId += event.key
 			}

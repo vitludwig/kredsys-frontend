@@ -1,6 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {ERoute} from '../../../../types/ERoute';
 import {NavigationEnd, Router} from '@angular/router';
+import {UserService} from '../../../../services/user/user.service';
+import {AuthService} from '../../../../../modules/login/services/auth/auth.service';
 
 @Component({
 	selector: 'app-side-menu',
@@ -12,7 +14,8 @@ export class SideMenuComponent implements OnInit {
 	public adminMenuOpened: boolean = false;
 
 	constructor(
-		public router: Router
+		public router: Router,
+		public authService: AuthService,
 	) {
 	}
 

@@ -8,6 +8,11 @@ import {PlaceGuard} from './common/utils/place.guard';
 const routes: Routes = [
 	{
 		path: '',
+		redirectTo: ERoute.SALE,
+		pathMatch: 'full'
+	},
+	{
+		path: '',
 		canActivate: [AuthGuard],
 		children: [
 			{
@@ -29,7 +34,7 @@ const routes: Routes = [
 		path: ERoute.LOGIN,
 		loadChildren: () => import('./modules/login/login.module').then((m) => m.LoginModule)
 	},
-	{path: '', component: SaleComponent}
+
 ];
 
 @NgModule({

@@ -4,6 +4,11 @@ import {EUserRole, IUser} from '../../../../../../common/types/IUser';
 import {ActivatedRoute, Router} from '@angular/router';
 import {ERoute} from '../../../../../../common/types/ERoute';
 import {ICard} from '../../../card-list/types/ICard';
+import {IPlaceSortimentItem} from '../../../../../../common/types/IPlace';
+import {ESaleItemType} from '../../../../../sale/types/ESaleItemType';
+import {SortimentDetailComponent} from '../../../place-list/components/place-detail/components/sortiment-detail/sortiment-detail.component';
+import {MatDialog} from '@angular/material/dialog';
+import {CardDetailComponent} from './components/card-detail/card-detail.component';
 
 @Component({
 	selector: 'app-user-detail',
@@ -22,6 +27,7 @@ export class UserDetailComponent implements OnInit {
 		public usersService: UsersService,
 		protected route: ActivatedRoute,
 		protected router: Router,
+		protected dialog: MatDialog,
 	) {
 	}
 
@@ -55,6 +61,24 @@ export class UserDetailComponent implements OnInit {
 			await this.usersService.addUser(this.user!);
 		}
 		this.router.navigate([ERoute.ADMIN, ERoute.ADMIN_USERS]);
+	}
+
+	public openCardDetailDialog(): void {
+		let newCard =  {
+			description: '',
+			type: 'Card',
+		};
+		const dialog = this.dialog.open<CardDetailComponent, ICard>(CardDetailComponent, {
+			width: '300px',
+			minWidth: '250px',
+			autoFocus: 'dialog',
+			data: newCard,
+		});
+
+		dialog.afterClosed().subscribe((result) => {
+			this.cards.push(result);
+			console.log('card: ', result);
+		});
 	}
 
 }
