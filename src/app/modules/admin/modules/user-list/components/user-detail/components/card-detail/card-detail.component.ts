@@ -1,7 +1,7 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {PlaceService} from '../../../../../../services/place/place/place.service';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
-import {ICard} from '../../../../../card-list/types/ICard';
+import {ICard} from '../../../../../../../../common/types/ICard';
 
 @Component({
   selector: 'app-card-detail',

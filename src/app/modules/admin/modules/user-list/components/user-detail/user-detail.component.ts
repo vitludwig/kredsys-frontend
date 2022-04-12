@@ -3,12 +3,9 @@ import {UsersService} from '../../../../services/users/users.service';
 import {EUserRole, IUser} from '../../../../../../common/types/IUser';
 import {ActivatedRoute, Router} from '@angular/router';
 import {ERoute} from '../../../../../../common/types/ERoute';
-import {ICard} from '../../../card-list/types/ICard';
-import {IPlaceSortimentItem} from '../../../../../../common/types/IPlace';
-import {ESaleItemType} from '../../../../../sale/types/ESaleItemType';
-import {SortimentDetailComponent} from '../../../place-list/components/place-detail/components/sortiment-detail/sortiment-detail.component';
 import {MatDialog} from '@angular/material/dialog';
 import {CardDetailComponent} from './components/card-detail/card-detail.component';
+import {ICard} from '../../../../../../common/types/ICard';
 
 @Component({
 	selector: 'app-user-detail',

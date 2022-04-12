@@ -26,10 +26,16 @@
 				Uživatelé
 			</a>
 			<a mat-list-item
-				[class.active]="router.url === '/' + ERoute.ADMIN + '/' + ERoute.ADMIN_CARDS"
-				[routerLink]="[ERoute.ADMIN, ERoute.ADMIN_CARDS]"
+				[class.active]="router.url === '/' + ERoute.ADMIN + '/' + ERoute.ADMIN_GOODS"
+				[routerLink]="[ERoute.ADMIN, ERoute.ADMIN_GOODS]"
 			>
-				Karty
+				Zboží
+			</a>
+			<a mat-list-item
+				[class.active]="router.url === '/' + ERoute.ADMIN + '/' + ERoute.ADMIN_CURRENCIES"
+				[routerLink]="[ERoute.ADMIN, ERoute.ADMIN_CURRENCIES]"
+			>
+				Měny
 			</a>
 		</div>
 

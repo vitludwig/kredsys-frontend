@@ -5,9 +5,9 @@ import {MatSort} from '@angular/material/sort';
 import {map, merge, startWith, Subject, switchMap, takeUntil} from 'rxjs';
 import {ActivatedRoute} from '@angular/router';
 import {debounce} from '../../../../common/decorators/debounce';
-import {ICard} from './types/ICard';
 import { ERoute } from 'src/app/common/types/ERoute';
 import {CardService} from '../../services/card/card.service';
+import {ICard} from '../../../../common/types/ICard';
 
 @Component({
 	selector: 'app-card-list',

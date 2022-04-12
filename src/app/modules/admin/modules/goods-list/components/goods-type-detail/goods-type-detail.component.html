@@ -1,0 +1,56 @@
+<div class="row mb-4">
+	<div class="col-12">
+		<button backButton
+			mat-raised-button>
+			<mat-icon>keyboard_arrow_left</mat-icon>
+			Zpět
+		</button>
+	</div>
+</div>
+
+<div class="row"
+	*ngIf="!isLoading"
+>
+	<div class="col-sx-12 col-md-6">
+		<h2>{{ isEdit ? item.name : 'Nový typ zboží' }}</h2>
+
+		<form #form="ngForm"
+			(ngSubmit)="form.valid && onSubmit()"
+		>
+			<mat-form-field appearance="standard"
+				class="w-100">
+				<mat-label>Název</mat-label>
+				<input matInput
+					placeholder="Název"
+					name="goodsName"
+					required
+					[(ngModel)]="item.name"
+				>
+			</mat-form-field>
+
+			<mat-form-field appearance="standard"
+				class="w-100"
+			>
+				<mat-label>Ikona</mat-label>
+				<mat-select name="Ikona"
+					[(ngModel)]="item.icon"
+				>
+					<mat-option [value]="'beer'" class="icon-option">Pivo <img src="assets/images/beer.jpg"></mat-option>
+					<mat-option [value]="'food'" class="icon-option">Jídlo <img src="assets/images/food.jpg"></mat-option>
+					<mat-option [value]="'shot'" class="icon-option">Panák <img src="assets/images/shot.jpg"></mat-option>
+					<mat-option [value]="'other'" class="icon-option">Ostatní <img src="assets/images/other.jpg"></mat-option>
+				</mat-select>
+			</mat-form-field>
+
+			<div>
+				<button mat-raised-button
+					class="w-100"
+					color="primary"
+					type="submit"
+				>
+					Potvrdit
+				</button>
+			</div>
+		</form>
+	</div>
+</div>

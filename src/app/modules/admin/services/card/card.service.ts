@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {IPaginatedResponse} from '../../../../common/types/IPaginatedResponse';
 import {EPlaceRole, IPlace, IPlaceSortimentItem} from '../../../../common/types/IPlace';
-import {ICard} from '../../modules/card-list/types/ICard';
+import {ICard} from '../../../../common/types/ICard';
 
 @Injectable({
 	providedIn: 'root'

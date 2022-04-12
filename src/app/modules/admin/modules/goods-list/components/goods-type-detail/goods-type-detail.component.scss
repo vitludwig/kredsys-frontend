@@ -1,0 +1,14 @@
+.icon-option {
+  ::ng-deep {
+    .mat-option-text {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+  }
+
+  img {
+    width: auto;
+    height: 50px;
+  }
+}

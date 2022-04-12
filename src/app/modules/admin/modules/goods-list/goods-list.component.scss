@@ -1,0 +1,4 @@
+@import '../../../../../assets/styles/mixins';
+.data-table {
+  @include expandable-table
+}
