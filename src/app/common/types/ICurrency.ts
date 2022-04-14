@@ -7,3 +7,13 @@ export interface ICurrency {
 	maxRechargeAmountWarn: number;
 	blocked: boolean;
 }
+
+export interface ICurrencyAccount {
+	id: number;
+	userId: number
+	overdraftLimit: number;
+	currentAmount: number;
+	currencyId: number;
+}
+
+

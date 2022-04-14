@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {IPaginatedResponse} from '../../../../common/types/IPaginatedResponse';
-import {ICurrency} from '../../../../common/types/ICurrency';
+import {ICurrency, ICurrencyAccount} from '../../../../common/types/ICurrency';
 import {firstValueFrom} from 'rxjs';
 import {environment} from '../../../../../environments/environment';
 import {IGoods} from '../../../../common/types/IGoods';
@@ -36,6 +36,10 @@ export class CurrencyService {
 
 	public async addCurrency(item: ICurrency): Promise<ICurrency> {
 		return firstValueFrom(this.http.post<ICurrency>(environment.apiUrl + 'currencies', item));
+	}
+
+	public getCurrencyAccount(id: number): Promise<ICurrencyAccount> {
+		return firstValueFrom(this.http.get<ICurrencyAccount>(environment.apiUrl + 'currencyaccounts/' + id));
 	}
 
 	public createNewCurrency(): ICurrency {

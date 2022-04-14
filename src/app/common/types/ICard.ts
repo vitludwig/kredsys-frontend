@@ -1,5 +1,6 @@
 export interface ICard {
-	id?: number;
+	id?: number; // card DB id
+	uid?: number; // card device id
 	description: string;
 	type: 'Card' | unknown;
 	expirationDate?: string; // "2022-04-02T14:54:52.794Z"

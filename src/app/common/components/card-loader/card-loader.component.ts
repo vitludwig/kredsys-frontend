@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, Renderer2} from '@angular/core';
 import {Subject, takeUntil} from 'rxjs';
-import {UserService} from '../../services/user/user.service';
+import {CustomerService} from '../../../modules/sale/services/customer/customer.service';
 
 @Component({
 	selector: 'app-card-loader',
@@ -12,19 +12,31 @@ export class CardLoaderComponent implements OnInit, OnDestroy {
 	public hidden: boolean = false;
 
 	@Output()
-	public cardId: EventEmitter<string> = new EventEmitter<string>();
+	public cardId: EventEmitter<number> = new EventEmitter<number>();
 
 	protected unsubscribe: Subject<void> = new Subject();
 	protected keydownListener: any;
+	protected czechEnglishKeymap: {[key: string]: number} = {
+		'+': 1,
+		'ě': 2,
+		'š': 3,
+		'č': 4,
+		'ř': 5,
+		'ž': 6,
+		'ý': 7,
+		'á': 8,
+		'í': 9,
+		'é': 0,
+	}
 
 	constructor(
-		public userService: UserService,
+		public customerService: CustomerService,
 		protected renderer: Renderer2,
 	) {
 	}
 
 	public ngOnInit(): void {
-		this.userService.user$
+		this.customerService.customer$
 			.pipe(takeUntil(this.unsubscribe))
 			.subscribe((user) => {
 				// user was logged out, listen for new id
@@ -41,14 +53,40 @@ export class CardLoaderComponent implements OnInit, OnDestroy {
 			// loading sequence is completed with Enter key (13)
 			if(event.keyCode === 13) {
 				this.removeKeydownListener();
-				// this.userService.loadUser(Number(this.userId));
-				this.cardId.emit(userId);
-				console.log('user id: ', this.cardId);
+
+				try {
+					let numberId = Number(userId);
+
+					if(Number.isNaN(numberId)) {
+						numberId = this.convertFromCzechToNumbers(userId);
+					}
+					this.cardId.emit(numberId);
+				} catch(e) {
+					console.error('Token loading error: ', e)
+				}
 			} else {
 				userId += event.key
 			}
 		})
 
+	}
+
+	/**
+	 * In case of czech keyboard, convert to numbers from diacritics
+	 * TODO: make this generic for other languages or check keyboard layout
+	 * @param id
+	 * @protected
+	 */
+	protected convertFromCzechToNumbers(id: string): number {
+		let numberId = '';
+		for(const char of id) {
+			if(this.czechEnglishKeymap[char] !== undefined) {
+				numberId += this.czechEnglishKeymap[char] + '';
+			} else {
+				throw new Error('Invalid id conversion on char ' + char);
+			}
+		}
+		return Number(numberId);
 	}
 
 	protected removeKeydownListener(): void {

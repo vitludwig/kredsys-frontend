@@ -4,7 +4,7 @@ import {BackButtonDirective} from './common/components/back-button/back-button.d
 import {FormsModule} from '@angular/forms';
 import { CardLoaderComponent } from './common/components/card-loader/card-loader.component';
 import {HttpClientModule} from '@angular/common/http';
-
+import {MatSnackBarModule} from '@angular/material/snack-bar';
 
 @NgModule({
 	declarations: [
@@ -15,6 +15,7 @@ import {HttpClientModule} from '@angular/common/http';
 		CommonModule,
 		FormsModule,
 		HttpClientModule,
+		MatSnackBarModule,
 	],
 	exports: [
 		CommonModule,
@@ -22,6 +23,7 @@ import {HttpClientModule} from '@angular/common/http';
 		BackButtonDirective,
 		CardLoaderComponent,
 		HttpClientModule,
+		MatSnackBarModule,
 	]
 })
 export class SharedModule {

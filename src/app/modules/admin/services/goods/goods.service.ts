@@ -17,6 +17,16 @@ export class GoodsService {
 	) {
 	}
 
+	// TODO: this is not good, think of better solution
+	public async getAllGoods(): Promise<IGoods[]> {
+		const params = {
+			offset: 0,
+			limit: 999,
+		};
+
+		return (await firstValueFrom(this.http.get<IPaginatedResponse<IGoods>>(environment.apiUrl + 'goods', {params: params}))).data;
+	}
+
 	public async getGoods(search: string = '', page: number = 1, limit = this.limit): Promise<IPaginatedResponse<IGoods>> {
 		const params = {
 			offset: (page - 1) * this.limit,

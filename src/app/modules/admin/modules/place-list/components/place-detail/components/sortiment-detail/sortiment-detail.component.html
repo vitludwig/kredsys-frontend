@@ -5,43 +5,17 @@
 	<mat-icon class="close-icon">close</mat-icon>
 </button>
 
-<h2 mat-dialog-title>{{ isEdit ? 'Upravit položku' : 'Přidat položku' }}</h2>
-<h4>{{ data.name }}</h4>
+<h2 mat-dialog-title>Přidat položku</h2>
 
 <div mat-dialog-content>
 	<mat-form-field appearance="standard"
-		class="w-100">
-		<mat-label>Název</mat-label>
-		<input matInput
-			placeholder="Název"
-			name="name"
-			required
-			[(ngModel)]="data.name"
-		>
-	</mat-form-field>
-
-	<mat-form-field appearance="standard"
-		class="w-100">
-		<mat-label>Cena</mat-label>
-		<input matInput
-			placeholder="Cena"
-			type="number"
-			name="price"
-			required
-			[(ngModel)]="data.price"
-		>
-	</mat-form-field>
-
-	<mat-form-field appearance="standard"
 		required
 		class="w-100">
-		<mat-label>Druh zboží</mat-label>
-		<mat-select name="type"
-			[(ngModel)]="data.type">
-			<mat-option [value]="ESaleItemType.BEER">Pivo</mat-option>
-			<mat-option [value]="ESaleItemType.SHOT">Panák</mat-option>
-			<mat-option [value]="ESaleItemType.FOOD">Jídlo</mat-option>
-			<mat-option [value]="ESaleItemType.OTHER">Ostatní</mat-option>
+		<mat-label>Vyber zboží</mat-label>
+		<mat-select name="goods"
+			[(ngModel)]="selectedGoods"
+		>
+			<mat-option *ngFor="let item of allGoods" [value]="item">{{ item.name }}</mat-option>
 		</mat-select>
 	</mat-form-field>
 

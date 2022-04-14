@@ -1,6 +1,10 @@
 import {Injectable} from '@angular/core';
 import {IPaginatedResponse} from '../../../../../common/types/IPaginatedResponse';
-import {EPlaceRole, IPlace, IPlaceSortimentItem} from '../../../../../common/types/IPlace';
+import {EPlaceRole, IPlace} from '../../../../../common/types/IPlace';
+import {firstValueFrom} from 'rxjs';
+import {environment} from '../../../../../../environments/environment';
+import {HttpClient} from '@angular/common/http';
+import {IGoods} from '../../../../../common/types/IGoods';
 
 @Injectable({
 	providedIn: 'root'
@@ -9,10 +13,6 @@ export class PlaceService {
 	#selectedPlace: IPlace | null;
 
 	public get selectedPlace(): IPlace | null {
-		const placeId = localStorage.getItem('selectedPlaceId')
-		if(placeId) {
-			return this.places.find((place) => place.id === Number(placeId)) ?? null;
-		}
 		return this.#selectedPlace;
 	}
 
@@ -21,22 +21,26 @@ export class PlaceService {
 		localStorage.setItem('selectedPlaceId', value?.id + '');
 	}
 
-	protected places: IPlace[] = [];
-	protected sortiment: IPlaceSortimentItem[] = [];
 	protected limit = 5;
 
-	constructor() {
-		// Create 100 users
-		this.places = Array.from({length: 2}, (_, k) => this.createNewPlace(k + 1));
+	constructor(
+		protected http: HttpClient,
+	) {
+		const placeId = localStorage.getItem('selectedPlaceId')
+		if(placeId) {
+			this.getPlace(Number(placeId)).then((place) => {
+				this.#selectedPlace = place
+			})
+		}
 	}
 
-	public async getAllPlaces(search: string = ''): Promise<IPaginatedResponse<IPlace>> {
-		return {
-			total: this.places.length,
+	public async getAllPlaces(search: string = ''): Promise<IPlace[]> {
+		const params = {
 			offset: 0,
-			limit: 100,
-			data: this.places,
+			limit: 999,
 		};
+
+		return (await firstValueFrom(this.http.get<IPaginatedResponse<IPlace>>(environment.apiUrl + 'places', {params: params}))).data;
 	}
 
 	public async getPlaces(search: string = '', page: number = 1, limit = this.limit): Promise<IPaginatedResponse<IPlace>> {
@@ -44,41 +48,42 @@ export class PlaceService {
 			offset: (page - 1) * this.limit,
 			limit: limit,
 		};
-		let data = this.places.slice(params.offset, params.offset + params.limit)
-		if (search !== '') {
-			data = data.filter((item) => (item.name.toLowerCase()).includes(search.toLowerCase()) || (item.id!.toString()).includes(search))
-		}
 
-		return {
-			total: this.places.length,
-			offset: params.offset,
-			limit: params.limit,
-			data: data,
+		return firstValueFrom(this.http.get<IPaginatedResponse<IPlace>>(environment.apiUrl + 'places', {params: params}));
+	}
+
+	public async getPlace(id: number): Promise<IPlace> {
+		return firstValueFrom(this.http.get<IPlace>(environment.apiUrl + 'places/' + id));
+	}
+
+	public async getPlaceGoods(id: number): Promise<IGoods[]> {
+		const params = {
+			offset: 0,
+			limit: 999,
 		};
+		return (await firstValueFrom(this.http.get<IPaginatedResponse<IGoods>>(environment.apiUrl + 'places/' + id + '/goods', {params: params}))).data;
 	}
 
-	public async getPlace(id: number): Promise<IPlace | undefined> {
-		return this.places.find((place) => place.id === id);
+	public async editPlace(item: IPlace): Promise<IPlace> {
+		return firstValueFrom(this.http.put<IPlace>(environment.apiUrl + 'places/' + item.id, item));
 	}
 
-	public async editPlace(place: IPlace): Promise<void> {
-		let u = this.places.find((p) => p.id === place.id);
-		if (u) {
-			u = place;
-		}
+	public async addPlace(item: IPlace): Promise<IPlace> {
+		return firstValueFrom(this.http.post<IPlace>(environment.apiUrl + 'place/', item));
 	}
 
-	public async addPlace(place: IPlace): Promise<void> {
-		this.places.push(place);
-		console.log('place added');
+	public async addGoods(goodsId: number, placeId: number): Promise<void> {
+		return firstValueFrom(this.http.post<void>(environment.apiUrl + 'places/' + placeId + '/goods?placeId='+placeId+'&goodsId='+goodsId, {
+			placeId,
+			goodsId,
+		}));
 	}
 
 	public createNewPlace(id?: number): IPlace {
 		return {
 			id: id,
 			name: id ? 'New Place ' + id : '',
-			role: EPlaceRole.BAR,
-			goods: [],
+			type: EPlaceRole.BAR,
 		};
 	}
 }

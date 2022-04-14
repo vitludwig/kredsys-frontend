@@ -1,15 +1,30 @@
 import {Injectable} from '@angular/core';
 import {ISaleItem} from '../../types/ISaleItem';
 import {IOrderItem} from '../../types/IOrderItem';
+import {BehaviorSubject, Observable} from 'rxjs';
+import {IUser} from '../../../../common/types/IUser';
 
 @Injectable({
 	providedIn: 'root'
 })
 export class OrderService {
+	#balanceSubject: BehaviorSubject<number>;
+	public balance$: Observable<number>;
+
 	public total: number = 0;
 	public items: IOrderItem[] = [];
 
+	public get balance(): number {
+		return this.#balanceSubject.getValue();
+	}
+
+	public set balance(value: number) {
+		this.#balanceSubject.next(value);
+	}
+
 	constructor() {
+		this.#balanceSubject = new BehaviorSubject<number>(0);
+		this.balance$ = this.#balanceSubject.asObservable();
 	}
 
 	public editItem(item: ISaleItem, count: number): void {

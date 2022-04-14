@@ -1,12 +1,10 @@
 <div class="summary">
-	<div class="p-5 h-100 d-flex align-items-center">
+	<div class="p-5 h-100 d-flex align-items-center justify-content-center" *ngIf="!(customerService.customer$ | async)">
 		<app-card-loader (cardId)="loadUserId($event)"></app-card-loader>
 	</div>
 
-	<ng-container *ngIf="(userService.user$ | async)">
+	<ng-container *ngIf="(customerService.customer$ | async)">
 		<div class="summary-list">
-
-
 			<div class="summary-item"
 				*ngFor="let item of orderService.items"
 			>
@@ -41,7 +39,10 @@
 
 			<button mat-raised-button
 				class="submit-btn"
-				color="primary">Potvrdit
+				color="primary"
+				(click)="submitOrder()"
+			>
+				Potvrdit
 			</button>
 		</div>
 	</ng-container>

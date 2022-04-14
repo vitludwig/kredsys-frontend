@@ -5,7 +5,6 @@ import {UserListComponent} from './modules/user-list/user-list.component';
 import {PlaceListComponent} from './modules/place-list/place-list.component';
 import {UserDetailComponent} from './modules/user-list/components/user-detail/user-detail.component';
 import {PlaceDetailComponent} from './modules/place-list/components/place-detail/place-detail.component';
-import {CardListComponent} from './modules/card-list/card-list.component';
 import {GoodsListComponent} from './modules/goods-list/goods-list.component';
 import {GoodsDetailComponent} from './modules/goods-list/components/goods-detail/goods-detail.component';
 import {CurrencyListComponent} from './modules/currency-list/currency-list.component';

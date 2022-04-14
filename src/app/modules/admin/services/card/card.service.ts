@@ -1,6 +1,5 @@
 import {Injectable} from '@angular/core';
 import {IPaginatedResponse} from '../../../../common/types/IPaginatedResponse';
-import {EPlaceRole, IPlace, IPlaceSortimentItem} from '../../../../common/types/IPlace';
 import {ICard} from '../../../../common/types/ICard';
 
 @Injectable({
@@ -8,7 +7,6 @@ import {ICard} from '../../../../common/types/ICard';
 })
 export class CardService {
 	protected cards: ICard[] = [];
-	protected sortiment: IPlaceSortimentItem[] = [];
 	protected limit = 5;
 
 	constructor() {
@@ -22,7 +20,7 @@ export class CardService {
 		};
 		let data = this.cards.slice(params.offset, params.offset + params.limit)
 		if (search !== '') {
-			data = data.filter((item) => (item.description.toLowerCase()).includes(search.toLowerCase()) || (item.id!.toString()).includes(search))
+			data = data.filter((item) => (item.description.toLowerCase()).includes(search.toLowerCase()) || (item.uid!.toString()).includes(search))
 		}
 
 		return {
@@ -33,13 +31,9 @@ export class CardService {
 		};
 	}
 
-	public async addCard(card: ICard): Promise<void> {
-		// TODO: implement
-	}
-
 	public createNewCard(id?: number): ICard {
 		return {
-			id: id,
+			uid: id,
 			description: 'card desc ' + id,
 			type: 'Card',
 			expirationDate: '', // "2022-04-02T14:54:52.794Z"

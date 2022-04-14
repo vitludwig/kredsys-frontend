@@ -14,29 +14,28 @@
 		<mat-form-field appearance="standard"
 			class="w-100"
 		>
-			<mat-label>Název</mat-label>
+			<mat-label>Popis</mat-label>
 			<input matInput
-				placeholder="Název"
+				placeholder="Popis"
 				name="description"
-				required
 				[(ngModel)]="data.description"
 			>
 		</mat-form-field>
 
 		<div class="mt-3"
-			*ngIf="!data.id">
-			<app-card-loader (cardId)="setCardId($event)"></app-card-loader>
+			*ngIf="!data.uid">
+			<app-card-loader (cardId)="data.uid = $event"></app-card-loader>
 		</div>
 
 		<mat-form-field appearance="standard"
 			class="w-100"
-			*ngIf="data.id"
+			*ngIf="data.uid"
 		>
 			<input matInput
 				required
 				disabled
 				name="id"
-				[ngModel]="data.id"
+				[ngModel]="data.uid"
 			>
 		</mat-form-field>
 

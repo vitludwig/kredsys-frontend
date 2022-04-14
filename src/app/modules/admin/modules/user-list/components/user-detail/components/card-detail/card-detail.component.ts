@@ -8,7 +8,7 @@ import {ICard} from '../../../../../../../../common/types/ICard';
   templateUrl: './card-detail.component.html',
   styleUrls: ['./card-detail.component.scss']
 })
-export class CardDetailComponent implements OnInit {
+export class CardDetailComponent {
 
   constructor(
       public placeService: PlaceService,
@@ -17,17 +17,9 @@ export class CardDetailComponent implements OnInit {
   ) {
   }
 
-  public ngOnInit(): void {
-
-  }
-
   public async onSubmit(): Promise<void> {
     console.log('submitting');
     this.dialogRef.close(this.data);
-  }
-
-  public setCardId(id: string): void {
-    this.data.id = Number(id);
   }
 
 }

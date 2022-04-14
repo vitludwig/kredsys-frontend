@@ -12,10 +12,18 @@ export class PlaceGuard implements CanActivate {
 	) {
 	}
 
-	canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
+	public async canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean> {
 		const selectedPlace = this.placeService.selectedPlace;
 		if(selectedPlace) {
 			return true;
+		} else {
+			const selectedId = localStorage.getItem('selectedPlaceId');
+			console.log('storage: ', selectedId);
+			if(selectedId) {
+				this.placeService.selectedPlace = await this.placeService.getPlace(Number(selectedId));
+				console.log('place loaded', this.placeService.selectedPlace);
+				return true;
+			}
 		}
 
 		// not logged in so redirect to login page with the return url

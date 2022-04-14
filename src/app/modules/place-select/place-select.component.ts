@@ -20,8 +20,7 @@ export class PlaceSelectComponent {
 	}
 
 	public async getAllPlaces(): Promise<IPlace[]> {
-		const places = await this.placeService.getAllPlaces();
-		return places.data.filter((place) => place.role === EPlaceRole.BAR);
+		return this.placeService.getAllPlaces();
 	}
 
 	public selectPlace(): void {

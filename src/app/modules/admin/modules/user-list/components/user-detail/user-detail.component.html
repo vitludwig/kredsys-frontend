@@ -29,16 +29,27 @@
 			</mat-form-field>
 
 			<mat-form-field appearance="standard"
-				required
 				class="w-100">
-				<mat-label>Role</mat-label>
-				<mat-select name="role"
-					[(ngModel)]="user.role">
-					<mat-option [value]="EUserRole.ADMIN">Admin</mat-option>
-					<mat-option [value]="EUserRole.VISITOR">Návštěvník</mat-option>
-					<mat-option [value]="EUserRole.MERCHANT">Prodavač</mat-option>
-				</mat-select>
+				<mat-label>E-mail</mat-label>
+				<input matInput
+					placeholder="E-mail"
+					name="email"
+					required
+					[(ngModel)]="user.email"
+				>
 			</mat-form-field>
+
+			<!--			<mat-form-field appearance="standard"-->
+			<!--				required-->
+			<!--				class="w-100">-->
+			<!--				<mat-label>Role</mat-label>-->
+			<!--				<mat-select name="role"-->
+			<!--					[(ngModel)]="user.role">-->
+			<!--					<mat-option [value]="EUserRole.ADMIN">Admin</mat-option>-->
+			<!--					<mat-option [value]="EUserRole.VISITOR">Návštěvník</mat-option>-->
+			<!--					<mat-option [value]="EUserRole.MERCHANT">Prodavač</mat-option>-->
+			<!--				</mat-select>-->
+			<!--			</mat-form-field>-->
 
 			<div>
 				<button mat-raised-button
@@ -65,9 +76,12 @@
 			<mat-list-item role="listitem"
 				*ngFor="let card of cards">
 				<div class="card-item">
-					<span>{{ card.type }} (id:{{ card.id }})</span>
+					<span>{{ card.type }} (id:{{ card.uid }})</span>
 					<button mat-raised-button
-						color="warn">Zablokovat
+						(click)="usersService.deleteUserCard(card.uid)"
+						color="warn"
+					>
+						Odstranit
 					</button>
 				</div>
 			</mat-list-item>

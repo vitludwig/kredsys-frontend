@@ -1,8 +1,8 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
-import {IPlaceSortimentItem} from '../../../../../../../../common/types/IPlace';
-import {PlaceService} from '../../../../../../services/place/place/place.service';
 import {ESaleItemType} from '../../../../../../../sale/types/ESaleItemType';
+import {IGoods} from '../../../../../../../../common/types/IGoods';
+import {GoodsService} from '../../../../../../services/goods/goods.service';
 
 @Component({
 	selector: 'app-sortiment-detail',
@@ -10,33 +10,32 @@ import {ESaleItemType} from '../../../../../../../sale/types/ESaleItemType';
 	styleUrls: ['./sortiment-detail.component.scss']
 })
 export class SortimentDetailComponent implements OnInit {
+	public allGoods: IGoods[] = [];
+	public selectedGoods: IGoods;
 	public isEdit: boolean = false;
+	public isLoading: boolean = true;
 
 	public readonly ESaleItemType = ESaleItemType;
 
 	constructor(
-		public placeService: PlaceService,
+		public goodsService: GoodsService,
 		protected dialogRef: MatDialogRef<SortimentDetailComponent>,
-		@Inject(MAT_DIALOG_DATA) public data: IPlaceSortimentItem
 	) {
 	}
 
-	public ngOnInit(): void {
-		if (!this.data) {
-			this.data = {
-				name: '',
-				price: 0,
-				currency: 'Kč',
-				type: ESaleItemType.FOOD,
-			}
-			this.isEdit = false;
-		} else {
-			this.isEdit = true;
+	public async ngOnInit(): Promise<void> {
+		try {
+			this.isLoading = true;
+			this.allGoods = await this.goodsService.getAllGoods();
+		} catch(e) {
+			console.error('Cannot load goods: ', e);
+		} finally {
+			this.isLoading = false;
 		}
 	}
 
 	public async onSubmit(): Promise<void> {
-		this.dialogRef.close(this.data);
+		this.dialogRef.close(this.selectedGoods);
 	}
 
 }

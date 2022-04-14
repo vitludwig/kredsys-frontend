@@ -1,9 +1,10 @@
 import {Component, OnDestroy, OnInit, Renderer2, ViewChild} from '@angular/core';
 import {Subject, takeUntil} from 'rxjs';
-import {UserService} from './common/services/user/user.service';
 import {NavigationEnd, Router} from '@angular/router';
 import {MatDrawer} from '@angular/material/sidenav';
 import {AuthService} from './modules/login/services/auth/auth.service';
+import {PlaceService} from './modules/admin/services/place/place/place.service';
+import {CustomerService} from './modules/sale/services/customer/customer.service';
 
 
 @Component({
@@ -21,12 +22,14 @@ export class AppComponent implements OnInit, OnDestroy {
 
 	constructor(
 		public authService: AuthService,
-		protected userService: UserService,
+		public placeService: PlaceService,
+		protected customerService: CustomerService,
 		protected router: Router,
 	) {
 	}
 
-	public ngOnInit(): void {
+	public async ngOnInit(): Promise<void> {
+
 		this.router.events
 			.pipe(takeUntil(this.unsubscribe))
 			.subscribe((event) => {

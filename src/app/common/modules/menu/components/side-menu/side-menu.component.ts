@@ -1,7 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {ERoute} from '../../../../types/ERoute';
 import {NavigationEnd, Router} from '@angular/router';
-import {UserService} from '../../../../services/user/user.service';
 import {AuthService} from '../../../../../modules/login/services/auth/auth.service';
 
 @Component({

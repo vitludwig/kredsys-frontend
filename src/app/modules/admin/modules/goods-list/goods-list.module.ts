@@ -1,5 +1,4 @@
 import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
 import {GoodsListComponent} from './goods-list.component';
 import {GoodsDetailComponent} from './components/goods-detail/goods-detail.component';
 import {SharedModule} from '../../../../shared.module';
@@ -13,14 +12,14 @@ import {MatSelectModule} from '@angular/material/select';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {MatDialogModule} from '@angular/material/dialog';
-import { GoodsTypeDetailComponent } from './components/goods-type-detail/goods-type-detail.component';
+import {GoodsTypeDetailComponent} from './components/goods-type-detail/goods-type-detail.component';
 
 
 @NgModule({
 	declarations: [
 		GoodsListComponent,
 		GoodsDetailComponent,
-  GoodsTypeDetailComponent
+		GoodsTypeDetailComponent
 	],
 	imports: [
 		SharedModule,
