@@ -33,7 +33,7 @@
 				class="w-100">
 				<mat-label>Role</mat-label>
 				<mat-select name="role"
-					[(ngModel)]="place.role">
+					[(ngModel)]="place.type">
 					<mat-option [value]="EPlaceRole.BAR">Bar</mat-option>
 					<mat-option [value]="EPlaceRole.INFO">Info stánek</mat-option>
 					<mat-option [value]="EPlaceRole.NPC">NPC</mat-option>
@@ -64,7 +64,7 @@
 		</h2>
 
 		<div cdkDropList class="sortiment-list" (cdkDropListDropped)="drop($event)">
-			<div class="sortiment-item" *ngFor="let item of sortiment" cdkDrag>
+			<div class="sortiment-item" *ngFor="let item of goods" cdkDrag>
 				<span>{{ item.name }}</span>
 				<span>{{ item.price }}Kč</span>
 			</div>

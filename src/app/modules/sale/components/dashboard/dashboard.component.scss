@@ -26,6 +26,12 @@
 
     mat-card-content {
       text-align: center;
+
+      ::ng-deep {
+        h2 {
+          line-height: 23px;
+        }
+      }
     }
   }
 }

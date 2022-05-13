@@ -3,7 +3,10 @@ import {UsersService} from '../../../../services/users/users.service';
 import {EUserRole, IUser} from '../../../../../../common/types/IUser';
 import {ActivatedRoute, Router} from '@angular/router';
 import {ERoute} from '../../../../../../common/types/ERoute';
-import {ICard} from '../../../../types/ICard';
+import {MatDialog} from '@angular/material/dialog';
+import {CardDetailComponent} from './components/card-detail/card-detail.component';
+import {ICard} from '../../../../../../common/types/ICard';
+import {CardService} from '../../../../services/card/card.service';
 
 @Component({
 	selector: 'app-user-detail',
@@ -13,6 +16,7 @@ import {ICard} from '../../../../types/ICard';
 export class UserDetailComponent implements OnInit {
 	public user: IUser | undefined;
 	public cards: ICard[] = [];
+	public newCards: ICard[] = [];
 	public isLoading: boolean = false;
 	public isEdit: boolean = false;
 
@@ -20,8 +24,10 @@ export class UserDetailComponent implements OnInit {
 
 	constructor(
 		public usersService: UsersService,
+		protected cardService: CardService,
 		protected route: ActivatedRoute,
 		protected router: Router,
+		protected dialog: MatDialog,
 	) {
 	}
 
@@ -32,12 +38,12 @@ export class UserDetailComponent implements OnInit {
 			if (userId) {
 				console.log('is edit');
 				this.user = Object.assign({}, await this.usersService.getUser(userId));
-				this.cards = await this.usersService.getUserCards(userId);
-				this.isEdit = false;
+				this.cards = (await this.usersService.getUserCards(userId)).data;
+				this.isEdit = true;
 			} else {
 				console.log('is new');
 				this.user = Object.assign({}, this.usersService.createNewUser());
-				this.isEdit = true;
+				this.isEdit = false;
 			}
 		} catch (e) {
 			// TODO: handle
@@ -49,12 +55,44 @@ export class UserDetailComponent implements OnInit {
 
 	public async onSubmit(): Promise<void> {
 		// TODO: pridat osetren erroru, globalne
-		if (this.isEdit) {
-			await this.usersService.editUser(this.user!);
-		} else {
-			await this.usersService.addUser(this.user!);
+		try {
+			let userId;
+			if(this.isEdit) {
+				await this.usersService.editUser(this.user!);
+				userId = this.user!.id;
+			} else {
+				const user = await this.usersService.addUser(this.user!);
+				userId = user.id;
+			}
+
+			if(userId) {
+				for(const card of this.newCards) {
+					await this.usersService.addUserCard(userId, card.uid!);
+				}
+			}
+		} catch(e) {
+			console.error('Cannot add user', e);
 		}
 		this.router.navigate([ERoute.ADMIN, ERoute.ADMIN_USERS]);
+	}
+
+	public openCardDetailDialog(): void {
+		let newCard =  {
+			description: '',
+			type: 'Card',
+		};
+		const dialog = this.dialog.open<CardDetailComponent, ICard>(CardDetailComponent, {
+			width: '300px',
+			minWidth: '250px',
+			autoFocus: 'dialog',
+			data: newCard,
+		});
+
+		dialog.afterClosed().subscribe((result) => {
+			this.cards.push(result);
+			this.newCards.push(result);
+			console.log('card: ', result);
+		});
 	}
 
 }

@@ -1,11 +1,12 @@
 import {Component, OnInit} from '@angular/core';
-import {EPlaceRole, IPlace, IPlaceSortimentItem} from '../../../../../../common/types/IPlace';
+import {EPlaceRole, IPlace} from '../../../../../../common/types/IPlace';
 import {ERoute} from '../../../../../../common/types/ERoute';
 import {ActivatedRoute, Router} from '@angular/router';
 import {PlaceService} from '../../../../services/place/place/place.service';
-import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
+import {CdkDragDrop} from '@angular/cdk/drag-drop';
 import {MatDialog} from '@angular/material/dialog';
 import {SortimentDetailComponent} from './components/sortiment-detail/sortiment-detail.component';
+import {IGoods} from '../../../../../../common/types/IGoods';
 
 @Component({
 	selector: 'app-place-detail',
@@ -14,9 +15,9 @@ import {SortimentDetailComponent} from './components/sortiment-detail/sortiment-
 })
 export class PlaceDetailComponent implements OnInit {
 	public place: IPlace;
+	public goods: IGoods[] = [];
 	public isLoading: boolean = false;
 	public isEdit: boolean = false;
-	public sortiment: IPlaceSortimentItem[] = [];
 
 	public readonly EPlaceRole = EPlaceRole;
 
@@ -35,12 +36,12 @@ export class PlaceDetailComponent implements OnInit {
 			if (placeId) {
 				console.log('is edit');
 				this.place = Object.assign({}, await this.placeService.getPlace(placeId));
-				await this.loadSortiment();
-				this.isEdit = false;
+				this.goods = await this.placeService.getPlaceGoods(placeId);
+				this.isEdit = true;
 			} else {
 				console.log('is new');
 				this.place = Object.assign({}, this.placeService.createNewPlace());
-				this.isEdit = true;
+				this.isEdit = false;
 			}
 		} catch (e) {
 			// TODO: handle
@@ -50,35 +51,38 @@ export class PlaceDetailComponent implements OnInit {
 		}
 	}
 
-	protected async loadSortiment(): Promise<void> {
-		this.sortiment = await this.placeService.getSortiment();
-	}
 
 	public async onSubmit(): Promise<void> {
 		// TODO: pridat osetren erroru, globalne
 		if (this.isEdit) {
 			await this.placeService.editPlace(this.place!);
 		} else {
-			await this.placeService.addPlace(this.place!);
+			const place = await this.placeService.addPlace(this.place!);
+			for(const item of this.goods) {
+				this.placeService.addGoods(item.id!, place.id!);
+			}
 		}
 		this.router.navigate([ERoute.ADMIN, ERoute.ADMIN_PLACES]);
 	}
 
 	public drop(event: CdkDragDrop<string[]>): void {
-		moveItemInArray(this.sortiment, event.previousIndex, event.currentIndex);
-		this.placeService.editSortiment(this.sortiment);
+		// TODO: implement sorting goods
+		// moveItemInArray(this.place.goods, event.previousIndex, event.currentIndex);
 	}
 
-	public openSortimentDetailDialog(data?: IPlaceSortimentItem): void {
-		const dialog = this.dialog.open<SortimentDetailComponent, IPlaceSortimentItem>(SortimentDetailComponent, {
+	public openSortimentDetailDialog(): void {
+		const dialog = this.dialog.open<SortimentDetailComponent>(SortimentDetailComponent, {
 			width: '300px',
 			minWidth: '250px',
 			autoFocus: 'dialog',
-			data: Object.assign({}, data),
 		});
 
 		dialog.afterClosed().subscribe((result) => {
-			this.loadSortiment();
+			if(this.place.id) {
+				console.log('selected: ', result);
+				this.placeService.addGoods(result.id, this.place.id);
+			}
+			this.goods.push(result)
 		});
 	}
 

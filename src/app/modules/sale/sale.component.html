@@ -5,11 +5,11 @@
 		position="end"
 		opened
 	>
-		<app-sale-summary></app-sale-summary>
+		<app-sale-summary [place]="placeService.selectedPlace"></app-sale-summary>
 	</mat-drawer>
 
 	<div class="sale-content p-3">
-		<app-dashboard></app-dashboard>
+		<app-dashboard [place]="placeService.selectedPlace"></app-dashboard>
 	</div>
 
 </mat-drawer-container>

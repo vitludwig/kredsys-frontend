@@ -23,5 +23,8 @@
 .dashboard-grid .dashboard-item mat-card-content {
   text-align: center;
 }
+.dashboard-grid .dashboard-item mat-card-content ::ng-deep h2 {
+  line-height: 23px;
+}
 
 /*# sourceMappingURL=dashboard.component.css.map */

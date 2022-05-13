@@ -1,0 +1,17 @@
+@import 'assets/styles/colors';
+
+.card-loader {
+  height: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+
+  &.hidden {
+    visibility: hidden;
+  }
+
+  img {
+    height: 100%;
+  }
+}

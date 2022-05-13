@@ -1,0 +1,4 @@
+<div class="card-loader" [class.hidden]="hidden || (customerService.customer$ | async) !== null">
+	<img src="assets/images/signal.png">
+	<h3>Načtěte kartu</h3>
+</div>

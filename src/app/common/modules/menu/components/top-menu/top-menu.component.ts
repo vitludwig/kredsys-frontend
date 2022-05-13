@@ -1,25 +1,44 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {ChargeDialogComponent} from '../../../../../modules/sale/components/charge-dialog/charge-dialog.component';
-import {UserService} from '../../../../services/user/user.service';
 import {MatDrawer} from '@angular/material/sidenav';
-import {ActivationEnd, ActivationStart, Router} from '@angular/router';
-import {filter} from 'rxjs';
+import {ActivationEnd, Router} from '@angular/router';
+import {CustomerService} from '../../../../../modules/sale/services/customer/customer.service';
+import {TransactionService} from '../../../../services/transaction/transaction.service';
+import {IPlace} from '../../../../types/IPlace';
+import {ICurrencyAccount} from '../../../../types/ICurrency';
+import {CurrencyService} from '../../../../../modules/admin/services/currency/currency.service';
+import {ITransactionRecordDeposit} from '../../../../services/transaction/types/ITransaction';
+import {Subject, takeUntil} from 'rxjs';
+import {IUser} from '../../../../types/IUser';
+import {UsersService} from '../../../../../modules/admin/services/users/users.service';
+import {OrderService} from '../../../../../modules/sale/services/order/order.service';
 
 @Component({
 	selector: 'app-top-menu',
 	templateUrl: './top-menu.component.html',
 	styleUrls: ['./top-menu.component.scss']
 })
-export class TopMenuComponent implements OnInit {
+export class TopMenuComponent implements OnInit, OnDestroy {
 	public pageName: string = '';
+	public customer: IUser | null;
+	public currencyAccount: ICurrencyAccount | null; // TODO: this is here onl temporary until we can create CurrencyAccount
 
-	@Input('side-menu')
-	public sideMenu: MatDrawer
+	@Input()
+	public sideMenu: MatDrawer;
+
+	@Input()
+	public place: IPlace;
+
+	protected unsubscribe: Subject<void> = new Subject();
 
 	constructor(
 		public router: Router,
-		public userService: UserService,
+		public customerService: CustomerService,
+		public usersService: UsersService,
+		protected transactionService: TransactionService,
+		protected currencyService: CurrencyService,
+		protected orderService: OrderService,
 		protected dialog: MatDialog,
 	) {
 		this.router.events
@@ -30,20 +49,56 @@ export class TopMenuComponent implements OnInit {
 			})
 	}
 
-	public ngOnInit(): void {
+	public async ngOnInit(): Promise<void> {
+		this.customerService.customer$
+			.pipe(takeUntil(this.unsubscribe))
+			.subscribe(async (customer) => {
+				this.customer = customer;
+				if(customer) {
+					this.loadCurrencyAccount(customer.id!);
+				} else {
+					this.currencyAccount = null;
+				}
+			})
+
+		this.orderService.balance$
+			.pipe(takeUntil(this.unsubscribe))
+			.subscribe((amount) => {
+				if(this.currencyAccount) {
+					this.currencyAccount.currentAmount = amount;
+				}
+			})
+	}
+
+	protected async loadCurrencyAccount(userId: number): Promise<void> {
+		this.currencyAccount = (await this.usersService.getUserCurrencyAccounts(userId))[0]
+		this.orderService.balance = this.currencyAccount.currentAmount;
 	}
 
 	public openChargeDialog(): void {
-		this.dialog.open(ChargeDialogComponent, {
+		const dialogRef = this.dialog.open<ChargeDialogComponent, number>(ChargeDialogComponent, {
 			width: '300px',
 			minWidth: '250px',
 			autoFocus: 'dialog',
-			data: {},
+			data: 0,
 		});
 
-		// dialogRef.afterClosed().subscribe(result => {
-		// 	console.log(`Dialog result: ${result}`);
-		// });
+		dialogRef.afterClosed().subscribe(async (result) => {
+			const records: ITransactionRecordDeposit[] = [{
+				creatorId: -1,
+				amount: result,
+				text: '',
+			}]
+			try {
+				const result = await this.transactionService.deposit(this.customer!.id!, this.place.id!, this.currencyAccount?.currencyId!, records);
+				this.currencyAccount!.currentAmount += result.amount;
+			} catch(e) {
+				console.error('Cannot deposit money: ', e)
+			}
+		});
 	}
 
+	public ngOnDestroy() {
+		this.unsubscribe.next();
+	}
 }

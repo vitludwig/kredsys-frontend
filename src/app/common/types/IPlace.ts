@@ -1,16 +1,8 @@
-import {ESaleItemType} from '../../modules/sale/types/ESaleItemType';
 
 export interface IPlace {
 	id?: number;
 	name: string;
-	role: EPlaceRole;
-}
-
-export interface IPlaceSortimentItem {
-	name: string;
-	price: number;
-	currency: unknown;
-	type: ESaleItemType;
+	type: EPlaceRole;
 }
 
 export enum EPlaceRole {

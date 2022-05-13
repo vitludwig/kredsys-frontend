@@ -1,0 +1,50 @@
+<button mat-icon-button
+	class="close-btn"
+	mat-dialog-close
+>
+	<mat-icon class="close-icon">close</mat-icon>
+</button>
+
+<h2 mat-dialog-title>Přidat kartu</h2>
+
+<div mat-dialog-content>
+	<form #cardForm="ngForm"
+		(ngSubmit)="cardForm.valid && onSubmit()">
+
+		<mat-form-field appearance="standard"
+			class="w-100"
+		>
+			<mat-label>Popis</mat-label>
+			<input matInput
+				placeholder="Popis"
+				name="description"
+				[(ngModel)]="data.description"
+			>
+		</mat-form-field>
+
+		<div class="mt-3"
+			*ngIf="!data.uid">
+			<app-card-loader (cardId)="data.uid = $event"></app-card-loader>
+		</div>
+
+		<mat-form-field appearance="standard"
+			class="w-100"
+			*ngIf="data.uid"
+		>
+			<input matInput
+				required
+				disabled
+				name="id"
+				[ngModel]="data.uid"
+			>
+		</mat-form-field>
+
+		<button mat-raised-button
+			color="primary"
+			class="submit-btn"
+			type="submit"
+		>
+			Přidat
+		</button>
+	</form>
+</div>

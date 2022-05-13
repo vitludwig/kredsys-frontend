@@ -1,8 +1,10 @@
 import {Component, OnDestroy, OnInit, Renderer2, ViewChild} from '@angular/core';
 import {Subject, takeUntil} from 'rxjs';
-import {UserService} from './common/services/user/user.service';
 import {NavigationEnd, Router} from '@angular/router';
 import {MatDrawer} from '@angular/material/sidenav';
+import {AuthService} from './modules/login/services/auth/auth.service';
+import {PlaceService} from './modules/admin/services/place/place/place.service';
+import {CustomerService} from './modules/sale/services/customer/customer.service';
 
 
 @Component({
@@ -19,13 +21,15 @@ export class AppComponent implements OnInit, OnDestroy {
 	protected userId: string = '';
 
 	constructor(
-		protected userService: UserService,
-		protected renderer: Renderer2,
+		public authService: AuthService,
+		public placeService: PlaceService,
+		protected customerService: CustomerService,
 		protected router: Router,
 	) {
 	}
 
-	public ngOnInit(): void {
+	public async ngOnInit(): Promise<void> {
+
 		this.router.events
 			.pipe(takeUntil(this.unsubscribe))
 			.subscribe((event) => {
@@ -33,39 +37,10 @@ export class AppComponent implements OnInit, OnDestroy {
 				this.sideMenu.close();
 			}
 		});
-
-		// this.initLoginListener();
 	}
 
-	protected initLoginListener(): void {
-		this.userService.user$
-			.pipe(takeUntil(this.unsubscribe))
-			.subscribe((user) => {
-				// user was unlogged, listen for new id
-				if (user === null) {
-					this.keydownListener = this.renderer.listen('document', 'keydown', (event) => {
-						console.log('event: ', event);
-						if (event.keyCode === 13) {
-							this.removeKeydownListener();
-							this.userService.login(Number(this.userId));
-							console.log('user id: ', this.userId);
-						} else {
-							this.userId += event.key
-						}
-					})
-				}
-			})
-	}
-
-	protected removeKeydownListener(): void {
-		if (this.keydownListener) {
-			this.keydownListener();
-			this.keydownListener = undefined;
-		}
-	}
 
 	public ngOnDestroy(): void {
 		this.unsubscribe.next();
-		this.removeKeydownListener();
 	}
 }

@@ -6,7 +6,6 @@ import {map, merge, startWith, Subject, switchMap, takeUntil} from 'rxjs';
 import {ActivatedRoute} from '@angular/router';
 import {debounce} from '../../../../common/decorators/debounce';
 import {ERoute} from 'src/app/common/types/ERoute';
-import {Animations} from '../../../../common/utils/animations';
 import {PlaceService} from '../../services/place/place/place.service';
 import {IPlace} from '../../../../common/types/IPlace';
 
@@ -14,9 +13,6 @@ import {IPlace} from '../../../../common/types/IPlace';
 	selector: 'app-place-list',
 	templateUrl: './place-list.component.html',
 	styleUrls: ['./place-list.component.scss'],
-	animations: [
-		Animations.expandableTable
-	],
 })
 export class PlaceListComponent implements OnInit, OnDestroy {
 	public displayedColumns: string[] = ['name', 'role', 'actions'];

@@ -26,12 +26,31 @@
 				Uživatelé
 			</a>
 			<a mat-list-item
-				[class.active]="router.url === '/' + ERoute.ADMIN + '/' + ERoute.ADMIN_CARDS"
-				[routerLink]="[ERoute.ADMIN, ERoute.ADMIN_CARDS]"
+				[class.active]="router.url === '/' + ERoute.ADMIN + '/' + ERoute.ADMIN_GOODS"
+				[routerLink]="[ERoute.ADMIN, ERoute.ADMIN_GOODS]"
 			>
-				Karty
+				Zboží
 			</a>
-
+			<a mat-list-item
+				[class.active]="router.url === '/' + ERoute.ADMIN + '/' + ERoute.ADMIN_CURRENCIES"
+				[routerLink]="[ERoute.ADMIN, ERoute.ADMIN_CURRENCIES]"
+			>
+				Měny
+			</a>
 		</div>
+
+		<a mat-list-item
+			[routerLink]="ERoute.PLACE_SELECT"
+			[class.active]="router.url === '/' + ERoute.PLACE_SELECT">
+			Vybrat místo
+		</a>
+
+		<a mat-list-item
+			href="#"
+			*ngIf="authService.isLogged"
+			(click)="authService.logout()"
+		>
+			Odhlásit
+		</a>
 	</mat-nav-list>
 </div>

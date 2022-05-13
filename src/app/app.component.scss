@@ -1,5 +1,5 @@
 @import "../assets/styles/sizes";
 .main-content {
-  height: calc(100vh - #{$mat-toolbar-height});
+  min-height: calc(100vh - #{$mat-toolbar-height});
   padding: 15px;
 }
