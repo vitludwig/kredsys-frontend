@@ -12,7 +12,7 @@ export class CardLoaderComponent implements OnInit, OnDestroy {
 	public hidden: boolean = false;
 
 	@Output()
-	public cardId: EventEmitter<number> = new EventEmitter<number>();
+	public cardIdChange: EventEmitter<number> = new EventEmitter<number>();
 
 	protected unsubscribe: Subject<void> = new Subject();
 	protected keydownListener: any;
@@ -60,7 +60,7 @@ export class CardLoaderComponent implements OnInit, OnDestroy {
 					if(Number.isNaN(numberId)) {
 						numberId = this.convertFromCzechToNumbers(userId);
 					}
-					this.cardId.emit(numberId);
+					this.cardIdChange.emit(numberId);
 				} catch(e) {
 					console.error('Token loading error: ', e)
 				}

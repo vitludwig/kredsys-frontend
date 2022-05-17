@@ -1,6 +1,9 @@
-import {Injectable, OnInit} from '@angular/core';
-import {EUserRole, IUser} from '../../../../common/types/IUser';
-import {HashMap} from '../../../../common/types/HashMap';
+import {Injectable} from '@angular/core';
+import {IUser} from '../../../../common/types/IUser';
+import {HttpClient} from '@angular/common/http';
+import {environment} from '../../../../../environments/environment';
+import {IAuthenticationResponse} from './types/IAuthenticationResponse';
+import {firstValueFrom} from 'rxjs';
 
 @Injectable({
 	providedIn: 'root'
@@ -10,11 +13,12 @@ export class AuthService {
 
 	public get isLogged(): boolean {
 		return true;
-		// TODO: uncomment after login backend is available
 		// return this.user !== null || !!localStorage.getItem('userId');
 	}
 
-	constructor() {
+	constructor(
+		protected http: HttpClient,
+	) {
 		const userId = Number(localStorage.getItem('userId')) ?? null;
 		// if(userId) {
 		// 	this.getUser(userId).then((user) => this.user = user);
@@ -26,16 +30,11 @@ export class AuthService {
 		return;
 	}
 
-	public async login(username: string, password: string): Promise<void> {
-		// if(username === 'test' && password === 'test') {
-		// 	this.user = users['2'];
-		// 	localStorage.setItem('userId', '2');
-		// }
-		//
-		// if(username === 'admin' && password === 'admin') {
-		// 	this.user = users['1'];
-		// 	localStorage.setItem('userId', '1');
-		// }
+	public async login(email: string, password: string): Promise<IAuthenticationResponse> {
+		return firstValueFrom(this.http.post<IAuthenticationResponse>(environment.apiUrl + 'authentication', {
+			email: email,
+			password: password,
+		}));
 	}
 
 	public async logout(): Promise<void> {

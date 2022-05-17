@@ -42,6 +42,12 @@ export class CurrencyService {
 		return firstValueFrom(this.http.get<ICurrencyAccount>(environment.apiUrl + 'currencyaccounts/' + id));
 	}
 
+	public editCurrencyAccount(id: number, data: ICurrencyAccount): Promise<ICurrencyAccount> {
+		return firstValueFrom(this.http.put<ICurrencyAccount>(environment.apiUrl + 'currencyaccounts/' + id, {
+			overdraftLimit: data.overdraftLimit
+		}));
+	}
+
 	public createNewCurrency(): ICurrency {
 		return {
 			name: '',

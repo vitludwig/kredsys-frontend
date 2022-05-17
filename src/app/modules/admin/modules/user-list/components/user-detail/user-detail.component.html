@@ -11,12 +11,24 @@
 <div class="row"
 	*ngIf="!isLoading"
 >
-	<div class="col-sx-12 col-md-6">
+	<div class="col-xs-12 col-md-6">
 		<h2>{{ isEdit ? user.name : 'Nový uživatel' }}</h2>
 
 		<form #userForm="ngForm"
 			(ngSubmit)="userForm.valid && onSubmit()"
 		>
+			<mat-form-field appearance="standard"
+				class="w-100">
+				<mat-label>Členské ID</mat-label>
+				<input matInput
+					placeholder="Členské ID"
+					name="memberId"
+					type="number"
+					required
+					[(ngModel)]="user.memberId"
+				>
+			</mat-form-field>
+
 			<mat-form-field appearance="standard"
 				class="w-100">
 				<mat-label>Jméno</mat-label>
@@ -39,6 +51,21 @@
 				>
 			</mat-form-field>
 
+			<ng-container *ngIf="user.id">
+				<mat-form-field appearance="standard"
+					class="w-100"
+					*ngFor="let account of accounts"
+				>
+					<mat-label>Limit přečerpání {{ currencies[account.currencyId].code }}</mat-label>
+					<input matInput
+						placeholder="Limit přečerpání"
+						type="number"
+						[name]="'overdraftLimit' + account.currencyId"
+						[(ngModel)]="account.overdraftLimit"
+					>
+					<span matSuffix>{{ currencies[account.currencyId].symbol }}</span>
+				</mat-form-field>
+			</ng-container>
 			<!--			<mat-form-field appearance="standard"-->
 			<!--				required-->
 			<!--				class="w-100">-->
@@ -62,7 +89,7 @@
 			</div>
 		</form>
 	</div>
-	<div class="col-sx-12 col-md-6">
+	<div class="col-xs-12 col-md-6">
 		<h2 class="d-flex justify-content-between">
 			<span>Napárované karty</span>
 			<button mat-button
@@ -78,7 +105,7 @@
 				<div class="card-item">
 					<span>{{ card.type }} (id:{{ card.uid }})</span>
 					<button mat-raised-button
-						(click)="usersService.deleteUserCard(card.uid)"
+						(click)="deleteCard(card.id)"
 						color="warn"
 					>
 						Odstranit

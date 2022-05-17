@@ -63,8 +63,8 @@ export class UsersService {
 		return (await firstValueFrom(this.http.get<IPaginatedResponse<ICurrencyAccount>>(environment.apiUrl + 'users/' + userId + '/accounts', {params: params}))).data;
 	}
 
-	public async addUserCard(userId: number, cardUid: number, description: string = '', type: string = 'Card'): Promise<void> {
-		return firstValueFrom(this.http.post<void>(environment.apiUrl + 'users/' + userId + '/card', {
+	public async addUserCard(userId: number, cardUid: number, description: string = '', type: string = 'Card'): Promise<ICard> {
+		return firstValueFrom(this.http.post<ICard>(environment.apiUrl + 'users/' + userId + '/card', {
 			uid: cardUid,
 			type: type,
 			description: description,
