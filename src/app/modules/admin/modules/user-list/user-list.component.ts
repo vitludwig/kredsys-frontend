@@ -11,6 +11,7 @@ import {ActivatedRoute} from '@angular/router';
 import {MatDialog} from '@angular/material/dialog';
 import {UserDetailComponent} from './components/user-detail/user-detail.component';
 import {Animations} from '../../../../common/utils/animations';
+import {AlertService} from '../../../../common/services/alert/alert.service';
 
 @Component({
 	selector: 'app-user-list',
@@ -41,7 +42,8 @@ export class UserListComponent implements OnInit, OnDestroy {
 	constructor(
 		public route: ActivatedRoute,
 		protected usersService: UsersService,
-		protected dialog: MatDialog
+		protected dialog: MatDialog,
+		protected alertService: AlertService,
 	) {
 
 	}
@@ -88,11 +90,15 @@ export class UserListComponent implements OnInit, OnDestroy {
 		this.loadUsers(value);
 	}
 
-	protected async loadUsers(search: string = '', page: number = 1): Promise<void> {
-		const users = await this.usersService.getUsers(search, page);
-
-		this.usersData = users.data;
-		this.usersTotal = users.total;
+	public async blockUser(user: IUser): Promise<void> {
+		try {
+			await this.usersService.blockUser(user);
+			await this.loadUsers();
+			this.alertService.success('Uživatel zablokován');
+		} catch(e) {
+			console.error('Cannot block user', e);
+			this.alertService.error('Nepodařilo se zablokovat uživatele');
+		}
 	}
 
 	public applyFilter(event: Event): void {
@@ -111,6 +117,14 @@ export class UserListComponent implements OnInit, OnDestroy {
 			autoFocus: 'dialog',
 			data: Object.assign({}, data),
 		});
+	}
+
+	protected async loadUsers(search: string = '', page: number = 1): Promise<void> {
+		const users = await this.usersService.getUsers(search, page);
+		const data = users.data = users.data.filter((user) => !user.blocked);
+
+		this.usersData = data;
+		this.usersTotal = users.total;
 	}
 
 	public ngOnDestroy(): void {

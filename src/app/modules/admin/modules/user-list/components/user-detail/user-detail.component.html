@@ -12,8 +12,10 @@
 	*ngIf="!isLoading"
 >
 	<div class="col-xs-12 col-md-6">
-		<h2>{{ isEdit ? user.name : 'Nový uživatel' }}</h2>
-
+		<div class="d-flex justify-content-between">
+			<h2>{{ isEdit ? user.name : 'Nový uživatel' }}</h2>
+			<h3 *ngIf="accounts[0]">Zůstatek: {{ accounts[0].currentAmount }} Kč</h3>
+		</div>
 		<form #userForm="ngForm"
 			(ngSubmit)="userForm.valid && onSubmit()"
 		>

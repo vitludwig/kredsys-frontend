@@ -11,15 +11,24 @@
 				<mat-icon>menu</mat-icon>
 			</button>
 			{{ pageName }}
+			<span class="place-name" *ngIf="place && pageName === 'Prodej'">({{ place.name }})</span>
 		</div>
-		<ng-container *ngIf="customer && currencyAccount">
+		<ng-container *ngIf="customer">
 			<div>{{ customer.name }}</div>
 
 			<div>
-				<small class="me-3">Zůstatek: {{currencyAccount.currentAmount ?? 0 }} Kč</small>
+				<ng-container *ngIf="currencyAccount">
+					<small>Zůstatek: {{currencyAccount.currentAmount ?? 0 }} Kč</small>
+				</ng-container>
+
+				<ng-container *ngIf="!currencyAccount">
+					<strong>Uživatel ještě neprovedl první nabití</strong>
+				</ng-container>
+
 				<button mat-button
 					mat-raised-button
 					color="accent"
+					class="ms-3"
 					(click)="openChargeDialog()"
 				>
 					Dobít

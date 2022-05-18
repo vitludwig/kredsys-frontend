@@ -10,6 +10,7 @@ import {GoodsDetailComponent} from './modules/goods-list/components/goods-detail
 import {CurrencyListComponent} from './modules/currency-list/currency-list.component';
 import {CurrencyDetailComponent} from './modules/currency-list/components/currency-detail/currency-detail.component';
 import {GoodsTypeDetailComponent} from './modules/goods-list/components/goods-type-detail/goods-type-detail.component';
+import {ChargeComponent} from './modules/charge/charge.component';
 
 const routes: Routes = [
 	{
@@ -135,6 +136,14 @@ const routes: Routes = [
 			}
 		]
 	},
+	{
+		path: ERoute.ADMIN_CHARGE,
+		component: ChargeComponent,
+		data: {
+			name: 'Nabít peňauze'
+		}
+	}
+
 ];
 
 @NgModule({

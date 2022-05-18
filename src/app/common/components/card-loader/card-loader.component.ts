@@ -51,7 +51,7 @@ export class CardLoaderComponent implements OnInit, OnDestroy {
 
 		this.keydownListener = this.renderer.listen('document', 'keydown', (event) => {
 			// loading sequence is completed with Enter key (13)
-			if(event.keyCode === 13) {
+			if(event.keyCode === 13 && userId.length > 0) {
 				this.removeKeydownListener();
 
 				try {
@@ -64,7 +64,7 @@ export class CardLoaderComponent implements OnInit, OnDestroy {
 				} catch(e) {
 					console.error('Token loading error: ', e)
 				}
-			} else {
+			} else if(event.key.length === 1) {
 				userId += event.key
 			}
 		})

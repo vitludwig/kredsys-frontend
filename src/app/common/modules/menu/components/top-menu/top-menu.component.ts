@@ -6,7 +6,7 @@ import {ActivationEnd, Router} from '@angular/router';
 import {CustomerService} from '../../../../../modules/sale/services/customer/customer.service';
 import {TransactionService} from '../../../../services/transaction/transaction.service';
 import {IPlace} from '../../../../types/IPlace';
-import {ICurrencyAccount} from '../../../../types/ICurrency';
+import {ICurrency, ICurrencyAccount} from '../../../../types/ICurrency';
 import {CurrencyService} from '../../../../../modules/admin/services/currency/currency.service';
 import {ITransactionRecordDeposit} from '../../../../services/transaction/types/ITransaction';
 import {Subject, takeUntil} from 'rxjs';
@@ -23,6 +23,8 @@ export class TopMenuComponent implements OnInit, OnDestroy {
 	public pageName: string = '';
 	public customer: IUser | null;
 	public currencyAccount: ICurrencyAccount | null; // TODO: this is here onl temporary until we can create CurrencyAccount
+
+	protected defaultCurrency: ICurrency;
 
 	@Input()
 	public sideMenu: MatDrawer;
@@ -68,11 +70,13 @@ export class TopMenuComponent implements OnInit, OnDestroy {
 					this.currencyAccount.currentAmount = amount;
 				}
 			})
+
+		this.defaultCurrency = await this.currencyService.getDefaultCurrency();
 	}
 
 	protected async loadCurrencyAccount(userId: number): Promise<void> {
-		this.currencyAccount = (await this.usersService.getUserCurrencyAccounts(userId))[0]
-		this.orderService.balance = this.currencyAccount.currentAmount;
+		this.currencyAccount = (await this.usersService.getUserCurrencyAccounts(userId))[0];
+		this.orderService.balance = this.currencyAccount?.currentAmount;
 	}
 
 	public openChargeDialog(): void {
@@ -90,8 +94,16 @@ export class TopMenuComponent implements OnInit, OnDestroy {
 				text: '',
 			}]
 			try {
-				const result = await this.transactionService.deposit(this.customer!.id!, this.place.id!, this.currencyAccount?.currencyId!, records);
-				this.currencyAccount!.currentAmount += result.amount;
+
+				const result = await this.transactionService.deposit(
+					this.customer!.id!,
+					this.place.id!,
+					this.currencyAccount?.currencyId ?? this.defaultCurrency.id!,
+					records
+				);
+				if(this.currencyAccount) {
+					this.currencyAccount.currentAmount += result.amount;
+				}
 			} catch(e) {
 				console.error('Cannot deposit money: ', e)
 			}

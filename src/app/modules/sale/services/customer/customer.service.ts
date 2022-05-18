@@ -1,6 +1,7 @@
 import {Injectable, Renderer2} from '@angular/core';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {IUser} from '../../../../common/types/IUser';
+import {OrderService} from '../order/order.service';
 
 @Injectable({
 	providedIn: 'root'
@@ -18,9 +19,12 @@ export class CustomerService {
 	public set customer(value: IUser | null) {
 		this.#customerSubject.next(value);
 		this.isLogged = value !== null;
+		this.orderService.clearOrder();
 	}
 
-	constructor() {
+	constructor(
+		protected orderService: OrderService,
+	) {
 		this.#customerSubject = new BehaviorSubject<IUser | null>(null);
 		this.customer$ = this.#customerSubject.asObservable();
 	}

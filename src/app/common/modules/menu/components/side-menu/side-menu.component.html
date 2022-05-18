@@ -37,6 +37,12 @@
 			>
 				Měny
 			</a>
+			<a mat-list-item
+				[class.active]="router.url === '/' + ERoute.ADMIN + '/' + ERoute.ADMIN_CHARGE"
+				[routerLink]="[ERoute.ADMIN, ERoute.ADMIN_CHARGE]"
+			>
+				Nabíjedlo
+			</a>
 		</div>
 
 		<a mat-list-item

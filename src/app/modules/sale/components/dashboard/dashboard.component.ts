@@ -3,17 +3,18 @@ import {SaleService} from '../../services/sale/sale.service';
 import {OrderService} from '../../services/order/order.service';
 import {IPlace} from '../../../../common/types/IPlace';
 import {PlaceService} from '../../../admin/services/place/place/place.service';
-import {IGoods, IGoodsType} from '../../../../common/types/IGoods';
+import {IGoodsType} from '../../../../common/types/IGoods';
 import {ISaleItem} from '../../types/ISaleItem';
 import {GoodsService} from '../../../admin/services/goods/goods.service';
 import {Utils} from '../../../../common/utils/Utils';
+import {CustomerService} from '../../services/customer/customer.service';
 
 @Component({
 	selector: 'app-dashboard',
 	templateUrl: './dashboard.component.html',
 	styleUrls: ['./dashboard.component.scss']
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent {
 	#place: IPlace;
 
 	public get place(): IPlace {
@@ -33,11 +34,8 @@ export class DashboardComponent implements OnInit {
 		protected orderService: OrderService,
 		protected placeService: PlaceService,
 		protected goodsService: GoodsService,
+		protected customerService: CustomerService,
 	) {
-	}
-
-	public ngOnInit(): void {
-
 	}
 
 	protected async loadItems(): Promise<void> {
@@ -58,10 +56,9 @@ export class DashboardComponent implements OnInit {
 		}
 	}
 
-	public openAddDialog(item: ISaleItem): void {
-		this.saleService.openSaleDialog({
-			item: item,
-			edit: false,
-		})
+	public addItem(item: ISaleItem): void {
+		if(this.customerService.isLogged) {
+			this.orderService.addItem(item);
+		}
 	}
 }

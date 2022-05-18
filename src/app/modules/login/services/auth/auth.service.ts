@@ -4,6 +4,7 @@ import {HttpClient} from '@angular/common/http';
 import {environment} from '../../../../../environments/environment';
 import {IAuthenticationResponse} from './types/IAuthenticationResponse';
 import {firstValueFrom} from 'rxjs';
+import {UsersService} from '../../../admin/services/users/users.service';
 
 @Injectable({
 	providedIn: 'root'
@@ -18,16 +19,12 @@ export class AuthService {
 
 	constructor(
 		protected http: HttpClient,
+		protected usersService: UsersService,
 	) {
 		const userId = Number(localStorage.getItem('userId')) ?? null;
-		// if(userId) {
-		// 	this.getUser(userId).then((user) => this.user = user);
-		// }
-	}
-
-	public async getUser(id: number): Promise<void> {
-		// return users[id + ''];
-		return;
+		if(userId) {
+			this.usersService.getUser(userId).then((user) => this.user = user);
+		}
 	}
 
 	public async login(email: string, password: string): Promise<IAuthenticationResponse> {

@@ -6,6 +6,7 @@ import {PlaceListModule} from './modules/place-list/place-list.module';
 import {SharedModule} from '../../shared.module';
 import {GoodsListModule} from './modules/goods-list/goods-list.module';
 import {CurrencyListModule} from './modules/currency-list/currency-list.module';
+import {ChargeModule} from './modules/charge/charge.module';
 
 
 @NgModule({
@@ -19,6 +20,7 @@ import {CurrencyListModule} from './modules/currency-list/currency-list.module';
 		PlaceListModule,
 		GoodsListModule,
 		CurrencyListModule,
+		ChargeModule,
 	]
 })
 export class AdminModule {
