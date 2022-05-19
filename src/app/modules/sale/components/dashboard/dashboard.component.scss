@@ -28,6 +28,7 @@
         .dashboard__item-icon {
           filter: url(#filter);
           @include make-retro-vision;
+
         }
       }
 
@@ -38,7 +39,7 @@
       }
 
       &-icon {
-        fill: map-get($primary,500);
+        fill: rgba(map-get($primary,500),.5);
         height: 100px;
       }
 

@@ -44,7 +44,7 @@
   #filter{
     &__flood{
       &--primary{
-        flood-color: map_get($warn, 500)
+        flood-color: map_get($primary, 500)
       }
       &--secondary{
         flood-color: map_get($accent, 500)

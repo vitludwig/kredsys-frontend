@@ -10,6 +10,8 @@
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    @include make-retro-vision;
+    filter: url(#filter);
 
     &.hidden {
       visibility: hidden;
