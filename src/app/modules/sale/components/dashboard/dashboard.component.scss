@@ -39,9 +39,12 @@
       }
 
       &-icon {
-        fill: rgba(map-get($primary,500),.5);
+        fill: rgba(map-get($primary,500),.25);
+        stroke: rgba(map-get($primary,500),1);
+        stroke-width: .4px;
         height: 100px;
         opacity: .75;
+        margin: 10px;
       }
 
       mat-card-content {
