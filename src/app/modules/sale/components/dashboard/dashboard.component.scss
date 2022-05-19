@@ -41,6 +41,7 @@
       &-icon {
         fill: rgba(map-get($primary,500),.5);
         height: 100px;
+        opacity: .75;
       }
 
       mat-card-content {

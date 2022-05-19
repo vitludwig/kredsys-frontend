@@ -22,6 +22,7 @@
       height: 100px;
       margin: var(--cy__gap) 0;
       fill: map_get($primary, 500);
+      opacity: .5;
     }
   }
 }
