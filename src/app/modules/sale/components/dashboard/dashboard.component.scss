@@ -1,35 +1,54 @@
-@import "../../../../../assets/styles/sizes";
+@mixin dashboard-theme($theme) {
 
-.dashboard-grid {
-  width: 100%;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
+  $primary: map-get(map-get($theme, color), primary);
+  $warn: map-get(map-get($theme, color), warn);
+  $background: map-get($theme, background);
+  $foreground: map-get($theme, foreground);
 
-  .dashboard-item {
-    flex: 1;
-    width: $sale-card-size;
-    height: $sale-card-size;
-    margin: 1rem;
-    cursor: pointer;
+  $sale-card-size: map-get(map-get($theme, custom), sale-card-size);
 
-    .item-image {
-      padding: 0 1rem;
-      margin-bottom: .5rem;
-      text-align: center;
+  .dashboard {
+    &__grid {
+      width: 100%;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    &__item {
+      flex: 1;
+      width: $sale-card-size;
+      height: $sale-card-size;
+      margin: 1rem;
+      cursor: pointer;
 
-      img {
-        width: auto;
+      &:hover {
+        box-shadow: inset 0px 0px 2rem map-get($primary,500);
+
+        .mat-card-content,
+        .dashboard__item-icon {
+          filter: url(#filter);
+          @include make-retro-vision;
+        }
+      }
+
+      &-image {
+        padding: 0 1rem;
+        margin-bottom: .5rem;
+        text-align: center;
+      }
+
+      &-icon {
+        fill: map-get($primary,500);
         height: 100px;
       }
-    }
 
-    mat-card-content {
-      text-align: center;
+      mat-card-content {
+        text-align: center;
 
-      ::ng-deep {
-        h2 {
-          line-height: 23px;
+        ::ng-deep {
+          h2 {
+            line-height: 23px;
+          }
         }
       }
     }

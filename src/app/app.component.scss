@@ -1,5 +1,26 @@
-@import "../assets/styles/sizes";
-.main-content {
-  min-height: calc(100vh - #{$mat-toolbar-height});
-  padding: 15px;
+@mixin app-theme($theme) {
+
+  $primary: map-get(map-get($theme, color), primary);
+  $warn: map-get(map-get($theme, color), warn);
+  $background: map-get($theme, background);
+  $foreground: map-get($theme, foreground);
+
+  $mat-toolbar-height: map-get(map-get($theme, custom), mat-toolbar-height);
+
+  .main-content {
+    min-height: calc(100vh - #{$mat-toolbar-height});
+    padding: 15px;
+  }
+
+  .mat-drawer {
+    margin-top: -2px;
+    margin-left: -2px;
+    margin-bottom: -2px;
+  }
+
+  .mat-toolbar {
+    border-bottom: 2px solid rgba(map_get($primary, 500),.25);
+  }
 }
+
+

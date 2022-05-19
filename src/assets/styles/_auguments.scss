@@ -1,0 +1,24 @@
+@mixin auguments-theme($theme) {
+
+  $primary: map-get(map-get($theme, color), primary);
+  $accent: map-get(map-get($theme, color), accent);
+  $warn: map-get(map-get($theme, color), warn);
+  $background: map-get($theme, background);
+  $foreground: map-get($theme, foreground);
+
+
+  [data-augmented-ui]{
+    --aug-tr: 15px;
+    --aug-bl: 15px;
+    --aug-tl: 15px;
+    --aug-br: 15px;
+    --aug-br-inset2: 0%;
+    --aug-border-all: 2px;
+    --aug-p: #{map-get($primary,500)};
+    --aug-w: #{map-get($primary,500)};
+    --aug-border-bg: #{map-get($primary,500)};
+    --aug-border-opacity: .25;
+    --aug-inlay-all: 10px;
+    --aug-inlay-bg: transparent;
+  }
+}

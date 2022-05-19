@@ -1,12 +1,16 @@
 <div class="dashboard">
-	<div class="dashboard-grid">
+	<div class="dashboard__grid">
 		<div *ngFor="let item of items">
-			<mat-card class="dashboard-item mat-elevation-z4"
+			<mat-card class="dashboard__item mat-elevation-z4"
 				mat-ripple
 				(click)="openAddDialog(item)"
+        data-augmented-ui="tl-clip br-2-clip-y both"
 			>
-				<div class="item-image">
-					<img [src]="'assets/images/' + item.icon + '.jpg'">
+				<div class="dashboard__item-image">
+
+          <svg viewBox="0 0 24 24" class="dashboard__item-icon">
+            <use [attr.xlink:href]="'assets/images/' + item.icon + '.svg#icon--' + item.icon"></use>
+          </svg>
 				</div>
 				<mat-card-content>
 					<h2 class="mb-0">{{ item.name }}</h2>

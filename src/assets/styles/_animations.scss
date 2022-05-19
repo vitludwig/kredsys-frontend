@@ -1,0 +1,98 @@
+@mixin animations-theme($theme) {
+
+  $primary: map-get(map-get($theme, color), primary);
+  $accent: map-get(map-get($theme, color), accent);
+  $warn: map-get(map-get($theme, color), warn);
+  $background: map-get($theme, background);
+  $foreground: map-get($theme, foreground);
+
+  .top-r,
+  .bot-r,
+  .top-g,
+  .bot-g {
+    stroke: #ffffff;
+  }
+
+  .top-r {
+    stroke-width: 100px;
+    animation: topani 1.5s linear infinite;
+  }
+
+  .bot-r {
+    stroke-width: 100px;
+    animation: botani 2s linear infinite;
+  }
+
+  .top-g {
+    stroke-width: 50px;
+    animation: topani 2s linear reverse infinite;
+  }
+
+  .bot-g {
+    stroke-width: 50%;
+    animation: botani 1.5s linear reverse infinite;
+  }
+
+  .filter{
+    &wrapper {
+      position: absolute;
+      z-index: -1;
+      pointer-events: none;
+      opacity: 0;
+    }
+  }
+  #filter{
+    &__flood{
+      &--primary{
+        flood-color: map_get($warn, 500)
+      }
+      &--secondary{
+        flood-color: map_get($accent, 500)
+      }
+    }
+  }
+
+
+}
+
+@mixin createRandomKeyframes( $numberOfKeys ) {
+  $delta: round(100/$numberOfKeys);
+
+  @for $i from 1 through $numberOfKeys {
+    $time: ($i*$delta - random($delta)) +'%';
+    #{$time} {
+      stroke-width: random(200) + px;
+    }
+  }
+}
+
+@keyframes topani {
+  @include createRandomKeyframes( 10 + random(10) );
+}
+
+@keyframes botani {
+  @include createRandomKeyframes( 10 + random(10) );
+}
+
+@keyframes retro-future-tv-lines {
+  0% {
+    -webkit-mask-position: center 0rem;
+    mask-position: center 0rem;
+  }
+  100% {
+    -webkit-mask-position: center -1.5rem;
+    mask-position: center -1.5rem;
+  }
+}
+
+
+@mixin make-retro-vision($color: black){
+  -webkit-mask-image: repeating-linear-gradient($color, $color 0.5rem, rgba(0, 0, 0, 0.5) 0.75rem);
+  mask-image: repeating-linear-gradient($color, $color 0.5rem, rgba(0, 0, 0, 0.5) 0.75rem);
+  -webkit-mask-position: center 0rem;
+  mask-position: center 0rem;
+  animation: retro-future-tv-lines linear infinite;
+  animation-duration: 500ms;
+  --playstate: var(--media-prefers-reduced-motion) paused;
+  animation-play-state: var(--playstate, running);
+}

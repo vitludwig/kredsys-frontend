@@ -1,13 +1,29 @@
-@import "../../../assets/styles/sizes";
-.sale-container {
-  min-height: calc(100vh - #{$mat-toolbar-height});
-  margin: -15px;
+@mixin sale-theme($theme) {
 
-  .sale-content {
-    height: 100%;
-  }
+  $primary: map-get(map-get($theme, color), primary);
+  $warn: map-get(map-get($theme, color), warn);
+  $background: map-get($theme, background);
+  $foreground: map-get($theme, foreground);
 
-  .sale-sidebar {
-    width: 300px;
+  $mat-toolbar-height: map-get(map-get($theme, custom), mat-toolbar-height);
+
+  .sale-container {
+    min-height: calc(100vh - #{$mat-toolbar-height});
+    margin: -15px;
+
+    .sale-content {
+      height: 100%;
+    }
+
+    .sale-sidebar {
+      width: 300px;
+      margin-top: -2px;
+      margin-right: -2px;
+      margin-bottom: -2px;
+      height: 50%;
+      top: $mat-toolbar-height !important;
+    }
   }
 }
+
+

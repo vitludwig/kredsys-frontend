@@ -1,4 +1,11 @@
-@mixin expandable-table {
+@mixin expandable-table($theme) {
+
+  $primary: map-get(map-get($theme, color), primary);
+  $accent: map-get(map-get($theme, color), accent);
+  $warn: map-get(map-get($theme, color), warn);
+  $background: map-get($theme, background);
+  $foreground: map-get($theme, foreground);
+
   .mat-table {
     width: 100%;
     display: table;
@@ -6,15 +13,15 @@
     .table-row {
       &:not(.expanded-row) {
         &:hover {
-          background: #eee;
+          background: rgba(map_get($primary, 500),.10);
         }
         &:active {
-          background: #efefef;
+          background: rgba(map_get($warn, 500),.10);
         }
       }
 
       &.expanded-row {
-        background: #eee;
+        background: rgba(map_get($accent, 500),.10);;
       }
 
       td {

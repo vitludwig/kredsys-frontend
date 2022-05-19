@@ -1,53 +1,173 @@
 @use '@angular/material' as mat;
 
-// define 3 theme color
-// mat-palette accepts $palette-name, main, lighter and darker variants
-$cyber-theme-primary: mat.define-palette($mat-pink, 400, 200, 500);
-$cyber-theme-accent: mat-palette($mat-light-blue);
-$cyber-theme-warn: mat-palette($mat-deep-orange, A200);
-$cyber-theme-background: mat-palette($mat-grey, 900);
+@import 'assets/styles/mixins';
+@import 'assets/styles/animations';
+@import 'assets/styles/auguments';
 
-// create theme (use mat-dark-theme for themes with dark backgrounds)
-$cyber-theme: mat.define-dark-theme(
-    $cyber-theme-primary,
-    $cyber-theme-accent,
-    $cyber-theme-warn
+@import 'app/common/components/card-loader/card-loader.component';
+@import 'app/modules/sale/components/dashboard/dashboard.component';
+@import 'app/app.component';
+@import 'app/modules/sale/sale.component';
+
+$cy-primary: (
+  50: #d2348a,
+  100: #d2348a,
+  200: #d2348a,
+  300: #d2348a,
+  400: #d2348a,
+  500: #d2348a,
+  600: #d2348a,
+  700: #d2348a,
+  800: #d2348a,
+  900: #d2348a,
+  A100: #ff8a80,
+  A200: #ff5252,
+  A400: #ff1744,
+  A700: #d50000,
+  contrast: (
+    50: rgba(black, 0.87),
+    100: rgba(black, 0.87),
+    200: rgba(black, 0.87),
+    300: white,
+    400: white,
+    500: white,
+    600: white,
+    700: white,
+    800: white,
+    900: white,
+    A100: $black-87-opacity,
+    A200: white,
+    A400: white,
+    A700: white
+  )
 );
 
-@function modify-background($theme, $background-color) {
-  // A theme is a map with the following structure:
-  // (
-  //   color: (..., background),
-  //   ...,
-  //   background: ...
-  // )
-  //
-  // We need to replace the background color in two palettes.
-  // Once in the background palette inside the color map.
-  // Again in the background palette itself.
 
-  // Replace the background in the color object's background palette.
-  $theme-color: map-get($theme, color);
-  $color-background-palette: map-get($theme-color, background);
-  $color-background-palette: map-merge($color-background-palette, (background: $background-color));
-  $color-background-palette: map-merge($color-background-palette, (raised-button: $background-color));
+$cy-accent: (
+  50: #7859a0,
+  100: #7859a0,
+  200: #7859a0,
+  300: #7859a0,
+  400: #7859a0,
+  500: #7859a0,
+  600: #7859a0,
+  700: #7859a0,
+  800: #7859a0,
+  900: #7859a0,
+  A100: #ff8a80,
+  A200: #ff5252,
+  A400: #ff1744,
+  A700: #d50000,
+  contrast: (
+    50: rgba(black, 0.87),
+    100: rgba(black, 0.87),
+    200: rgba(black, 0.87),
+    300: white,
+    400: white,
+    500: white,
+    600: white,
+    700: white,
+    800: white,
+    900: white,
+    A100: $black-87-opacity,
+    A200: white,
+    A400: white,
+    A700: white
+  )
+);
 
-  // Replace the background in the background palette.
-  $background-palette: map-get($theme, background);
-  $background-palette: map-merge($background-palette, (background: $background-color));
-  $background-palette: map-merge($background-palette, (raised-button: $background-color));
+// define 3 theme color
+// mat-palette accepts $palette-name, main, lighter and darker variants
+$cyber-theme-primary: mat-palette($cy-primary);
+$cyber-theme-accent: mat-palette($cy-accent);
+$cyber-theme-warn: mat-palette($mat-yellow, 500);
 
-  // Merge the changes into a new theme.
-  $modified-theme-color: map-merge($theme-color, (background: $color-background-palette));
-  $modified-theme: map-merge($theme, (color: $modified-theme-color));
-  $modified-theme: map-merge($modified-theme, (background: $background-palette));
+// custom background and foreground palettes
+$cyber-dark-theme-background: (
+  status-bar: map-get($cyber-theme-primary, 500),
+  app-bar:    #0f0f0f,
+  background: #0f0f0f,
+  hover:      map-get($cyber-theme-primary, 500),
+  card:       #151515,
+  dialog:     #151515,
+  disabled-button: $white-12-opacity,
+  raised-button: map-get($mat-grey, 800),
+  focused-button: $white-6-opacity,
+  selected-button: map_get($mat-grey, 900),
+  selected-disabled-button: map_get($mat-grey, 800),
+  disabled-button-toggle: black,
+  unselected-chip: map_get($mat-grey, 700),
+  disabled-list-option: black,
+);
 
-  @return $modified-theme;
-}
+$cyber-dark-theme-foreground: (
+  base:              map_get($mat-grey, 200),
+  divider:           $white-12-opacity,
+  dividers:          $white-12-opacity,
+  disabled:          rgba(white, 0.3),
+  disabled-button:   rgba(white, 0.3),
+  disabled-text:     rgba(white, 0.3),
+  hint-text:         rgba(white, 0.3),
+  secondary-text:    rgba(white, 0.7),
+  icon:              white,
+  icons:             white,
+  text:              map_get($mat-grey, 200),
+  slider-min:        white,
+  slider-off:        rgba(white, 0.3),
+  slider-off-active: rgba(white, 0.3),
+);
 
-$cyber-theme: modify-background($cyber-theme, #000000);
+$cyber-theme: (
+  is-dark: true,
+  color: (
+    primary: $cyber-theme-primary,
+    accent: $cyber-theme-accent,
+    warn: $cyber-theme-warn,
+    foreground: $cyber-dark-theme-foreground,
+    background: $cyber-dark-theme-background,
+  ),
 
+  typography: mat.define-typography-config(
+    $font-family:   "'JetBrains Mono', monospace",
+    $display-4:     mat.define-typography-level(112px, 112px, 300, $letter-spacing: -0.05em),
+    $display-3:     mat.define-typography-level(56px, 56px, 400, $letter-spacing: -0.02em),
+    $display-2:     mat.define-typography-level(45px, 48px, 400, $letter-spacing: -0.005em),
+    $display-1:     mat.define-typography-level(34px, 40px, 400),
+    $headline:      mat.define-typography-level(24px, 32px, 400),
+    $title:         mat.define-typography-level(20px, 32px, 500),
+    $subheading-2:  mat.define-typography-level(16px, 28px, 400),
+    $subheading-1:  mat.define-typography-level(15px, 24px, 400),
+    $body-2:        mat.define-typography-level(14px, 24px, 500),
+    $body-1:        mat.define-typography-level(14px, 20px, 400, $letter-spacing: 0.05em),
+    $caption:       mat.define-typography-level(12px, 20px, 400),
+    $button:        mat.define-typography-level(14px, 14px, 500),
+      // Line-height must be unit-less fraction of the font-size.
+    $input:         mat.define-typography-level(inherit, 1.125, 400)
+  ),
+
+  custom: (
+    sale-card-size: 200px,
+    mat-toolbar-height: 64px
+  )
+);
+
+// Material Components
 @include mat.core-theme($cyber-theme);
-@include mat.sidenav-theme($cyber-theme);
-
 @include mat.all-component-themes($cyber-theme);
+@include mat.all-component-typographies($cyber-theme);
+
+// Custom components
+@include app-theme($cyber-theme);
+@include sale-theme($cyber-theme);
+@include card-loader-theme($cyber-theme);
+@include dashboard-theme($cyber-theme);
+@include animations-theme($cyber-theme);
+@include auguments-theme($cyber-theme);
+
+@include expandable-table($cyber-theme);
+
+
+
+
+// Glitch filter
+

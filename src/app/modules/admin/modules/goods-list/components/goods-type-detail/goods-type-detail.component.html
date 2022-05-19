@@ -35,10 +35,26 @@
 				<mat-select name="Ikona"
 					[(ngModel)]="item.icon"
 				>
-					<mat-option [value]="'beer'" class="icon-option">Pivo <img src="assets/images/beer.jpg"></mat-option>
-					<mat-option [value]="'food'" class="icon-option">Jídlo <img src="assets/images/food.jpg"></mat-option>
-					<mat-option [value]="'shot'" class="icon-option">Panák <img src="assets/images/shot.jpg"></mat-option>
-					<mat-option [value]="'other'" class="icon-option">Ostatní <img src="assets/images/other.jpg"></mat-option>
+					<mat-option [value]="'beer'" class="icon-option">Pivo
+            <svg viewBox="0 0 24 24" class="goods-type__icon">
+              <use xlink:href="assets/images/beer.svg#icon--beer"></use>
+            </svg>
+          </mat-option>
+					<mat-option [value]="'food'" class="icon-option">Jídlo
+            <svg viewBox="0 0 24 24" class="goods-type__icon">
+              <use xlink:href="assets/images/food.svg#icon--food"></use>
+            </svg>
+          </mat-option>
+					<mat-option [value]="'shot'" class="icon-option">Panák
+            <svg viewBox="0 0 24 24" class="goods-type__icon">
+              <use xlink:href="assets/images/shot.svg#icon--shot"></use>
+            </svg>
+          </mat-option>
+					<mat-option [value]="'other'" class="icon-option">Ostatní
+            <svg viewBox="0 0 24 24" class="goods-type__icon">
+              <use xlink:href="assets/images/other.svg#icon--other"></use>
+            </svg>
+          </mat-option>
 				</mat-select>
 			</mat-form-field>
 

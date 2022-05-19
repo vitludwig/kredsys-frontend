@@ -1,3 +1,4 @@
+<div class="app-logo"><img src="/assets/images/Cybertown_logo_FULL.png"/></div>
 <app-top-menu *ngIf="authService.isLogged" [sideMenu]="sideMenu" [place]="placeService.selectedPlace"></app-top-menu>
 
 <mat-drawer-container>
@@ -5,6 +6,7 @@
 		class="menu-sidebar"
 		mode="over"
 		position="start"
+    data-augmented-ui="br-2-clip-x both"
 	>
 		<app-side-menu></app-side-menu>
 	</mat-drawer>

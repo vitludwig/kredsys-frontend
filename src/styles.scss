@@ -5,16 +5,39 @@
 
 // import our custom theme
 @import 'cyber-theme.scss';
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
 // specify theme class eg: <body class="my-theme"> ... </body>
 
 
-  // use our theme with angular-material-theme mixin
-  @include angular-material-theme($cyber-theme);
+// use our theme with angular-material-theme mixin
+@include angular-material-theme($cyber-theme);
 
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+:root{
+  --cy__gap: 1rem;
+}
+
+
+html, body { height: 100%; overflow: hidden;}
+
+.app-logo {
+  position: fixed;
+  top: 0;
+  left:50%;
+  height: 100px;
+  z-index: 999;
+  transform: translateX(-50%);
+  img{
+    width: 100%;
+    height: 100%;
+  }
+}
+
+// Some overrides goes here
+.mat-drawer-backdrop.mat-drawer-shown{
+  background-color: rgba(#000000, 0.8);
+}
 
 .mat-dialog-container {
   .close-btn {
@@ -29,5 +52,4 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     font-size: 1.5rem;
     margin-top: 2rem;
   }
-
 }
