@@ -69,7 +69,7 @@ export class PlaceService {
 	}
 
 	public async addPlace(item: IPlace): Promise<IPlace> {
-		return firstValueFrom(this.http.post<IPlace>(environment.apiUrl + 'place/', item));
+		return firstValueFrom(this.http.post<IPlace>(environment.apiUrl + 'places/', item));
 	}
 
 	public async addGoods(goodsId: number, placeId: number): Promise<void> {
@@ -77,6 +77,13 @@ export class PlaceService {
 			placeId,
 			goodsId,
 		}));
+	}
+
+	public async moveGoods(placeId: number, goodsId: number, afterGoodsId: number): Promise<void> {
+		const params = {
+			afterGoodsId
+		}
+		return firstValueFrom(this.http.patch<void>(environment.apiUrl + 'places/' + placeId + '/goods/' + goodsId, {params: params}));
 	}
 
 	public createNewPlace(id?: number): IPlace {

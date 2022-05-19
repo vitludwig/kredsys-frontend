@@ -4,7 +4,6 @@ import {IPaginatedResponse} from '../../../../common/types/IPaginatedResponse';
 import {ICurrency, ICurrencyAccount} from '../../../../common/types/ICurrency';
 import {firstValueFrom} from 'rxjs';
 import {environment} from '../../../../../environments/environment';
-import {IGoods} from '../../../../common/types/IGoods';
 
 @Injectable({
 	providedIn: 'root'
@@ -26,6 +25,13 @@ export class CurrencyService {
 	    return firstValueFrom(this.http.get<IPaginatedResponse<ICurrency>>(environment.apiUrl + 'currencies', {params: params}));
     }
 
+	/**
+	 * For now first currency, in future change this flow after currencies are discussed
+	 */
+	public async getDefaultCurrency(): Promise<ICurrency> {
+		return (await this.getCurrencies()).data[0];
+	}
+
 	public async getCurrency(id: number): Promise<ICurrency> {
 		return firstValueFrom(this.http.get<ICurrency>(environment.apiUrl + 'currencies/' + id));
 	}
@@ -40,6 +46,12 @@ export class CurrencyService {
 
 	public getCurrencyAccount(id: number): Promise<ICurrencyAccount> {
 		return firstValueFrom(this.http.get<ICurrencyAccount>(environment.apiUrl + 'currencyaccounts/' + id));
+	}
+
+	public editCurrencyAccount(id: number, data: ICurrencyAccount): Promise<ICurrencyAccount> {
+		return firstValueFrom(this.http.put<ICurrencyAccount>(environment.apiUrl + 'currencyaccounts/' + id, {
+			overdraftLimit: data.overdraftLimit
+		}));
 	}
 
 	public createNewCurrency(): ICurrency {

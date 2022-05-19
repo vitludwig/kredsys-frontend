@@ -9,5 +9,9 @@ mat-toolbar .toolbar-content {
   align-items: center;
   width: 100%;
 }
+mat-toolbar .toolbar-content .place-name {
+  font-size: 14px;
+  margin-left: 1em;
+}
 
 /*# sourceMappingURL=top-menu.component.css.map */

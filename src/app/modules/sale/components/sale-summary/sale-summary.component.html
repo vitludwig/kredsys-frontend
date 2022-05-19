@@ -1,6 +1,6 @@
 <div class="summary">
 	<div class="p-5 h-100 d-flex align-items-center justify-content-center" *ngIf="!(customerService.customer$ | async)">
-		<app-card-loader (cardId)="loadUserId($event)"></app-card-loader>
+		<app-card-loader (cardIdChange)="loadUserId($event)"></app-card-loader>
 	</div>
 
 	<ng-container *ngIf="(customerService.customer$ | async)">
@@ -8,16 +8,24 @@
 			<div class="summary-item"
 				*ngFor="let item of orderService.items"
 			>
-				<div class="item-info"
-					(click)="openEditDialog(item)">
+				<div class="item-info">
 					<button mat-icon-button
 						color="primary"
-						aria-label="Edit item"
+						(click)="setItemAmount(item,-1)"
 					>
-						<mat-icon>edit</mat-icon>
+						<mat-icon>remove</mat-icon>
 					</button>
-					<div class="item-count">{{ item.count }}&times;</div>
-					<div class="item-name">{{ item.item.name }}</div>
+
+					<small class="item-count">{{ item.count }}&times;</small>
+
+					<button mat-icon-button
+						color="primary"
+						(click)="setItemAmount(item,1)"
+					>
+						<mat-icon>add</mat-icon>
+					</button>
+
+					<small class="item-name">{{ item.item.name }}</small>
 				</div>
 
 				<div class="item-actions">
@@ -40,6 +48,7 @@
 			<button mat-raised-button
 				class="submit-btn"
 				color="primary"
+				[disabled]="orderService.items.length === 0"
 				(click)="submitOrder()"
 			>
 				Potvrdit

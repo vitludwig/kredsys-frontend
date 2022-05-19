@@ -24,6 +24,7 @@ export class UsersService {
 		const params = {
 			offset: (page - 1) * this.limit,
 			limit: limit,
+			blocked: false, // TODO: create filtering of blocked users in grid
 		};
 
 		return firstValueFrom(this.http.get<IPaginatedResponse<IUser>>(environment.apiUrl + 'users', {params: params}));
@@ -34,6 +35,17 @@ export class UsersService {
 	}
 
 	public async editUser(user: IUser): Promise<IUser> {
+		return firstValueFrom(this.http.put<IUser>(environment.apiUrl + 'users/' + user.id, user));
+	}
+
+	/**
+	 * Blocks user
+	 * TODO: make backend to allow sending only partial data
+	 *
+	 * @param user
+	 */
+	public async blockUser(user: IUser): Promise<IUser> {
+		user.blocked = true;
 		return firstValueFrom(this.http.put<IUser>(environment.apiUrl + 'users/' + user.id, user));
 	}
 
@@ -63,8 +75,8 @@ export class UsersService {
 		return (await firstValueFrom(this.http.get<IPaginatedResponse<ICurrencyAccount>>(environment.apiUrl + 'users/' + userId + '/accounts', {params: params}))).data;
 	}
 
-	public async addUserCard(userId: number, cardUid: number, description: string = '', type: string = 'Card'): Promise<void> {
-		return firstValueFrom(this.http.post<void>(environment.apiUrl + 'users/' + userId + '/card', {
+	public async addUserCard(userId: number, cardUid: number, description: string = '', type: string = 'Card'): Promise<ICard> {
+		return firstValueFrom(this.http.post<ICard>(environment.apiUrl + 'users/' + userId + '/card', {
 			uid: cardUid,
 			type: type,
 			description: description,
@@ -77,11 +89,11 @@ export class UsersService {
 	}
 
 	public createNewUser(id?: number): IUser {
-		const date = new Date();
 		return {
 			name: '',
 			email: '',
-			memberId: date.getTime(),
+			memberId: null,
+			blocked: false,
 		};
 	}
 }

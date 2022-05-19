@@ -29,25 +29,24 @@ export class OrderService {
 
 	public editItem(item: ISaleItem, count: number): void {
 		const foundItem = this.items.find((obj) => obj.item.id === item.id);
-		if (foundItem) {
+		if(foundItem) {
 			foundItem.count = count;
 		}
 
 		this.refreshTotal();
 	}
 
-	public addItem(item: ISaleItem, count: number): void {
-		// in case somebody call addItem instead of editItem
-		const foundItemIndex = this.items.findIndex((obj) => obj.item.id === item.id);
-		if (foundItemIndex > -1) {
-			this.editItem(item, count);
-			return;
-		}
+	public addItem(item: ISaleItem): void {
+		const existingItem = this.items.find((obj) => obj.item.id === item.id);
 
-		this.items.push({
-			item,
-			count,
-		});
+		if(existingItem) {
+			existingItem.count++
+		} else {
+			this.items.push({
+				item,
+				count: 1,
+			});
+		}
 
 		this.refreshTotal();
 	}
@@ -57,9 +56,19 @@ export class OrderService {
 		this.refreshTotal();
 	}
 
+	public clearOrder(): void {
+		this.items = [];
+		this.total = 0;
+	}
+
 	protected refreshTotal(): void {
-		this.total = this.items
-			.map((item) => item.count * item.item.price)
-			.reduce((a, b) => a + b)
+		if(this.items.length === 0) {
+			this.total = 0;
+
+		} else {
+			this.total = this.items
+				.map((item) => item.count * item.item.price)
+				.reduce((a, b) => a + b)
+		}
 	}
 }

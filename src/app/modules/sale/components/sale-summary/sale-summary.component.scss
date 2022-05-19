@@ -9,6 +9,7 @@
   .summary-list {
     height: 70%;
     overflow-y: auto;
+    position: relative;
 
     .summary-item {
       display: flex;
@@ -17,6 +18,9 @@
       align-items: center;
       padding: 0.5rem 0;
 
+      .item-name {
+        word-break: break-word;
+      }
 
       &:not(:last-child) {
         border-bottom: 1px solid $border-primary;

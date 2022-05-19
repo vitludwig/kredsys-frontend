@@ -3,12 +3,11 @@ import {OrderService} from '../../services/order/order.service';
 import {SaleService} from '../../services/sale/sale.service';
 import {IOrderItem} from '../../types/IOrderItem';
 import {IPlace} from '../../../../common/types/IPlace';
-import {CardService} from '../../../admin/services/card/card.service';
 import {UsersService} from '../../../admin/services/users/users.service';
 import {CustomerService} from '../../services/customer/customer.service';
 import {ITransactionRecordPayment} from '../../../../common/services/transaction/types/ITransaction';
 import {TransactionService} from '../../../../common/services/transaction/transaction.service';
-import {MatSnackBar} from '@angular/material/snack-bar';
+import {AlertService} from '../../../../common/services/alert/alert.service';
 
 @Component({
 	selector: 'app-sale-summary',
@@ -25,23 +24,26 @@ export class SaleSummaryComponent {
 		public usersService: UsersService,
 		public customerService: CustomerService,
 		protected transactionService: TransactionService,
-		protected snackBar: MatSnackBar,
+		protected alertService: AlertService,
 	) {
-	}
-
-	public openEditDialog(item: IOrderItem): void {
-		this.saleService.openSaleDialog({
-			item: item.item,
-			edit: true,
-			count: item.count
-		});
 	}
 
 	public async loadUserId(uid: number): Promise<void> {
 		this.customerService.customer = await this.usersService.getUserByCardUid(uid);
 	}
 
+	public setItemAmount(item: IOrderItem, value: number): void {
+		if(item.count + value === 0) {
+			this.orderService.removeItem(item.item.id)
+		}
+		item.count += value;
+	}
+
 	public async submitOrder(): Promise<void> {
+		if(this.orderService.items.length === 0) {
+			return;
+		}
+
 		const records: ITransactionRecordPayment[] = [];
 		const customerId = this.customerService.customer?.id!;
 		for(const item of this.orderService.items) {
@@ -52,15 +54,21 @@ export class SaleSummaryComponent {
 			})
 		}
 		try {
-			const result = await this.transactionService.pay(customerId, this.place.id!, records);
+			await this.transactionService.pay(customerId, this.place.id!, records);
 			const audio = new Audio('assets/finish.mp3');
 			audio.play();
-			// for balance update
-			// this.orderService.balance = this.orderService.balance - result.amount;
+
+			this.orderService.clearOrder();
 			this.customerService.logout();
 		} catch(e) {
 			console.error('Cannot make payment: ', e);
-			this.snackBar.open('Něco se posralo při platbě');
+			// @ts-ignore
+			if(e.error.Code === 404) {
+				this.alertService.error('Nebyl nalezen uživatelům účet, hybaj na infostánek!');
+			} else {
+				// @ts-ignore
+				this.alertService.error(e.error.Message);
+			}
 		}
 	}
 }

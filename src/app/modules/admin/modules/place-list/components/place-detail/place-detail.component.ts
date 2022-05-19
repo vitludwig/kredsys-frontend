@@ -3,10 +3,11 @@ import {EPlaceRole, IPlace} from '../../../../../../common/types/IPlace';
 import {ERoute} from '../../../../../../common/types/ERoute';
 import {ActivatedRoute, Router} from '@angular/router';
 import {PlaceService} from '../../../../services/place/place/place.service';
-import {CdkDragDrop} from '@angular/cdk/drag-drop';
+import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
 import {MatDialog} from '@angular/material/dialog';
 import {SortimentDetailComponent} from './components/sortiment-detail/sortiment-detail.component';
 import {IGoods} from '../../../../../../common/types/IGoods';
+import {AlertService} from '../../../../../../common/services/alert/alert.service';
 
 @Component({
 	selector: 'app-place-detail',
@@ -26,6 +27,7 @@ export class PlaceDetailComponent implements OnInit {
 		protected route: ActivatedRoute,
 		protected router: Router,
 		protected dialog: MatDialog,
+		protected alertService: AlertService,
 	) {
 	}
 
@@ -65,9 +67,13 @@ export class PlaceDetailComponent implements OnInit {
 		this.router.navigate([ERoute.ADMIN, ERoute.ADMIN_PLACES]);
 	}
 
-	public drop(event: CdkDragDrop<string[]>): void {
-		// TODO: implement sorting goods
-		// moveItemInArray(this.place.goods, event.previousIndex, event.currentIndex);
+	public async drop(event: CdkDragDrop<string[]>): Promise<void> {
+		try {
+			await this.placeService.moveGoods(this.place!.id!, this.goods[event.previousIndex].id!, this.goods[event.previousIndex + 1].id!);
+			moveItemInArray(this.goods, event.previousIndex, event.currentIndex);
+		} catch(e) {
+			console.error('Canot move goods: ', e)
+		}
 	}
 
 	public openSortimentDetailDialog(): void {
@@ -77,12 +83,21 @@ export class PlaceDetailComponent implements OnInit {
 			autoFocus: 'dialog',
 		});
 
-		dialog.afterClosed().subscribe((result) => {
-			if(this.place.id) {
-				console.log('selected: ', result);
-				this.placeService.addGoods(result.id, this.place.id);
+		dialog.afterClosed().subscribe(async (result) => {
+			if(!result) {
+				return;
 			}
-			this.goods.push(result)
+
+			try {
+				if(this.place.id) {
+					await this.placeService.addGoods(result.id, this.place.id);
+					this.goods.push(result)
+				}
+			} catch(e) {
+				// TODO: dodelat spravne validace
+				// @ts-ignore
+				this.alertService.error(e.error.Message ?? 'Chyba při přidávání sortimentu');
+			}
 		});
 	}
 
