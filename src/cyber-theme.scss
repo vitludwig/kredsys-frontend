@@ -5,6 +5,7 @@
 @import 'assets/styles/auguments';
 
 @import 'app/common/components/card-loader/card-loader.component';
+@import 'app/common/modules/menu/components/top-menu/top-menu.component';
 @import 'app/modules/sale/components/dashboard/dashboard.component';
 @import 'app/app.component';
 @import 'app/modules/sale/sale.component';
@@ -158,6 +159,7 @@ $cyber-theme: (
 
 // Custom components
 @include app-theme($cyber-theme);
+@include topmenu-theme($cyber-theme);
 @include sale-theme($cyber-theme);
 @include card-loader-theme($cyber-theme);
 @include dashboard-theme($cyber-theme);
