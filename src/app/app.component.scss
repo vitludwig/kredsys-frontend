@@ -21,6 +21,13 @@
   .mat-toolbar {
     border-bottom: 2px solid rgba(map_get($primary, 500),.25);
   }
+
+  .mat-option-text{
+    svg{
+      height: 24px;
+      fill: map_get($primary, 500);
+    }
+  }
 }
 
 
