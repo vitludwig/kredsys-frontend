@@ -1,14 +1,15 @@
-<div class="row mb-4">
-	<div class="col-12">
-		<button backButton
-			mat-raised-button>
-			<mat-icon>keyboard_arrow_left</mat-icon>
-			Zpět
-		</button>
-	</div>
-</div>
+<div class="container p-5" data-augmented-ui="tl-2-clip-x tr-2-clip-x br-2-clip-x bl-2-clip-x both">
+  <div class="row mb-4">
+    <div class="col-12">
+      <button backButton
+        mat-raised-button>
+        <mat-icon>keyboard_arrow_left</mat-icon>
+        Zpět
+      </button>
+    </div>
+  </div>
 
-<div class="row"
+  <div class="row"
 	*ngIf="!isLoading"
 >
 	<div class="col-xs-12 col-md-6">
@@ -116,4 +117,5 @@
 			</mat-list-item>
 		</mat-list>
 	</div>
+</div>
 </div>

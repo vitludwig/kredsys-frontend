@@ -22,10 +22,15 @@
     border-bottom: 2px solid rgba(map_get($primary, 500),.25);
   }
 
-  .mat-option-text{
+  .mat-option{
     svg{
       height: 24px;
       fill: map_get($primary, 500);
+    }
+    &.mat-active{
+      svg{
+        fill: map_get(map_get($primary, 'contrast'),500);
+      }
     }
   }
 

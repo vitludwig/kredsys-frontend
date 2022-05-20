@@ -1,72 +1,74 @@
-<div class="row mb-4">
-	<div class="col-12">
-		<button backButton
-			mat-raised-button>
-			<mat-icon>keyboard_arrow_left</mat-icon>
-			Zpět
-		</button>
-	</div>
-</div>
+<div class="container p-5" data-augmented-ui="tl-2-clip-x tr-2-clip-x br-2-clip-x bl-2-clip-x both">
+  <div class="row mb-4">
+    <div class="col-12">
+      <button backButton
+        mat-raised-button>
+        <mat-icon>keyboard_arrow_left</mat-icon>
+        Zpět
+      </button>
+    </div>
+  </div>
 
-<div class="row"
-	*ngIf="!isLoading"
->
-	<div class="col-sx-12 col-md-6">
-		<h2>{{ isEdit ? item.name : 'Nový typ zboží' }}</h2>
+  <div class="row"
+    *ngIf="!isLoading"
+  >
+    <div class="col-sx-12 col-md-12">
+      <h2>{{ isEdit ? item.name : 'Nový typ zboží' }}</h2>
 
-		<form #form="ngForm"
-			(ngSubmit)="form.valid && onSubmit()"
-		>
-			<mat-form-field appearance="standard"
-				class="w-100">
-				<mat-label>Název</mat-label>
-				<input matInput
-					placeholder="Název"
-					name="goodsName"
-					required
-					[(ngModel)]="item.name"
-				>
-			</mat-form-field>
+      <form #form="ngForm"
+        (ngSubmit)="form.valid && onSubmit()"
+      >
+        <mat-form-field appearance="standard"
+          class="w-100">
+          <mat-label>Název</mat-label>
+          <input matInput
+            placeholder="Název"
+            name="goodsName"
+            required
+            [(ngModel)]="item.name"
+          >
+        </mat-form-field>
 
-			<mat-form-field appearance="standard"
-				class="w-100"
-			>
-				<mat-label>Ikona</mat-label>
-				<mat-select name="Ikona"
-					[(ngModel)]="item.icon"
-				>
-					<mat-option [value]="'beer'" class="icon-option">Pivo
-            <svg viewBox="0 0 24 24" class="goods-type__icon">
-              <use xlink:href="assets/images/beer.svg#icon--beer"></use>
-            </svg>
-          </mat-option>
-					<mat-option [value]="'food'" class="icon-option">Jídlo
-            <svg viewBox="0 0 24 24" class="goods-type__icon">
-              <use xlink:href="assets/images/food.svg#icon--food"></use>
-            </svg>
-          </mat-option>
-					<mat-option [value]="'shot'" class="icon-option">Panák
-            <svg viewBox="0 0 24 24" class="goods-type__icon">
-              <use xlink:href="assets/images/shot.svg#icon--shot"></use>
-            </svg>
-          </mat-option>
-					<mat-option [value]="'other'" class="icon-option">Ostatní
-            <svg viewBox="0 0 24 24" class="goods-type__icon">
-              <use xlink:href="assets/images/other.svg#icon--other"></use>
-            </svg>
-          </mat-option>
-				</mat-select>
-			</mat-form-field>
+        <mat-form-field appearance="standard"
+          class="w-100"
+        >
+          <mat-label>Ikona</mat-label>
+          <mat-select name="Ikona"
+            [(ngModel)]="item.icon"
+          >
+            <mat-option [value]="'beer'" class="icon-option">Pivo
+              <svg viewBox="0 0 24 24" class="goods-type__icon">
+                <use xlink:href="assets/images/icons.svg#icon--beer"></use>
+              </svg>
+            </mat-option>
+            <mat-option [value]="'food'" class="icon-option">Jídlo
+              <svg viewBox="0 0 24 24" class="goods-type__icon">
+                <use xlink:href="assets/images/icons.svg#icon--food"></use>
+              </svg>
+            </mat-option>
+            <mat-option [value]="'shot'" class="icon-option">Panák
+              <svg viewBox="0 0 24 24" class="goods-type__icon">
+                <use xlink:href="assets/images/icons.svg#icon--shot"></use>
+              </svg>
+            </mat-option>
+            <mat-option [value]="'other'" class="icon-option">Ostatní
+              <svg viewBox="0 0 24 24" class="goods-type__icon">
+                <use xlink:href="assets/images/icons.svg#icon--other"></use>
+              </svg>
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
 
-			<div>
-				<button mat-raised-button
-					class="w-100"
-					color="primary"
-					type="submit"
-				>
-					Potvrdit
-				</button>
-			</div>
-		</form>
-	</div>
+        <div>
+          <button mat-raised-button
+            class="w-100"
+            color="primary"
+            type="submit"
+          >
+            Potvrdit
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
 </div>
