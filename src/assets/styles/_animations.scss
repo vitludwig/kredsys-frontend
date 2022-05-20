@@ -87,12 +87,12 @@
 
 
 @mixin make-retro-vision($color: black){
-  -webkit-mask-image: repeating-linear-gradient($color, $color 0.5rem, rgba(0, 0, 0, 0.5) 0.75rem);
-  mask-image: repeating-linear-gradient($color, $color 0.5rem, rgba(0, 0, 0, 0.5) 0.75rem);
+  -webkit-mask-image: repeating-linear-gradient($color, $color 0.66rem, rgba(0, 0, 0, 0.5) 0.75rem);
+  mask-image: repeating-linear-gradient($color, $color 0.66rem, rgba(0, 0, 0, 0.5) 0.75rem);
   -webkit-mask-position: center 0rem;
   mask-position: center 0rem;
   animation: retro-future-tv-lines linear infinite;
-  animation-duration: 500ms;
+  animation-duration: 1000ms;
   --playstate: var(--media-prefers-reduced-motion) paused;
   animation-play-state: var(--playstate, running);
 }
