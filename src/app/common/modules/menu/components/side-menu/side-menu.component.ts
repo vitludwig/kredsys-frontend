@@ -6,7 +6,7 @@ import {AuthService} from '../../../../../modules/login/services/auth/auth.servi
 @Component({
 	selector: 'app-side-menu',
 	templateUrl: './side-menu.component.html',
-	styleUrls: ['./side-menu.component.scss']
+	styleUrls: ['./side-menu.component.scss'],
 })
 export class SideMenuComponent implements OnInit {
 	public ERoute = ERoute;
@@ -20,9 +20,9 @@ export class SideMenuComponent implements OnInit {
 
 	public ngOnInit(): void {
 		this.router.events.subscribe((event) => {
-			if (event instanceof NavigationEnd) {
+			if(event instanceof NavigationEnd) {
 				this.adminMenuOpened = event.url.includes(ERoute.ADMIN);
 			}
-		})
+		});
 	}
 }

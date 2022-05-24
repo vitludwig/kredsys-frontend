@@ -22,7 +22,7 @@ import {SharedModule} from './shared.module';
 		SaleModule,
 	],
 	providers: [],
-	bootstrap: [AppComponent]
+	bootstrap: [AppComponent],
 })
 export class AppModule {
 }

@@ -39,7 +39,7 @@ import {CardDetailComponent} from './components/user-detail/components/card-deta
 	exports: [
 		UserListComponent,
 		UserDetailComponent,
-	]
+	],
 })
 export class UserListModule {
 }

@@ -18,7 +18,7 @@ import {MatDialogModule} from '@angular/material/dialog';
 @NgModule({
 	declarations: [
 		CurrencyListComponent,
-		CurrencyDetailComponent
+		CurrencyDetailComponent,
 	],
 	imports: [
 		SharedModule,
@@ -32,7 +32,7 @@ import {MatDialogModule} from '@angular/material/dialog';
 		MatButtonModule,
 		MatIconModule,
 		MatDialogModule,
-	]
+	],
 })
 export class CurrencyListModule {
 }

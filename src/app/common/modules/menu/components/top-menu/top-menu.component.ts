@@ -13,11 +13,12 @@ import {Subject, takeUntil} from 'rxjs';
 import {IUser} from '../../../../types/IUser';
 import {UsersService} from '../../../../../modules/admin/services/users/users.service';
 import {OrderService} from '../../../../../modules/sale/services/order/order.service';
+import {AuthService} from '../../../../../modules/login/services/auth/auth.service';
 
 @Component({
 	selector: 'app-top-menu',
 	templateUrl: './top-menu.component.html',
-	styleUrls: ['./top-menu.component.scss']
+	styleUrls: ['./top-menu.component.scss'],
 })
 export class TopMenuComponent implements OnInit, OnDestroy {
 	public pageName: string = '';
@@ -42,13 +43,14 @@ export class TopMenuComponent implements OnInit, OnDestroy {
 		protected currencyService: CurrencyService,
 		protected orderService: OrderService,
 		protected dialog: MatDialog,
+		protected authService: AuthService,
 	) {
 		this.router.events
 			.subscribe((e) => {
 				if(e instanceof ActivationEnd && e.snapshot.data.hasOwnProperty('name')) {
 					this.pageName = e.snapshot.data['name'] ?? '';
 				}
-			})
+			});
 	}
 
 	public async ngOnInit(): Promise<void> {
@@ -61,7 +63,7 @@ export class TopMenuComponent implements OnInit, OnDestroy {
 				} else {
 					this.currencyAccount = null;
 				}
-			})
+			});
 
 		this.orderService.balance$
 			.pipe(takeUntil(this.unsubscribe))
@@ -69,7 +71,7 @@ export class TopMenuComponent implements OnInit, OnDestroy {
 				if(this.currencyAccount) {
 					this.currencyAccount.currentAmount = amount;
 				}
-			})
+			});
 
 		this.defaultCurrency = await this.currencyService.getDefaultCurrency();
 	}
@@ -92,22 +94,31 @@ export class TopMenuComponent implements OnInit, OnDestroy {
 				creatorId: -1,
 				amount: result,
 				text: '',
-			}]
+			}];
 			try {
 
 				const result = await this.transactionService.deposit(
 					this.customer!.id!,
 					this.place.id!,
 					this.currencyAccount?.currencyId ?? this.defaultCurrency.id!,
-					records
+					records,
 				);
 				if(this.currencyAccount) {
 					this.currencyAccount.currentAmount += result.amount;
 				}
 			} catch(e) {
-				console.error('Cannot deposit money: ', e)
+				console.error('Cannot deposit money: ', e);
 			}
 		});
+	}
+
+	public async debugLoadCard(): Promise<void> {
+		try {
+			const cardId = (await this.usersService.getUserCards(this.authService.user!.id!)).data[0]?.uid!;
+			this.customerService.customer = await this.usersService.getUserByCardUid(cardId);
+		} catch(e) {
+			console.error('Debug card load error: ', e);
+		}
 	}
 
 	public ngOnDestroy() {

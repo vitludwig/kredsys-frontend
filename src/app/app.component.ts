@@ -10,7 +10,7 @@ import {CustomerService} from './modules/sale/services/customer/customer.service
 @Component({
 	selector: 'app-root',
 	templateUrl: './app.component.html',
-	styleUrls: ['./app.component.scss']
+	styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit, OnDestroy {
 	@ViewChild('sideMenu')
@@ -33,10 +33,10 @@ export class AppComponent implements OnInit, OnDestroy {
 		this.router.events
 			.pipe(takeUntil(this.unsubscribe))
 			.subscribe((event) => {
-			if (event instanceof NavigationEnd) {
-				this.sideMenu.close();
-			}
-		});
+				if(event instanceof NavigationEnd) {
+					this.sideMenu.close();
+				}
+			});
 	}
 
 

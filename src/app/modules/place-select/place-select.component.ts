@@ -7,7 +7,7 @@ import {ERoute} from '../../common/types/ERoute';
 @Component({
 	selector: 'app-place-select',
 	templateUrl: './place-select.component.html',
-	styleUrls: ['./place-select.component.scss']
+	styleUrls: ['./place-select.component.scss'],
 })
 export class PlaceSelectComponent {
 	public place: IPlace;

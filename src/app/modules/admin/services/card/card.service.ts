@@ -3,7 +3,7 @@ import {IPaginatedResponse} from '../../../../common/types/IPaginatedResponse';
 import {ICard} from '../../../../common/types/ICard';
 
 @Injectable({
-	providedIn: 'root'
+	providedIn: 'root',
 })
 export class CardService {
 	protected cards: ICard[] = [];
@@ -18,9 +18,9 @@ export class CardService {
 			offset: (page - 1) * this.limit,
 			limit: limit,
 		};
-		let data = this.cards.slice(params.offset, params.offset + params.limit)
-		if (search !== '') {
-			data = data.filter((item) => (item.description.toLowerCase()).includes(search.toLowerCase()) || (item.uid!.toString()).includes(search))
+		let data = this.cards.slice(params.offset, params.offset + params.limit);
+		if(search !== '') {
+			data = data.filter((item) => (item.description.toLowerCase()).includes(search.toLowerCase()) || (item.uid!.toString()).includes(search));
 		}
 
 		return {

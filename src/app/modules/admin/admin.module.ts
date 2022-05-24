@@ -21,7 +21,7 @@ import {ChargeModule} from './modules/charge/charge.module';
 		GoodsListModule,
 		CurrencyListModule,
 		ChargeModule,
-	]
+	],
 })
 export class AdminModule {
 }

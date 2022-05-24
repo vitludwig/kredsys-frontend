@@ -4,7 +4,7 @@ import {IUser} from '../../../../common/types/IUser';
 import {OrderService} from '../order/order.service';
 
 @Injectable({
-	providedIn: 'root'
+	providedIn: 'root',
 })
 export class CustomerService {
 	#customerSubject: BehaviorSubject<IUser | null>;

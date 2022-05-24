@@ -19,7 +19,7 @@ import {ReactiveFormsModule} from '@angular/forms';
 		MatCardModule,
 		MatInputModule,
 		MatButtonModule,
-	]
+	],
 })
 export class LoginModule {
 }

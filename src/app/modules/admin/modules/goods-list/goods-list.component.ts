@@ -15,7 +15,7 @@ import {ICurrency} from '../../../../common/types/ICurrency';
 @Component({
 	selector: 'app-goods-list',
 	templateUrl: './goods-list.component.html',
-	styleUrls: ['./goods-list.component.scss']
+	styleUrls: ['./goods-list.component.scss'],
 })
 export class GoodsListComponent implements OnInit, OnDestroy {
 	public goodsDisplayedColumns: string[] = ['name', 'type', 'price', 'currency', 'actions'];
@@ -62,7 +62,7 @@ export class GoodsListComponent implements OnInit, OnDestroy {
 					return this.goodsService.getGoods(
 						'',
 						this.paginator.pageIndex + 1,
-					)
+					);
 				}),
 				map((data) => {
 					// Flip flag to show that loading has finished.
@@ -75,7 +75,7 @@ export class GoodsListComponent implements OnInit, OnDestroy {
 					this.goodsTotal = data.total;
 					return data.data;
 				}),
-				takeUntil(this.unsubscribe)
+				takeUntil(this.unsubscribe),
 			)
 			.subscribe(async (data) => {
 				console.log('new data: ', data);
@@ -108,7 +108,7 @@ export class GoodsListComponent implements OnInit, OnDestroy {
 				...item,
 				currency: currencies[item.currencyId!].code,
 				type: types[item.goodsTypeId!].name,
-			})
+			});
 		}
 
 		return data;

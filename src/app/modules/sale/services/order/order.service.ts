@@ -5,7 +5,7 @@ import {BehaviorSubject, Observable} from 'rxjs';
 import {IUser} from '../../../../common/types/IUser';
 
 @Injectable({
-	providedIn: 'root'
+	providedIn: 'root',
 })
 export class OrderService {
 	#balanceSubject: BehaviorSubject<number>;
@@ -40,7 +40,7 @@ export class OrderService {
 		const existingItem = this.items.find((obj) => obj.item.id === item.id);
 
 		if(existingItem) {
-			existingItem.count++
+			existingItem.count++;
 		} else {
 			this.items.push({
 				item,
@@ -68,7 +68,7 @@ export class OrderService {
 		} else {
 			this.total = this.items
 				.map((item) => item.count * item.item.price)
-				.reduce((a, b) => a + b)
+				.reduce((a, b) => a + b);
 		}
 	}
 }

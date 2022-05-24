@@ -7,7 +7,7 @@ import {HttpClient} from '@angular/common/http';
 import {IGoods} from '../../../../../common/types/IGoods';
 
 @Injectable({
-	providedIn: 'root'
+	providedIn: 'root',
 })
 export class PlaceService {
 	#selectedPlace: IPlace | null;
@@ -26,11 +26,11 @@ export class PlaceService {
 	constructor(
 		protected http: HttpClient,
 	) {
-		const placeId = localStorage.getItem('selectedPlaceId')
+		const placeId = localStorage.getItem('selectedPlaceId');
 		if(placeId) {
 			this.getPlace(Number(placeId)).then((place) => {
-				this.#selectedPlace = place
-			})
+				this.#selectedPlace = place;
+			});
 		}
 	}
 
@@ -81,8 +81,8 @@ export class PlaceService {
 
 	public async moveGoods(placeId: number, goodsId: number, afterGoodsId: number): Promise<void> {
 		const params = {
-			afterGoodsId
-		}
+			afterGoodsId,
+		};
 		return firstValueFrom(this.http.patch<void>(environment.apiUrl + 'places/' + placeId + '/goods/' + goodsId, {params: params}));
 	}
 

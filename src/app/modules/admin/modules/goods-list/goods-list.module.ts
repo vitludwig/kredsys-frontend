@@ -19,7 +19,7 @@ import {GoodsTypeDetailComponent} from './components/goods-type-detail/goods-typ
 	declarations: [
 		GoodsListComponent,
 		GoodsDetailComponent,
-		GoodsTypeDetailComponent
+		GoodsTypeDetailComponent,
 	],
 	imports: [
 		SharedModule,
@@ -33,7 +33,7 @@ import {GoodsTypeDetailComponent} from './components/goods-type-detail/goods-typ
 		MatButtonModule,
 		MatIconModule,
 		MatDialogModule,
-	]
+	],
 })
 export class GoodsListModule {
 }

@@ -7,14 +7,14 @@ const routes: Routes = [
 		path: '',
 		component: PlaceSelectComponent,
 		data: {
-			name: 'Výběr místa'
-		}
+			name: 'Výběr místa',
+		},
 	},
 ];
 
 @NgModule({
 	imports: [RouterModule.forChild(routes)],
-	exports: [RouterModule]
+	exports: [RouterModule],
 })
 export class PlaceSelectRoutingModule {
 }

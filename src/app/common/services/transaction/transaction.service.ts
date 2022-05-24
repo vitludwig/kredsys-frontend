@@ -3,14 +3,14 @@ import {
 	ITransaction,
 	ITransactionRecordDeposit,
 	ITransactionRecordPayment,
-	ITransactionResponse
+	ITransactionResponse,
 } from './types/ITransaction';
 import {firstValueFrom} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {environment} from '../../../../environments/environment';
 
 @Injectable({
-	providedIn: 'root'
+	providedIn: 'root',
 })
 export class TransactionService {
 
@@ -34,7 +34,7 @@ export class TransactionService {
 			userId: userId,
 			placeId: placeId,
 			records: records,
-			currencyId: currencyId
+			currencyId: currencyId,
 		}));
 	}
 }

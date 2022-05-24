@@ -10,7 +10,7 @@ export interface ICurrency {
 
 export interface ICurrencyAccount {
 	id: number;
-	userId: number
+	userId: number;
 	overdraftLimit: number;
 	currentAmount: number;
 	currencyId: number;

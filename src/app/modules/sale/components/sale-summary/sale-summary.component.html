@@ -1,5 +1,5 @@
 <div class="summary">
-	<div class="p-5 h-100 d-flex align-items-center justify-content-center" *ngIf="!(customerService.customer$ | async)">
+	<div class="p-5 h-100 d-flex align-items-center justify-content-center" *ngIf="(customerService.customer$ | async) === null">
 		<app-card-loader (cardIdChange)="loadUserId($event)"></app-card-loader>
 	</div>
 

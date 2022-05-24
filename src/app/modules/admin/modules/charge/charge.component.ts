@@ -12,7 +12,7 @@ import {AlertService} from '../../../../common/services/alert/alert.service';
 @Component({
 	selector: 'app-charge',
 	templateUrl: './charge.component.html',
-	styleUrls: ['./charge.component.scss']
+	styleUrls: ['./charge.component.scss'],
 })
 export class ChargeComponent implements OnInit {
 	public amount: number | null;
@@ -52,11 +52,11 @@ export class ChargeComponent implements OnInit {
 				this.user.id!,
 				this.placeService.selectedPlace!.id!,
 				this.currencyAccount?.currencyId ?? this.defaultCurrency.id!,
-				records
+				records,
 			);
-			this.alertService.success('Peňauze dobity!')
+			this.alertService.success('Peňauze dobity!');
 		} catch(e) {
-			console.error('Cannot deposit money: ', e)
+			console.error('Cannot deposit money: ', e);
 			this.alertService.error('Nepodařilo se dobít peňauze');
 		} finally {
 			this.user = null;

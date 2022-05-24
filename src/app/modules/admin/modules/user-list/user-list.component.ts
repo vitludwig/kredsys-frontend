@@ -18,7 +18,7 @@ import {AlertService} from '../../../../common/services/alert/alert.service';
 	templateUrl: './user-list.component.html',
 	styleUrls: ['./user-list.component.scss'],
 	animations: [
-		Animations.expandableTable
+		Animations.expandableTable,
 	],
 })
 export class UserListComponent implements OnInit, OnDestroy {
@@ -64,24 +64,24 @@ export class UserListComponent implements OnInit, OnDestroy {
 					return this.usersService.getUsers(
 						'',
 						this.paginator.pageIndex + 1,
-					)
+					);
 				}),
 				map((data) => {
 					// Flip flag to show that loading has finished.
 					this.isUsersLoading = false;
 
-					if (data === null) {
+					if(data === null) {
 						return [];
 					}
 
 					this.usersTotal = data.total;
 					return data.data;
 				}),
-				takeUntil(this.unsubscribe)
+				takeUntil(this.unsubscribe),
 			)
 			.subscribe((data) => {
 				console.log('new data: ', data);
-				this.usersData = data
+				this.usersData = data;
 			});
 	}
 
@@ -105,7 +105,7 @@ export class UserListComponent implements OnInit, OnDestroy {
 		const filterValue = (event.target as HTMLInputElement).value;
 		this.dataSource.filter = filterValue.trim().toLowerCase();
 
-		if (this.dataSource.paginator) {
+		if(this.dataSource.paginator) {
 			this.dataSource.paginator.firstPage();
 		}
 	}

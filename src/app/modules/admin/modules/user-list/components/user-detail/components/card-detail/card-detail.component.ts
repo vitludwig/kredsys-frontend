@@ -7,14 +7,14 @@ import {MatInput} from '@angular/material/input';
 @Component({
 	selector: 'app-card-detail',
 	templateUrl: './card-detail.component.html',
-	styleUrls: ['./card-detail.component.scss']
+	styleUrls: ['./card-detail.component.scss'],
 })
 export class CardDetailComponent {
 
 	constructor(
 		public placeService: PlaceService,
 		protected dialogRef: MatDialogRef<CardDetailComponent>,
-		@Inject(MAT_DIALOG_DATA) public data: ICard
+		@Inject(MAT_DIALOG_DATA) public data: ICard,
 	) {
 	}
 

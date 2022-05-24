@@ -26,7 +26,7 @@ import {RouterModule} from '@angular/router';
 	exports: [
 		TopMenuComponent,
 		SideMenuComponent,
-	]
+	],
 })
 export class MenuModule {
 }

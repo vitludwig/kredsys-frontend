@@ -12,7 +12,7 @@ import {AlertService} from '../../../../common/services/alert/alert.service';
 @Component({
 	selector: 'app-sale-summary',
 	templateUrl: './sale-summary.component.html',
-	styleUrls: ['./sale-summary.component.scss']
+	styleUrls: ['./sale-summary.component.scss'],
 })
 export class SaleSummaryComponent {
 	@Input()
@@ -34,7 +34,7 @@ export class SaleSummaryComponent {
 
 	public setItemAmount(item: IOrderItem, value: number): void {
 		if(item.count + value === 0) {
-			this.orderService.removeItem(item.item.id)
+			this.orderService.removeItem(item.item.id);
 		}
 		item.count += value;
 	}
@@ -51,7 +51,7 @@ export class SaleSummaryComponent {
 				creatorId: customerId,
 				goodsId: item.item.id,
 				multiplier: item.count,
-			})
+			});
 		}
 		try {
 			await this.transactionService.pay(customerId, this.place.id!, records);

@@ -10,7 +10,7 @@ import {MatIconModule} from '@angular/material/icon';
 
 @NgModule({
 	declarations: [
-		ChargeComponent
+		ChargeComponent,
 	],
 	imports: [
 		SharedModule,
@@ -18,7 +18,7 @@ import {MatIconModule} from '@angular/material/icon';
 		MatInputModule,
 		MatButtonModule,
 		MatIconModule,
-	]
+	],
 })
 export class ChargeModule {
 }

@@ -16,7 +16,7 @@ import {HashMap} from '../../../../../../common/types/HashMap';
 @Component({
 	selector: 'app-user-detail',
 	templateUrl: './user-detail.component.html',
-	styleUrls: ['./user-detail.component.scss']
+	styleUrls: ['./user-detail.component.scss'],
 })
 export class UserDetailComponent implements OnInit {
 	public user: IUser | undefined;
@@ -62,7 +62,7 @@ export class UserDetailComponent implements OnInit {
 			// TODO: handle
 			console.error(e);
 		} finally {
-			this.isLoading = false
+			this.isLoading = false;
 		}
 	}
 
@@ -95,7 +95,7 @@ export class UserDetailComponent implements OnInit {
 	}
 
 	public openCardDetailDialog(): void {
-		let newCard = {
+		const newCard = {
 			description: '',
 			type: 'Card',
 		};
@@ -133,10 +133,10 @@ export class UserDetailComponent implements OnInit {
 				await this.usersService.deleteUserCard(id);
 			}
 			this.cards = this.cards.filter((card) => card.id !== id);
-			this.newCards = this.cards
+			this.newCards = this.cards;
 		} catch(e) {
 			// @ts-ignore
-			this.alertService.error(e.Message ?? 'Nepodarilo se odstranit kartu')
+			this.alertService.error(e.Message ?? 'Nepodarilo se odstranit kartu');
 		}
 	}
 

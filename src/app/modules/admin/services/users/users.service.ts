@@ -8,7 +8,7 @@ import {ICard} from '../../../../common/types/ICard';
 import {ICurrencyAccount} from '../../../../common/types/ICurrency';
 
 @Injectable({
-	providedIn: 'root'
+	providedIn: 'root',
 })
 export class UsersService {
 	protected users: IUser[];

@@ -6,7 +6,7 @@ import {firstValueFrom} from 'rxjs';
 import {environment} from '../../../../../environments/environment';
 
 @Injectable({
-	providedIn: 'root'
+	providedIn: 'root',
 })
 export class GoodsService {
 	protected goods: IGoods[] = [];
@@ -47,7 +47,7 @@ export class GoodsService {
 		const params = {
 			offset: 0,
 			limit: 999, // we dont need to paginate goods types for now
-		}
+		};
 		return (await firstValueFrom(this.http.get<IPaginatedResponse<IGoodsType>>(environment.apiUrl + 'goodstypes', {params: params}))).data;
 	}
 
@@ -79,13 +79,13 @@ export class GoodsService {
 			currencyId: null,
 			placeId: null,
 			deleted: false,
-		}
+		};
 	}
 	public createNewGoodieType(): IGoodsType {
 		return {
 			name: '',
 			icon: '',
 			deleted: false,
-		}
+		};
 	}
 }

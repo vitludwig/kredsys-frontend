@@ -6,24 +6,24 @@ import {firstValueFrom} from 'rxjs';
 import {environment} from '../../../../../environments/environment';
 
 @Injectable({
-	providedIn: 'root'
+	providedIn: 'root',
 })
 export class CurrencyService {
 	protected limit = 10;
 
 	constructor(
-        protected http: HttpClient,
-    ) {
+		protected http: HttpClient,
+	) {
 	}
 
-    public getCurrencies(search: string = '', page: number = 1, limit = this.limit): Promise<IPaginatedResponse<ICurrency>> {
+	public getCurrencies(search: string = '', page: number = 1, limit = this.limit): Promise<IPaginatedResponse<ICurrency>> {
 	    const params = {
 		    offset: (page - 1) * this.limit,
 		    limit: limit,
 	    };
 
 	    return firstValueFrom(this.http.get<IPaginatedResponse<ICurrency>>(environment.apiUrl + 'currencies', {params: params}));
-    }
+	}
 
 	/**
 	 * For now first currency, in future change this flow after currencies are discussed
@@ -50,7 +50,7 @@ export class CurrencyService {
 
 	public editCurrencyAccount(id: number, data: ICurrencyAccount): Promise<ICurrencyAccount> {
 		return firstValueFrom(this.http.put<ICurrencyAccount>(environment.apiUrl + 'currencyaccounts/' + id, {
-			overdraftLimit: data.overdraftLimit
+			overdraftLimit: data.overdraftLimit,
 		}));
 	}
 
@@ -62,6 +62,6 @@ export class CurrencyService {
 			minRechargeAmountWarn: 0,
 			maxRechargeAmountWarn: 0,
 			blocked: false,
-		}
+		};
 	}
 }
