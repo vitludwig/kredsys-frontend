@@ -112,15 +112,6 @@ export class TopMenuComponent implements OnInit, OnDestroy {
 		});
 	}
 
-	public async debugLoadCard(): Promise<void> {
-		try {
-			const cardId = (await this.usersService.getUserCards(this.authService.user!.id!)).data[0]?.uid!;
-			this.customerService.customer = await this.usersService.getUserByCardUid(cardId);
-		} catch(e) {
-			console.error('Debug card load error: ', e);
-		}
-	}
-
 	public ngOnDestroy() {
 		this.unsubscribe.next();
 	}

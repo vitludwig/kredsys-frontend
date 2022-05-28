@@ -1,6 +1,7 @@
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, Renderer2} from '@angular/core';
 import {Subject, takeUntil} from 'rxjs';
 import {CustomerService} from '../../../modules/sale/services/customer/customer.service';
+import {environment} from '../../../../environments/environment';
 
 @Component({
 	selector: 'app-card-loader',
@@ -13,6 +14,8 @@ export class CardLoaderComponent implements OnInit, OnDestroy {
 
 	@Output()
 	public cardIdChange: EventEmitter<number> = new EventEmitter<number>();
+
+	public isDebug: boolean = !environment.production;
 
 	protected unsubscribe: Subject<void> = new Subject();
 	protected keydownListener: any;
@@ -44,6 +47,16 @@ export class CardLoaderComponent implements OnInit, OnDestroy {
 					this.initCardListener();
 				}
 			});
+	}
+
+	public ngOnDestroy(): void {
+		this.unsubscribe.next();
+		this.removeKeydownListener();
+	}
+
+	public async debugLoadCard(): Promise<void> {
+		console.log('debugging');
+		this.cardIdChange.emit(2866252548);
 	}
 
 	protected initCardListener(): void {
@@ -96,10 +109,4 @@ export class CardLoaderComponent implements OnInit, OnDestroy {
 			this.keydownListener = undefined;
 		}
 	}
-
-	public ngOnDestroy(): void {
-		this.unsubscribe.next();
-		this.removeKeydownListener();
-	}
-
 }

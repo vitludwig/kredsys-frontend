@@ -12,15 +12,6 @@
 			</button>
 			{{ pageName }}
 			<span class="place-name" *ngIf="place && pageName === 'Prodej'">({{ place.name }})</span>
-
-			<button
-				mat-raised-button
-				class="ms-2"
-				(click)="debugLoadCard()"
-			>
-				<mat-icon>bug_report</mat-icon>
-				Simulovat kartu
-			</button>
 		</div>
 		<ng-container *ngIf="customer">
 			<div>{{ customer.name }}</div>
