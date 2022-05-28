@@ -1,10 +1,10 @@
 import {Component, OnInit} from '@angular/core';
-import {TransactionService} from '../../../../common/services/transaction/transaction.service';
-import {ITransaction} from '../../../../common/services/transaction/types/ITransaction';
 import {UsersService} from '../../services/users/users.service';
 import {IPlace} from '../../../../common/types/IPlace';
 import {PlaceService} from '../../services/place/place/place.service';
 import {ActivatedRoute} from '@angular/router';
+import {TransactionService} from './services/transaction/transaction.service';
+import {ITransaction} from './services/transaction/types/ITransaction';
 
 @Component({
 	selector: 'app-transactions',

@@ -1,5 +1,4 @@
 import {AfterViewInit, Component, Input, ViewChild} from '@angular/core';
-import {ITransaction} from '../../../../../../common/services/transaction/types/ITransaction';
 import {UsersService} from '../../../../services/users/users.service';
 import {HashMap} from '../../../../../../common/types/HashMap';
 import {IUser} from '../../../../../../common/types/IUser';
@@ -7,6 +6,10 @@ import {Animations} from '../../../../../../common/utils/animations';
 import {MatSort} from '@angular/material/sort';
 import {MatTableDataSource} from '@angular/material/table';
 import {MatPaginator} from '@angular/material/paginator';
+import {ITransaction, ITransactionResponse} from '../../services/transaction/types/ITransaction';
+import {TransactionService} from '../../services/transaction/transaction.service';
+import {GoodsService} from '../../../../services/goods/goods.service';
+import {IGoods} from '../../../../../../common/types/IGoods';
 
 @Component({
 	selector: 'app-transaction-list',
@@ -19,8 +22,13 @@ import {MatPaginator} from '@angular/material/paginator';
 export class TransactionListComponent implements AfterViewInit {
 	public displayedColumns: string[] = ['amount', 'type', 'created'];
 	public dataSource: MatTableDataSource<ITransaction>;
-	public users: HashMap<IUser> = {};
 	public expandedRow: ITransaction | null;
+
+	public usersMap: HashMap<IUser> = {};
+	public transactionsMap: HashMap<ITransactionResponse> = {};
+	public goodsMap: HashMap<IGoods> = {};
+
+	public detailReady: boolean = false;
 
 	@ViewChild(MatSort)
 	public sort: MatSort;
@@ -47,6 +55,8 @@ export class TransactionListComponent implements AfterViewInit {
 
 	constructor(
 		protected usersService: UsersService,
+		protected transactionService: TransactionService,
+		protected goodsService: GoodsService,
 	) {
 	}
 
@@ -60,11 +70,19 @@ export class TransactionListComponent implements AfterViewInit {
 			this.expandedRow = null;
 			return;
 		}
+		this.detailReady = false;
+		try {
+			this.expandedRow = row;
 
-		this.expandedRow = row;
-
-		if(!this.users[row.userId]) {
-			this.users[row.userId] = await this.usersService.getUser(row.userId); // TODO: cache this in userService or, ideally, by decorator on request
+			this.usersMap[row.userId] = await this.usersService.getUser(row.userId);
+			const transaction = await this.transactionService.getTransaction(row.id);
+			this.transactionsMap[row.id] = transaction
+			for(const record of transaction.records) {
+				this.goodsMap[record.goodsId] = await this.goodsService.getGoodie(record.goodsId);
+			}
+			this.detailReady = true;
+		} catch(e) {
+			console.error('Cannot load transaction detail');
 		}
 	}
 

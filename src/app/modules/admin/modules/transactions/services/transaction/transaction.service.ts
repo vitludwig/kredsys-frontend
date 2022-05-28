@@ -7,8 +7,11 @@ import {
 } from './types/ITransaction';
 import {firstValueFrom} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
-import {environment} from '../../../../environments/environment';
-import {IPaginatedResponse} from '../../types/IPaginatedResponse';
+import {ETime} from '../../../../../../common/types/ETime';
+import {ECacheTag} from '../../../../../../common/types/ECacheTag';
+import {environment} from '../../../../../../../environments/environment';
+import {IPaginatedResponse} from '../../../../../../common/types/IPaginatedResponse';
+import {cache} from '../../../../../../common/decorators/cache';
 
 @Injectable({
 	providedIn: 'root',
@@ -20,6 +23,13 @@ export class TransactionService {
 	) {
 	}
 
+	@cache(ETime.DAY, [ECacheTag.TRANSACTION])
+	public getTransaction(id: number): Promise<ITransactionResponse> {
+		return firstValueFrom(this.http.get<ITransactionResponse>(environment.apiUrl + 'transactions/' + id));
+	}
+
+	// TODO: after backend support filtering, fix this method (limit)
+	@cache(ETime.DAY, [ECacheTag.TRANSACTIONS])
 	public getTransactions(): Promise<IPaginatedResponse<ITransaction>> {
 		const params = {
 			offset: 0,

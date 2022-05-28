@@ -4,16 +4,16 @@ import {ChargeDialogComponent} from '../../../../../modules/sale/components/char
 import {MatDrawer} from '@angular/material/sidenav';
 import {ActivationEnd, Router} from '@angular/router';
 import {CustomerService} from '../../../../../modules/sale/services/customer/customer.service';
-import {TransactionService} from '../../../../services/transaction/transaction.service';
 import {IPlace} from '../../../../types/IPlace';
 import {ICurrency, ICurrencyAccount} from '../../../../types/ICurrency';
 import {CurrencyService} from '../../../../../modules/admin/services/currency/currency.service';
-import {ITransactionRecordDeposit} from '../../../../services/transaction/types/ITransaction';
 import {Subject, takeUntil} from 'rxjs';
 import {IUser} from '../../../../types/IUser';
 import {UsersService} from '../../../../../modules/admin/services/users/users.service';
 import {OrderService} from '../../../../../modules/sale/services/order/order.service';
 import {AuthService} from '../../../../../modules/login/services/auth/auth.service';
+import {TransactionService} from '../../../../../modules/admin/modules/transactions/services/transaction/transaction.service';
+import {ITransactionRecordDeposit} from '../../../../../modules/admin/modules/transactions/services/transaction/types/ITransaction';
 
 @Component({
 	selector: 'app-top-menu',

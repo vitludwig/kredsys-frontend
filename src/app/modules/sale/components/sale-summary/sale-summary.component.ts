@@ -1,14 +1,14 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {OrderService} from '../../services/order/order.service';
 import {SaleService} from '../../services/sale/sale.service';
 import {IOrderItem} from '../../types/IOrderItem';
 import {IPlace} from '../../../../common/types/IPlace';
 import {UsersService} from '../../../admin/services/users/users.service';
 import {CustomerService} from '../../services/customer/customer.service';
-import {ITransactionRecordPayment} from '../../../../common/services/transaction/types/ITransaction';
-import {TransactionService} from '../../../../common/services/transaction/transaction.service';
 import {AlertService} from '../../../../common/services/alert/alert.service';
 import {HttpErrorResponse} from '@angular/common/http';
+import {TransactionService} from '../../../admin/modules/transactions/services/transaction/transaction.service';
+import {ITransactionRecordPayment} from '../../../admin/modules/transactions/services/transaction/types/ITransaction';
 
 @Component({
 	selector: 'app-sale-summary',

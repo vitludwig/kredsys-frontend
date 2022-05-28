@@ -1,6 +1,4 @@
 import {Component, OnInit} from '@angular/core';
-import {ITransactionRecordDeposit} from '../../../../common/services/transaction/types/ITransaction';
-import {TransactionService} from '../../../../common/services/transaction/transaction.service';
 import {UsersService} from '../../services/users/users.service';
 import {IUser} from '../../../../common/types/IUser';
 import {CurrencyService} from '../../services/currency/currency.service';
@@ -8,6 +6,8 @@ import {ICurrency, ICurrencyAccount} from '../../../../common/types/ICurrency';
 import {AuthService} from '../../../login/services/auth/auth.service';
 import {PlaceService} from '../../services/place/place/place.service';
 import {AlertService} from '../../../../common/services/alert/alert.service';
+import {TransactionService} from '../transactions/services/transaction/transaction.service';
+import {ITransactionRecordDeposit} from '../transactions/services/transaction/types/ITransaction';
 
 @Component({
 	selector: 'app-charge',
@@ -49,7 +49,7 @@ export class ChargeComponent implements OnInit {
 
 		try {
 			const result = await this.transactionService.deposit(
-				this.user.id!,
+				this.user?.id!,
 				this.placeService.selectedPlace!.id!,
 				this.currencyAccount?.currencyId ?? this.defaultCurrency.id!,
 				records,
