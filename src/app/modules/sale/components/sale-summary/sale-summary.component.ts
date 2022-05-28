@@ -8,6 +8,7 @@ import {CustomerService} from '../../services/customer/customer.service';
 import {ITransactionRecordPayment} from '../../../../common/services/transaction/types/ITransaction';
 import {TransactionService} from '../../../../common/services/transaction/transaction.service';
 import {AlertService} from '../../../../common/services/alert/alert.service';
+import {HttpErrorResponse} from '@angular/common/http';
 
 @Component({
 	selector: 'app-sale-summary',
@@ -29,7 +30,13 @@ export class SaleSummaryComponent {
 	}
 
 	public async loadUserId(uid: number): Promise<void> {
-		this.customerService.customer = await this.usersService.getUserByCardUid(uid);
+		try {
+			this.customerService.customer = await this.usersService.getUserByCardUid(uid);
+		} catch(e) {
+			if(e instanceof HttpErrorResponse) {
+				this.alertService.error(e.error.Message);
+			}
+		}
 	}
 
 	public setItemAmount(item: IOrderItem, value: number): void {
@@ -62,12 +69,14 @@ export class SaleSummaryComponent {
 			this.customerService.logout();
 		} catch(e) {
 			console.error('Cannot make payment: ', e);
-			// @ts-ignore
-			if(e.error.Code === 404) {
-				this.alertService.error('Nebyl nalezen uživatelům účet, hybaj na infostánek!');
+			if(e instanceof HttpErrorResponse) {
+				if(e.error.Code === 404) {
+					this.alertService.error('Nebyl nalezen uživatelům účet, hybaj na infostánek!');
+				} else {
+					this.alertService.error(e.error.Message);
+				}
 			} else {
-				// @ts-ignore
-				this.alertService.error(e.error.Message);
+				this.alertService.error('Vyskytla se neznámá chyba');
 			}
 		}
 	}

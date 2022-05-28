@@ -12,6 +12,7 @@ import {ICurrency, ICurrencyAccount} from '../../../../../../common/types/ICurre
 import {Utils} from '../../../../../../common/utils/Utils';
 import {CurrencyService} from '../../../../services/currency/currency.service';
 import {HashMap} from '../../../../../../common/types/HashMap';
+import {HttpErrorResponse} from '@angular/common/http';
 
 @Component({
 	selector: 'app-user-detail',
@@ -120,9 +121,9 @@ export class UserDetailComponent implements OnInit {
 				}
 				this.cards.push(result);
 			} catch(e) {
-				// TODO: dodelat spravne validace
-				// @ts-ignore
-				this.alertService.error(e.error.Message ?? 'Chyba při přidávání karty');
+				if(e instanceof HttpErrorResponse) {
+					this.alertService.error(e.error.Message ?? 'Chyba při přidávání karty');
+				}
 			}
 		});
 	}
@@ -135,8 +136,9 @@ export class UserDetailComponent implements OnInit {
 			this.cards = this.cards.filter((card) => card.id !== id);
 			this.newCards = this.cards;
 		} catch(e) {
-			// @ts-ignore
-			this.alertService.error(e.Message ?? 'Nepodarilo se odstranit kartu');
+			if(e instanceof HttpErrorResponse) {
+				this.alertService.error(e.error.Message ?? 'Nepodarilo se odstranit kartu');
+			}
 		}
 	}
 

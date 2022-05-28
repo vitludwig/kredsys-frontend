@@ -8,6 +8,7 @@ import {MatDialog} from '@angular/material/dialog';
 import {SortimentDetailComponent} from './components/sortiment-detail/sortiment-detail.component';
 import {IGoods} from '../../../../../../common/types/IGoods';
 import {AlertService} from '../../../../../../common/services/alert/alert.service';
+import {HttpErrorResponse} from '@angular/common/http';
 
 @Component({
 	selector: 'app-place-detail',
@@ -94,9 +95,9 @@ export class PlaceDetailComponent implements OnInit {
 					this.goods.push(result);
 				}
 			} catch(e) {
-				// TODO: dodelat spravne validace
-				// @ts-ignore
-				this.alertService.error(e.error.Message ?? 'Chyba při přidávání sortimentu');
+				if(e instanceof HttpErrorResponse) {
+					this.alertService.error(e.error.Message ?? 'Chyba při přidávání sortimentu');
+				}
 			}
 		});
 	}
