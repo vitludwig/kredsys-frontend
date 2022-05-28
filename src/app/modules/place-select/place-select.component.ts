@@ -23,8 +23,8 @@ export class PlaceSelectComponent {
 		return this.placeService.getAllPlaces();
 	}
 
-	public selectPlace(): void {
-		this.placeService.selectedPlace = this.place;
+	public async selectPlace(): Promise<void> {
+		this.placeService.selectedPlace = await this.placeService.getPlace(this.place.id!);
 		this.router.navigate(['/' + ERoute.SALE]);
 	}
 

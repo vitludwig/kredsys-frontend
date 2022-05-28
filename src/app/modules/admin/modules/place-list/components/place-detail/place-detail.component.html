@@ -1,11 +1,15 @@
-<div class="row mb-4">
-	<div class="col-12">
+<div class="d-flex justify-content-between mb-4">
 		<button backButton
 			mat-raised-button>
 			<mat-icon>keyboard_arrow_left</mat-icon>
 			Zpět
 		</button>
-	</div>
+
+		<a mat-raised-button
+			[routerLink]="['/', ERoute.ADMIN, ERoute.ADMIN_TRANSACTIONS, place.id]"
+		>
+			Seznam transakcí
+		</a>
 </div>
 
 <div class="row"

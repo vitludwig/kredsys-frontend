@@ -2,7 +2,6 @@ import {Injectable} from '@angular/core';
 import {ISaleItem} from '../../types/ISaleItem';
 import {IOrderItem} from '../../types/IOrderItem';
 import {BehaviorSubject, Observable} from 'rxjs';
-import {IUser} from '../../../../common/types/IUser';
 
 @Injectable({
 	providedIn: 'root',
@@ -61,7 +60,7 @@ export class OrderService {
 		this.total = 0;
 	}
 
-	protected refreshTotal(): void {
+	public refreshTotal(): void {
 		if(this.items.length === 0) {
 			this.total = 0;
 

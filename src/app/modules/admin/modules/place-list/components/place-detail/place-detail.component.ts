@@ -22,6 +22,7 @@ export class PlaceDetailComponent implements OnInit {
 	public isEdit: boolean = false;
 
 	public readonly EPlaceRole = EPlaceRole;
+	public readonly ERoute = ERoute;
 
 	constructor(
 		public placeService: PlaceService,

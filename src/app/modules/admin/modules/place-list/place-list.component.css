@@ -1,3 +1,6 @@
+.places-table {
+  width: 100%;
+}
 .places-table .mat-table {
   width: 100%;
   display: table;

@@ -8,6 +8,7 @@ import {
 import {firstValueFrom} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {environment} from '../../../../environments/environment';
+import {IPaginatedResponse} from '../../types/IPaginatedResponse';
 
 @Injectable({
 	providedIn: 'root',
@@ -17,6 +18,14 @@ export class TransactionService {
 	constructor(
 		protected http: HttpClient,
 	) {
+	}
+
+	public getTransactions(): Promise<IPaginatedResponse<ITransaction>> {
+		const params = {
+			offset: 0,
+			limit: 9999,
+		};
+		return firstValueFrom(this.http.get<IPaginatedResponse<ITransaction>>(environment.apiUrl + 'transactions', {params: params}));
 	}
 
 	public pay(userId: number, placeId: number, records: ITransactionRecordPayment[]): Promise<ITransactionResponse> {

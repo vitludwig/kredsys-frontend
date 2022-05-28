@@ -1,15 +1,16 @@
-import {Injectable} from '@angular/core';
+import {Injectable, OnDestroy} from '@angular/core';
 import {IPaginatedResponse} from '../../../../../common/types/IPaginatedResponse';
 import {EPlaceRole, IPlace} from '../../../../../common/types/IPlace';
-import {firstValueFrom} from 'rxjs';
+import {firstValueFrom, Subject, takeUntil} from 'rxjs';
 import {environment} from '../../../../../../environments/environment';
 import {HttpClient} from '@angular/common/http';
 import {IGoods} from '../../../../../common/types/IGoods';
+import {AuthService} from '../../../../login/services/auth/auth.service';
 
 @Injectable({
 	providedIn: 'root',
 })
-export class PlaceService {
+export class PlaceService implements OnDestroy {
 	#selectedPlace: IPlace | null;
 
 	public get selectedPlace(): IPlace | null {
@@ -19,19 +20,28 @@ export class PlaceService {
 	public set selectedPlace(value: IPlace | null) {
 		this.#selectedPlace = value;
 		localStorage.setItem('selectedPlaceId', value?.id + '');
+		localStorage.setItem('placeToken', value?.apiToken + '');
 	}
 
 	protected limit = 5;
+	protected unsubscribe: Subject<void> = new Subject<void>()
 
 	constructor(
 		protected http: HttpClient,
+		protected authService: AuthService,
 	) {
-		const placeId = localStorage.getItem('selectedPlaceId');
-		if(placeId) {
-			this.getPlace(Number(placeId)).then((place) => {
-				this.#selectedPlace = place;
-			});
-		}
+		this.authService.isLogged$
+			.pipe(takeUntil(this.unsubscribe))
+			.subscribe(async (isLogged) => {
+				const placeId = localStorage.getItem('selectedPlaceId');
+				if(isLogged && placeId) {
+					this.#selectedPlace = await this.getPlace(Number(placeId));
+				}
+			})
+	}
+
+	public ngOnDestroy() {
+		this.unsubscribe.next();
 	}
 
 	public async getAllPlaces(search: string = ''): Promise<IPlace[]> {
@@ -73,7 +83,7 @@ export class PlaceService {
 	}
 
 	public async addGoods(goodsId: number, placeId: number): Promise<void> {
-		return firstValueFrom(this.http.post<void>(environment.apiUrl + 'places/' + placeId + '/goods?placeId='+placeId+'&goodsId='+goodsId, {
+		return firstValueFrom(this.http.post<void>(environment.apiUrl + 'places/' + placeId + '/goods?placeId=' + placeId + '&goodsId=' + goodsId, {
 			placeId,
 			goodsId,
 		}));

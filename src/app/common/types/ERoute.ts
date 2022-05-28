@@ -10,6 +10,7 @@ export enum ERoute {
 	ADMIN_GOODS_TYPES = 'types',
 	ADMIN_CURRENCIES = 'currencies',
 	ADMIN_CHARGE = 'charge',
+	ADMIN_TRANSACTIONS = 'transactions',
 	EDIT = 'edit',
 	NEW = 'new',
 }

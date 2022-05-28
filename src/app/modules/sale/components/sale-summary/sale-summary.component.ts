@@ -44,6 +44,7 @@ export class SaleSummaryComponent {
 			this.orderService.removeItem(item.item.id);
 		}
 		item.count += value;
+		this.orderService.refreshTotal();
 	}
 
 	public async submitOrder(): Promise<void> {

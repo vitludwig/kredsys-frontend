@@ -32,6 +32,12 @@
 				Zboží
 			</a>
 			<a mat-list-item
+				[class.active]="router.url === '/' + ERoute.ADMIN + '/' + ERoute.ADMIN_TRANSACTIONS"
+				[routerLink]="[ERoute.ADMIN, ERoute.ADMIN_TRANSACTIONS]"
+			>
+				Transakce
+			</a>
+			<a mat-list-item
 				[class.active]="router.url === '/' + ERoute.ADMIN + '/' + ERoute.ADMIN_CURRENCIES"
 				[routerLink]="[ERoute.ADMIN, ERoute.ADMIN_CURRENCIES]"
 			>

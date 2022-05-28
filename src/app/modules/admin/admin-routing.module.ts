@@ -11,6 +11,7 @@ import {CurrencyListComponent} from './modules/currency-list/currency-list.compo
 import {CurrencyDetailComponent} from './modules/currency-list/components/currency-detail/currency-detail.component';
 import {GoodsTypeDetailComponent} from './modules/goods-list/components/goods-type-detail/goods-type-detail.component';
 import {ChargeComponent} from './modules/charge/charge.component';
+import {TransactionsComponent} from './modules/transactions/transactions.component';
 
 const routes: Routes = [
 	{
@@ -132,6 +133,25 @@ const routes: Routes = [
 				component: CurrencyDetailComponent,
 				data: {
 					name: 'Přidat měnu',
+				},
+			},
+		],
+	},
+	{
+		path: ERoute.ADMIN_TRANSACTIONS,
+		children: [
+			{
+				path: '',
+				component: TransactionsComponent,
+				data: {
+					name: 'Správa transakcí',
+				},
+			},
+			{
+				path: ':id',
+				component: TransactionsComponent,
+				data: {
+					name: 'Správa transakcí',
 				},
 			},
 		],

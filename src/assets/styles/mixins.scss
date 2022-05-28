@@ -1,4 +1,5 @@
 @mixin expandable-table {
+  width: 100%;
   .mat-table {
     width: 100%;
     display: table;
