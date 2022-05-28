@@ -70,7 +70,7 @@ export class PlaceDetailComponent implements OnInit {
 
 	public async drop(event: CdkDragDrop<string[]>): Promise<void> {
 		try {
-			await this.placeService.moveGoods(this.place!.id!, this.goods[event.previousIndex].id!, this.goods[event.previousIndex + 1].id!);
+			await this.placeService.moveGoods(this.place!.id!, this.goods[event.previousIndex].id!, this.goods[event.currentIndex].id!);
 			moveItemInArray(this.goods, event.previousIndex, event.currentIndex);
 		} catch(e) {
 			console.error('Canot move goods: ', e);
