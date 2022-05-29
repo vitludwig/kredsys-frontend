@@ -48,7 +48,9 @@ export class AuthService {
 
 		localStorage.setItem('userId', result.userId + '');
 		localStorage.setItem('apiToken', result.token + '');
-		this.user = await this.usersService.getUser(result.userId);
+		const user = await this.usersService.getUser(result.userId);
+		user.roles = result.roles;
+		this.user = user;
 		return result;
 	}
 

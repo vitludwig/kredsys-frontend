@@ -53,6 +53,20 @@
 				>
 			</mat-form-field>
 
+			<mat-form-field *ngIf="!isEdit"
+				appearance="standard"
+				class="w-100"
+			>
+				<mat-label>Heslo</mat-label>
+				<input matInput
+					placeholder="Heslo"
+					name="password"
+					type="password"
+					required
+					[(ngModel)]="user.password"
+				>
+			</mat-form-field>
+
 			<ng-container *ngIf="user.id">
 				<mat-form-field appearance="standard"
 					class="w-100"
@@ -68,17 +82,18 @@
 					<span matSuffix>{{ currencies[account.currencyId].symbol }}</span>
 				</mat-form-field>
 			</ng-container>
-			<!--			<mat-form-field appearance="standard"-->
-			<!--				required-->
-			<!--				class="w-100">-->
-			<!--				<mat-label>Role</mat-label>-->
-			<!--				<mat-select name="role"-->
-			<!--					[(ngModel)]="user.role">-->
-			<!--					<mat-option [value]="EUserRole.ADMIN">Admin</mat-option>-->
-			<!--					<mat-option [value]="EUserRole.VISITOR">Návštěvník</mat-option>-->
-			<!--					<mat-option [value]="EUserRole.MERCHANT">Prodavač</mat-option>-->
-			<!--				</mat-select>-->
-			<!--			</mat-form-field>-->
+
+			<mat-form-field appearance="standard"
+				required
+				class="w-100">
+				<mat-label>Role</mat-label>
+				<mat-select name="role"
+					[(ngModel)]="user.roles[0]"
+				>
+					<mat-option *ngFor="let role of roles"
+						[value]="role">{{ role }}</mat-option>
+				</mat-select>
+			</mat-form-field>
 
 			<div>
 				<button mat-raised-button

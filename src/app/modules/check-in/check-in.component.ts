@@ -38,7 +38,7 @@ export class CheckInComponent implements OnInit {
 
 	public async ngOnInit(): Promise<void> {
 		this.user = this.usersService.createNewUser();
-		this.user.role = EUserRole.MEMBER;
+		this.user.roles = [EUserRole.MEMBER];
 		this.defaultCurrency = await this.currencyService.getDefaultCurrency();
 	}
 
@@ -50,7 +50,7 @@ export class CheckInComponent implements OnInit {
 	}
 
 	public selectUser(user: IUser): void {
-		user.role = user.role ?? EUserRole.MEMBER;
+		user.roles = user.roles ?? [EUserRole.MEMBER];
 		this.user = user;
 	}
 

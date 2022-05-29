@@ -2,8 +2,9 @@ export interface IUser {
 	id?: number;
 	name: string;
 	email: string;
+	password?: string;
 	memberId: number | null;
-	role?: EUserRole; // basic, band, org...
+	roles?: EUserRole[]; // basic, band, org...
 	blocked: boolean;
 }
 

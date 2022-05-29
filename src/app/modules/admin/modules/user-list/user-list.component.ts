@@ -61,9 +61,10 @@ export class UserListComponent implements OnInit, OnDestroy {
 				startWith({}),
 				switchMap(() => {
 					this.isUsersLoading = true;
+					const offset = (this.paginator.pageIndex - 1) * 10
 					return this.usersService.getUsers(
 						'',
-						(this.paginator.pageIndex - 1) * 10,
+						offset >= 0 ? offset : 0,
 						10
 					);
 				}),

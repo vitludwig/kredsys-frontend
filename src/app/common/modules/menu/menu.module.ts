@@ -9,6 +9,7 @@ import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatListModule} from '@angular/material/list';
 import {RouterModule} from '@angular/router';
 import {SharedModule} from '../../../shared.module';
+import {LoginModule} from '../../../modules/login/login.module';
 
 @NgModule({
 	declarations: [
@@ -24,6 +25,7 @@ import {SharedModule} from '../../../shared.module';
 		MatIconModule,
 		MatListModule,
 		SharedModule,
+		LoginModule,
 	],
 	exports: [
 		TopMenuComponent,

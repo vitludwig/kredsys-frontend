@@ -24,6 +24,7 @@ export class UserDetailComponent implements OnInit {
 	public accounts: ICurrencyAccount[] = [];
 	public cards: ICard[] = [];
 	public currencies: HashMap<ICurrency>;
+	public roles: string[] = Object.values(EUserRole);
 
 	public newCards: ICard[] = [];
 	public isLoading: boolean = false;

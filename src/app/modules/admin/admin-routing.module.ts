@@ -12,6 +12,7 @@ import {CurrencyDetailComponent} from './modules/currency-list/components/curren
 import {GoodsTypeDetailComponent} from './modules/goods-list/components/goods-type-detail/goods-type-detail.component';
 import {ChargeComponent} from './modules/charge/charge.component';
 import {TransactionsComponent} from './modules/transactions/transactions.component';
+import {PlaceGuard} from '../../common/utils/place.guard';
 
 const routes: Routes = [
 	{
@@ -159,6 +160,7 @@ const routes: Routes = [
 	{
 		path: ERoute.ADMIN_CHARGE,
 		component: ChargeComponent,
+		canActivate: [PlaceGuard],
 		data: {
 			name: 'Nabít peňauze',
 		},
