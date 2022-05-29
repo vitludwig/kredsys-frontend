@@ -58,6 +58,12 @@
 		</a>
 
 		<a mat-list-item
+			[routerLink]="ERoute.CHECK_IN"
+			[class.active]="router.url === '/' + ERoute.CHECK_IN">
+			Rychloregistrace
+		</a>
+
+		<a mat-list-item
 			href="#"
 			*ngIf="authService.isLogged"
 			(click)="authService.logout()"

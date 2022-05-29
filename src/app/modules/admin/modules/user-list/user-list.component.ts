@@ -63,7 +63,8 @@ export class UserListComponent implements OnInit, OnDestroy {
 					this.isUsersLoading = true;
 					return this.usersService.getUsers(
 						'',
-						this.paginator.pageIndex + 1,
+						(this.paginator.pageIndex - 1) * 10,
+						10
 					);
 				}),
 				map((data) => {
@@ -119,8 +120,8 @@ export class UserListComponent implements OnInit, OnDestroy {
 		});
 	}
 
-	protected async loadUsers(search: string = '', page: number = 1): Promise<void> {
-		const users = await this.usersService.getUsers(search, page);
+	protected async loadUsers(search: string = '', offset?: number, limit?: number): Promise<void> {
+		const users = await this.usersService.getUsers(search, offset, limit);
 		const data = users.data = users.data.filter((user) => !user.blocked);
 
 		this.usersData = data;

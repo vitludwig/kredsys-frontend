@@ -32,6 +32,7 @@ export class CurrencyService {
 	/**
 	 * For now first currency, in future change this flow after currencies are discussed
 	 */
+	@cache(ETime.DAY, [ECacheTag.CURRENCIES])
 	public async getDefaultCurrency(): Promise<ICurrency> {
 		return (await this.getCurrencies()).data[0];
 	}

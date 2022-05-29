@@ -1,39 +1,5 @@
 <div class="row justify-content-center p-3">
 	<div class="col-4">
-		<app-card-loader *ngIf="!user"
-			(cardIdChange)="setCardId($event)">
-
-		</app-card-loader>
-
-		<ng-container *ngIf="user">
-			<h2>Stav: {{ currencyAccount?.currentAmount ?? 0 }} Kč</h2>
-			<mat-form-field appearance="standard"
-				class="w-100">
-				<mat-label>Částka</mat-label>
-				<input matInput
-					[(ngModel)]="amount"
-					type="number">
-				<div matSuffix>Kč</div>
-			</mat-form-field>
-
-			<div class="btn-group predefined"
-				role="group"
-			>
-				<button mat-stroked-button
-					class="me-2"
-					*ngFor="let value of predefinedAmounts"
-					(click)="amount = value"
-				>{{ value }} Kč
-				</button>
-			</div>
-
-			<button mat-raised-button
-				color="primary"
-				class="submit-btn"
-				(click)="submit()"
-			>
-				Dobít
-			</button>
-		</ng-container>
+		<app-charge-form (charge)="onCharge($event)"></app-charge-form>
 	</div>
 </div>

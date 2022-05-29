@@ -2,6 +2,7 @@ export enum ERoute {
 	LOGIN = 'login',
 	LOGIN_SIGN_IN = 'sign-in',
 	PLACE_SELECT = 'place-select',
+	CHECK_IN = 'check-in',
 	SALE = 'sale',
 	ADMIN = 'admin',
 	ADMIN_USERS = 'users',

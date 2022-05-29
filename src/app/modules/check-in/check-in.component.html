@@ -1,0 +1,132 @@
+<div class="row">
+	<div class="col-md-6 col-xs-12">
+		<h2>Uživatel</h2>
+		<form #userForm="ngForm"
+			(ngSubmit)="userForm.valid && onSubmit()"
+		>
+			<mat-form-field appearance="standard"
+				class="w-100">
+				<mat-label>Členské ID</mat-label>
+				<input matInput
+					placeholder="Členské ID"
+					name="memberId"
+					type="number"
+					required
+					[(ngModel)]="user.memberId"
+				>
+			</mat-form-field>
+
+			<mat-form-field appearance="standard"
+				class="w-100">
+				<mat-label>Jméno</mat-label>
+				<input matInput
+					placeholder="Jméno"
+					name="userName"
+					required
+					[(ngModel)]="user.name"
+				>
+			</mat-form-field>
+
+			<mat-form-field appearance="standard"
+				class="w-100">
+				<mat-label>E-mail</mat-label>
+				<input matInput
+					placeholder="E-mail"
+					name="email"
+					required
+					[(ngModel)]="user.email"
+				>
+			</mat-form-field>
+
+			<mat-form-field appearance="standard"
+				required
+				class="w-100">
+				<mat-label>Role</mat-label>
+				<mat-select name="role"
+					[(ngModel)]="user.role"
+				>
+					<mat-option *ngFor="let role of roles"
+						[value]="role">{{ role }}</mat-option>
+				</mat-select>
+			</mat-form-field>
+
+			<app-card-loader *ngIf="!newCard"
+				(cardIdChange)="setCard($event)">
+			</app-card-loader>
+
+			<div [hidden]="!newCard">
+				<mat-form-field appearance="standard"
+					class="w-100"
+				>
+					<mat-label>Karta</mat-label>
+					<input matInput
+						placeholder="Karta"
+						name="card"
+						type="number"
+						required
+						disabled
+						[value]="newCard"
+					>
+				</mat-form-field>
+
+				<mat-form-field appearance="standard"
+					class="w-100">
+					<mat-label>Vklad (volitelné)</mat-label>
+					<input matInput
+						[(ngModel)]="deposit"
+						type="number">
+					<div matSuffix>Kč</div>
+				</mat-form-field>
+			</div>
+
+			<div>
+				<button mat-raised-button
+					class="w-100 submit-btn"
+					color="primary"
+					type="submit"
+					[disabled]="!userForm.valid"
+				>
+					Přidat uživatele
+				</button>
+			</div>
+		</form>
+	</div>
+
+	<div class="col-md-6 col-xs-12">
+		<div class="d-flex align-items-center justify-content-between">
+			<h2 class="mb-0 me-5">Uživatelé</h2>
+			<mat-form-field appearance="standard"
+				class="w-100">
+				<mat-label>Vyhledat</mat-label>
+				<input matInput
+					#search
+					(keyup)="onUserSearch(search.value)">
+			</mat-form-field>
+		</div>
+
+		<mat-action-list>
+			<button mat-list-item
+				*ngFor="let user of users"
+				(click)="selectUser(user)"
+			>
+				{{ user.name }} (id: {{ user.memberId }}) | {{ user.email }}
+				<button mat-raised-button
+					color="accent"
+					class="ms-auto"
+				>
+					Vybrat
+				</button>
+			</button>
+		</mat-action-list>
+	</div>
+	<!--	<div class="col-md-4 col-xs-12">-->
+	<!--		<h2>Nabít peníze</h2>-->
+	<!--		<ng-container *ngIf="newCard">-->
+	<!--			<app-charge-form [cardId]="newCard"></app-charge-form>-->
+	<!--		</ng-container>-->
+
+	<!--		<ng-container *ngIf="!newCard">-->
+	<!--			<h4>Nejprve přidejte kartu</h4>-->
+	<!--		</ng-container>-->
+	<!--	</div>-->
+</div>

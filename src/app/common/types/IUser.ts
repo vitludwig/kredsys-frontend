@@ -8,7 +8,9 @@ export interface IUser {
 }
 
 export enum EUserRole {
-	ADMIN = 'admin',
-	VISITOR = 'visitor',
-	MERCHANT = 'merchant',
+	ADMIN = 'Admin',
+	MEMBER = 'Member',
+	PLACE = 'Place',
+	REGISTRAR = 'Registrar',
+	POWER_SALESMAN = 'PowerSalesman',
 }

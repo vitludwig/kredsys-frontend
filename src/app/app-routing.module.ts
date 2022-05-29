@@ -1,6 +1,5 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
-import {SaleComponent} from './modules/sale/sale.component';
 import {ERoute} from './common/types/ERoute';
 import {AuthGuard} from './common/utils/auth.guard';
 import {PlaceGuard} from './common/utils/place.guard';
@@ -27,6 +26,10 @@ const routes: Routes = [
 			{
 				path: ERoute.PLACE_SELECT,
 				loadChildren: () => import('./modules/place-select/place-select.module').then((m) => m.PlaceSelectModule),
+			},
+			{
+				path: ERoute.CHECK_IN,
+				loadChildren: () => import('./modules/check-in/check-in.module').then((m) => m.CheckInModule),
 			},
 		],
 	},

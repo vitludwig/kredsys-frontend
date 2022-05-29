@@ -24,11 +24,12 @@ export class UsersService {
 	}
 
 	@cache(ETime.DAY, [ECacheTag.USERS])
-	public async getUsers(search: string = '', page: number = 1, limit = this.limit): Promise<IPaginatedResponse<IUser>> {
+	public async getUsers(search: string = '', offset: number = 0, limit = this.limit): Promise<IPaginatedResponse<IUser>> {
 		const params = {
-			offset: (page - 1) * this.limit,
+			offset: offset,
 			limit: limit,
 			blocked: false, // TODO: create filtering of blocked users in grid
+			name: search,
 		};
 
 		return firstValueFrom(this.http.get<IPaginatedResponse<IUser>>(environment.apiUrl + 'users', {params: params}));
@@ -75,7 +76,6 @@ export class UsersService {
 		return firstValueFrom(this.http.get<IUser>(environment.apiUrl + 'cards/' + uid + '/user'));
 	}
 
-	@cache(ETime.DAY, [ECacheTag.USER])
 	public async getUserCurrencyAccounts(userId: number): Promise<ICurrencyAccount[]> {
 		const params = {
 			offset: 0,
