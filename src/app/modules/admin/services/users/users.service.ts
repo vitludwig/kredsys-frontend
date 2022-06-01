@@ -45,6 +45,10 @@ export class UsersService {
 		return firstValueFrom(this.http.put<IUser>(environment.apiUrl + 'users/' + user.id, user));
 	}
 
+	public async editRole(): Promise<void> {
+
+	}
+
 	/**
 	 * Blocks user
 	 * TODO: make backend to allow sending only partial data

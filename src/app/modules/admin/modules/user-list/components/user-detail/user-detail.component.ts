@@ -50,6 +50,7 @@ export class UserDetailComponent implements OnInit {
 			if(userId) {
 				console.log('is edit');
 				this.user = Object.assign({}, await this.usersService.getUser(userId));
+				this.user.roles = [];
 				this.cards = (await this.usersService.getUserCards(userId)).data;
 				this.accounts = await this.usersService.getUserCurrencyAccounts(userId);
 				this.currencies = Utils.toHashMap<ICurrency>((await this.currencyService.getCurrencies()).data, 'id');
