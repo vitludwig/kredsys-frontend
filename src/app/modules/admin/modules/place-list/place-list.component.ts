@@ -55,24 +55,24 @@ export class PlaceListComponent implements OnInit, OnDestroy {
 					return this.placeService.getPlaces(
 						'',
 						this.paginator.pageIndex + 1,
-					)
+					);
 				}),
 				map((data) => {
 					// Flip flag to show that loading has finished.
 					this.isPlacesLoading = false;
 
-					if (data === null) {
+					if(data === null) {
 						return [];
 					}
 
 					this.placesTotal = data.total;
 					return data.data;
 				}),
-				takeUntil(this.unsubscribe)
+				takeUntil(this.unsubscribe),
 			)
 			.subscribe((data) => {
 				console.log('new data: ', data);
-				this.placesData = data
+				this.placesData = data;
 			});
 	}
 
@@ -92,7 +92,7 @@ export class PlaceListComponent implements OnInit, OnDestroy {
 		const filterValue = (event.target as HTMLInputElement).value;
 		this.dataSource.filter = filterValue.trim().toLowerCase();
 
-		if (this.dataSource.paginator) {
+		if(this.dataSource.paginator) {
 			this.dataSource.paginator.firstPage();
 		}
 	}

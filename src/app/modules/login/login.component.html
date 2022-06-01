@@ -4,7 +4,8 @@
 		<mat-card-content>
 			<form [formGroup]="loginForm"
 				#form="ngForm"
-				(ngSubmit)="form.valid && login()">
+				(ngSubmit)="form.valid && login()"
+			>
 				<mat-form-field>
 					<mat-label>Jméno</mat-label>
 					<input type="text"
@@ -29,6 +30,32 @@
 						class="w-100"
 						mat-raised-button
 					>Login
+					</button>
+				</div>
+
+				<div class="mt-2">
+					<button type="submit"
+						color="accent"
+						mat-raised-button
+						(click)="loginAs('admin@test.cz')"
+					>
+						Admin
+					</button>
+
+					<button type="submit"
+						color="accent"
+						mat-raised-button
+						(click)="loginAs('worker@test.cz')"
+					>
+						Worker
+					</button>
+
+					<button type="submit"
+						color="accent"
+						mat-raised-button
+						(click)="loginAs('sales@test.cz')"
+					>
+						Power sales
 					</button>
 				</div>
 			</form>

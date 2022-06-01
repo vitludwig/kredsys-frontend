@@ -11,6 +11,8 @@ import {CurrencyListComponent} from './modules/currency-list/currency-list.compo
 import {CurrencyDetailComponent} from './modules/currency-list/components/currency-detail/currency-detail.component';
 import {GoodsTypeDetailComponent} from './modules/goods-list/components/goods-type-detail/goods-type-detail.component';
 import {ChargeComponent} from './modules/charge/charge.component';
+import {TransactionsComponent} from './modules/transactions/transactions.component';
+import {PlaceGuard} from '../../common/utils/place.guard';
 
 const routes: Routes = [
 	{
@@ -20,24 +22,24 @@ const routes: Routes = [
 				path: '',
 				component: UserListComponent,
 				data: {
-					name: 'Správa uživatelů'
-				}
+					name: 'Správa uživatelů',
+				},
 			},
 			{
 				path: ':id/' + ERoute.EDIT,
 				component: UserDetailComponent,
 				data: {
-					name: 'Upravit uživatele'
-				}
+					name: 'Upravit uživatele',
+				},
 			},
 			{
 				path: ERoute.NEW,
 				component: UserDetailComponent,
 				data: {
-					name: 'Přidat uživatele'
-				}
-			}
-		]
+					name: 'Přidat uživatele',
+				},
+			},
+		],
 	},
 	{
 		path: ERoute.ADMIN_PLACES,
@@ -46,24 +48,24 @@ const routes: Routes = [
 				path: '',
 				component: PlaceListComponent,
 				data: {
-					name: 'Správa míst'
-				}
+					name: 'Správa míst',
+				},
 			},
 			{
 				path: ':id/' + ERoute.EDIT,
 				component: PlaceDetailComponent,
 				data: {
-					name: 'Upravit místo'
-				}
+					name: 'Upravit místo',
+				},
 			},
 			{
 				path: ERoute.NEW,
 				component: PlaceDetailComponent,
 				data: {
-					name: 'Přidat místo'
-				}
-			}
-		]
+					name: 'Přidat místo',
+				},
+			},
+		],
 	},
 	{
 		path: ERoute.ADMIN_GOODS,
@@ -72,22 +74,22 @@ const routes: Routes = [
 				path: '',
 				component: GoodsListComponent,
 				data: {
-					name: 'Správa zboží'
-				}
+					name: 'Správa zboží',
+				},
 			},
 			{
 				path: ':id/' + ERoute.EDIT,
 				component: GoodsDetailComponent,
 				data: {
-					name: 'Upravit zboží'
-				}
+					name: 'Upravit zboží',
+				},
 			},
 			{
 				path: ERoute.NEW,
 				component: GoodsDetailComponent,
 				data: {
-					name: 'Přidat zboží'
-				}
+					name: 'Přidat zboží',
+				},
 			},
 			{
 				path: ERoute.ADMIN_GOODS_TYPES,
@@ -96,19 +98,19 @@ const routes: Routes = [
 						path: ':id/' + ERoute.EDIT,
 						component: GoodsTypeDetailComponent,
 						data: {
-							name: 'Upravit zboží'
-						}
+							name: 'Upravit zboží',
+						},
 					},
 					{
 						path: ERoute.NEW,
 						component: GoodsTypeDetailComponent,
 						data: {
-							name: 'Přidat zboží'
-						}
-					}
-				]
-			}
-		]
+							name: 'Přidat zboží',
+						},
+					},
+				],
+			},
+		],
 	},
 	{
 		path: ERoute.ADMIN_CURRENCIES,
@@ -117,38 +119,58 @@ const routes: Routes = [
 				path: '',
 				component: CurrencyListComponent,
 				data: {
-					name: 'Správa měn'
-				}
+					name: 'Správa měn',
+				},
 			},
 			{
 				path: ':id/' + ERoute.EDIT,
 				component: CurrencyDetailComponent,
 				data: {
-					name: 'Upravit měnu'
-				}
+					name: 'Upravit měnu',
+				},
 			},
 			{
 				path: ERoute.NEW,
 				component: CurrencyDetailComponent,
 				data: {
-					name: 'Přidat měnu'
-				}
-			}
-		]
+					name: 'Přidat měnu',
+				},
+			},
+		],
+	},
+	{
+		path: ERoute.ADMIN_TRANSACTIONS,
+		children: [
+			{
+				path: '',
+				component: TransactionsComponent,
+				data: {
+					name: 'Správa transakcí',
+				},
+			},
+			{
+				path: ':id',
+				component: TransactionsComponent,
+				data: {
+					name: 'Správa transakcí',
+				},
+			},
+		],
 	},
 	{
 		path: ERoute.ADMIN_CHARGE,
 		component: ChargeComponent,
+		canActivate: [PlaceGuard],
 		data: {
-			name: 'Nabít peňauze'
-		}
-	}
+			name: 'Nabít peňauze',
+		},
+	},
 
 ];
 
 @NgModule({
 	imports: [RouterModule.forChild(routes)],
-	exports: [RouterModule]
+	exports: [RouterModule],
 })
 export class AdminRoutingModule {
 }

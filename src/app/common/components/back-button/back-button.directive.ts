@@ -2,12 +2,12 @@ import {Directive, HostListener} from '@angular/core';
 import {Location} from '@angular/common';
 
 @Directive({
-	selector: '[backButton]'
+	selector: '[backButton]',
 })
 export class BackButtonDirective {
 
 	constructor(
-		protected location: Location
+		protected location: Location,
 	) {
 	}
 

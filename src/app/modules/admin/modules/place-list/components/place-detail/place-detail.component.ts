@@ -8,11 +8,12 @@ import {MatDialog} from '@angular/material/dialog';
 import {SortimentDetailComponent} from './components/sortiment-detail/sortiment-detail.component';
 import {IGoods} from '../../../../../../common/types/IGoods';
 import {AlertService} from '../../../../../../common/services/alert/alert.service';
+import {HttpErrorResponse} from '@angular/common/http';
 
 @Component({
 	selector: 'app-place-detail',
 	templateUrl: './place-detail.component.html',
-	styleUrls: ['./place-detail.component.scss']
+	styleUrls: ['./place-detail.component.scss'],
 })
 export class PlaceDetailComponent implements OnInit {
 	public place: IPlace;
@@ -21,6 +22,7 @@ export class PlaceDetailComponent implements OnInit {
 	public isEdit: boolean = false;
 
 	public readonly EPlaceRole = EPlaceRole;
+	public readonly ERoute = ERoute;
 
 	constructor(
 		public placeService: PlaceService,
@@ -35,7 +37,7 @@ export class PlaceDetailComponent implements OnInit {
 		this.isLoading = true;
 		try {
 			const placeId = Number(this.route.snapshot.paramMap.get('id'));
-			if (placeId) {
+			if(placeId) {
 				console.log('is edit');
 				this.place = Object.assign({}, await this.placeService.getPlace(placeId));
 				this.goods = await this.placeService.getPlaceGoods(placeId);
@@ -45,18 +47,18 @@ export class PlaceDetailComponent implements OnInit {
 				this.place = Object.assign({}, this.placeService.createNewPlace());
 				this.isEdit = false;
 			}
-		} catch (e) {
+		} catch(e) {
 			// TODO: handle
 			console.error(e);
 		} finally {
-			this.isLoading = false
+			this.isLoading = false;
 		}
 	}
 
 
 	public async onSubmit(): Promise<void> {
 		// TODO: pridat osetren erroru, globalne
-		if (this.isEdit) {
+		if(this.isEdit) {
 			await this.placeService.editPlace(this.place!);
 		} else {
 			const place = await this.placeService.addPlace(this.place!);
@@ -69,10 +71,10 @@ export class PlaceDetailComponent implements OnInit {
 
 	public async drop(event: CdkDragDrop<string[]>): Promise<void> {
 		try {
-			await this.placeService.moveGoods(this.place!.id!, this.goods[event.previousIndex].id!, this.goods[event.previousIndex + 1].id!);
+			await this.placeService.moveGoods(this.place!.id!, this.goods[event.previousIndex].id!, this.goods[event.currentIndex].id!);
 			moveItemInArray(this.goods, event.previousIndex, event.currentIndex);
 		} catch(e) {
-			console.error('Canot move goods: ', e)
+			console.error('Canot move goods: ', e);
 		}
 	}
 
@@ -91,12 +93,12 @@ export class PlaceDetailComponent implements OnInit {
 			try {
 				if(this.place.id) {
 					await this.placeService.addGoods(result.id, this.place.id);
-					this.goods.push(result)
+					this.goods.push(result);
 				}
 			} catch(e) {
-				// TODO: dodelat spravne validace
-				// @ts-ignore
-				this.alertService.error(e.error.Message ?? 'Chyba při přidávání sortimentu');
+				if(e instanceof HttpErrorResponse) {
+					this.alertService.error(e.error.Message ?? 'Chyba při přidávání sortimentu');
+				}
 			}
 		});
 	}

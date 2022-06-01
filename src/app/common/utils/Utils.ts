@@ -4,6 +4,7 @@ export class Utils {
 	/**
 	 * make object of data indexed by key
 	 * BEWARE: you need to use pipe 'keyvalue' if you want to iterate over returned array in template!
+	 *
 	 * @param data
 	 * @param indexBy
 	 */

@@ -12,17 +12,19 @@ import {ICurrency, ICurrencyAccount} from '../../../../../../common/types/ICurre
 import {Utils} from '../../../../../../common/utils/Utils';
 import {CurrencyService} from '../../../../services/currency/currency.service';
 import {HashMap} from '../../../../../../common/types/HashMap';
+import {HttpErrorResponse} from '@angular/common/http';
 
 @Component({
 	selector: 'app-user-detail',
 	templateUrl: './user-detail.component.html',
-	styleUrls: ['./user-detail.component.scss']
+	styleUrls: ['./user-detail.component.scss'],
 })
 export class UserDetailComponent implements OnInit {
 	public user: IUser | undefined;
 	public accounts: ICurrencyAccount[] = [];
 	public cards: ICard[] = [];
 	public currencies: HashMap<ICurrency>;
+	public roles: string[] = Object.values(EUserRole);
 
 	public newCards: ICard[] = [];
 	public isLoading: boolean = false;
@@ -48,6 +50,7 @@ export class UserDetailComponent implements OnInit {
 			if(userId) {
 				console.log('is edit');
 				this.user = Object.assign({}, await this.usersService.getUser(userId));
+				this.user.roles = [];
 				this.cards = (await this.usersService.getUserCards(userId)).data;
 				this.accounts = await this.usersService.getUserCurrencyAccounts(userId);
 				this.currencies = Utils.toHashMap<ICurrency>((await this.currencyService.getCurrencies()).data, 'id');
@@ -62,7 +65,7 @@ export class UserDetailComponent implements OnInit {
 			// TODO: handle
 			console.error(e);
 		} finally {
-			this.isLoading = false
+			this.isLoading = false;
 		}
 	}
 
@@ -95,7 +98,7 @@ export class UserDetailComponent implements OnInit {
 	}
 
 	public openCardDetailDialog(): void {
-		let newCard = {
+		const newCard = {
 			description: '',
 			type: 'Card',
 		};
@@ -120,9 +123,9 @@ export class UserDetailComponent implements OnInit {
 				}
 				this.cards.push(result);
 			} catch(e) {
-				// TODO: dodelat spravne validace
-				// @ts-ignore
-				this.alertService.error(e.error.Message ?? 'Chyba při přidávání karty');
+				if(e instanceof HttpErrorResponse) {
+					this.alertService.error(e.error.Message ?? 'Chyba při přidávání karty');
+				}
 			}
 		});
 	}
@@ -133,10 +136,11 @@ export class UserDetailComponent implements OnInit {
 				await this.usersService.deleteUserCard(id);
 			}
 			this.cards = this.cards.filter((card) => card.id !== id);
-			this.newCards = this.cards
+			this.newCards = this.cards;
 		} catch(e) {
-			// @ts-ignore
-			this.alertService.error(e.Message ?? 'Nepodarilo se odstranit kartu')
+			if(e instanceof HttpErrorResponse) {
+				this.alertService.error(e.error.Message ?? 'Nepodarilo se odstranit kartu');
+			}
 		}
 	}
 

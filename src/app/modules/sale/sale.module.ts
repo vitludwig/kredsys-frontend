@@ -25,7 +25,7 @@ import {SharedModule} from '../../shared.module';
 		ChargeDialogComponent,
 	],
 	exports: [
-		SaleComponent
+		SaleComponent,
 	],
 	imports: [
 		SharedModule,
@@ -38,7 +38,7 @@ import {SharedModule} from '../../shared.module';
 		MatDialogModule,
 		MatFormFieldModule,
 		MatInputModule,
-	]
+	],
 })
 export class SaleModule {
 }

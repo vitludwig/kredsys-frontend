@@ -12,7 +12,7 @@ import {CustomerService} from '../../services/customer/customer.service';
 @Component({
 	selector: 'app-dashboard',
 	templateUrl: './dashboard.component.html',
-	styleUrls: ['./dashboard.component.scss']
+	styleUrls: ['./dashboard.component.scss'],
 })
 export class DashboardComponent {
 	#place: IPlace;
@@ -49,7 +49,7 @@ export class DashboardComponent {
 					name: item.name,
 					price: item.price!,
 					icon: goodsTypes[item.goodsTypeId!].icon ?? 'other',
-				})
+				});
 			}
 		} catch(e) {
 			console.error('Cannot load place goods: ', e);

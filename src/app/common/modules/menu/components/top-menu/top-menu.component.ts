@@ -1,23 +1,25 @@
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {ChargeDialogComponent} from '../../../../../modules/sale/components/charge-dialog/charge-dialog.component';
 import {MatDrawer} from '@angular/material/sidenav';
-import {ActivationEnd, Router} from '@angular/router';
+import {ActivationEnd, NavigationEnd, Router} from '@angular/router';
 import {CustomerService} from '../../../../../modules/sale/services/customer/customer.service';
-import {TransactionService} from '../../../../services/transaction/transaction.service';
 import {IPlace} from '../../../../types/IPlace';
 import {ICurrency, ICurrencyAccount} from '../../../../types/ICurrency';
 import {CurrencyService} from '../../../../../modules/admin/services/currency/currency.service';
-import {ITransactionRecordDeposit} from '../../../../services/transaction/types/ITransaction';
 import {Subject, takeUntil} from 'rxjs';
 import {IUser} from '../../../../types/IUser';
 import {UsersService} from '../../../../../modules/admin/services/users/users.service';
 import {OrderService} from '../../../../../modules/sale/services/order/order.service';
+import {AuthService} from '../../../../../modules/login/services/auth/auth.service';
+import {TransactionService} from '../../../../../modules/admin/modules/transactions/services/transaction/transaction.service';
+import {ITransactionRecordDeposit} from '../../../../../modules/admin/modules/transactions/services/transaction/types/ITransaction';
+import {MatButton} from '@angular/material/button';
 
 @Component({
 	selector: 'app-top-menu',
 	templateUrl: './top-menu.component.html',
-	styleUrls: ['./top-menu.component.scss']
+	styleUrls: ['./top-menu.component.scss'],
 })
 export class TopMenuComponent implements OnInit, OnDestroy {
 	public pageName: string = '';
@@ -42,13 +44,14 @@ export class TopMenuComponent implements OnInit, OnDestroy {
 		protected currencyService: CurrencyService,
 		protected orderService: OrderService,
 		protected dialog: MatDialog,
+		protected authService: AuthService,
 	) {
 		this.router.events
 			.subscribe((e) => {
 				if(e instanceof ActivationEnd && e.snapshot.data.hasOwnProperty('name')) {
 					this.pageName = e.snapshot.data['name'] ?? '';
 				}
-			})
+			});
 	}
 
 	public async ngOnInit(): Promise<void> {
@@ -61,7 +64,7 @@ export class TopMenuComponent implements OnInit, OnDestroy {
 				} else {
 					this.currencyAccount = null;
 				}
-			})
+			});
 
 		this.orderService.balance$
 			.pipe(takeUntil(this.unsubscribe))
@@ -69,7 +72,7 @@ export class TopMenuComponent implements OnInit, OnDestroy {
 				if(this.currencyAccount) {
 					this.currencyAccount.currentAmount = amount;
 				}
-			})
+			});
 
 		this.defaultCurrency = await this.currencyService.getDefaultCurrency();
 	}
@@ -92,20 +95,20 @@ export class TopMenuComponent implements OnInit, OnDestroy {
 				creatorId: -1,
 				amount: result,
 				text: '',
-			}]
+			}];
 			try {
 
 				const result = await this.transactionService.deposit(
 					this.customer!.id!,
 					this.place.id!,
 					this.currencyAccount?.currencyId ?? this.defaultCurrency.id!,
-					records
+					records,
 				);
 				if(this.currencyAccount) {
 					this.currencyAccount.currentAmount += result.amount;
 				}
 			} catch(e) {
-				console.error('Cannot deposit money: ', e)
+				console.error('Cannot deposit money: ', e);
 			}
 		});
 	}

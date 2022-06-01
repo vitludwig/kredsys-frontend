@@ -5,7 +5,7 @@ import {CustomerService} from '../../../modules/sale/services/customer/customer.
 @Component({
 	selector: 'app-card-loader',
 	templateUrl: './card-loader.component.html',
-	styleUrls: ['./card-loader.component.scss']
+	styleUrls: ['./card-loader.component.scss'],
 })
 export class CardLoaderComponent implements OnInit, OnDestroy {
 	@Input()
@@ -27,7 +27,7 @@ export class CardLoaderComponent implements OnInit, OnDestroy {
 		'á': 8,
 		'í': 9,
 		'é': 0,
-	}
+	};
 
 	constructor(
 		public customerService: CustomerService,
@@ -43,7 +43,17 @@ export class CardLoaderComponent implements OnInit, OnDestroy {
 				if(user === null) {
 					this.initCardListener();
 				}
-			})
+			});
+	}
+
+	public ngOnDestroy(): void {
+		this.unsubscribe.next();
+		this.removeKeydownListener();
+	}
+
+	public async debugLoadCard(): Promise<void> {
+		console.log('debugging');
+		this.cardIdChange.emit(2866252548);
 	}
 
 	protected initCardListener(): void {
@@ -62,18 +72,19 @@ export class CardLoaderComponent implements OnInit, OnDestroy {
 					}
 					this.cardIdChange.emit(numberId);
 				} catch(e) {
-					console.error('Token loading error: ', e)
+					console.error('Token loading error: ', e);
 				}
 			} else if(event.key.length === 1) {
-				userId += event.key
+				userId += event.key;
 			}
-		})
+		});
 
 	}
 
 	/**
 	 * In case of czech keyboard, convert to numbers from diacritics
 	 * TODO: make this generic for other languages or check keyboard layout
+	 *
 	 * @param id
 	 * @protected
 	 */
@@ -95,10 +106,4 @@ export class CardLoaderComponent implements OnInit, OnDestroy {
 			this.keydownListener = undefined;
 		}
 	}
-
-	public ngOnDestroy(): void {
-		this.unsubscribe.next();
-		this.removeKeydownListener();
-	}
-
 }

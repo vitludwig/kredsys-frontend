@@ -2,13 +2,16 @@ export interface IUser {
 	id?: number;
 	name: string;
 	email: string;
+	password?: string;
 	memberId: number | null;
-	role?: EUserRole; // basic, band, org...
+	roles?: EUserRole[]; // basic, band, org...
 	blocked: boolean;
 }
 
 export enum EUserRole {
-	ADMIN = 'admin',
-	VISITOR = 'visitor',
-	MERCHANT = 'merchant',
+	ADMIN = 'Admin',
+	MEMBER = 'Member',
+	PLACE = 'Place',
+	REGISTRAR = 'Registrar',
+	POWER_SALESMAN = 'PowerSalesman',
 }

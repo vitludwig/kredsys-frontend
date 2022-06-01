@@ -3,8 +3,9 @@ import {CommonModule} from '@angular/common';
 import {BackButtonDirective} from './common/components/back-button/back-button.directive';
 import {FormsModule} from '@angular/forms';
 import { CardLoaderComponent } from './common/components/card-loader/card-loader.component';
-import {HttpClientModule} from '@angular/common/http';
+import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
+import {AuthInterceptor} from './common/interceptors/auth/auth.interceptor';
 
 @NgModule({
 	declarations: [
@@ -24,7 +25,10 @@ import {MatSnackBarModule} from '@angular/material/snack-bar';
 		CardLoaderComponent,
 		HttpClientModule,
 		MatSnackBarModule,
-	]
+	],
+	providers: [
+		{provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true},
+	],
 })
 export class SharedModule {
 }

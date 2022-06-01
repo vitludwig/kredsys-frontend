@@ -7,7 +7,7 @@ import {ERoute} from '../../common/types/ERoute';
 @Component({
 	selector: 'app-place-select',
 	templateUrl: './place-select.component.html',
-	styleUrls: ['./place-select.component.scss']
+	styleUrls: ['./place-select.component.scss'],
 })
 export class PlaceSelectComponent {
 	public place: IPlace;
@@ -23,8 +23,8 @@ export class PlaceSelectComponent {
 		return this.placeService.getAllPlaces();
 	}
 
-	public selectPlace(): void {
-		this.placeService.selectedPlace = this.place;
+	public async selectPlace(): Promise<void> {
+		this.placeService.selectedPlace = await this.placeService.getPlace(this.place.id!);
 		this.router.navigate(['/' + ERoute.SALE]);
 	}
 

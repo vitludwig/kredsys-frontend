@@ -8,6 +8,8 @@ import {SideMenuComponent} from './components/side-menu/side-menu.component';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatListModule} from '@angular/material/list';
 import {RouterModule} from '@angular/router';
+import {SharedModule} from '../../../shared.module';
+import {LoginModule} from '../../../modules/login/login.module';
 
 @NgModule({
 	declarations: [
@@ -22,11 +24,13 @@ import {RouterModule} from '@angular/router';
 		MatButtonModule,
 		MatIconModule,
 		MatListModule,
+		SharedModule,
+		LoginModule,
 	],
 	exports: [
 		TopMenuComponent,
 		SideMenuComponent,
-	]
+	],
 })
 export class MenuModule {
 }

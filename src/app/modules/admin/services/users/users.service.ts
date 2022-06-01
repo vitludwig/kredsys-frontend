@@ -6,9 +6,12 @@ import {environment} from '../../../../../environments/environment';
 import {HttpClient} from '@angular/common/http';
 import {ICard} from '../../../../common/types/ICard';
 import {ICurrencyAccount} from '../../../../common/types/ICurrency';
+import {cache, invalidateCache} from '../../../../common/decorators/cache';
+import {ETime} from '../../../../common/types/ETime';
+import {ECacheTag} from '../../../../common/types/ECacheTag';
 
 @Injectable({
-	providedIn: 'root'
+	providedIn: 'root',
 })
 export class UsersService {
 	protected users: IUser[];
@@ -20,22 +23,30 @@ export class UsersService {
 
 	}
 
-	public async getUsers(search: string = '', page: number = 1, limit = this.limit): Promise<IPaginatedResponse<IUser>> {
+	@cache(ETime.DAY, [ECacheTag.USERS])
+	public async getUsers(search: string = '', offset: number = 0, limit = this.limit): Promise<IPaginatedResponse<IUser>> {
 		const params = {
-			offset: (page - 1) * this.limit,
+			offset: offset,
 			limit: limit,
 			blocked: false, // TODO: create filtering of blocked users in grid
+			name: search,
 		};
 
 		return firstValueFrom(this.http.get<IPaginatedResponse<IUser>>(environment.apiUrl + 'users', {params: params}));
 	}
 
+	@cache(ETime.DAY, [ECacheTag.USER])
 	public async getUser(id: number): Promise<IUser> {
 		return firstValueFrom(this.http.get<IUser>(environment.apiUrl + 'users/' + id));
 	}
 
+	@invalidateCache([ECacheTag.USERS, ECacheTag.USER])
 	public async editUser(user: IUser): Promise<IUser> {
 		return firstValueFrom(this.http.put<IUser>(environment.apiUrl + 'users/' + user.id, user));
+	}
+
+	public async editRole(): Promise<void> {
+
 	}
 
 	/**
@@ -44,15 +55,18 @@ export class UsersService {
 	 *
 	 * @param user
 	 */
+	@invalidateCache([ECacheTag.USERS, ECacheTag.USER])
 	public async blockUser(user: IUser): Promise<IUser> {
 		user.blocked = true;
 		return firstValueFrom(this.http.put<IUser>(environment.apiUrl + 'users/' + user.id, user));
 	}
 
+	@invalidateCache([ECacheTag.USERS, ECacheTag.USER])
 	public async addUser(user: IUser): Promise<IUser> {
 		return firstValueFrom(this.http.post<IUser>(environment.apiUrl + 'users', user));
 	}
 
+	@cache(ETime.DAY, [ECacheTag.USER_CARDS])
 	public async getUserCards(id: number): Promise<IPaginatedResponse<ICard>> {
 		const params = {
 			offset: 0,
@@ -75,6 +89,7 @@ export class UsersService {
 		return (await firstValueFrom(this.http.get<IPaginatedResponse<ICurrencyAccount>>(environment.apiUrl + 'users/' + userId + '/accounts', {params: params}))).data;
 	}
 
+	@invalidateCache([ECacheTag.USER_CARDS])
 	public async addUserCard(userId: number, cardUid: number, description: string = '', type: string = 'Card'): Promise<ICard> {
 		return firstValueFrom(this.http.post<ICard>(environment.apiUrl + 'users/' + userId + '/card', {
 			uid: cardUid,
@@ -84,6 +99,7 @@ export class UsersService {
 		}));
 	}
 
+	@invalidateCache([ECacheTag.USER_CARDS])
 	public deleteUserCard(id: number): Promise<void> {
 		return firstValueFrom(this.http.delete<void>(environment.apiUrl + 'cards/' + id));
 	}

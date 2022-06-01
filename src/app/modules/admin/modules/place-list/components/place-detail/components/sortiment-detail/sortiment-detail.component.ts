@@ -7,7 +7,7 @@ import {GoodsService} from '../../../../../../services/goods/goods.service';
 @Component({
 	selector: 'app-sortiment-detail',
 	templateUrl: './sortiment-detail.component.html',
-	styleUrls: ['./sortiment-detail.component.scss']
+	styleUrls: ['./sortiment-detail.component.scss'],
 })
 export class SortimentDetailComponent implements OnInit {
 	public allGoods: IGoods[] = [];

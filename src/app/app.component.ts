@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit, Renderer2, ViewChild} from '@angular/core';
+import {Component, ElementRef, OnDestroy, OnInit, Renderer2, ViewChild} from '@angular/core';
 import {Subject, takeUntil} from 'rxjs';
 import {NavigationEnd, Router} from '@angular/router';
 import {MatDrawer} from '@angular/material/sidenav';
@@ -10,11 +10,14 @@ import {CustomerService} from './modules/sale/services/customer/customer.service
 @Component({
 	selector: 'app-root',
 	templateUrl: './app.component.html',
-	styleUrls: ['./app.component.scss']
+	styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit, OnDestroy {
 	@ViewChild('sideMenu')
 	protected sideMenu: MatDrawer;
+
+	@ViewChild('mainContent')
+	protected mainContent: ElementRef;
 
 	protected unsubscribe: Subject<void> = new Subject();
 	protected keydownListener: any;
@@ -29,14 +32,14 @@ export class AppComponent implements OnInit, OnDestroy {
 	}
 
 	public async ngOnInit(): Promise<void> {
-
 		this.router.events
 			.pipe(takeUntil(this.unsubscribe))
 			.subscribe((event) => {
-			if (event instanceof NavigationEnd) {
-				this.sideMenu.close();
-			}
-		});
+				if(event instanceof NavigationEnd) {
+					this.sideMenu.close();
+					this.mainContent.nativeElement.focus();
+				}
+			});
 	}
 
 

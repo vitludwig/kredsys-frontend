@@ -8,19 +8,19 @@ const routes: Routes = [
 		path: ERoute.LOGIN_SIGN_IN,
 		component: LoginComponent,
 		data: {
-			name: 'Přihlášení'
-		}
+			name: 'Přihlášení',
+		},
 	},
 	{
 		path: '**',
 		redirectTo: ERoute.LOGIN_SIGN_IN,
-		pathMatch: 'full'
+		pathMatch: 'full',
 	},
 ];
 
 @NgModule({
 	imports: [RouterModule.forChild(routes)],
-	exports: [RouterModule]
+	exports: [RouterModule],
 })
 export class LoginRoutingModule {
 }

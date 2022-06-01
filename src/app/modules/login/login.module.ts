@@ -6,11 +6,13 @@ import {MatInputModule} from '@angular/material/input';
 import {MatCardModule} from '@angular/material/card';
 import {LoginRoutingModule} from './login-routing.module';
 import {ReactiveFormsModule} from '@angular/forms';
+import {CanAccessRoutePipe} from './services/auth/pipes/can-access-route/can-access-route.pipe';
 
 
 @NgModule({
 	declarations: [
 		LoginComponent,
+		CanAccessRoutePipe,
 	],
 	imports: [
 		SharedModule,
@@ -19,6 +21,9 @@ import {ReactiveFormsModule} from '@angular/forms';
 		MatCardModule,
 		MatInputModule,
 		MatButtonModule,
+	],
+	exports: [
+		CanAccessRoutePipe,
 	]
 })
 export class LoginModule {

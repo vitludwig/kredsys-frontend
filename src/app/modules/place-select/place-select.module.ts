@@ -20,7 +20,7 @@ import {MatSelectModule} from '@angular/material/select';
 		MatCardModule,
 		MatSelectModule,
 		MatButtonModule,
-	]
+	],
 })
 export class PlaceSelectModule {
 }

@@ -1,10 +1,11 @@
 @mixin expandable-table($theme) {
-
   $primary: map-get(map-get($theme, color), primary);
   $accent: map-get(map-get($theme, color), accent);
   $warn: map-get(map-get($theme, color), warn);
   $background: map-get($theme, background);
   $foreground: map-get($theme, foreground);
+
+  width: 100%;
 
   .mat-table {
     width: 100%;

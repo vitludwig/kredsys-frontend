@@ -18,7 +18,7 @@ import {AlertService} from '../../../../common/services/alert/alert.service';
 	templateUrl: './user-list.component.html',
 	styleUrls: ['./user-list.component.scss'],
 	animations: [
-		Animations.expandableTable
+		Animations.expandableTable,
 	],
 })
 export class UserListComponent implements OnInit, OnDestroy {
@@ -61,27 +61,29 @@ export class UserListComponent implements OnInit, OnDestroy {
 				startWith({}),
 				switchMap(() => {
 					this.isUsersLoading = true;
+					const offset = (this.paginator.pageIndex - 1) * 10
 					return this.usersService.getUsers(
 						'',
-						this.paginator.pageIndex + 1,
-					)
+						offset >= 0 ? offset : 0,
+						10
+					);
 				}),
 				map((data) => {
 					// Flip flag to show that loading has finished.
 					this.isUsersLoading = false;
 
-					if (data === null) {
+					if(data === null) {
 						return [];
 					}
 
 					this.usersTotal = data.total;
 					return data.data;
 				}),
-				takeUntil(this.unsubscribe)
+				takeUntil(this.unsubscribe),
 			)
 			.subscribe((data) => {
 				console.log('new data: ', data);
-				this.usersData = data
+				this.usersData = data;
 			});
 	}
 
@@ -105,7 +107,7 @@ export class UserListComponent implements OnInit, OnDestroy {
 		const filterValue = (event.target as HTMLInputElement).value;
 		this.dataSource.filter = filterValue.trim().toLowerCase();
 
-		if (this.dataSource.paginator) {
+		if(this.dataSource.paginator) {
 			this.dataSource.paginator.firstPage();
 		}
 	}
@@ -119,8 +121,8 @@ export class UserListComponent implements OnInit, OnDestroy {
 		});
 	}
 
-	protected async loadUsers(search: string = '', page: number = 1): Promise<void> {
-		const users = await this.usersService.getUsers(search, page);
+	protected async loadUsers(search: string = '', offset?: number, limit?: number): Promise<void> {
+		const users = await this.usersService.getUsers(search, offset, limit);
 		const data = users.data = users.data.filter((user) => !user.blocked);
 
 		this.usersData = data;

@@ -36,7 +36,7 @@ import {MatDialogModule} from '@angular/material/dialog';
 		MatIconModule,
 		MatDialogModule,
 		DragDropModule,
-	]
+	],
 })
 export class PlaceListModule {
 }

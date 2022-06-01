@@ -1,28 +1,17 @@
-.users-table .mat-table {
-  width: 100%;
-  display: table;
-}
-.users-table .mat-table .table-row:not(.expanded-row):hover {
-  background: #eee;
-}
-.users-table .mat-table .table-row:not(.expanded-row):active {
-  background: #efefef;
-}
-.users-table .mat-table .table-row.expanded-row {
-  background: #eee;
-}
-.users-table .mat-table .table-row td {
-  border-bottom-width: 0;
-}
-.users-table .mat-table .detail-row {
-  height: 0;
-}
-.users-table .mat-table .element-detail {
-  overflow: hidden;
-  display: flex;
-}
-.users-table .mat-table .element-detail .detail-content {
-  padding: 1rem 0.5rem;
-}
+/* Error: Can't find stylesheet to import.
+ *   ,
+ * 1 | @import 'styles/mixins';
+ *   |         ^^^^^^^^^^^^^^^
+ *   '
+ *   user-list.component.scss 1:9  root stylesheet */
 
-/*# sourceMappingURL=user-list.component.css.map */
+body::before {
+  font-family: "Source Code Pro", "SF Mono", Monaco, Inconsolata, "Fira Mono",
+      "Droid Sans Mono", monospace, monospace;
+  white-space: pre;
+  display: block;
+  padding: 1em;
+  margin-bottom: 1em;
+  border-bottom: 2px solid black;
+  content: "Error: Can't find stylesheet to import.\a   \2577 \a 1 \2502  @import 'styles/mixins';\d\a   \2502          ^^^^^^^^^^^^^^^\a   \2575 \a   user-list.component.scss 1:9  root stylesheet";
+}

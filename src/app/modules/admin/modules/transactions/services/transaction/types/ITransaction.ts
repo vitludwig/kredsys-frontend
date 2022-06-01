@@ -12,17 +12,29 @@ export interface ITransaction {
 
 export interface ITransactionRecord {
 	creatorId: number;
+	text: string,
+	id: number;
+	type: string; // Create... TODO: create enum
+	transactionId: number;
+	goodsId: number;
+	modifyLogId: number;
+	created: Date;
+	amountSum: number;
+	amountItem: number;
+	multiplier: number
 }
-export interface ITransactionRecordPayment extends ITransactionRecord {
+export interface ITransactionRecordPayment {
+	creatorId: number;
 	goodsId: number;
 	multiplier: number;
 }
 
-export interface ITransactionRecordDeposit extends ITransactionRecord {
+export interface ITransactionRecordDeposit {
+	creatorId: number;
 	text: string;
 	amount: number;
 }
 
 export interface ITransactionResponse extends ITransaction {
-	records: any[]; // TODO type that correctly
+	records: ITransactionRecord[]; // TODO type that correctly
 }
