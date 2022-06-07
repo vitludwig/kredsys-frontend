@@ -2,6 +2,11 @@
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 13.2.2.
 
+## Instalation
+- Download latest NPM (>=8.5.5)
+- Install Angular CLI globally `npm install -g @angular/cli`
+- You can change proxy to server in /src/proxy.conf.json (due to CORS, only for development)
+
 ## Development server
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
