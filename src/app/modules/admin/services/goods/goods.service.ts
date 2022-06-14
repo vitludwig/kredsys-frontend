@@ -32,9 +32,9 @@ export class GoodsService {
 	}
 
 	@cache(ETime.DAY, [ECacheTag.GOODS])
-	public async getGoods(search: string = '', page: number = 1, limit = this.limit): Promise<IPaginatedResponse<IGoods>> {
+	public async getGoods(search: string = '', offset: number = 0, limit = this.limit): Promise<IPaginatedResponse<IGoods>> {
 		const params = {
-			offset: (page - 1) * this.limit,
+			offset: offset,
 			limit: limit,
 		};
 

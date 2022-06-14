@@ -31,6 +31,10 @@ const routes: Routes = [
 				path: ERoute.CHECK_IN,
 				loadChildren: () => import('./modules/check-in/check-in.module').then((m) => m.CheckInModule),
 			},
+			{
+				path: ERoute.CARD_INFO,
+				loadChildren: () => import('./modules/card-info/card-info.module').then((m) => m.CardInfoModule),
+			},
 		],
 	},
 	{

@@ -21,6 +21,7 @@ export class CheckInComponent implements OnInit {
 	public deposit: number | null;
 
 	public roles: string[] = Object.values(EUserRole);
+	public role: EUserRole = EUserRole.MEMBER;
 
 	protected defaultCurrency: ICurrency;
 
@@ -50,7 +51,7 @@ export class CheckInComponent implements OnInit {
 	}
 
 	public selectUser(user: IUser): void {
-		user.roles = user.roles ?? [EUserRole.MEMBER];
+		this.role = user.roles![0] ?? EUserRole.MEMBER;
 		this.user = user;
 	}
 
@@ -60,6 +61,7 @@ export class CheckInComponent implements OnInit {
 
 			if(user.id && this.newCard) {
 				await this.usersService.addUserCard(user.id, this.newCard);
+				await this.usersService.editRoles(user.id, [this.role]);
 
 				if(this.deposit) {
 					await this.transactionService.deposit(

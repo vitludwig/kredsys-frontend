@@ -8,7 +8,9 @@
 		<app-sale-summary [place]="placeService.selectedPlace"></app-sale-summary>
 	</mat-drawer>
 
-	<div class="sale-content p-3">
+	<div class="sale-content"
+		[class.disabled]="(customerService.customer$ | async) === null"
+	>
 		<app-dashboard [place]="placeService.selectedPlace"></app-dashboard>
 	</div>
 

@@ -56,16 +56,17 @@ export class UserListComponent implements OnInit, OnDestroy {
 			.pipe(takeUntil(this.unsubscribe))
 			.subscribe(() => (this.paginator.pageIndex = 0));
 
-		merge(this.sort.sortChange, this.paginator.page)
+		merge(this.sort.sortChange, this.paginator.page, this.paginator.pageSize)
 			.pipe(
 				startWith({}),
 				switchMap(() => {
 					this.isUsersLoading = true;
-					const offset = (this.paginator.pageIndex - 1) * 10
+					const offset = this.paginator.pageIndex * this.paginator.pageSize;
+
 					return this.usersService.getUsers(
 						'',
 						offset >= 0 ? offset : 0,
-						10
+						this.paginator.pageSize,
 					);
 				}),
 				map((data) => {
