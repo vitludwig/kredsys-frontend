@@ -1,136 +1,137 @@
 <div class="container p-5" data-augmented-ui="tl-2-clip-x tr-2-clip-x br-2-clip-x bl-2-clip-x both">
-  <div class="row mb-4">
-    <div class="col-12">
-      <button backButton
-        mat-raised-button>
-        <mat-icon>keyboard_arrow_left</mat-icon>
-        Zpět
-      </button>
-    </div>
-  </div>
-
-  <div class="row"
-	*ngIf="!isLoading"
->
-	<div class="col-xs-12 col-md-6">
-		<div class="d-flex justify-content-between">
-			<h2>{{ isEdit ? user.name : 'Nový uživatel' }}</h2>
-			<h3 *ngIf="accounts[0]">Zůstatek: {{ accounts[0].currentAmount }} Kč</h3>
-		</div>
-		<form #userForm="ngForm"
-			(ngSubmit)="userForm.valid && onSubmit()"
-		>
-			<mat-form-field appearance="standard"
-				class="w-100">
-				<mat-label>Členské ID</mat-label>
-				<input matInput
-					placeholder="Členské ID"
-					name="memberId"
-					type="number"
-					required
-					[(ngModel)]="user.memberId"
-				>
-			</mat-form-field>
-
-			<mat-form-field appearance="standard"
-				class="w-100">
-				<mat-label>Jméno</mat-label>
-				<input matInput
-					placeholder="Jméno"
-					name="userName"
-					required
-					[(ngModel)]="user.name"
-				>
-			</mat-form-field>
-
-			<mat-form-field appearance="standard"
-				class="w-100">
-				<mat-label>E-mail</mat-label>
-				<input matInput
-					placeholder="E-mail"
-					name="email"
-					required
-					[(ngModel)]="user.email"
-				>
-			</mat-form-field>
-
-			<mat-form-field *ngIf="!isEdit"
-				appearance="standard"
-				class="w-100"
-			>
-				<mat-label>Heslo</mat-label>
-				<input matInput
-					placeholder="Heslo"
-					name="password"
-					type="password"
-					required
-					[(ngModel)]="user.password"
-				>
-			</mat-form-field>
-
-			<ng-container *ngIf="user.id">
-				<mat-form-field appearance="standard"
-					class="w-100"
-					*ngFor="let account of accounts"
-				>
-					<mat-label>Limit přečerpání {{ currencies[account.currencyId].code }}</mat-label>
-					<input matInput
-						placeholder="Limit přečerpání"
-						type="number"
-						[name]="'overdraftLimit' + account.currencyId"
-						[(ngModel)]="account.overdraftLimit"
-					>
-					<span matSuffix>{{ currencies[account.currencyId].symbol }}</span>
-				</mat-form-field>
-			</ng-container>
-
-			<mat-form-field appearance="standard"
-				required
-				class="w-100">
-				<mat-label>Role</mat-label>
-				<mat-select name="role"
-					[(ngModel)]="user.roles[0]"
-				>
-					<mat-option *ngFor="let role of roles"
-						[value]="role">{{ role }}</mat-option>
-				</mat-select>
-			</mat-form-field>
-
-			<div>
-				<button mat-raised-button
-					class="w-100"
-					color="primary"
-					type="submit"
-				>
-					Potvrdit
-				</button>
-			</div>
-		</form>
-	</div>
-	<div class="col-xs-12 col-md-6">
-		<h2 class="d-flex justify-content-between">
-			<span>Napárované karty</span>
-			<button mat-button
-				color="primary"
-				(click)="openCardDetailDialog()">
-				<mat-icon>add</mat-icon>
-				Přidat kartu
+	<div class="row mb-4">
+		<div class="col-12">
+			<button backButton
+				mat-raised-button>
+				<mat-icon>keyboard_arrow_left</mat-icon>
+				Zpět
 			</button>
-		</h2>
-		<mat-list role="list">
-			<mat-list-item role="listitem"
-				*ngFor="let card of cards">
-				<div class="card-item">
-					<span>{{ card.type }} (id:{{ card.uid }})</span>
-					<button mat-raised-button
-						(click)="deleteCard(card.id)"
-						color="warn"
+		</div>
+	</div>
+
+	<div class="row"
+		*ngIf="!isLoading"
+	>
+		<div class="col-xs-12 col-md-6">
+			<div class="d-flex justify-content-between">
+				<h2>{{ isEdit ? user.name : 'Nový uživatel' }}</h2>
+				<h3 *ngIf="accounts[0]">Zůstatek: {{ accounts[0].currentAmount }} Kč</h3>
+			</div>
+			<form #userForm="ngForm"
+				(ngSubmit)="userForm.valid && onSubmit()"
+			>
+				<mat-form-field appearance="standard"
+					class="w-100">
+					<mat-label>Členské ID</mat-label>
+					<input matInput
+						placeholder="Členské ID"
+						name="memberId"
+						type="number"
+						required
+						[(ngModel)]="user.memberId"
 					>
-						Odstranit
+				</mat-form-field>
+
+				<mat-form-field appearance="standard"
+					class="w-100">
+					<mat-label>Jméno</mat-label>
+					<input matInput
+						placeholder="Jméno"
+						name="userName"
+						required
+						[(ngModel)]="user.name"
+					>
+				</mat-form-field>
+
+				<mat-form-field appearance="standard"
+					class="w-100">
+					<mat-label>E-mail</mat-label>
+					<input matInput
+						placeholder="E-mail"
+						name="email"
+						required
+						[(ngModel)]="user.email"
+					>
+				</mat-form-field>
+
+				<mat-form-field *ngIf="!isEdit"
+					appearance="standard"
+					class="w-100"
+				>
+					<mat-label>Heslo</mat-label>
+					<input matInput
+						placeholder="Heslo"
+						name="password"
+						type="password"
+						required
+						[(ngModel)]="user.password"
+					>
+				</mat-form-field>
+
+				<ng-container *ngIf="user.id">
+					<mat-form-field appearance="standard"
+						class="w-100"
+						*ngFor="let account of accounts"
+					>
+						<mat-label>Limit přečerpání {{ currencies[account.currencyId].code }}</mat-label>
+						<input matInput
+							placeholder="Limit přečerpání"
+							type="number"
+							[name]="'overdraftLimit' + account.currencyId"
+							[(ngModel)]="account.overdraftLimit"
+						>
+						<span matSuffix>{{ currencies[account.currencyId].symbol }}</span>
+					</mat-form-field>
+				</ng-container>
+
+				<mat-form-field appearance="standard"
+					required
+					class="w-100">
+					<mat-label>Role</mat-label>
+					<mat-select name="role"
+						[(ngModel)]="user.roles[0]"
+					>
+						<mat-option *ngFor="let role of roles"
+							[value]="role">{{ role }}
+						</mat-option>
+					</mat-select>
+				</mat-form-field>
+
+				<div>
+					<button mat-raised-button
+						class="w-100"
+						color="primary"
+						type="submit"
+					>
+						Potvrdit
 					</button>
 				</div>
-			</mat-list-item>
-		</mat-list>
+			</form>
+		</div>
+		<div class="col-xs-12 col-md-6">
+			<h2 class="d-flex justify-content-between">
+				<span>Napárované karty</span>
+				<button mat-button
+					color="primary"
+					(click)="openCardDetailDialog()">
+					<mat-icon>add</mat-icon>
+					Přidat kartu
+				</button>
+			</h2>
+			<mat-list role="list">
+				<mat-list-item role="listitem"
+					*ngFor="let card of cards">
+					<div class="card-item">
+						<span>{{ card.type }} (id:{{ card.uid }})</span>
+						<button mat-raised-button
+							(click)="deleteCard(card.id)"
+							color="warn"
+						>
+							Odstranit
+						</button>
+					</div>
+				</mat-list-item>
+			</mat-list>
+		</div>
 	</div>
-</div>
 </div>

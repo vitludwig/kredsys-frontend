@@ -7,12 +7,14 @@
     flex-wrap: wrap;
     align-items: center;
   }
+
   &__item {
     flex: 1;
     flex-basis: var(--cy__sale-card--size);
     height: var(--cy__sale-card--size);
     margin: 1rem;
     cursor: pointer;
+
     &:hover {
       box-shadow: inset 0px 0px 2rem rgb(var(--cy__color--primary-500));
 
@@ -39,15 +41,15 @@
       margin: 10px;
     }
 
-    h2{
+    h2 {
       line-height: 1.125;
       text-shadow: 0 0 3px black;
     }
 
-    &-price{
+    &-price {
       --aug-tl: 10px !important;
 
-      background: rgba(var(--cy__color--warn-500),.85);
+      background: rgba(var(--cy__color--warn-500), .85);
       color: var(var(--cy__color--warn-contrast-500));
       border: 1px solid var(--cy__color--warn-500);
       font-size: 1.5rem;
@@ -56,7 +58,7 @@
       float: right;
       position: relative;
 
-      small{
+      small {
         font-size: .6rem;
         position: absolute;
         top: 0;

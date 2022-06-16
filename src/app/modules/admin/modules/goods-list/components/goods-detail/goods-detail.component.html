@@ -1,74 +1,74 @@
 <div class="container p-5" data-augmented-ui="tl-2-clip-x tr-2-clip-x br-2-clip-x bl-2-clip-x both">
-  <div class="row mb-4">
-    <div class="col-12">
-      <button backButton
-        mat-raised-button>
-        <mat-icon>keyboard_arrow_left</mat-icon>
-        Zpět
-      </button>
-    </div>
-  </div>
+	<div class="row mb-4">
+		<div class="col-12">
+			<button backButton
+				mat-raised-button>
+				<mat-icon>keyboard_arrow_left</mat-icon>
+				Zpět
+			</button>
+		</div>
+	</div>
 
-  <div class="row"
-    *ngIf="!isLoading"
-  >
-    <div class="col-sx-12 col-md-6">
-      <h2>{{ isEdit ? item.name : 'Nové zboží' }}</h2>
+	<div class="row"
+		*ngIf="!isLoading"
+	>
+		<div class="col-sx-12 col-md-6">
+			<h2>{{ isEdit ? item.name : 'Nové zboží' }}</h2>
 
-      <form #form="ngForm"
-        (ngSubmit)="form.valid && onSubmit()"
-      >
-        <mat-form-field appearance="standard"
-          class="w-100">
-          <mat-label>Název</mat-label>
-          <input matInput
-            placeholder="Název"
-            name="goodsName"
-            required
-            [(ngModel)]="item.name"
-          >
-        </mat-form-field>
+			<form #form="ngForm"
+				(ngSubmit)="form.valid && onSubmit()"
+			>
+				<mat-form-field appearance="standard"
+					class="w-100">
+					<mat-label>Název</mat-label>
+					<input matInput
+						placeholder="Název"
+						name="goodsName"
+						required
+						[(ngModel)]="item.name"
+					>
+				</mat-form-field>
 
-        <mat-form-field appearance="standard"
-          class="w-100">
-          <mat-label>Cena</mat-label>
-          <input matInput
-            placeholder="Cena"
-            name="price"
-            type="number"
-            required
-            [(ngModel)]="item.price"
-          >
-        </mat-form-field>
+				<mat-form-field appearance="standard"
+					class="w-100">
+					<mat-label>Cena</mat-label>
+					<input matInput
+						placeholder="Cena"
+						name="price"
+						type="number"
+						required
+						[(ngModel)]="item.price"
+					>
+				</mat-form-field>
 
-        <mat-form-field appearance="standard"
-          class="w-100">
-          <mat-label>Typ</mat-label>
-          <mat-select name="type"
-            [(ngModel)]="item.goodsTypeId">
-            <mat-option *ngFor="let type of goodsTypes" [value]="type.id">{{ type.name }}</mat-option>
-          </mat-select>
-        </mat-form-field>
+				<mat-form-field appearance="standard"
+					class="w-100">
+					<mat-label>Typ</mat-label>
+					<mat-select name="type"
+						[(ngModel)]="item.goodsTypeId">
+						<mat-option *ngFor="let type of goodsTypes" [value]="type.id">{{ type.name }}</mat-option>
+					</mat-select>
+				</mat-form-field>
 
-        <mat-form-field appearance="standard"
-          class="w-100">
-          <mat-label>Měna</mat-label>
-          <mat-select name="currency"
-            [(ngModel)]="item.currencyId">
-            <mat-option *ngFor="let currency of currencies" [value]="currency.id">{{ currency.name }}</mat-option>
-          </mat-select>
-        </mat-form-field>
+				<mat-form-field appearance="standard"
+					class="w-100">
+					<mat-label>Měna</mat-label>
+					<mat-select name="currency"
+						[(ngModel)]="item.currencyId">
+						<mat-option *ngFor="let currency of currencies" [value]="currency.id">{{ currency.name }}</mat-option>
+					</mat-select>
+				</mat-form-field>
 
-        <div>
-          <button mat-raised-button
-            class="w-100"
-            color="primary"
-            type="submit"
-          >
-            Potvrdit
-          </button>
-        </div>
-      </form>
-    </div>
-  </div>
+				<div>
+					<button mat-raised-button
+						class="w-100"
+						color="primary"
+						type="submit"
+					>
+						Potvrdit
+					</button>
+				</div>
+			</form>
+		</div>
+	</div>
 </div>

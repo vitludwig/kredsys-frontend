@@ -33,7 +33,7 @@
     animation: botani 1.5s linear reverse infinite;
   }
 
-  .filter{
+  .filter {
     &wrapper {
       position: absolute;
       z-index: -1;
@@ -41,12 +41,13 @@
       opacity: 0;
     }
   }
-  #filter{
-    &__flood{
-      &--primary{
+  #filter {
+    &__flood {
+      &--primary {
         flood-color: map_get($primary, 500)
       }
-      &--secondary{
+
+      &--secondary {
         flood-color: map_get($accent, 500)
       }
     }
@@ -67,11 +68,11 @@
 }
 
 @keyframes topani {
-  @include createRandomKeyframes( 10 + random(10) );
+  @include createRandomKeyframes(10 + random(10));
 }
 
 @keyframes botani {
-  @include createRandomKeyframes( 10 + random(10) );
+  @include createRandomKeyframes(10 + random(10));
 }
 
 @keyframes retro-future-tv-lines {
@@ -86,7 +87,7 @@
 }
 
 
-@mixin make-retro-vision($color: black){
+@mixin make-retro-vision($color: black) {
   -webkit-mask-image: repeating-linear-gradient($color, $color 0.66rem, rgba(0, 0, 0, 0.5) 0.75rem);
   mask-image: repeating-linear-gradient($color, $color 0.66rem, rgba(0, 0, 0, 0.5) 0.75rem);
   -webkit-mask-position: center 0rem;
