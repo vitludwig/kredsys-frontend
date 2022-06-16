@@ -1,4 +1,4 @@
-@use "assets/styles/functions/hex2rgb" as rgb;
+@use "styles/functions/hex2rgb" as rgb;
 @import '~@angular/material/theming';
 
 // always include only once per project
@@ -14,38 +14,7 @@
 // use our theme with angular-material-theme mixin
 @include angular-material-theme($theme);
 
-
-:root{
-  --cy__gap: 1rem;
-  --cy__toolbar--height: 64px;
-  --cy__sale-card--size: 200px;
-
-  --cy__color--border: #{rgb.toValues(map-get($theme-primary,500))};
-  --cy__color--primary-500: #{rgb.toValues(map-get($theme-primary,500))};
-  --cy__color--primary-contrast-500: #{rgb.toValues(map_get($primary, 'contrast',500))};
-  --cy__color--warn-500: #{rgb.toValues(map-get($theme-warn,500))};
-  --cy__color--warn-contrast-500: #{rgb.toValues(map-get($theme-warn, 'contrast',500))};
-}
-
+@import "styles/variables";
+@import "styles/overides";
 
 html, body { height: 100%; overflow: hidden;}
-
-// Some overrides goes here
-.mat-drawer-backdrop.mat-drawer-shown{
-  background-color: rgba(#000000, 0.8);
-}
-
-.mat-dialog-container {
-  .close-btn {
-    float: right;
-    top: -24px;
-    right: -24px;
-  }
-
-  .submit-btn {
-    width: 100%;
-    padding: 1rem 0;
-    font-size: 1.5rem;
-    margin-top: 2rem;
-  }
-}

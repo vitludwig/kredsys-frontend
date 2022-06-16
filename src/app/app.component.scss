@@ -1,32 +1,5 @@
 @use "styles/animations";
 
-.main-content {
-  min-height: calc(100vh - var(--cy__toolbar--height));
-  padding: 15px;
-}
-
-.mat-drawer {
-  margin-top: -2px;
-  margin-left: -2px;
-  margin-bottom: -2px;
-}
-
-.mat-toolbar {
-  border-bottom: 2px solid rgba(var(--cy__color--primary-500),.25);
-}
-
-.mat-option{
-  svg{
-    height: 24px;
-    fill: var(--cy__color--primary-500);
-  }
-  &.mat-active{
-    svg{
-      fill: rgb(var(--cy__color--primary-contrast-500));
-    }
-  }
-}
-
 .app-logo {
   position: fixed;
   top: 0;

@@ -1,0 +1,45 @@
+// Some overrides goes here
+.mat-drawer-backdrop.mat-drawer-shown{
+  background-color: rgba(#000000, 0.8);
+}
+
+.mat-dialog-container {
+  .close-btn {
+    float: right;
+    top: -24px;
+    right: -24px;
+  }
+
+  .submit-btn {
+    width: 100%;
+    padding: 1rem 0;
+    font-size: 1.5rem;
+    margin-top: 2rem;
+  }
+}
+.main-content {
+  min-height: calc(100vh - var(--cy__toolbar--height));
+  padding: 15px;
+}
+
+.mat-drawer {
+  margin-top: -2px;
+  margin-left: -2px;
+  margin-bottom: -2px;
+}
+
+.mat-toolbar {
+  border-bottom: 2px solid rgba(var(--cy__color--primary-500),.25);
+}
+
+.mat-option{
+  svg{
+    height: 24px;
+    fill: var(--cy__color--primary-500);
+  }
+  &.mat-active{
+    svg{
+      fill: rgb(var(--cy__color--primary-contrast-500));
+    }
+  }
+}
