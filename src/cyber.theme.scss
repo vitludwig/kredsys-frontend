@@ -86,11 +86,11 @@ $theme-warn: mat-palette($mat-yellow, 500);
 // custom background and foreground palettes
 $dark-theme-background: (
   status-bar: map-get($theme-primary, 500),
-  app-bar:    #0f0f0f,
+  app-bar: #0f0f0f,
   background: #0f0f0f,
-  hover:      map-get($theme-primary, 500),
-  card:       #151515,
-  dialog:     #151515,
+  hover: map-get($theme-primary, 500),
+  card: #151515,
+  dialog: #151515,
   disabled-button: $white-12-opacity,
   raised-button: map-get($mat-grey, 800),
   focused-button: $white-6-opacity,
@@ -102,19 +102,19 @@ $dark-theme-background: (
 );
 
 $dark-theme-foreground: (
-  base:              map_get($mat-grey, 200),
-  divider:           $white-12-opacity,
-  dividers:          $white-12-opacity,
-  disabled:          rgba(white, 0.3),
-  disabled-button:   rgba(white, 0.3),
-  disabled-text:     rgba(white, 0.3),
-  hint-text:         rgba(white, 0.3),
-  secondary-text:    rgba(white, 0.7),
-  icon:              white,
-  icons:             white,
-  text:              map_get($mat-grey, 200),
-  slider-min:        white,
-  slider-off:        rgba(white, 0.3),
+  base: map_get($mat-grey, 200),
+  divider: $white-12-opacity,
+  dividers: $white-12-opacity,
+  disabled: rgba(white, 0.3),
+  disabled-button: rgba(white, 0.3),
+  disabled-text: rgba(white, 0.3),
+  hint-text: rgba(white, 0.3),
+  secondary-text: rgba(white, 0.7),
+  icon: white,
+  icons: white,
+  text: map_get($mat-grey, 200),
+  slider-min: white,
+  slider-off: rgba(white, 0.3),
   slider-off-active: rgba(white, 0.3),
 );
 
@@ -127,23 +127,22 @@ $theme: (
     foreground: $dark-theme-foreground,
     background: $dark-theme-background,
   ),
-
   typography: mat.define-typography-config(
-    $font-family:   "'JetBrains Mono', monospace",
-    $display-4:     mat.define-typography-level(112px, 112px, 300, $letter-spacing: -0.05em),
-    $display-3:     mat.define-typography-level(56px, 56px, 400, $letter-spacing: -0.02em),
-    $display-2:     mat.define-typography-level(45px, 48px, 400, $letter-spacing: -0.005em),
-    $display-1:     mat.define-typography-level(34px, 40px, 400),
-    $headline:      mat.define-typography-level(24px, 32px, 400),
-    $title:         mat.define-typography-level(20px, 32px, 500),
-    $subheading-2:  mat.define-typography-level(16px, 28px, 400),
-    $subheading-1:  mat.define-typography-level(15px, 24px, 400),
-    $body-2:        mat.define-typography-level(14px, 24px, 500),
-    $body-1:        mat.define-typography-level(14px, 20px, 400, $letter-spacing: 0.05em),
-    $caption:       mat.define-typography-level(12px, 20px, 400),
-    $button:        mat.define-typography-level(14px, 14px, 500),
+    $font-family: "'JetBrains Mono', monospace",
+    $display-4: mat.define-typography-level(112px, 112px, 300, $letter-spacing: -0.05em),
+    $display-3: mat.define-typography-level(56px, 56px, 400, $letter-spacing: -0.02em),
+    $display-2: mat.define-typography-level(45px, 48px, 400, $letter-spacing: -0.005em),
+    $display-1: mat.define-typography-level(34px, 40px, 400),
+    $headline: mat.define-typography-level(24px, 32px, 400),
+    $title: mat.define-typography-level(20px, 32px, 500),
+    $subheading-2: mat.define-typography-level(16px, 28px, 400),
+    $subheading-1: mat.define-typography-level(15px, 24px, 400),
+    $body-2: mat.define-typography-level(14px, 24px, 500),
+    $body-1: mat.define-typography-level(14px, 20px, 400, $letter-spacing: 0.05em),
+    $caption: mat.define-typography-level(12px, 20px, 400),
+    $button: mat.define-typography-level(14px, 14px, 500),
       // Line-height must be unit-less fraction of the font-size.
-    $input:         mat.define-typography-level(inherit, 1.125, 400)
+    $input: mat.define-typography-level(inherit, 1.125, 400)
   )
 );
 

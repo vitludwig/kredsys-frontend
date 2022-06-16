@@ -12,15 +12,16 @@
     .table-row {
       &:not(.expanded-row) {
         &:hover {
-          background: rgba(map_get($primary, 500),.10);
+          background: rgba(map_get($primary, 500), .10);
         }
+
         &:active {
-          background: rgba(map_get($warn, 500),.10);
+          background: rgba(map_get($warn, 500), .10);
         }
       }
 
       &.expanded-row {
-        background: rgba(map_get($accent, 500),.10);;
+        background: rgba(map_get($accent, 500), .10);;
       }
 
       td {
