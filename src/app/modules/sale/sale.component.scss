@@ -1,29 +1,17 @@
-@mixin sale-theme($theme) {
+.sale-container {
+  min-height: calc(100vh - var(--cy__toolbar--height));
+  margin: -15px;
 
-  $primary: map-get(map-get($theme, color), primary);
-  $warn: map-get(map-get($theme, color), warn);
-  $background: map-get($theme, background);
-  $foreground: map-get($theme, foreground);
+  .sale-content {
+    height: 100%;
+  }
 
-  $mat-toolbar-height: map-get(map-get($theme, custom), mat-toolbar-height);
-
-  .sale-container {
-    min-height: calc(100vh - #{$mat-toolbar-height});
-    margin: -15px;
-
-    .sale-content {
-      height: 100%;
-    }
-
-    .sale-sidebar {
-      width: 350px;
-      margin-top: -2px;
-      margin-right: -2px;
-      margin-bottom: -2px;
-      height: 50%;
-      top: $mat-toolbar-height !important;
-    }
+  .sale-sidebar {
+    width: 350px;
+    margin-top: -2px;
+    margin-right: -2px;
+    margin-bottom: -2px;
+    height: 50%;
+    top: var(--cy__toolbar--height) !important;
   }
 }
-
-

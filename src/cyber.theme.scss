@@ -4,13 +4,13 @@
 @import 'assets/styles/animations';
 @import 'assets/styles/auguments';
 
-@import 'app/common/components/card-loader/card-loader.component';
+//@import 'app/common/components/card-loader/card-loader.component';
 @import 'app/common/modules/menu/components/top-menu/top-menu.component';
 @import 'app/modules/sale/components/dashboard/dashboard.component';
 @import 'app/app.component';
 @import 'app/modules/sale/sale.component';
 
-$cy-primary: (
+$primary: (
   50: #d2348a,
   100: #d2348a,
   200: #d2348a,
@@ -44,7 +44,7 @@ $cy-primary: (
 );
 
 
-$cy-accent: (
+$accent: (
   50: #7859a0,
   100: #7859a0,
   200: #7859a0,
@@ -79,16 +79,16 @@ $cy-accent: (
 
 // define 3 theme color
 // mat-palette accepts $palette-name, main, lighter and darker variants
-$cyber-theme-primary: mat-palette($cy-primary);
-$cyber-theme-accent: mat-palette($cy-accent);
-$cyber-theme-warn: mat-palette($mat-yellow, 500);
+$theme-primary: mat-palette($primary);
+$theme-accent: mat-palette($accent);
+$theme-warn: mat-palette($mat-yellow, 500);
 
 // custom background and foreground palettes
-$cyber-dark-theme-background: (
-  status-bar: map-get($cyber-theme-primary, 500),
+$dark-theme-background: (
+  status-bar: map-get($theme-primary, 500),
   app-bar:    #0f0f0f,
   background: #0f0f0f,
-  hover:      map-get($cyber-theme-primary, 500),
+  hover:      map-get($theme-primary, 500),
   card:       #151515,
   dialog:     #151515,
   disabled-button: $white-12-opacity,
@@ -101,7 +101,7 @@ $cyber-dark-theme-background: (
   disabled-list-option: black,
 );
 
-$cyber-dark-theme-foreground: (
+$dark-theme-foreground: (
   base:              map_get($mat-grey, 200),
   divider:           $white-12-opacity,
   dividers:          $white-12-opacity,
@@ -118,14 +118,14 @@ $cyber-dark-theme-foreground: (
   slider-off-active: rgba(white, 0.3),
 );
 
-$cyber-theme: (
+$theme: (
   is-dark: true,
   color: (
-    primary: $cyber-theme-primary,
-    accent: $cyber-theme-accent,
-    warn: $cyber-theme-warn,
-    foreground: $cyber-dark-theme-foreground,
-    background: $cyber-dark-theme-background,
+    primary: $theme-primary,
+    accent: $theme-accent,
+    warn: $theme-warn,
+    foreground: $dark-theme-foreground,
+    background: $dark-theme-background,
   ),
 
   typography: mat.define-typography-config(
@@ -144,32 +144,15 @@ $cyber-theme: (
     $button:        mat.define-typography-level(14px, 14px, 500),
       // Line-height must be unit-less fraction of the font-size.
     $input:         mat.define-typography-level(inherit, 1.125, 400)
-  ),
-
-  custom: (
-    sale-card-size: 200px,
-    mat-toolbar-height: 64px
   )
 );
 
 // Material Components
-@include mat.core-theme($cyber-theme);
-@include mat.all-component-themes($cyber-theme);
-@include mat.all-component-typographies($cyber-theme);
+@include mat.core-theme($theme);
+@include mat.all-component-themes($theme);
+@include mat.all-component-typographies($theme);
 
 // Custom components
-@include app-theme($cyber-theme);
-@include topmenu-theme($cyber-theme);
-@include sale-theme($cyber-theme);
-@include card-loader-theme($cyber-theme);
-@include dashboard-theme($cyber-theme);
-@include animations-theme($cyber-theme);
-@include auguments-theme($cyber-theme);
-
-@include expandable-table($cyber-theme);
-
-
-
-
-// Glitch filter
-
+@include animations-theme($theme);
+@include auguments-theme($theme);
+@include expandable-table($theme);

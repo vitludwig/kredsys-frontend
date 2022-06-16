@@ -1,21 +1,30 @@
+@use "assets/styles/functions/hex2rgb" as rgb;
 @import '~@angular/material/theming';
 
 // always include only once per project
 @include mat-core();
 
 // import our custom theme
-@import 'cyber-theme.scss';
+@import 'cyber.theme.scss';
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
 // specify theme class eg: <body class="my-theme"> ... </body>
 
 
 // use our theme with angular-material-theme mixin
-@include angular-material-theme($cyber-theme);
+@include angular-material-theme($theme);
 
 
 :root{
   --cy__gap: 1rem;
+  --cy__toolbar--height: 64px;
+  --cy__sale-card--size: 200px;
+
+  --cy__color--border: #{rgb.toValues(map-get($theme-primary,500))};
+  --cy__color--primary-500: #{rgb.toValues(map-get($theme-primary,500))};
+  --cy__color--primary-contrast-500: #{rgb.toValues(map_get($primary, 'contrast',500))};
+  --cy__color--warn-500: #{rgb.toValues(map-get($theme-warn,500))};
+  --cy__color--warn-contrast-500: #{rgb.toValues(map-get($theme-warn, 'contrast',500))};
 }
 
 

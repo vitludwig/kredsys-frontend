@@ -1,66 +1,59 @@
-@mixin app-theme($theme) {
+@use "styles/animations";
 
-  $primary: map-get(map-get($theme, color), primary);
-  $warn: map-get(map-get($theme, color), warn);
-  $background: map-get($theme, background);
-  $foreground: map-get($theme, foreground);
+.main-content {
+  min-height: calc(100vh - var(--cy__toolbar--height));
+  padding: 15px;
+}
 
-  $mat-toolbar-height: map-get(map-get($theme, custom), mat-toolbar-height);
+.mat-drawer {
+  margin-top: -2px;
+  margin-left: -2px;
+  margin-bottom: -2px;
+}
 
-  .main-content {
-    min-height: calc(100vh - #{$mat-toolbar-height});
-    padding: 15px;
+.mat-toolbar {
+  border-bottom: 2px solid rgba(var(--cy__color--primary-500),.25);
+}
+
+.mat-option{
+  svg{
+    height: 24px;
+    fill: var(--cy__color--primary-500);
   }
-
-  .mat-drawer {
-    margin-top: -2px;
-    margin-left: -2px;
-    margin-bottom: -2px;
-  }
-
-  .mat-toolbar {
-    border-bottom: 2px solid rgba(map_get($primary, 500),.25);
-  }
-
-  .mat-option{
+  &.mat-active{
     svg{
-      height: 24px;
-      fill: map_get($primary, 500);
-    }
-    &.mat-active{
-      svg{
-        fill: map_get(map_get($primary, 'contrast'),500);
-      }
-    }
-  }
-
-  .app-logo {
-    position: fixed;
-    top: 0;
-    left:50%;
-    height: 100px;
-    z-index: 999;
-    transform: translateX(-50%);
-    img{
-      width: 100%;
-      height: 100%;
-    }
-    &__tag{
-      font-size: .75rem;
-      font-weight: 900;
-      text-transform: uppercase;
-      background: rgba(map_get($warn, 500),.9);
-      padding: 0px 12px ;
-      border: 1px solid map_get($warn, 500);
-      border-radius: 20px;
-      position: absolute;
-      left: 50%;
-      bottom: 26px;
-      transform: translateX(-50%);
-      filter: url(#filter);
-      @include make-retro-vision;
+      fill: rgb(var(--cy__color--primary-contrast-500));
     }
   }
 }
+
+.app-logo {
+  position: fixed;
+  top: 0;
+  left:50%;
+  height: 100px;
+  z-index: 999;
+  transform: translateX(-50%);
+  img{
+    width: 100%;
+    height: 100%;
+  }
+  &__tag{
+    font-size: .75rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    background: rgba(var(--cy__color--warn-500),.9);
+    padding: 0px 12px ;
+    border: 1px solid var(--cy__color--var-500);
+    border-radius: 20px;
+    position: absolute;
+    left: 50%;
+    bottom: 26px;
+    transform: translateX(-50%);
+    filter: url(#filter);
+    @include animations.make-retro-vision;
+  }
+}
+
 
 

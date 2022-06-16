@@ -1,84 +1,76 @@
-@mixin dashboard-theme($theme) {
+@use "styles/animations";
 
-  $primary: map-get(map-get($theme, color), primary);
-  $warn: map-get(map-get($theme, color), warn);
-  $background: map-get($theme, background);
-  $foreground: map-get($theme, foreground);
+.dashboard {
+  &__grid {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  &__item {
+    flex: 1;
+    flex-basis: var(--cy__sale-card--size);
+    height: var(--cy__sale-card--size);
+    margin: 1rem;
+    cursor: pointer;
+    &:hover {
+      box-shadow: inset 0px 0px 2rem rgb(var(--cy__color--primary-500));
 
-  $sale-card-size: map-get(map-get($theme, custom), sale-card-size);
+      .mat-card-content,
+      .dashboard__item-icon {
+        filter: url(#filter);
+        @include animations.make-retro-vision;
 
-  .dashboard {
-    &__grid {
-      width: 100%;
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
+      }
     }
-    &__item {
-      flex: 1;
-      flex-basis: $sale-card-size;
-      height: $sale-card-size;
-      margin: 1rem;
-      cursor: pointer;
-      &:hover {
-        box-shadow: inset 0px 0px 2rem map-get($primary,500);
 
-        .mat-card-content,
-        .dashboard__item-icon {
-          filter: url(#filter);
-          @include make-retro-vision;
+    &-image {
+      padding: 0 1rem;
+      margin-bottom: .5rem;
+      text-align: center;
+    }
 
-        }
-      }
+    &-icon {
+      fill: rgb(var(--cy__color--primary-500));
+      stroke: rgb(var(--cy__color--primary-500));
+      stroke-width: .4px;
+      height: 90px;
+      opacity: .75;
+      margin: 10px;
+    }
 
-      &-image {
-        padding: 0 1rem;
-        margin-bottom: .5rem;
-        text-align: center;
-      }
+    h2{
+      line-height: 1.125;
+      text-shadow: 0 0 3px black;
+    }
 
-      &-icon {
-        fill: rgba(map-get($primary,500),.25);
-        stroke: rgba(map-get($primary,500),1);
-        stroke-width: .4px;
-        height: 90px;
-        opacity: .75;
-        margin: 10px;
-      }
+    &-price{
+      --aug-tl: 10px !important;
 
-      h2{
-        line-height: 1.125;
-        text-shadow: 0 0 3px black;
-      }
+      background: rgba(var(--cy__color--warn-500),.85);
+      color: var(var(--cy__color--warn-contrast-500));
+      border: 1px solid var(--cy__color--warn-500);
+      font-size: 1.5rem;
+      font-weight: 900;
+      padding: 18px 36px 3px 6px;
+      float: right;
+      position: relative;
 
-      &-price{
-        --aug-tl: 10px !important;
-
-        background: rgba(map-get($warn,500),.85);
-        color: map-get(map-get($warn,contrast),500);
-        border: 1px solid map-get($warn,500);
-        font-size: 1.5rem;
-        font-weight: 900;
-        padding: 18px 36px 3px 6px;
-        float: right;
-        position: relative;
-
-        small{
-          font-size: .6rem;
-          position: absolute;
-          top: 0;
-          right: 17px;
-        }
-      }
-
-      mat-card-content {
-        text-align: center;
+      small{
+        font-size: .6rem;
         position: absolute;
-        bottom: 0;
-        width: 100%;
-        left: 50%;
-        transform: translateX(-50%);
+        top: 0;
+        right: 17px;
       }
+    }
+
+    mat-card-content {
+      text-align: center;
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      left: 50%;
+      transform: translateX(-50%);
     }
   }
 }

@@ -5,8 +5,6 @@
   $background: map-get($theme, background);
   $foreground: map-get($theme, foreground);
 
-  width: 100%;
-
   .mat-table {
     width: 100%;
     display: table;
