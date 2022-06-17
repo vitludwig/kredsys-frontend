@@ -1,15 +1,15 @@
 <div class="card-loader" [class.hidden]="hidden || (customerService.customer$ | async) !== null">
-<!--	<img src="assets/images/signal.svg" class="card-loader__image">-->
+  <!--	<img src="assets/images/signal.svg" class="card-loader__image">-->
   <svg viewBox="0 0 24 24" class="card-loader__icon">
     <use xlink:href="assets/images/icons.svg#icon--signal"></use>
   </svg>
-	<h3>Načtěte kartu</h3>
+  <h3>Načtěte kartu</h3>
 
-	<button
-		class="ms-2 btn btn-outline-dark"
-		(click)="debugLoadCard()"
-	>
-		Simulovat kartu
-	</button>
+  <button
+    class="ms-2 btn btn-outline-dark"
+    (click)="debugLoadCard()"
+  >
+    Simulovat kartu
+  </button>
 
 </div>

@@ -1,9 +1,9 @@
 <div class="dashboard">
-	<div class="dashboard__grid">
+  <div class="dashboard__grid">
     <mat-card *ngFor="let item of items" class="dashboard__item mat-elevation-z4"
-      mat-ripple
-      (click)="addItem(item)"
-      data-augmented-ui="tl-clip br-2-clip-y both"
+              mat-ripple
+              (click)="addItem(item)"
+              data-augmented-ui="tl-clip br-2-clip-y both"
     >
       <div class="dashboard__item-image">
 
@@ -16,5 +16,5 @@
         <div class="dashboard__item-price" data-augmented-ui="tl-2-clip-x both">{{ item.price }}<small>Kč</small></div>
       </mat-card-content>
     </mat-card>
-	</div>
+  </div>
 </div>

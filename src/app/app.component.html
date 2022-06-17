@@ -1,19 +1,20 @@
-<div class="app-logo"><img src="/assets/images/Cybertown_logo_FULL.png"/><span class="app-logo__tag">Kredsys&nbsp;Šupérstóór</span></div>
+<div class="app-logo"><img src="/assets/images/Cybertown_logo_FULL.png"/><span class="app-logo__tag">Kredsys&nbsp;Šupérstóór</span>
+</div>
 <app-top-menu *ngIf="authService.isLogged" [sideMenu]="sideMenu" [place]="placeService.selectedPlace"></app-top-menu>
 
 <mat-drawer-container>
-	<mat-drawer #sideMenu
-		class="menu-sidebar"
-		mode="over"
-		position="start"
-    data-augmented-ui="br-2-clip-x both"
-	>
-		<app-side-menu></app-side-menu>
-	</mat-drawer>
+  <mat-drawer #sideMenu
+              class="menu-sidebar"
+              mode="over"
+              position="start"
+              data-augmented-ui="br-2-clip-x both"
+  >
+    <app-side-menu></app-side-menu>
+  </mat-drawer>
 
-	<div class="main-content" tabindex="0" #mainContent>
-		<router-outlet></router-outlet>
-	</div>
+  <div class="main-content" tabindex="0" #mainContent>
+    <router-outlet></router-outlet>
+  </div>
 
 </mat-drawer-container>
 
