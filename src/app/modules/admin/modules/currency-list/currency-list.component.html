@@ -5,8 +5,8 @@
 	</mat-form-field>
 
 	<a mat-button
-		 [routerLink]="ERoute.NEW"
-		 color="primary"
+		[routerLink]="ERoute.NEW"
+		color="primary"
 	>
 		<mat-icon>add</mat-icon>
 		Přidat měnu
@@ -33,8 +33,8 @@
 
 		<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
 		<tr mat-row
-				*matRowDef="let row; columns: displayedColumns;"
-				class="table-row"
+			*matRowDef="let row; columns: displayedColumns;"
+			class="table-row"
 		></tr>
 
 		<!-- Row shown when there is no matching data. -->
@@ -44,5 +44,5 @@
 	</table>
 
 	<mat-paginator [length]="total" [pageSizeOptions]="[5, 10, 25, 100]"
-								 aria-label="Select page of users"></mat-paginator>
+		aria-label="Select page of users"></mat-paginator>
 </div>
