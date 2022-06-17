@@ -2,8 +2,8 @@
 	<div class="toolbar-content">
 		<div class="d-flex align-items-center">
 			<button mat-icon-button
-			#menuBtn
-			(click)="sideMenu.toggle()"
+				#menuBtn
+				(click)="sideMenu.toggle()"
 			>
 				<mat-icon>menu</mat-icon>
 			</button>
@@ -23,19 +23,19 @@
 				</ng-container>
 
 				<button mat-button
-						mat-raised-button
-						color="accent"
-						class="ms-3"
-						(click)="openChargeDialog()"
+					mat-raised-button
+					color="accent"
+					class="ms-3"
+					(click)="openChargeDialog()"
 				>
 					Dobít
 				</button>
 
 				<button mat-button
-						mat-raised-button
-						color="basic"
-						class="ms-5"
-						(click)="customerService.logout()"
+					mat-raised-button
+					color="basic"
+					class="ms-5"
+					(click)="customerService.logout()"
 				>
 					Odhlásit
 				</button>
