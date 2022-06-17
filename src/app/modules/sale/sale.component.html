@@ -1,16 +1,16 @@
 <mat-drawer-container class="sale-container">
-  <mat-drawer #drawer
-              class="sale-sidebar"
-              mode="side"
-              position="end"
-              opened
-              data-augmented-ui="tl-2-clip-x bl-2-clip-x both both"
-  >
-    <app-sale-summary [place]="placeService.selectedPlace"></app-sale-summary>
-  </mat-drawer>
+	<mat-drawer #drawer
+							class="sale-sidebar"
+							mode="side"
+							position="end"
+							opened
+							data-augmented-ui="tl-2-clip-x bl-2-clip-x both both"
+	>
+		<app-sale-summary [place]="placeService.selectedPlace"></app-sale-summary>
+	</mat-drawer>
 
-  <div class="sale-content p-3">
-    <app-dashboard [place]="placeService.selectedPlace"></app-dashboard>
-  </div>
+	<div class="sale-content p-3">
+		<app-dashboard [place]="placeService.selectedPlace"></app-dashboard>
+	</div>
 
 </mat-drawer-container>
