@@ -5,7 +5,9 @@
 
   --cy__color--border: #{rgb.toValues(map-get($theme-primary,500))};
   --cy__color--primary-500: #{rgb.toValues(map-get($theme-primary,500))};
-  --cy__color--primary-contrast-500: #{rgb.toValues(map_get($primary, 'contrast',500))};
+  --cy__color--primary-contrast-500: #{rgb.toValues(map_get($theme-primary, 'contrast',500))};
+  --cy__color--accent-500: #{rgb.toValues(map-get($theme-accent,500))};
+  --cy__color--accent-contrast-500: #{rgb.toValues(map_get($theme-accent, 'contrast',500))};
   --cy__color--warn-500: #{rgb.toValues(map-get($theme-warn,500))};
   --cy__color--warn-contrast-500: #{rgb.toValues(map-get($theme-warn, 'contrast',500))};
 }

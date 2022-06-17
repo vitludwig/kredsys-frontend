@@ -1,6 +1,5 @@
 @use '@angular/material' as mat;
 
-@import 'assets/styles/mixins';
 @import 'assets/styles/animations';
 @import 'assets/styles/auguments';
 
@@ -154,4 +153,3 @@ $theme: (
 // Custom components
 @include animations-theme($theme);
 @include auguments-theme($theme);
-@include expandable-table($theme);

@@ -45,3 +45,41 @@
     }
   }
 }
+
+.mat-table {
+  width: 100%;
+  display: table;
+
+  .table-row {
+    &:not(.expanded-row) {
+      &:hover {
+        background: rgba(var(--cy__color--primary-500), .10);
+      }
+
+      &:active {
+        background: rgba(var(--cy__color--warn-500), .10);
+      }
+    }
+
+    &.expanded-row {
+      background: rgba(var(--cy__color--accent-500), .10);;
+    }
+
+    td {
+      border-bottom-width: 0;
+    }
+  }
+
+  .detail-row {
+    height: 0;
+  }
+
+  .element-detail {
+    overflow: hidden;
+    display: flex;
+
+    .detail-content {
+      padding: 1rem 0.5rem;
+    }
+  }
+}
