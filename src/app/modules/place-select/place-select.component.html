@@ -4,19 +4,19 @@
 		<mat-card-content>
 			<mat-form-field>
 				<mat-select [(ngModel)]="place"
-										placeholder="Místo">
+					placeholder="Místo">
 					<mat-option *ngFor="let place of places"
-											[value]="place">
+						[value]="place">
 						{{ place.name }}
 					</mat-option>
 				</mat-select>
 			</mat-form-field>
 			<div>
 				<button color="primary"
-								class="w-100"
-								mat-raised-button
-								[disabled]="!place"
-								(click)="selectPlace()"
+					class="w-100"
+					mat-raised-button
+					[disabled]="!place"
+					(click)="selectPlace()"
 				>
 					Vybrat
 				</button>
