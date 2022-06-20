@@ -50,7 +50,7 @@ export class UserDetailComponent implements OnInit {
 			if(userId) {
 				console.log('is edit');
 				this.user = Object.assign({}, await this.usersService.getUser(userId));
-				this.user.roles = [];
+				this.user.roles = this.user.roles ?? [];
 				this.cards = (await this.usersService.getUserCards(userId)).data;
 				this.accounts = await this.usersService.getUserCurrencyAccounts(userId);
 				this.currencies = Utils.toHashMap<ICurrency>((await this.currencyService.getCurrencies()).data, 'id');
@@ -59,6 +59,7 @@ export class UserDetailComponent implements OnInit {
 			} else {
 				console.log('is new');
 				this.user = Object.assign({}, this.usersService.createNewUser());
+				this.user.roles = [];
 				this.isEdit = false;
 			}
 		} catch(e) {

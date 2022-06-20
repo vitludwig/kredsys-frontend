@@ -1,6 +1,5 @@
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {MatTableDataSource} from '@angular/material/table';
-import {IGoods, IGoodsTableSource, IGoodsType} from '../../../../common/types/IGoods';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
 import {map, merge, startWith, Subject, switchMap, takeUntil} from 'rxjs';
@@ -8,7 +7,6 @@ import {ActivatedRoute} from '@angular/router';
 import {GoodsService} from '../../services/goods/goods.service';
 import {CurrencyService} from '../../services/currency/currency.service';
 import {debounce} from '../../../../common/decorators/debounce';
-import {Utils} from '../../../../common/utils/Utils';
 import {ICurrency} from '../../../../common/types/ICurrency';
 import { ERoute } from 'src/app/common/types/ERoute';
 
@@ -50,14 +48,17 @@ export class CurrencyListComponent implements OnInit, OnDestroy {
 			.subscribe(() => (this.paginator.pageIndex = 0));
 
 		// TODO: create parent component for this common grid tasks
-		merge(this.sort.sortChange, this.paginator.page)
+		merge(this.sort.sortChange, this.paginator.page, this.paginator.pageSize)
 			.pipe(
 				startWith({}),
 				switchMap(() => {
 					this.isLoading = true;
+					const offset = this.paginator.pageIndex * this.paginator.pageSize;
+
 					return this.currencyService.getCurrencies(
 						'',
-						this.paginator.pageIndex + 1,
+						offset >= 0 ? offset : 0,
+						this.paginator.pageSize
 					);
 				}),
 				map((data) => {

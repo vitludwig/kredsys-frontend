@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {IUser} from '../../../../common/types/IUser';
+import {EUserRole, IUser} from '../../../../common/types/IUser';
 import {IPaginatedResponse} from '../../../../common/types/IPaginatedResponse';
 import {firstValueFrom} from 'rxjs';
 import {environment} from '../../../../../environments/environment';
@@ -45,8 +45,8 @@ export class UsersService {
 		return firstValueFrom(this.http.put<IUser>(environment.apiUrl + 'users/' + user.id, user));
 	}
 
-	public async editRole(): Promise<void> {
-
+	public async editRoles(userId: number, roles: EUserRole[]): Promise<void> {
+		return firstValueFrom(this.http.put<void>(environment.apiUrl + 'users/' + userId + '/roles', {roles}));
 	}
 
 	/**

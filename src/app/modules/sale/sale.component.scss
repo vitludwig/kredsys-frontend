@@ -3,7 +3,11 @@
   margin: -15px;
 
   .sale-content {
-    height: 100%;
+    height: calc(100vh - #{$mat-toolbar-height});
+
+    &.disabled {
+      background: #ccc;
+    }
   }
 
   .sale-sidebar {

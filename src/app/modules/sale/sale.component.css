@@ -3,7 +3,10 @@
   margin: -15px;
 }
 .sale-container .sale-content {
-  height: 100%;
+  height: calc(100vh - 64px);
+}
+.sale-container .sale-content.disabled {
+  background: #ccc;
 }
 .sale-container .sale-sidebar {
   width: 350px;

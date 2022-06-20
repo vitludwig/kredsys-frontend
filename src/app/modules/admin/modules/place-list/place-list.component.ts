@@ -47,14 +47,17 @@ export class PlaceListComponent implements OnInit, OnDestroy {
 			.pipe(takeUntil(this.unsubscribe))
 			.subscribe(() => (this.paginator.pageIndex = 0));
 
-		merge(this.sort.sortChange, this.paginator.page)
+		merge(this.sort.sortChange, this.paginator.page, this.paginator.pageSize)
 			.pipe(
 				startWith({}),
 				switchMap(() => {
 					this.isPlacesLoading = true;
+					const offset = this.paginator.pageIndex * this.paginator.pageSize;
+
 					return this.placeService.getPlaces(
 						'',
-						this.paginator.pageIndex + 1,
+						offset >= 0 ? offset : 0,
+						this.paginator.pageSize
 					);
 				}),
 				map((data) => {

@@ -43,7 +43,7 @@
 				class="w-100">
 				<mat-label>Role</mat-label>
 				<mat-select name="role"
-					[(ngModel)]="user.roles[0]"
+					[(ngModel)]="role"
 				>
 					<mat-option *ngFor="let role of roles"
 						[value]="role">{{ role }}</mat-option>
@@ -74,7 +74,9 @@
 					<mat-label>Vklad (volitelné)</mat-label>
 					<input matInput
 						[(ngModel)]="deposit"
-						type="number">
+						name="deposit"
+						type="number"
+					>
 					<div matSuffix>Kč</div>
 				</mat-form-field>
 			</div>

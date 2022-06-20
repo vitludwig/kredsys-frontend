@@ -77,6 +77,13 @@
 		</a>
 
 		<a mat-list-item
+			*ngIf="userRoles | canAccessRoute: ERoute.CARD_INFO"
+			[routerLink]="ERoute.CARD_INFO"
+			[class.active]="router.url === '/' + ERoute.CARD_INFO">
+			Infokartáčka
+		</a>
+
+		<a mat-list-item
 			href="#"
 			*ngIf="authService.isLogged"
 			(click)="authService.logout()"

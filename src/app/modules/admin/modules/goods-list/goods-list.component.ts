@@ -54,14 +54,17 @@ export class GoodsListComponent implements OnInit, OnDestroy {
 			.pipe(takeUntil(this.unsubscribe))
 			.subscribe(() => (this.paginator.pageIndex = 0));
 
-		merge(this.sort.sortChange, this.paginator.page)
+		merge(this.sort.sortChange, this.paginator.page, this.paginator.pageSize)
 			.pipe(
 				startWith({}),
 				switchMap(() => {
 					this.isLoading = true;
+					const offset = this.paginator.pageIndex * this.paginator.pageSize
+
 					return this.goodsService.getGoods(
 						'',
-						this.paginator.pageIndex + 1,
+						offset >= 0 ? offset : 0,
+						this.paginator.pageSize
 					);
 				}),
 				map((data) => {
@@ -88,8 +91,8 @@ export class GoodsListComponent implements OnInit, OnDestroy {
 		this.loadData(value);
 	}
 
-	protected async loadData(search: string = '', page: number = 1): Promise<void> {
-		const goods = await this.goodsService.getGoods(search, page);
+	protected async loadData(search: string = '', offset: number = 0, limit: number = 15): Promise<void> {
+		const goods = await this.goodsService.getGoods(search, offset, limit);
 		const goodsTypes = await this.goodsService.getGoodsTypes();
 
 		this.goodsDataSource = new MatTableDataSource<IGoodsTableSource>(await this.transformGoodsToSource(goods.data));

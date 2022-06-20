@@ -26,6 +26,7 @@ export class AuthService {
 	public isLogged$: Observable<boolean>
 
 	protected isLoggedSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+
 	#user: IUser | null = null;
 
 	constructor(

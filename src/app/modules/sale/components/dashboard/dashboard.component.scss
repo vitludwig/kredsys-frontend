@@ -73,6 +73,11 @@
       width: 100%;
       left: 50%;
       transform: translateX(-50%);
+      ::ng-deep {
+        h2 {
+          line-height: 23px;
+        }
+      }
     }
   }
 }

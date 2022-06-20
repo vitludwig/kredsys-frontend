@@ -8,6 +8,7 @@ const allowedRoutes: EnumHashMap<EUserRole, ERoute[]> = {
 		ERoute.SALE,
 		ERoute.ADMIN,
 		ERoute.ADMIN_PLACES,
+		ERoute.CARD_INFO,
 	],
 	[EUserRole.POWER_SALESMAN]: [
 		ERoute.SALE,
@@ -15,14 +16,18 @@ const allowedRoutes: EnumHashMap<EUserRole, ERoute[]> = {
 		ERoute.ADMIN_PLACES,
 		ERoute.PLACE_SELECT,
 		ERoute.ADMIN_CHARGE,
+		ERoute.CARD_INFO,
 	],
 	[EUserRole.REGISTRAR]: [
 		ERoute.CHECK_IN,
 		ERoute.ADMIN,
 		ERoute.ADMIN_USERS,
-		ERoute.ADMIN_CHARGE
+		ERoute.ADMIN_CHARGE,
+		ERoute.CARD_INFO,
 	],
-	[EUserRole.MEMBER]: [],
+	[EUserRole.MEMBER]: [
+		ERoute.CARD_INFO,
+	],
 }
 
 export default allowedRoutes;

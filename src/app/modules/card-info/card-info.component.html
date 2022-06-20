@@ -1,0 +1,11 @@
+<div class="row justify-content-center p-3">
+	<div class="col-4">
+		<app-card-loader *ngIf="!user"
+			(cardIdChange)="setCardId($event)">
+		</app-card-loader>
+
+		<ng-container *ngIf="user">
+			<h1 class="very-big">Stav: {{ currencyAccount?.currentAmount ?? 0 }} Kč</h1>
+		</ng-container>
+	</div>
+</div>
