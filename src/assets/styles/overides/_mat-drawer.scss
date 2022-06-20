@@ -1,0 +1,13 @@
+.mat-drawer {
+  margin-top: -2px;
+  margin-left: -2px;
+  margin-bottom: -2px;
+
+  &-container {
+    height: 100vh;
+  }
+
+  &-backdrop.mat-drawer-shown {
+    background-color: rgba(#000000, 0.8);
+  }
+}

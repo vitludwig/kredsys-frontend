@@ -1,0 +1,12 @@
+.mat-option {
+  svg {
+    height: 24px;
+    fill: var(--cy__color--primary-500);
+  }
+
+  &.mat-active {
+    svg {
+      fill: rgb(var(--cy__color--primary-contrast-500));
+    }
+  }
+}
