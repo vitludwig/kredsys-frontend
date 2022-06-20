@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {AfterViewInit, Component, Input, OnInit} from '@angular/core';
 import {SaleService} from '../../services/sale/sale.service';
 import {OrderService} from '../../services/order/order.service';
 import {IPlace} from '../../../../common/types/IPlace';
@@ -15,7 +15,6 @@ import {CustomerService} from '../../services/customer/customer.service';
 	styleUrls: ['./dashboard.component.scss'],
 })
 export class DashboardComponent {
-	#place: IPlace;
 
 	public get place(): IPlace {
 		return this.#place;
@@ -23,10 +22,13 @@ export class DashboardComponent {
 
 	@Input()
 	public set place(value: IPlace) {
-		this.#place = value;
-		this.loadItems();
+		if(value && JSON.stringify(value) !== JSON.stringify(this.#place)) {
+			this.#place = value;
+			this.loadItems();
+		}
 	}
 
+	#place: IPlace;
 	public items: ISaleItem[] = [];
 
 	constructor(
@@ -36,10 +38,12 @@ export class DashboardComponent {
 		protected goodsService: GoodsService,
 		protected customerService: CustomerService,
 	) {
+
 	}
 
-	protected async loadItems(): Promise<void> {
+	protected loadItems = async (): Promise<void> => {
 		try {
+			this.items = [];
 			const goods = await this.placeService.getPlaceGoods(this.place.id!);
 			const goodsTypes = Utils.toHashMap<IGoodsType>(await this.goodsService.getGoodsTypes(), 'id');
 

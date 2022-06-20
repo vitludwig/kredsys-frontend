@@ -7,55 +7,85 @@
   flex-direction: column;
 
   .summary-list {
-    height: 70%;
-    overflow-y: auto;
-    position: relative;
+	height: 70%;
+	overflow-y: auto;
+	position: relative;
 
-    .summary-item {
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0.5rem 0;
+	.summary-item {
+	  display: flex;
+	  flex-direction: row;
+	  justify-content: space-between;
+	  align-items: center;
+	  padding: 0.5rem 0;
 
-      .item-name {
-        word-break: break-word;
-      }
+	  .item-name {
+		word-break: break-word;
+	  }
 
-      &:not(:last-child) {
-        border-bottom: 1px solid $border-primary;
-      }
+	  &:not(:last-child) {
+		border-bottom: 1px solid $border-primary;
+	  }
 
-      .item-info {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        width: 100%;
-        cursor: pointer;
-        font-size: 1.2rem;
+	  .item-info {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		width: 100%;
+		cursor: pointer;
+		font-size: 1.4rem;
 
-        .item-name {
-          width: 100%;
-          text-align: center;
-        }
-      }
-    }
+		.item-count {
+		  margin: 0 .3rem;
+		}
+
+		button {
+		  display: flex;
+		  justify-content: center;
+		  align-items: center;
+		}
+
+		mat-icon {
+		  font-size: 30px;
+		  display: flex;
+		  justify-content: center;
+		  align-items: center;
+		}
+
+		.item-name {
+		  width: 100%;
+		  text-align: center;
+		}
+	  }
+
+	  .item-actions {
+		mat-icon {
+		  font-size: 30px;
+		}
+	  }
+	}
   }
 
   .summary-actions {
-    margin-top: auto;
+	margin-top: auto;
 
-    .total {
-      font-size: 3.5rem;
-      text-align: center;
-      margin: 2.5rem 0;
-    }
+	.total {
+	  font-size: 3.5rem;
+	  text-align: center;
+	  margin: 2.5rem 0;
+	}
 
-    .submit-btn {
-      width: 100%;
-      padding: 1.5rem 0;
-      font-size: 1.5rem;
-    }
+	.total-left {
+	  border-top: 1px solid #bbb;
+	  padding: 1rem;
+	  text-align: center;
+	  font-size: 1.5rem;
+	}
+
+	.submit-btn {
+	  width: 100%;
+	  padding: 1.5rem 0;
+	  font-size: 1.5rem;
+	}
   }
 }
 

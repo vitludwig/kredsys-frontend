@@ -78,11 +78,23 @@ export class PlaceDetailComponent implements OnInit {
 		}
 	}
 
+	public async removeItem(id: number): Promise<void> {
+		try {
+			await this.placeService.removeGoods(id, this.place!.id!);
+			this.goods = this.goods.filter((obj) => obj.id !== id);
+		} catch(e) {
+			console.error('Cannot remove item', e)
+		}
+	}
+
 	public openSortimentDetailDialog(): void {
 		const dialog = this.dialog.open<SortimentDetailComponent>(SortimentDetailComponent, {
 			width: '300px',
 			minWidth: '250px',
 			autoFocus: 'dialog',
+			data: {
+				existingItems: this.goods,
+			}
 		});
 
 		dialog.afterClosed().subscribe(async (result) => {
@@ -92,8 +104,10 @@ export class PlaceDetailComponent implements OnInit {
 
 			try {
 				if(this.place.id) {
-					await this.placeService.addGoods(result.id, this.place.id);
-					this.goods.push(result);
+					for(const item of result) {
+						await this.placeService.addGoods(item.id, this.place.id);
+					}
+					this.goods.push(...result);
 				}
 			} catch(e) {
 				if(e instanceof HttpErrorResponse) {

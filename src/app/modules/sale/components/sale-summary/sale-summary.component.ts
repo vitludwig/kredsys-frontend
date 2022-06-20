@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {OrderService} from '../../services/order/order.service';
 import {SaleService} from '../../services/sale/sale.service';
 import {IOrderItem} from '../../types/IOrderItem';
@@ -9,15 +9,23 @@ import {AlertService} from '../../../../common/services/alert/alert.service';
 import {HttpErrorResponse} from '@angular/common/http';
 import {TransactionService} from '../../../admin/modules/transactions/services/transaction/transaction.service';
 import {ITransactionRecordPayment} from '../../../admin/modules/transactions/services/transaction/types/ITransaction';
+import {ICurrencyAccount} from '../../../../common/types/ICurrency';
+import {Subject, takeUntil} from 'rxjs';
 
 @Component({
 	selector: 'app-sale-summary',
 	templateUrl: './sale-summary.component.html',
 	styleUrls: ['./sale-summary.component.scss'],
 })
-export class SaleSummaryComponent {
+export class SaleSummaryComponent implements OnInit, OnDestroy {
 	@Input()
 	public place: IPlace;
+
+	public totalLeft: number;
+	public currencyAccount: ICurrencyAccount | null;
+	public isUserLoaded: boolean = false;
+
+	protected unsubscribe: Subject<void> = new Subject();
 
 	constructor(
 		public orderService: OrderService,
@@ -29,9 +37,35 @@ export class SaleSummaryComponent {
 	) {
 	}
 
+	public ngOnInit(): void {
+		this.orderService.orderChange$
+			.pipe(takeUntil(this.unsubscribe))
+			.subscribe((items) => {
+				if(this.currencyAccount) {
+					this.totalLeft = this.currencyAccount.currentAmount - this.orderService.total;
+				}
+			})
+
+		this.customerService.customer$
+			.pipe(takeUntil(this.unsubscribe))
+			.subscribe((user) => {
+				if(!user) {
+					this.isUserLoaded = false;
+				}
+			})
+	}
+
+	public ngOnDestroy(): void {
+		this.unsubscribe.next();
+	}
+
 	public async loadUserId(uid: number): Promise<void> {
 		try {
 			this.customerService.customer = await this.usersService.getUserByCardUid(uid);
+			this.currencyAccount = (await this.usersService.getUserCurrencyAccounts(this.customerService.customer.id!))[0];
+			console.log(this.currencyAccount);
+			this.isUserLoaded = true;
+
 		} catch(e) {
 			if(e instanceof HttpErrorResponse) {
 				this.alertService.error(e.error.Message);

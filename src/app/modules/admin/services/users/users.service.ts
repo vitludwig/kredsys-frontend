@@ -15,7 +15,7 @@ import {ECacheTag} from '../../../../common/types/ECacheTag';
 })
 export class UsersService {
 	protected users: IUser[];
-	protected limit = 5;
+	protected limit = 15;
 
 	constructor(
 		protected http: HttpClient,
@@ -74,6 +74,16 @@ export class UsersService {
 		};
 
 		return firstValueFrom(this.http.get<IPaginatedResponse<ICard>>(environment.apiUrl + 'users/' + id + '/cards', {params: params}));
+	}
+
+	@cache(ETime.DAY, [ECacheTag.TRANSACTION, ECacheTag.TRANSACTIONS])
+	public async getUserTransactions(id: number, offset: number = 0, limit: number = 15): Promise<IPaginatedResponse<ICard>> {
+		const params = {
+			offset: offset,
+			limit: limit,
+		};
+
+		return firstValueFrom(this.http.get<IPaginatedResponse<ICard>>(environment.apiUrl + 'users/' + id + '/transactions', {params: params}));
 	}
 
 	public async getUserByCardUid(uid: number): Promise<IUser> {

@@ -20,9 +20,9 @@ export class CurrencyService {
 	}
 
 	@cache(ETime.DAY, [ECacheTag.CURRENCIES])
-	public getCurrencies(search: string = '', page: number = 1, limit = this.limit): Promise<IPaginatedResponse<ICurrency>> {
+	public getCurrencies(search: string = '', offset: number = 0, limit = this.limit): Promise<IPaginatedResponse<ICurrency>> {
 	    const params = {
-		    offset: (page - 1) * this.limit,
+		    offset: offset,
 		    limit: limit,
 	    };
 

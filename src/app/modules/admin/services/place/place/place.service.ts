@@ -58,9 +58,9 @@ export class PlaceService implements OnDestroy {
 	}
 
 	@cache(ETime.DAY, [ECacheTag.PLACE])
-	public async getPlaces(search: string = '', page: number = 1, limit = this.limit): Promise<IPaginatedResponse<IPlace>> {
+	public async getPlaces(search: string = '', offset: number = 0, limit = this.limit): Promise<IPaginatedResponse<IPlace>> {
 		const params = {
-			offset: (page - 1) * this.limit,
+			offset: offset,
 			limit: limit,
 		};
 
@@ -95,6 +95,11 @@ export class PlaceService implements OnDestroy {
 			placeId,
 			goodsId,
 		}));
+	}
+
+	@invalidateCache([ECacheTag.PLACES, ECacheTag.PLACE])
+	public async removeGoods(goodsId: number, placeId: number): Promise<void> {
+		return firstValueFrom(this.http.delete<void>(environment.apiUrl + 'places/' + placeId + '/goods/' + goodsId));
 	}
 
 	@invalidateCache([ECacheTag.PLACES, ECacheTag.PLACE])

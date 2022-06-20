@@ -13,11 +13,11 @@
 			<span class="place-name" *ngIf="place && pageName === 'Prodej'">({{ place.name }})</span>
 		</div>
 		<ng-container *ngIf="customer">
-			<div>{{ customer.name }}</div>
+			<div>{{ customer.name }} (Id: {{ customer.memberId }})</div>
 
-			<div>
+			<div class="d-flex align-center">
 				<ng-container *ngIf="currencyAccount">
-					<small>Zůstatek: {{currencyAccount.currentAmount ?? 0 }} Kč</small>
+					<span class="currency-amount">Zůstatek: {{currencyAccount.currentAmount ?? 0 }} Kč</span>
 				</ng-container>
 
 				<ng-container *ngIf="!currencyAccount">

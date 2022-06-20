@@ -13,5 +13,8 @@ mat-toolbar .toolbar-content .place-name {
   font-size: 14px;
   margin-left: 1em;
 }
+mat-toolbar .toolbar-content .currency-amount {
+  font-size: 25px;
+}
 
 /*# sourceMappingURL=top-menu.component.css.map */
