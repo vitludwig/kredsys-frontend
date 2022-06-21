@@ -1,80 +1,93 @@
-<div class="container p-5" data-augmented-ui="tl-2-clip-x tr-2-clip-x br-2-clip-x bl-2-clip-x both">
-	<div class="d-flex justify-content-between mb-4">
-		<div class="col-12">
-			<button backButton
-				mat-raised-button>
-				<mat-icon>keyboard_arrow_left</mat-icon>
-				Zpět
-			</button>
-			<a mat-raised-button
-				[routerLink]="['/', ERoute.ADMIN, ERoute.ADMIN_TRANSACTIONS, place.id]"
-			>
-				Seznam transakcí
-			</a>
-		</div>
-	</div>
+<ng-container *ngIf="!isLoading">
+  <div class="container p-5" data-augmented-ui="tl-2-clip-x tr-2-clip-x br-2-clip-x bl-2-clip-x both">
+    <div class="d-flex justify-content-between mb-4">
+      <button backButton
+        mat-raised-button>
+        <mat-icon>keyboard_arrow_left</mat-icon>
+        Zpět
+      </button>
 
-	<div class="row"
-		*ngIf="!isLoading"
-	>
-		<div class="col-sx-12 col-md-6">
-			<h2>{{ isEdit ? place.name : 'Nové místo' }}</h2>
+      <a mat-raised-button
+        [routerLink]="['/', ERoute.ADMIN, ERoute.ADMIN_TRANSACTIONS, place.id]"
+      >
+        Seznam transakcí
+      </a>
+    </div>
 
-			<form #userForm="ngForm"
-				(ngSubmit)="userForm.valid && onSubmit()"
-			>
-				<mat-form-field appearance="standard"
-					class="w-100">
-					<mat-label>Jméno</mat-label>
-					<input matInput
-						placeholder="Jméno"
-						name="userName"
-						required
-						[(ngModel)]="place.name"
-					>
-				</mat-form-field>
+    <div class="row">
+      <div class="col-sx-12 col-md-6">
+        <h2>{{ isEdit ? place.name : 'Nové místo' }}</h2>
 
-				<mat-form-field appearance="standard"
-					required
-					class="w-100">
-					<mat-label>Role</mat-label>
-					<mat-select name="role"
-						[(ngModel)]="place.type">
-						<mat-option [value]="EPlaceRole.BAR">Bar</mat-option>
-						<mat-option [value]="EPlaceRole.INFO">Info stánek</mat-option>
-						<mat-option [value]="EPlaceRole.NPC">NPC</mat-option>
-					</mat-select>
-				</mat-form-field>
+        <form #userForm="ngForm"
+          (ngSubmit)="userForm.valid && onSubmit()"
+        >
+          <mat-form-field appearance="standard"
+            class="w-100">
+            <mat-label>Jméno</mat-label>
+            <input matInput
+              placeholder="Jméno"
+              name="userName"
+              required
+              [(ngModel)]="place.name"
+            >
+          </mat-form-field>
 
-				<div>
-					<button mat-raised-button
-						class="w-100"
-						color="primary"
-						type="submit"
-					>
-						Potvrdit
-					</button>
-				</div>
-			</form>
-		</div>
-		<div class="col-sx-12 col-md-6">
-			<h2 class="d-flex justify-content-between">
-				<span>Sortiment</span>
-				<button mat-button
-					color="primary"
-					(click)="openSortimentDetailDialog()"
-				>
-					<mat-icon>add</mat-icon>
-					Přidat položku
-				</button>
-			</h2>
+          <mat-form-field appearance="standard"
+            required
+            class="w-100">
+            <mat-label>Role</mat-label>
+            <mat-select name="role"
+              [(ngModel)]="place.type">
+              <mat-option [value]="EPlaceRole.BAR">Bar</mat-option>
+              <mat-option [value]="EPlaceRole.INFO">Info stánek</mat-option>
+              <mat-option [value]="EPlaceRole.NPC">NPC</mat-option>
+            </mat-select>
+          </mat-form-field>
 
-			<div cdkDropList class="sortiment-list" (cdkDropListDropped)="drop($event)">
-				<div class="sortiment-item" *ngFor="let item of goods" cdkDrag>
-					<span>{{ item.name }}</span>
-					<span>{{ item.price }}Kč</span>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
+          <div>
+            <button mat-raised-button
+              class="w-100"
+              color="primary"
+              type="submit"
+            >
+              Potvrdit
+            </button>
+          </div>
+        </form>
+      </div>
+      <div class="col-sx-12 col-md-6">
+        <h2 class="d-flex justify-content-between">
+          <span>Sortiment</span>
+          <button mat-button
+            color="primary"
+            (click)="openSortimentDetailDialog()"
+          >
+            <mat-icon>add</mat-icon>
+            Přidat položku
+          </button>
+        </h2>
+
+        <div cdkDropList
+          class="sortiment-list"
+          (cdkDropListDropped)="drop($event)">
+          <div class="sortiment-item"
+            *ngFor="let item of goods"
+            cdkDrag>
+            <span>{{ item.name }}</span>
+            <div>
+              <span class="me-3">{{ item.price }}Kč</span>
+
+              <button mat-icon-button
+                color="warn"
+                aria-label="Delete item"
+                (click)="removeItem(item.id)"
+              >
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-container>

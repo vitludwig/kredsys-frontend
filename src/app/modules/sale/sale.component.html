@@ -9,10 +9,9 @@
 		<app-sale-summary [place]="placeService.selectedPlace"></app-sale-summary>
 	</mat-drawer>
 
-	<div class="sale-content"
-		[class.disabled]="(customerService.customer$ | async) === null"
-	>
+	<div class="sale-content">
 		<app-dashboard [place]="placeService.selectedPlace"></app-dashboard>
+		<div class="disabled-overlay" *ngIf="(customerService.customer$ | async) === null"></div>
 	</div>
 
 </mat-drawer-container>

@@ -84,8 +84,8 @@ export class PlaceListComponent implements OnInit, OnDestroy {
 		this.loadPlaces(value);
 	}
 
-	protected async loadPlaces(search: string = '', page: number = 1): Promise<void> {
-		const users = await this.placeService.getPlaces(search, page);
+	protected async loadPlaces(search: string = '', offset?: number, limit?: number): Promise<void> {
+		const users = await this.placeService.getPlaces(search, offset, limit);
 
 		this.placesData = users.data;
 		this.placesTotal = users.total;

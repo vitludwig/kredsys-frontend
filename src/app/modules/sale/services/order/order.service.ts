@@ -10,6 +10,9 @@ export class OrderService {
 	#balanceSubject: BehaviorSubject<number>;
 	public balance$: Observable<number>;
 
+	#orderChangeSubject: BehaviorSubject<IOrderItem[]>;
+	public orderChange$: Observable<IOrderItem[]>;
+
 	public total: number = 0;
 	public items: IOrderItem[] = [];
 
@@ -24,6 +27,9 @@ export class OrderService {
 	constructor() {
 		this.#balanceSubject = new BehaviorSubject<number>(0);
 		this.balance$ = this.#balanceSubject.asObservable();
+
+		this.#orderChangeSubject = new BehaviorSubject<IOrderItem[]>([]);
+		this.orderChange$ = this.#orderChangeSubject.asObservable();
 	}
 
 	public editItem(item: ISaleItem, count: number): void {
@@ -52,12 +58,15 @@ export class OrderService {
 
 	public removeItem(id: number): void {
 		this.items = this.items.filter((item) => item.item.id !== id);
+
 		this.refreshTotal();
 	}
 
 	public clearOrder(): void {
 		this.items = [];
 		this.total = 0;
+
+		this.#orderChangeSubject.next(this.items);
 	}
 
 	public refreshTotal(): void {
@@ -69,5 +78,7 @@ export class OrderService {
 				.map((item) => item.count * item.item.price)
 				.reduce((a, b) => a + b);
 		}
+
+		this.#orderChangeSubject.next(this.items);
 	}
 }

@@ -85,8 +85,8 @@ export class CurrencyListComponent implements OnInit, OnDestroy {
 		this.loadData(value);
 	}
 
-	protected async loadData(search: string = '', page: number = 1): Promise<void> {
-		const data = await this.currencyService.getCurrencies(search, page);
+	protected async loadData(search: string = '', offset?: number, limit?: number): Promise<void> {
+		const data = await this.currencyService.getCurrencies(search, offset, limit);
 
 		this.dataSource = new MatTableDataSource<ICurrency>(data.data);
 		this.total = data.total;

@@ -1,11 +1,12 @@
 <div class="row justify-content-center p-3">
-	<div class="col-4">
+	<div class="col-xs-12 col-md-4">
 		<app-card-loader *ngIf="!user"
 			(cardIdChange)="setCardId($event)">
 		</app-card-loader>
 
 		<ng-container *ngIf="user">
-			<h1 class="very-big">Stav: {{ currencyAccount?.currentAmount ?? 0 }} Kč</h1>
+			<h2 class="text-center">{{ user.name }} (Členské id: {{ user.memberId }})</h2>
+			<h1 class="very-big text-center">{{ currencyAccount?.currentAmount ?? 0 }} Kč</h1>
 		</ng-container>
 	</div>
 </div>

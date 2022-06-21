@@ -1,9 +1,9 @@
 <div class="summary">
-	<div class="p-5 h-100 d-flex align-items-center justify-content-center" *ngIf="(customerService.customer$ | async) === null">
+	<div class="p-5 h-100 d-flex align-items-center justify-content-center" *ngIf="!isUserLoaded">
 		<app-card-loader (cardIdChange)="loadUserId($event)"></app-card-loader>
 	</div>
 
-	<ng-container *ngIf="(customerService.customer$ | async)">
+	<ng-container *ngIf="isUserLoaded">
 		<div class="summary-list">
 			<div class="summary-item"
 				*ngFor="let item of orderService.items"
@@ -44,11 +44,14 @@
 			<div class="total">
 				{{ orderService.total }} Kč
 			</div>
+			<div class="total-left" [class.text-danger]="totalLeft < -currencyAccount.overdraftLimit">
+				Zbyde: {{ totalLeft }}
+			</div>
 
 			<button mat-raised-button
 				class="submit-btn"
 				color="primary"
-				[disabled]="orderService.items.length === 0"
+				[disabled]="orderService.items.length === 0 || totalLeft < -currencyAccount.overdraftLimit"
 				(click)="submitOrder()"
 			>
 				Potvrdit

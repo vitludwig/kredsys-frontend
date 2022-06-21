@@ -30,11 +30,34 @@
         align-items: center;
         width: 100%;
         cursor: pointer;
-        font-size: 1.2rem;
+        font-size: 1.4rem;
+
+        .item-count {
+          margin: 0 .3rem;
+        }
+
+        button {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+
+        mat-icon {
+          font-size: 30px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
 
         .item-name {
           width: 100%;
           text-align: center;
+        }
+      }
+
+      .item-actions {
+        mat-icon {
+          font-size: 30px;
         }
       }
     }
@@ -47,6 +70,13 @@
       font-size: 3.5rem;
       text-align: center;
       margin: 2.5rem 0;
+    }
+
+    .total-left {
+      border-top: 1px solid #bbb;
+      padding: 1rem;
+      text-align: center;
+      font-size: 1.5rem;
     }
 
     .submit-btn {

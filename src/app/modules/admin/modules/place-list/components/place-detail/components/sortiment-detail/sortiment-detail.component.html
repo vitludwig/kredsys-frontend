@@ -12,11 +12,34 @@
 		required
 		class="w-100">
 		<mat-label>Vyber zboží</mat-label>
-		<mat-select name="goods"
-			[(ngModel)]="selectedGoods"
+		<mat-chip-list #itemSelect
+			multiple
 		>
-			<mat-option *ngFor="let item of allGoods" [value]="item">{{ item.name }}</mat-option>
-		</mat-select>
+			<mat-chip
+				*ngFor="let item of selectedOptions"
+				(removed)="removeItem(item)"
+			>
+				{{ item }}
+				<button matChipRemove>
+					<mat-icon>cancel</mat-icon>
+				</button>
+			</mat-chip>
+
+			<input
+				placeholder="Přidat položku"
+				class="mt-3"
+				#itemInput
+				[matChipInputFor]="itemSelect"
+				[matAutocomplete]="autocomplete"
+				[matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+				(matChipInputTokenEnd)="addItem($event)">
+		</mat-chip-list>
+
+		<mat-autocomplete #autocomplete="matAutocomplete" (optionSelected)="itemSelected($event)">
+			<mat-option *ngFor="let item of allOptions" [value]="item">
+				{{ item }}
+			</mat-option>
+		</mat-autocomplete>
 	</mat-form-field>
 
 	<button mat-raised-button
