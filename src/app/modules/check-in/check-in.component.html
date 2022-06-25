@@ -1,8 +1,52 @@
 <div class="row">
 	<div class="col-md-6 col-xs-12">
 		<h2>Uživatel</h2>
-		<form #userForm="ngForm"
-			(ngSubmit)="userForm.valid && onSubmit()"
+
+		<ng-container *ngIf="showValidationErrors">
+			<div *ngIf="memberId.invalid"
+				class="alert alert-danger">
+
+				<div *ngIf="memberId.errors?.['required']">
+					Vyplňte členské číslo
+				</div>
+			</div>
+
+			<div *ngIf="name.invalid"
+				class="alert alert-danger">
+
+				<div *ngIf="name.errors?.['required']">
+					Vyplňte uživatelské jméno
+				</div>
+			</div>
+
+			<div *ngIf="email.invalid"
+				class="alert alert-danger">
+
+				<div *ngIf="email.errors?.['required']">
+					Vyplňte email
+				</div>
+
+				<div *ngIf="email.errors?.['email']">
+					Email není validní emailová adresa
+				</div>
+			</div>
+
+			<div *ngIf="role.invalid"
+				class="alert alert-danger">
+
+				<div *ngIf="role.errors?.['required']">
+					Vyplňte roli
+				</div>
+			</div>
+
+			<div *ngFor="let error of errors"
+				class="alert alert-danger">
+					{{ error }}
+			</div>
+		</ng-container>
+
+		<form [formGroup]="userForm"
+			(ngSubmit)=" onSubmit()"
 		>
 			<mat-form-field appearance="standard"
 				class="w-100">
@@ -11,8 +55,8 @@
 					placeholder="Členské ID"
 					name="memberId"
 					type="number"
-					required
-					[(ngModel)]="user.memberId"
+					min="0"
+					formControlName="memberId"
 				>
 			</mat-form-field>
 
@@ -21,9 +65,8 @@
 				<mat-label>Jméno</mat-label>
 				<input matInput
 					placeholder="Jméno"
-					name="userName"
-					required
-					[(ngModel)]="user.name"
+					name="name"
+					formControlName="name"
 				>
 			</mat-form-field>
 
@@ -33,17 +76,15 @@
 				<input matInput
 					placeholder="E-mail"
 					name="email"
-					required
-					[(ngModel)]="user.email"
+					formControlName="email"
 				>
 			</mat-form-field>
 
 			<mat-form-field appearance="standard"
-				required
-				class="w-100">
+				class="w-100"
+			>
 				<mat-label>Role</mat-label>
-				<mat-select name="role"
-					[(ngModel)]="role"
+				<mat-select [formControlName]="'role'"
 				>
 					<mat-option *ngFor="let role of roles"
 						[value]="role">{{ role }}</mat-option>
@@ -63,9 +104,7 @@
 						placeholder="Karta"
 						name="card"
 						type="number"
-						required
 						disabled
-						[value]="newCard"
 					>
 				</mat-form-field>
 
@@ -73,7 +112,7 @@
 					class="w-100">
 					<mat-label>Vklad (volitelné)</mat-label>
 					<input matInput
-						[(ngModel)]="deposit"
+						formControlName="deposit"
 						name="deposit"
 						type="number"
 					>
@@ -86,7 +125,6 @@
 					class="w-100 submit-btn"
 					color="primary"
 					type="submit"
-					[disabled]="!userForm.valid"
 				>
 					Přidat uživatele
 				</button>
@@ -99,7 +137,7 @@
 			<h2 class="mb-0 me-5">Uživatelé</h2>
 			<mat-form-field appearance="standard"
 				class="w-100">
-				<mat-label>Vyhledat</mat-label>
+				<mat-label>Vyhledat podle jména</mat-label>
 				<input matInput
 					#search
 					(keyup)="onUserSearch(search.value)">

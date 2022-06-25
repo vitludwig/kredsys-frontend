@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import {IGoods, IGoodsType} from '../../../../../../common/types/IGoods';
 import {ICurrency} from '../../../../../../common/types/ICurrency';
 import {GoodsService} from '../../../../services/goods/goods.service';
 import {CurrencyService} from '../../../../services/currency/currency.service';

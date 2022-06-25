@@ -30,6 +30,9 @@ export class UserDetailComponent implements OnInit {
 	public isLoading: boolean = false;
 	public isEdit: boolean = false;
 
+	public showValidationErrors: boolean = false;
+	public errors: string[] = [];
+
 	public readonly EUserRole = EUserRole;
 
 	constructor(
@@ -48,7 +51,6 @@ export class UserDetailComponent implements OnInit {
 		try {
 			const userId = Number(this.route.snapshot.paramMap.get('id'));
 			if(userId) {
-				console.log('is edit');
 				this.user = Object.assign({}, await this.usersService.getUser(userId));
 				this.user.roles = this.user.roles ?? [];
 				this.cards = (await this.usersService.getUserCards(userId)).data;
@@ -57,7 +59,6 @@ export class UserDetailComponent implements OnInit {
 
 				this.isEdit = true;
 			} else {
-				console.log('is new');
 				this.user = Object.assign({}, this.usersService.createNewUser());
 				this.user.roles = [];
 				this.isEdit = false;
@@ -92,10 +93,17 @@ export class UserDetailComponent implements OnInit {
 					await this.usersService.addUserCard(userId, card.uid!);
 				}
 			}
+
+			this.router.navigate([ERoute.ADMIN, ERoute.ADMIN_USERS]);
 		} catch(e) {
 			console.error('Cannot add user', e);
+			this.showValidationErrors = true;
+			if(e instanceof HttpErrorResponse) {
+				if(e.status === 409) {
+					this.errors.push('Uživatel se zadaným členským id, e-mailem nebo kartou již existuje');
+				}
+			}
 		}
-		this.router.navigate([ERoute.ADMIN, ERoute.ADMIN_USERS]);
 	}
 
 	public openCardDetailDialog(): void {

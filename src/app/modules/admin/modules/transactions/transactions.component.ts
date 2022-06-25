@@ -29,7 +29,6 @@ export class TransactionsComponent implements OnInit {
 		this.places = await this.placeService.getAllPlaces();
 		const transactions = await this.transactionService.getTransactions();
 		this.allTransactions = transactions.data;
-		console.log('data: ', transactions);
 
 		const id = Number(this.route.snapshot.paramMap.get('id'));
 		if(id !== undefined) {

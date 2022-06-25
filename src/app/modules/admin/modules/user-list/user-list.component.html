@@ -19,25 +19,25 @@
 	<table mat-table
 		[dataSource]="usersData"
 		multiTemplateDataRows
-		matSort
+
 	>
 
 		<ng-container matColumnDef="id">
 			<th mat-header-cell
 				*matHeaderCellDef
-				mat-sort-header>ID
+				>Členské id
 			</th>
 
 			<td mat-cell
 				*matCellDef="let row"
-			> {{row.id}}
+			> {{row.memberId}}
 			</td>
 		</ng-container>
 
 		<ng-container matColumnDef="name">
 			<th mat-header-cell
 				*matHeaderCellDef
-				mat-sort-header>Jméno
+				>Jméno
 			</th>
 
 			<td mat-cell
@@ -48,12 +48,17 @@
 		<ng-container matColumnDef="role">
 			<th mat-header-cell
 				*matHeaderCellDef
-				mat-sort-header>Role
+				>Role
 			</th>
 
 			<td mat-cell
 				*matCellDef="let row"
-			> {{row.role}}</td>
+			>
+				<ng-container *ngFor="let role of row.roles; let isLast = last">
+					{{role}}
+					{{ isLast ? '' : ', ' }}
+				</ng-container>
+			</td>
 		</ng-container>
 
 		<ng-container matColumnDef="actions">
@@ -115,7 +120,7 @@
 	</table>
 
 	<mat-paginator [length]="usersTotal"
-		[pageSizeOptions]="[5, 10, 25, 100]"
+		[pageSizeOptions]="[5, 10, 15, 25, 100]"
 		[pageSize]="15"
 		aria-label="Select page of users"></mat-paginator>
 </div>

@@ -16,6 +16,14 @@
 			<h2>{{ isEdit ? user.name : 'Nový uživatel' }}</h2>
 			<h3 *ngIf="accounts[0]">Zůstatek: {{ accounts[0].currentAmount }} Kč</h3>
 		</div>
+
+		<ng-container *ngIf="showValidationErrors">
+			<div *ngFor="let error of errors"
+				class="alert alert-danger">
+				{{ error }}
+			</div>
+		</ng-container>
+
 		<form #userForm="ngForm"
 			(ngSubmit)="userForm.valid && onSubmit()"
 		>
@@ -46,6 +54,8 @@
 				class="w-100">
 				<mat-label>E-mail</mat-label>
 				<input matInput
+					type="email"
+					pattern="[a-zA-Z0-9.-_]{1,}@[a-zA-Z.-]{2,}[.]{1}[a-zA-Z]{2,}"
 					placeholder="E-mail"
 					name="email"
 					required

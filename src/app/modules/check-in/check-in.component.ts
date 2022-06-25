@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {EUserRole, IUser} from '../../common/types/IUser';
 import {UsersService} from '../admin/services/users/users.service';
 import {debounce} from '../../common/decorators/debounce';
@@ -7,7 +7,8 @@ import {PlaceService} from '../admin/services/place/place/place.service';
 import {ICurrency} from '../../common/types/ICurrency';
 import {CurrencyService} from '../admin/services/currency/currency.service';
 import {AuthService} from '../login/services/auth/auth.service';
-import {NgForm} from '@angular/forms';
+import {AbstractControl, FormControl, FormGroup, Validators} from '@angular/forms';
+import {HttpErrorResponse} from '@angular/common/http';
 
 @Component({
 	selector: 'app-check-in',
@@ -15,18 +16,41 @@ import {NgForm} from '@angular/forms';
 	styleUrls: ['./check-in.component.scss']
 })
 export class CheckInComponent implements OnInit {
+	public userForm: FormGroup = new FormGroup({
+		memberId: new FormControl('', [Validators.required]),
+		name: new FormControl('', [Validators.required]),
+		email: new FormControl('', [Validators.required, Validators.email]),
+		role: new FormControl('', [Validators.required]),
+		deposit: new FormControl(''),
+	});
+	public showValidationErrors: boolean = false;
+	public errors: string[] = [];
+
 	public users: IUser[] = [];
 	public user: IUser | undefined;
 	public newCard: number | null;
 	public deposit: number | null;
 
 	public roles: string[] = Object.values(EUserRole);
-	public role: EUserRole = EUserRole.MEMBER;
+	public selectedRole: EUserRole = EUserRole.MEMBER;
+
+	public get memberId(): AbstractControl | null {
+		return this.userForm.get('memberId');
+	}
+
+	public get name(): AbstractControl | null {
+		return this.userForm.get('name');
+	}
+
+	public get email(): AbstractControl | null {
+		return this.userForm.get('email');
+	}
+
+	public get role(): AbstractControl | null {
+		return this.userForm.get('role');
+	}
 
 	protected defaultCurrency: ICurrency;
-
-	@ViewChild(NgForm)
-	protected userForm: NgForm;
 
 	constructor(
 		protected usersService: UsersService,
@@ -47,21 +71,32 @@ export class CheckInComponent implements OnInit {
 	public async onUserSearch(value: string): Promise<void> {
 		if(value) {
 			this.users = (await this.usersService.getUsers(value, 0, 100)).data;
+		} else {
+			this.users = [];
 		}
 	}
 
 	public selectUser(user: IUser): void {
-		this.role = user.roles![0] ?? EUserRole.MEMBER;
-		this.user = user;
+		this.userForm.patchValue({
+			memberId: user.memberId,
+			name: user.name,
+			email: user.email,
+			role: user.roles![0],
+		});
 	}
 
 	public async onSubmit(): Promise<void> {
+		if(this.userForm.invalid) {
+			this.showValidationErrors = true;
+			return;
+		}
+
 		try {
-			const user = await this.usersService.addUser(this.user!);
+			const user = await this.usersService.addUser(this.userForm.value);
 
 			if(user.id && this.newCard) {
 				await this.usersService.addUserCard(user.id, this.newCard);
-				await this.usersService.editRoles(user.id, [this.role]);
+				await this.usersService.editRoles(user.id, [this.role?.value]);
 
 				if(this.deposit) {
 					await this.transactionService.deposit(
@@ -80,6 +115,12 @@ export class CheckInComponent implements OnInit {
 			this.resetForm();
 		} catch(e) {
 			console.error('Cannot add user', e);
+			this.showValidationErrors = true;
+			if(e instanceof HttpErrorResponse) {
+				if(e.status === 409) {
+					this.errors.push('Uživatel se zadaným členským id, e-mailem nebo kartou již existuje');
+				}
+			}
 		}
 	}
 
@@ -88,7 +129,7 @@ export class CheckInComponent implements OnInit {
 	}
 
 	public resetForm(): void {
-		this.userForm.resetForm(this.usersService.createNewUser());
+		this.userForm.patchValue(this.usersService.createNewUser());
 		this.newCard = null;
 	}
 

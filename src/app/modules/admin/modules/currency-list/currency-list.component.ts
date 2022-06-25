@@ -42,13 +42,8 @@ export class CurrencyListComponent implements OnInit, OnDestroy {
 	public async ngOnInit(): Promise<void> {
 		await this.loadData();
 
-		// If the user changes the sort order, reset back to the first page.
-		this.sort.sortChange
-			.pipe(takeUntil(this.unsubscribe))
-			.subscribe(() => (this.paginator.pageIndex = 0));
-
 		// TODO: create parent component for this common grid tasks
-		merge(this.sort.sortChange, this.paginator.page, this.paginator.pageSize)
+		merge(this.paginator.page, this.paginator.pageSize)
 			.pipe(
 				startWith({}),
 				switchMap(() => {
@@ -74,8 +69,7 @@ export class CurrencyListComponent implements OnInit, OnDestroy {
 				}),
 				takeUntil(this.unsubscribe),
 			)
-			.subscribe(async (data) => {
-				console.log('new data: ', data);
+			.subscribe((data) => {
 				this.dataSource.data = data;
 			});
 	}

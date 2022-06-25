@@ -4,11 +4,11 @@
 		<mat-card-content>
 			<form [formGroup]="loginForm"
 				#form="ngForm"
-				(ngSubmit)="form.valid && login()"
+				(ngSubmit)="login()"
 			>
 				<mat-form-field>
 					<mat-label>Jméno</mat-label>
-					<input type="text"
+					<input type="email"
 						required
 						matInput
 						formControlName="username"
@@ -60,5 +60,32 @@
 				</div>
 			</form>
 		</mat-card-content>
+		<ng-container *ngIf="showValidationErrors">
+			<div *ngIf="username.invalid"
+				class="alert alert-danger">
+
+				<div *ngIf="username.errors?.['required']">
+					Vyplňte uživatelské jméno
+				</div>
+
+				<div *ngIf="username.errors?.['email']">
+					Uživatelské jméno není validní emailová adresa
+				</div>
+			</div>
+
+			<div *ngIf="password.invalid"
+				class="alert alert-danger">
+
+				<div *ngIf="password.errors?.['required']">
+					Vyplňte heslo
+				</div>
+			</div>
+
+			<div *ngIf="isWrongCredentials"
+				class="alert alert-danger">
+
+				Špatné uživatelské jméno nebo heslo
+			</div>
+		</ng-container>
 	</mat-card>
 </div>

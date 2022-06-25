@@ -90,5 +90,10 @@
 		>
 			Odhlásit
 		</a>
+
+		<mat-list-item class="expandable mt-auto">
+			<mat-icon>person</mat-icon>
+			<span class="ms-2" *ngIf="user">{{ user.name }} ({{ user.roles[0] }})</span>
+		</mat-list-item>
 	</mat-nav-list>
 </div>

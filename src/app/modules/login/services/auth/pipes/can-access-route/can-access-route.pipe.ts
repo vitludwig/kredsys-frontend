@@ -9,12 +9,12 @@ import {ERoute} from '../../../../../../common/types/ERoute';
 export class CanAccessRoutePipe implements PipeTransform {
 
 	public transform(roles: EUserRole[], route: ERoute): boolean {
-		return true;
+		// return true;
 		// TODO: uncomment after backend return roles on GET users
-		// if(!roles) {
-		// 	return false;
-		// }
-		// return Object.entries(allowedRoutes).some(([role, allowedRoutes]) => roles.includes(role as EUserRole) && allowedRoutes.includes(route));
+		if(!roles) {
+			return false;
+		}
+		return Object.entries(allowedRoutes).some(([role, allowedRoutes]) => roles.includes(role as EUserRole) && allowedRoutes.includes(route));
 	}
 
 }

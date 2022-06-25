@@ -1,5 +1,13 @@
 .side-menu {
   width: 15rem;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.side-menu .mat-nav-list {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 .side-menu .mat-list-item.active {
   background: #eee;
@@ -9,6 +17,9 @@
 }
 .side-menu .sub-menu a[mat-list-item] {
   padding-left: 3rem;
+}
+.side-menu .user-info {
+  margin-top: auto;
 }
 
 /*# sourceMappingURL=side-menu.component.css.map */

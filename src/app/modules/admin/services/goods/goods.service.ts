@@ -36,6 +36,7 @@ export class GoodsService {
 		const params = {
 			offset: offset,
 			limit: limit,
+			Name: search
 		};
 
 		const result = await firstValueFrom(this.http.get<IPaginatedResponse<IGoods>>(environment.apiUrl + 'goods', {params: params}));

@@ -1,4 +1,4 @@
-import {Injectable, Renderer2} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {IUser} from '../../../../common/types/IUser';
 import {OrderService} from '../order/order.service';
@@ -27,6 +27,10 @@ export class CustomerService {
 	) {
 		this.#customerSubject = new BehaviorSubject<IUser | null>(null);
 		this.customer$ = this.#customerSubject.asObservable();
+	}
+
+	public propagateRefreshCustomer(): void {
+		this.#customerSubject.next(this.customer);
 	}
 
 	public logout(): void {

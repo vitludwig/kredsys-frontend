@@ -12,6 +12,7 @@ export enum EUserRole {
 	ADMIN = 'Admin',
 	MEMBER = 'Member',
 	PLACE = 'Place',
+	WORKER = 'Worker',
 	REGISTRAR = 'Registrar',
 	POWER_SALESMAN = 'PowerSalesman',
 }
