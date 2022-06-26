@@ -1,3 +1,5 @@
+@use "sass:math";
+
 @mixin animations-theme($theme) {
 
   $primary: map-get(map-get($theme, color), primary);
@@ -57,7 +59,7 @@
 }
 
 @mixin createRandomKeyframes( $numberOfKeys ) {
-  $delta: round(100/$numberOfKeys);
+  $delta: round(math.div(100, $numberOfKeys));
 
   @for $i from 1 through $numberOfKeys {
     $time: ($i*$delta - random($delta)) +'%';
