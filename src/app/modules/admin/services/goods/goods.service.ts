@@ -21,7 +21,7 @@ export class GoodsService {
 	}
 
 	// TODO: this is not good, think of better solution
-	@cache(ETime.DAY, [ECacheTag.GOODS])
+	@cache(ETime.HOUR, [ECacheTag.GOODS])
 	public async getAllGoods(): Promise<IGoods[]> {
 		const params = {
 			offset: 0,
@@ -31,7 +31,7 @@ export class GoodsService {
 		return (await firstValueFrom(this.http.get<IPaginatedResponse<IGoods>>(environment.apiUrl + 'goods', {params: params}))).data;
 	}
 
-	@cache(ETime.DAY, [ECacheTag.GOODS])
+	@cache(ETime.HOUR, [ECacheTag.GOODS])
 	public async getGoods(search: string = '', offset: number = 0, limit = this.limit): Promise<IPaginatedResponse<IGoods>> {
 		const params = {
 			offset: offset,
@@ -44,10 +44,11 @@ export class GoodsService {
 		return result;
 	}
 
-	@cache(ETime.DAY, [ECacheTag.GOODIE])
+	@cache(ETime.HOUR, [ECacheTag.GOODIE])
 	public async getGoodie(id: number): Promise<IGoods> {
+		// TODO: remove after backend has endpoint for one item by id
 		return this.goods.find((item) => item.id === id)!;
-		// return firstValueFrom(this.http.get<IPaginatedResponse<IGoods>>(environment.apiUrl + 'goods/' + id));
+		// return firstValueFrom(this.http.get<IGoods>(environment.apiUrl + 'goods/' + id));
 	}
 
 	public async getGoodsTypes(): Promise<IGoodsType[]> {

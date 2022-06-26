@@ -1,13 +1,17 @@
+import {ETransactionType} from "./ETransactionType";
+
 export interface ITransaction {
 	info: string;
 	userId: number;
 	id: number;
-	type: 'Payment' | 'Deposit';
+	type: ETransactionType;
 	placeId: number;
 	created: string;
 	amount: number;
 	currencyId: number;
 	cancellation: boolean;
+	userName: string;
+	placeName: string;
 }
 
 export interface ITransactionRecord {

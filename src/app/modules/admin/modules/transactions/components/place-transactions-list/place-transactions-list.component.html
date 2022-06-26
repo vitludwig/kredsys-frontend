@@ -1,0 +1,17 @@
+<mat-form-field>
+	<mat-select [(ngModel)]="selectedPlace"
+			placeholder="Místo"
+	>
+		<mat-option *ngFor="let place of places"
+				[value]="place">
+			{{ place.name }}
+		</mat-option>
+	</mat-select>
+</mat-form-field>
+
+<app-transactions-list *ngIf="selectedPlace"
+		[dataLoader]="loadData"
+		[filterBy]="{
+			id: selectedPlace.id
+		}"
+></app-transactions-list>

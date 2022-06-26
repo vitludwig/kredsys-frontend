@@ -9,6 +9,7 @@ import {ICurrencyAccount} from '../../../../common/types/ICurrency';
 import {cache, invalidateCache} from '../../../../common/decorators/cache';
 import {ETime} from '../../../../common/types/ETime';
 import {ECacheTag} from '../../../../common/types/ECacheTag';
+import {ITransaction} from "../../modules/transactions/services/transaction/types/ITransaction";
 
 @Injectable({
 	providedIn: 'root',
@@ -23,7 +24,7 @@ export class UsersService {
 
 	}
 
-	@cache(ETime.DAY, [ECacheTag.USERS])
+	@cache(ETime.HOUR, [ECacheTag.USERS])
 	public async getUsers(search: string = '', offset: number = 0, limit = this.limit): Promise<IPaginatedResponse<IUser>> {
 		const params = {
 			offset: offset,
@@ -35,7 +36,7 @@ export class UsersService {
 		return firstValueFrom(this.http.get<IPaginatedResponse<IUser>>(environment.apiUrl + 'users', {params: params}));
 	}
 
-	@cache(ETime.DAY, [ECacheTag.USER])
+	@cache(ETime.HOUR, [ECacheTag.USER])
 	public async getUser(id: number): Promise<IUser> {
 		return firstValueFrom(this.http.get<IUser>(environment.apiUrl + 'users/' + id));
 	}
@@ -66,7 +67,7 @@ export class UsersService {
 		return firstValueFrom(this.http.post<IUser>(environment.apiUrl + 'users', user));
 	}
 
-	@cache(ETime.DAY, [ECacheTag.USER_CARDS])
+	@cache(ETime.HOUR, [ECacheTag.USER_CARDS])
 	public async getUserCards(id: number): Promise<IPaginatedResponse<ICard>> {
 		const params = {
 			offset: 0,
@@ -76,14 +77,15 @@ export class UsersService {
 		return firstValueFrom(this.http.get<IPaginatedResponse<ICard>>(environment.apiUrl + 'users/' + id + '/cards', {params: params}));
 	}
 
-	@cache(ETime.DAY, [ECacheTag.TRANSACTION, ECacheTag.TRANSACTIONS])
-	public async getUserTransactions(id: number, offset: number = 0, limit: number = 15): Promise<IPaginatedResponse<ICard>> {
+	@cache(ETime.HOUR, [ECacheTag.TRANSACTION, ECacheTag.TRANSACTIONS])
+	public async getUserTransactions(id: number, offset: number = 0, limit: number = 15, filterBy: Partial<ITransaction>): Promise<IPaginatedResponse<ITransaction>> {
 		const params = {
 			offset: offset,
 			limit: limit,
+			...filterBy,
 		};
 
-		return firstValueFrom(this.http.get<IPaginatedResponse<ICard>>(environment.apiUrl + 'users/' + id + '/transactions', {params: params}));
+		return firstValueFrom(this.http.get<IPaginatedResponse<ITransaction>>(environment.apiUrl + 'users/' + id + '/transactions', {params: params}));
 	}
 
 	public async getUserByCardUid(uid: number): Promise<IUser> {

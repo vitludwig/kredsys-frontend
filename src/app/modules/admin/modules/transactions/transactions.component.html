@@ -1,16 +1,14 @@
 <div class="w-100">
-<mat-form-field>
-	<mat-select [(ngModel)]="selectedPlace"
-		(valueChange)="selectPlace($event.id)"
-		placeholder="Místo"
-	>
-		<mat-option *ngFor="let place of places"
-			[value]="place">
-			{{ place.name }}
-		</mat-option>
-	</mat-select>
-</mat-form-field>
+    <mat-tab-group>
+        <mat-tab label="Místa" class="mt-5">
+            <ng-template matTabContent>
+                <app-place-transactions-list></app-place-transactions-list>
+            </ng-template>
+        </mat-tab>
+
+        <mat-tab label="Uživatelé">
+            <ng-template matTabContent></ng-template>
+        </mat-tab>
+    </mat-tab-group>
+
 </div>
-<app-transaction-list *ngIf="selectedPlace"
-	[transactions]="transactions"
-></app-transaction-list>

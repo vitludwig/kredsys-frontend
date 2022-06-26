@@ -23,17 +23,18 @@ export class TransactionService {
 	) {
 	}
 
-	@cache(ETime.DAY, [ECacheTag.TRANSACTION])
+	@cache(ETime.HOUR, [ECacheTag.TRANSACTION])
 	public getTransaction(id: number): Promise<ITransactionResponse> {
 		return firstValueFrom(this.http.get<ITransactionResponse>(environment.apiUrl + 'transactions/' + id));
 	}
 
 	// TODO: after backend support filtering, fix this method (limit)
-	@cache(ETime.DAY, [ECacheTag.TRANSACTIONS])
-	public getTransactions(): Promise<IPaginatedResponse<ITransaction>> {
+	@cache(ETime.HOUR, [ECacheTag.TRANSACTIONS])
+	public getTransactions(offset: number = 0, limit: number = 15, filterBy: Partial<ITransaction>): Promise<IPaginatedResponse<ITransaction>> {
 		const params = {
 			offset: 0,
-			limit: 9999,
+			limit: limit,
+			...filterBy
 		};
 		return firstValueFrom(this.http.get<IPaginatedResponse<ITransaction>>(environment.apiUrl + 'transactions', {params: params}));
 	}
