@@ -3,7 +3,7 @@
   margin: -15px;
 
   .sale-content {
-    height: calc(100vh - #{$mat-toolbar-height});
+    height: calc(100vh - var(--cy__toolbar--height));
 
     .disabled-overlay {
       position: absolute;
