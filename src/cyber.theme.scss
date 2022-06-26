@@ -3,11 +3,12 @@
 @import 'assets/styles/animations';
 @import 'assets/styles/auguments';
 
-//@import 'app/common/components/card-loader/card-loader.component';
 @import 'app/common/modules/menu/components/top-menu/top-menu.component';
 @import 'app/modules/sale/components/dashboard/dashboard.component';
 @import 'app/app.component';
 @import 'app/modules/sale/sale.component';
+
+mat.$theme-ignore-duplication-warnings: true;
 
 $primary: (
   50: #d2348a,
