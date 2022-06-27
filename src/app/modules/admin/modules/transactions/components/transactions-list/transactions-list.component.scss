@@ -1,7 +1,4 @@
-@import 'styles/mixins';
-
 .transaction-table {
-  @include expandable-table;
 
   .element-detail {
 
