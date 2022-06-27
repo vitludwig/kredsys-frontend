@@ -35,6 +35,15 @@
 
 				<button mat-button
 					mat-raised-button
+					color="warn"
+					class="ms-3"
+					(click)="openStornoDialog()"
+				>
+					Storno
+				</button>
+
+				<button mat-button
+					mat-raised-button
 					color="basic"
 					class="ms-5"
 					(click)="customerService.logout()"

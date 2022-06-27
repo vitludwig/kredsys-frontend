@@ -63,4 +63,8 @@ export class TransactionService {
 			currencyId: currencyId,
 		}));
 	}
+
+	public storno(transactionId: number): Promise<ITransactionResponse> {
+		return firstValueFrom(this.http.put<ITransactionResponse>(environment.apiUrl + 'transactions/' + transactionId + '/cancellation', {}));
+	}
 }

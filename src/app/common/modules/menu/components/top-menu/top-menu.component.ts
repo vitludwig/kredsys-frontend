@@ -14,6 +14,7 @@ import {OrderService} from '../../../../../modules/sale/services/order/order.ser
 import {AuthService} from '../../../../../modules/login/services/auth/auth.service';
 import {TransactionService} from '../../../../../modules/admin/modules/transactions/services/transaction/transaction.service';
 import {ITransactionRecordDeposit} from '../../../../../modules/admin/modules/transactions/services/transaction/types/ITransaction';
+import {StornoDialogComponent} from "../../../../../modules/sale/components/storno-dialog/storno-dialog.component";
 
 @Component({
 	selector: 'app-top-menu',
@@ -109,6 +110,24 @@ export class TopMenuComponent implements OnInit, OnDestroy {
 				if(this.currencyAccount) {
 					this.currencyAccount.currentAmount += result.amount;
 				}
+			} catch(e) {
+				console.error('Cannot deposit money: ', e);
+			}
+		});
+	}
+
+	public openStornoDialog(): void {
+		const dialogRef = this.dialog.open<StornoDialogComponent, number>(StornoDialogComponent, {
+			width: '300px',
+			minWidth: '250px',
+			autoFocus: 'dialog',
+			data: this.customer?.id,
+		});
+
+		dialogRef.afterClosed().subscribe(async (result) => {
+			console.log('storning: ', result);
+			try {
+				await this.transactionService.storno(result);
 			} catch(e) {
 				console.error('Cannot deposit money: ', e);
 			}
