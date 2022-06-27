@@ -3,7 +3,7 @@
 		<app-card-loader (cardIdChange)="loadUserId($event)"></app-card-loader>
 	</div>
 
-	<ng-container *ngIf="isUserLoaded">
+	<ng-container *ngIf="isUserLoaded && currencyAccount">
 		<div class="summary-list">
 			<div class="summary-item"
 				*ngFor="let item of orderService.items"

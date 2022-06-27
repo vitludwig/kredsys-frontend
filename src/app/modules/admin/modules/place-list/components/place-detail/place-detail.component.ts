@@ -38,12 +38,10 @@ export class PlaceDetailComponent implements OnInit {
 		try {
 			const placeId = Number(this.route.snapshot.paramMap.get('id'));
 			if(placeId) {
-				console.log('is edit');
 				this.place = Object.assign({}, await this.placeService.getPlace(placeId));
 				this.goods = await this.placeService.getPlaceGoods(placeId);
 				this.isEdit = true;
 			} else {
-				console.log('is new');
 				this.place = Object.assign({}, this.placeService.createNewPlace());
 				this.isEdit = false;
 			}

@@ -19,7 +19,7 @@ export class CurrencyService {
 	) {
 	}
 
-	@cache(ETime.DAY, [ECacheTag.CURRENCIES])
+	@cache(ETime.HOUR, [ECacheTag.CURRENCIES])
 	public getCurrencies(search: string = '', offset: number = 0, limit = this.limit): Promise<IPaginatedResponse<ICurrency>> {
 	    const params = {
 		    offset: offset,
@@ -32,12 +32,12 @@ export class CurrencyService {
 	/**
 	 * For now first currency, in future change this flow after currencies are discussed
 	 */
-	@cache(ETime.DAY, [ECacheTag.CURRENCIES])
+	@cache(ETime.HOUR, [ECacheTag.CURRENCIES])
 	public async getDefaultCurrency(): Promise<ICurrency> {
 		return (await this.getCurrencies()).data[0];
 	}
 
-	@cache(ETime.DAY, [ECacheTag.CURRENCY])
+	@cache(ETime.HOUR, [ECacheTag.CURRENCY])
 	public async getCurrency(id: number): Promise<ICurrency> {
 		return firstValueFrom(this.http.get<ICurrency>(environment.apiUrl + 'currencies/' + id));
 	}

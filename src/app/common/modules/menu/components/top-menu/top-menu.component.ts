@@ -1,8 +1,8 @@
-import {Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {ChargeDialogComponent} from '../../../../../modules/sale/components/charge-dialog/charge-dialog.component';
 import {MatDrawer} from '@angular/material/sidenav';
-import {ActivationEnd, NavigationEnd, Router} from '@angular/router';
+import {ActivationEnd, Router} from '@angular/router';
 import {CustomerService} from '../../../../../modules/sale/services/customer/customer.service';
 import {IPlace} from '../../../../types/IPlace';
 import {ICurrency, ICurrencyAccount} from '../../../../types/ICurrency';
@@ -14,7 +14,6 @@ import {OrderService} from '../../../../../modules/sale/services/order/order.ser
 import {AuthService} from '../../../../../modules/login/services/auth/auth.service';
 import {TransactionService} from '../../../../../modules/admin/modules/transactions/services/transaction/transaction.service';
 import {ITransactionRecordDeposit} from '../../../../../modules/admin/modules/transactions/services/transaction/types/ITransaction';
-import {MatButton} from '@angular/material/button';
 
 @Component({
 	selector: 'app-top-menu',
@@ -104,6 +103,9 @@ export class TopMenuComponent implements OnInit, OnDestroy {
 					this.currencyAccount?.currencyId ?? this.defaultCurrency.id!,
 					records,
 				);
+				await this.loadCurrencyAccount(this.customer!.id!);
+				this.customerService.propagateRefreshCustomer();
+
 				if(this.currencyAccount) {
 					this.currencyAccount.currentAmount += result.amount;
 				}

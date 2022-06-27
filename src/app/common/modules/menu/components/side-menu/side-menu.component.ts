@@ -3,8 +3,7 @@ import {ERoute} from '../../../../types/ERoute';
 import {NavigationEnd, Router} from '@angular/router';
 import {AuthService} from '../../../../../modules/login/services/auth/auth.service';
 import AllowedRoutes from '../../../../../modules/login/services/auth/types/AllowedRoutes';
-import {UsersService} from '../../../../../modules/admin/services/users/users.service';
-import {EUserRole} from '../../../../types/IUser';
+import {EUserRole, IUser} from '../../../../types/IUser';
 import {Subject, takeUntil} from 'rxjs';
 
 @Component({
@@ -15,6 +14,7 @@ import {Subject, takeUntil} from 'rxjs';
 export class SideMenuComponent implements OnInit, OnDestroy {
 	public adminMenuOpened: boolean = false;
 	public userRoles: EUserRole[];
+	public user: IUser;
 
 	public readonly ERoute = ERoute;
 	public readonly allowedRoutes = AllowedRoutes;
@@ -33,7 +33,8 @@ export class SideMenuComponent implements OnInit, OnDestroy {
 			.pipe(takeUntil(this.unsubscribe))
 			.subscribe((isLogged) => {
 				if(isLogged) {
-					this.userRoles = this.authService.user!.roles!;
+					this.user = this.authService.user!;
+					this.userRoles = this.user.roles!;
 				}
 			})
 

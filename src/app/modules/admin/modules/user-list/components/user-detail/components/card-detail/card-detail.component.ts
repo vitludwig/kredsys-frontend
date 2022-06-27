@@ -1,8 +1,7 @@
-import {Component, ElementRef, Inject, OnInit, ViewChild} from '@angular/core';
+import {Component, Inject} from '@angular/core';
 import {PlaceService} from '../../../../../../services/place/place/place.service';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {ICard} from '../../../../../../../../common/types/ICard';
-import {MatInput} from '@angular/material/input';
 
 @Component({
 	selector: 'app-card-detail',
@@ -19,7 +18,6 @@ export class CardDetailComponent {
 	}
 
 	public async onSubmit(): Promise<void> {
-		console.log('submitting');
 		this.dialogRef.close(this.data);
 	}
 

@@ -48,9 +48,12 @@ export class SaleSummaryComponent implements OnInit, OnDestroy {
 
 		this.customerService.customer$
 			.pipe(takeUntil(this.unsubscribe))
-			.subscribe((user) => {
+			.subscribe(async (user) => {
 				if(!user) {
 					this.isUserLoaded = false;
+				}
+				if(!this.currencyAccount && this.customerService.customer) {
+					this.currencyAccount = (await this.usersService.getUserCurrencyAccounts(this.customerService.customer.id!))[0];
 				}
 			})
 	}
@@ -63,7 +66,6 @@ export class SaleSummaryComponent implements OnInit, OnDestroy {
 		try {
 			this.customerService.customer = await this.usersService.getUserByCardUid(uid);
 			this.currencyAccount = (await this.usersService.getUserCurrencyAccounts(this.customerService.customer.id!))[0];
-			console.log(this.currencyAccount);
 			this.isUserLoaded = true;
 
 		} catch(e) {
@@ -97,8 +99,6 @@ export class SaleSummaryComponent implements OnInit, OnDestroy {
 		}
 		try {
 			await this.transactionService.pay(customerId, this.place.id!, records);
-			const audio = new Audio('assets/finish.mp3');
-			audio.play();
 
 			this.orderService.clearOrder();
 			this.customerService.logout();

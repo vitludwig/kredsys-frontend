@@ -29,17 +29,18 @@
 					>
 				</mat-form-field>
 
-				<mat-form-field appearance="standard"
-						class="w-100">
-					<mat-label>Kód (např. CZK)</mat-label>
-					<input matInput
-						placeholder="Kód"
-						name="code"
-						type="text"
-						required
-						[(ngModel)]="item.code"
-					>
-				</mat-form-field>
+			<mat-form-field appearance="standard"
+				class="w-100">
+				<mat-label>Kód (např. CZK)</mat-label>
+				<input matInput
+					placeholder="Kód"
+					name="code"
+					type="text"
+					maxlength="3"
+					required
+					[(ngModel)]="item.code"
+				>
+			</mat-form-field>
 
 				<mat-form-field appearance="standard"
 					class="w-100">

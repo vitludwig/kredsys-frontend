@@ -25,6 +25,7 @@ export class GoodsListComponent implements OnInit, OnDestroy {
 	public goodsTypesDataSource: MatTableDataSource<IGoodsType>;
 
 	public goodsTotal: number = 0;
+	public goodsTypesTotal: number = 0;
 
 	public isLoading: boolean = false;
 
@@ -49,12 +50,7 @@ export class GoodsListComponent implements OnInit, OnDestroy {
 	public async ngOnInit(): Promise<void> {
 		await this.loadData();
 
-		// If the user changes the sort order, reset back to the first page.
-		this.sort.sortChange
-			.pipe(takeUntil(this.unsubscribe))
-			.subscribe(() => (this.paginator.pageIndex = 0));
-
-		merge(this.sort.sortChange, this.paginator.page, this.paginator.pageSize)
+		merge(this.paginator.page, this.paginator.pageSize)
 			.pipe(
 				startWith({}),
 				switchMap(() => {
@@ -81,7 +77,6 @@ export class GoodsListComponent implements OnInit, OnDestroy {
 				takeUntil(this.unsubscribe),
 			)
 			.subscribe(async (data) => {
-				console.log('new data: ', data);
 				this.goodsDataSource.data = await this.transformGoodsToSource(data);
 			});
 	}

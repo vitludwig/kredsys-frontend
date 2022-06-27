@@ -42,12 +42,7 @@ export class PlaceListComponent implements OnInit, OnDestroy {
 	public async ngOnInit(): Promise<void> {
 		await this.loadPlaces();
 
-		// If the user changes the sort order, reset back to the first page.
-		this.sort.sortChange
-			.pipe(takeUntil(this.unsubscribe))
-			.subscribe(() => (this.paginator.pageIndex = 0));
-
-		merge(this.sort.sortChange, this.paginator.page, this.paginator.pageSize)
+		merge(this.paginator.page, this.paginator.pageSize)
 			.pipe(
 				startWith({}),
 				switchMap(() => {
@@ -74,7 +69,6 @@ export class PlaceListComponent implements OnInit, OnDestroy {
 				takeUntil(this.unsubscribe),
 			)
 			.subscribe((data) => {
-				console.log('new data: ', data);
 				this.placesData = data;
 			});
 	}

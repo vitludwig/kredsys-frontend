@@ -28,6 +28,7 @@ export class CardLoaderComponent implements OnInit, OnDestroy {
 		'í': 9,
 		'é': 0,
 	};
+	protected prevEventTime: number = 0;
 
 	constructor(
 		public customerService: CustomerService,
@@ -52,7 +53,6 @@ export class CardLoaderComponent implements OnInit, OnDestroy {
 	}
 
 	public async debugLoadCard(): Promise<void> {
-		console.log('debugging');
 		this.cardIdChange.emit(2866252548);
 	}
 
@@ -60,6 +60,16 @@ export class CardLoaderComponent implements OnInit, OnDestroy {
 		let userId = '';
 
 		this.keydownListener = this.renderer.listen('document', 'keydown', (event) => {
+			const timeDiff = Math.abs(new Date().getTime() - this.prevEventTime) / 100; // in ms
+
+			/**
+			 * Card loader events are firing cca in 0.02ms to 0.2ms interval
+			 * If this interval is bigger, it means user made keydown event himself - reset userId so user input won't be in card id we are listening to
+ 			 */
+			if(timeDiff > 0.2 && this.prevEventTime !== 0) {
+				userId = '';
+			}
+
 			// loading sequence is completed with Enter key (13)
 			if(event.keyCode === 13 && userId.length > 0) {
 				this.removeKeydownListener();
@@ -76,6 +86,7 @@ export class CardLoaderComponent implements OnInit, OnDestroy {
 				}
 			} else if(event.key.length === 1) {
 				userId += event.key;
+				this.prevEventTime = new Date().getTime();
 			}
 		});
 

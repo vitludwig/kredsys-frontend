@@ -7,6 +7,7 @@ import {MatInputModule} from '@angular/material/input';
 import {CheckInRoutingModule} from './check-in-routing.module';
 import {MatListModule} from '@angular/material/list';
 import {ChargeModule} from '../admin/modules/charge/charge.module';
+import {ReactiveFormsModule} from '@angular/forms';
 
 
 @NgModule({
@@ -16,6 +17,7 @@ import {ChargeModule} from '../admin/modules/charge/charge.module';
 	imports: [
 		SharedModule,
 		CheckInRoutingModule,
+		ReactiveFormsModule,
 		MatButtonModule,
 		MatSelectModule,
 		MatInputModule,

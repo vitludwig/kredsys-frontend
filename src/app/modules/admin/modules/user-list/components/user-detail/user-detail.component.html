@@ -9,28 +9,36 @@
 		</div>
 	</div>
 
-	<div class="row"
-		*ngIf="!isLoading"
-	>
-		<div class="col-xs-12 col-md-6">
-			<div class="d-flex justify-content-between">
-				<h2>{{ isEdit ? user.name : 'Nový uživatel' }}</h2>
-				<h3 *ngIf="accounts[0]">Zůstatek: {{ accounts[0].currentAmount }} Kč</h3>
+<div class="row"
+	*ngIf="!isLoading"
+>
+	<div class="col-xs-12 col-md-6">
+		<div class="d-flex justify-content-between">
+			<h2>{{ isEdit ? user.name : 'Nový uživatel' }}</h2>
+			<h3 *ngIf="accounts[0]">Zůstatek: {{ accounts[0].currentAmount }} Kč</h3>
+		</div>
+
+		<ng-container *ngIf="showValidationErrors">
+			<div *ngFor="let error of errors"
+				class="alert alert-danger">
+				{{ error }}
 			</div>
-			<form #userForm="ngForm"
-				(ngSubmit)="userForm.valid && onSubmit()"
-			>
-				<mat-form-field appearance="standard"
-					class="w-100">
-					<mat-label>Členské ID</mat-label>
-					<input matInput
-						placeholder="Členské ID"
-						name="memberId"
-						type="number"
-						required
-						[(ngModel)]="user.memberId"
-					>
-				</mat-form-field>
+		</ng-container>
+
+		<form #userForm="ngForm"
+			(ngSubmit)="userForm.valid && onSubmit()"
+		>
+			<mat-form-field appearance="standard"
+				class="w-100">
+				<mat-label>Členské ID</mat-label>
+				<input matInput
+					placeholder="Členské ID"
+					name="memberId"
+					type="number"
+					required
+					[(ngModel)]="user.memberId"
+				>
+			</mat-form-field>
 
 				<mat-form-field appearance="standard"
 					class="w-100">
@@ -43,16 +51,18 @@
 					>
 				</mat-form-field>
 
-				<mat-form-field appearance="standard"
-					class="w-100">
-					<mat-label>E-mail</mat-label>
-					<input matInput
-						placeholder="E-mail"
-						name="email"
-						required
-						[(ngModel)]="user.email"
-					>
-				</mat-form-field>
+			<mat-form-field appearance="standard"
+				class="w-100">
+				<mat-label>E-mail</mat-label>
+				<input matInput
+					type="email"
+					pattern="[a-zA-Z0-9.-_]{1,}@[a-zA-Z.-]{2,}[.]{1}[a-zA-Z]{2,}"
+					placeholder="E-mail"
+					name="email"
+					required
+					[(ngModel)]="user.email"
+				>
+			</mat-form-field>
 
 				<mat-form-field *ngIf="!isEdit"
 					appearance="standard"

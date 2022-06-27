@@ -2,11 +2,11 @@
 	<table mat-table
 		[dataSource]="dataSource"
 		multiTemplateDataRows
-		matSort
+
 	>
 		<ng-container matColumnDef="amount">
 			<th mat-header-cell
-				mat-sort-header
+
 				*matHeaderCellDef> Částka
 			</th>
 			<td mat-cell
@@ -17,7 +17,7 @@
 
 		<ng-container matColumnDef="type">
 			<th mat-header-cell
-				mat-sort-header
+
 				*matHeaderCellDef> Typ
 			</th>
 			<td mat-cell
@@ -30,7 +30,7 @@
 
 		<ng-container matColumnDef="created">
 			<th mat-header-cell
-				mat-sort-header
+
 				*matHeaderCellDef> Vytvořeno
 			</th>
 			<td mat-cell
@@ -44,13 +44,15 @@
 				<div class="element-detail"
 					[@detailExpand]="row === expandedRow ? 'expanded' : 'collapsed'"
 				>
-					<div class="detail-content d-flex justify-content-start align-items-center w-100">
+					<div class="detail-content">
 						<ng-container *ngIf="detailReady">
-							<span>Uživatel: {{ usersMap[row.userId]?.name ?? '' }}</span>
+							<span>Uživatel: {{ row.userName ?? '' }}</span>
+							<br>
+							<h3 class="mb-1">Položky</h3>
 							<div class="records">
-								<div *ngFor="let record of transactionsMap[row.id]?.records">
-									<span>{{ goodsMap[record.goodsId].name }}</span>
-									<span>{{ goodsMap[record.goodsId].price }} Kč</span>
+								<div class="record" *ngFor="let record of transactionRecordsMap[row.id]">
+									<span class="me-3">{{ goodsMap[record.goodsId].name }}</span>
+									<span class="text-right">{{ goodsMap[record.goodsId].price }} Kč</span>
 								</div>
 							</div>
 						</ng-container>
@@ -74,9 +76,20 @@
 			class="detail-row">
 		</tr>
 	</table>
-	<mat-paginator [pageSizeOptions]="[5, 10, 20]"
+	<mat-paginator [pageSizeOptions]="[5, 10, 15, 25, 100]"
 		[pageSize]="15"
 		showFirstLastButtons
 		aria-label="Select page of periodic elements">
 	</mat-paginator>
+</div>
+
+<div class="chart-wrapper">
+	<div class="chart">
+		<canvas baseChart
+			[data]="pieChartData"
+			[type]="pieChartType"
+			[options]="pieChartOptions"
+			[plugins]="pieChartPlugins">
+		</canvas>
+	</div>
 </div>

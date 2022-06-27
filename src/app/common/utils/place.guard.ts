@@ -18,10 +18,9 @@ export class PlaceGuard implements CanActivate {
 			return true;
 		} else {
 			const selectedId = localStorage.getItem('selectedPlaceId');
-			console.log('storage: ', selectedId);
+
 			if(selectedId) {
 				this.placeService.selectedPlace = await this.placeService.getPlace(Number(selectedId));
-				console.log('place loaded', this.placeService.selectedPlace);
 				return true;
 			}
 		}

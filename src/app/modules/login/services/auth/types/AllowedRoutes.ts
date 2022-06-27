@@ -28,6 +28,11 @@ const allowedRoutes: EnumHashMap<EUserRole, ERoute[]> = {
 	[EUserRole.MEMBER]: [
 		ERoute.CARD_INFO,
 	],
+	[EUserRole.WORKER]: [
+		ERoute.SALE,
+		ERoute.ADMIN,
+		ERoute.ADMIN_PLACES,
+	],
 }
 
 export default allowedRoutes;

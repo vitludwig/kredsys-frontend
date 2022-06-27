@@ -9,6 +9,7 @@ import {AuthService} from '../../../../login/services/auth/auth.service';
 import {cache, invalidateCache} from '../../../../../common/decorators/cache';
 import {ETime} from '../../../../../common/types/ETime';
 import {ECacheTag} from '../../../../../common/types/ECacheTag';
+import {ITransaction} from "../../../modules/transactions/services/transaction/types/ITransaction";
 
 @Injectable({
 	providedIn: 'root',
@@ -47,7 +48,7 @@ export class PlaceService implements OnDestroy {
 		this.unsubscribe.next();
 	}
 
-	@cache(ETime.DAY, [ECacheTag.PLACES])
+	@cache(ETime.HOUR, [ECacheTag.PLACES])
 	public async getAllPlaces(search: string = ''): Promise<IPlace[]> {
 		const params = {
 			offset: 0,
@@ -57,7 +58,7 @@ export class PlaceService implements OnDestroy {
 		return (await firstValueFrom(this.http.get<IPaginatedResponse<IPlace>>(environment.apiUrl + 'places', {params: params}))).data;
 	}
 
-	@cache(ETime.DAY, [ECacheTag.PLACE])
+	@cache(ETime.HOUR, [ECacheTag.PLACE])
 	public async getPlaces(search: string = '', offset: number = 0, limit = this.limit): Promise<IPaginatedResponse<IPlace>> {
 		const params = {
 			offset: offset,
@@ -77,6 +78,17 @@ export class PlaceService implements OnDestroy {
 			limit: 999,
 		};
 		return (await firstValueFrom(this.http.get<IPaginatedResponse<IGoods>>(environment.apiUrl + 'places/' + id + '/goods', {params: params}))).data;
+	}
+
+	@cache(ETime.HOUR, [ECacheTag.TRANSACTION, ECacheTag.TRANSACTIONS])
+	public async getPlaceTransactions(id: number, offset: number = 0, limit: number = 15, filterBy: Partial<ITransaction>): Promise<IPaginatedResponse<ITransaction>> {
+		const params = {
+			offset: offset,
+			limit: limit,
+			...filterBy,
+		};
+
+		return firstValueFrom(this.http.get<IPaginatedResponse<ITransaction>>(environment.apiUrl + 'places/' + id + '/transactions', {params: params}));
 	}
 
 	@invalidateCache([ECacheTag.PLACES, ECacheTag.PLACE])
