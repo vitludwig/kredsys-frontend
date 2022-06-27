@@ -5,7 +5,7 @@ import {
 	HttpEvent,
 	HttpInterceptor,
 } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import {Observable} from 'rxjs';
 import jwt_decode from 'jwt-decode';
 import {Router} from '@angular/router';
 
@@ -38,7 +38,6 @@ export class AuthInterceptor implements HttpInterceptor {
 		}
 
 		request = request.clone({headers});
-
 		return next.handle(request);
 	}
 }

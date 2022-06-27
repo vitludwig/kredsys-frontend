@@ -13,6 +13,7 @@ import {PlaceTransactionsListComponent} from './components/place-transactions-li
 import {UserTransactionsListComponent} from './components/user-transactions-list/user-transactions-list.component';
 import {MatAutocompleteModule} from "@angular/material/autocomplete";
 import {ReactiveFormsModule} from "@angular/forms";
+import {MatButton, MatButtonModule} from "@angular/material/button";
 
 @NgModule({
 	declarations: [
@@ -32,6 +33,7 @@ import {ReactiveFormsModule} from "@angular/forms";
 		MatTabsModule,
 		MatAutocompleteModule,
 		ReactiveFormsModule,
+		MatButtonModule,
 	],
 })
 export class TransactionsModule {

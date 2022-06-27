@@ -15,6 +15,8 @@ import {ChartConfiguration, ChartData, ChartType, TooltipItem, TooltipModel} fro
 import {BaseChartDirective} from 'ng2-charts';
 import {Utils} from "../../../../../../common/utils/Utils";
 import {ETransactionType} from "../../services/transaction/types/ETransactionType";
+import {AlertService} from "../../../../../../common/services/alert/alert.service";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
 	selector: 'app-transactions-list',
@@ -25,7 +27,7 @@ import {ETransactionType} from "../../services/transaction/types/ETransactionTyp
 	],
 })
 export class TransactionsListComponent implements OnInit {
-	public displayedColumns: string[] = ['amount', 'type', 'created'];
+	public displayedColumns: string[] = ['amount', 'type', 'created', 'actions'];
 	public dataSource: MatTableDataSource<ITransaction>;
 	public expandedRow: ITransaction | null;
 
@@ -106,11 +108,41 @@ export class TransactionsListComponent implements OnInit {
 		protected usersService: UsersService,
 		protected transactionService: TransactionService,
 		protected goodsService: GoodsService,
+		protected alertService: AlertService,
 	) {
 	}
 
 	public async ngOnInit(): Promise<void> {
 		this.loadData();
+	}
+
+	public async stornoTransaction(id: number): Promise<void> {
+		try {
+			await this.transactionService.storno(id);
+		} catch(e) {
+			console.error("Failed to storno transaction", e);
+			this.alertService.error("Nepodařilo se stornovat transakci");
+		}
+	}
+
+	public async showDetail(row: ITransaction): Promise<void> {
+		if(row === this.expandedRow) {
+			this.expandedRow = null;
+			return;
+		}
+		this.detailReady = false;
+		try {
+			this.expandedRow = row;
+			this.detailReady = true;
+		} catch(e) {
+			console.error('Cannot load transaction detail');
+		}
+	}
+
+	public onSearch(value: string): void {
+		// this.transactions = this.transactions.filter((transaction) => {
+		// 	return transaction.
+		// })
 	}
 
 	protected async loadData(): Promise<void> {
@@ -152,25 +184,4 @@ export class TransactionsListComponent implements OnInit {
 			console.error("Failed to load transactions", e);
 		}
 	}
-
-	public async showDetail(row: ITransaction): Promise<void> {
-		if(row === this.expandedRow) {
-			this.expandedRow = null;
-			return;
-		}
-		this.detailReady = false;
-		try {
-			this.expandedRow = row;
-			this.detailReady = true;
-		} catch(e) {
-			console.error('Cannot load transaction detail');
-		}
-	}
-
-	public onSearch(value: string): void {
-		// this.transactions = this.transactions.filter((transaction) => {
-		// 	return transaction.
-		// })
-	}
-
 }

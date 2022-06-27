@@ -1,5 +1,4 @@
 import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
 import {CurrencyListComponent} from './currency-list.component';
 import {CurrencyDetailComponent} from './components/currency-detail/currency-detail.component';
 import {SharedModule} from '../../../../shared.module';

@@ -21,7 +21,6 @@ import {SharedModule} from './shared.module';
 		MenuModule,
 		SaleModule,
 	],
-	providers: [],
 	bootstrap: [AppComponent],
 })
 export class AppModule {
