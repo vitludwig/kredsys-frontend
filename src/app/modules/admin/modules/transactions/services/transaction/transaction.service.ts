@@ -12,6 +12,7 @@ import {ECacheTag} from '../../../../../../common/types/ECacheTag';
 import {environment} from '../../../../../../../environments/environment';
 import {IPaginatedResponse} from '../../../../../../common/types/IPaginatedResponse';
 import {cache} from '../../../../../../common/decorators/cache';
+import {ETransactionType} from "./types/ETransactionType";
 
 @Injectable({
 	providedIn: 'root',
@@ -24,8 +25,13 @@ export class TransactionService {
 	}
 
 	@cache(ETime.HOUR, [ECacheTag.TRANSACTION])
-	public getTransaction(id: number): Promise<ITransactionResponse> {
-		return firstValueFrom(this.http.get<ITransactionResponse>(environment.apiUrl + 'transactions/' + id));
+	public getTransaction(id: number, type?: ETransactionType): Promise<ITransactionResponse> {
+		const params: Partial<ITransaction> = {};
+		if(type) {
+			params['type'] = type
+		}
+
+		return firstValueFrom(this.http.get<ITransactionResponse>(environment.apiUrl + 'transactions/' + id, {params: params}));
 	}
 
 	// TODO: after backend support filtering, fix this method (limit)

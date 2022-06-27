@@ -11,9 +11,10 @@ import {GoodsService} from '../../../../services/goods/goods.service';
 import {IGoods} from '../../../../../../common/types/IGoods';
 import {IPaginatedResponse} from "../../../../../../common/types/IPaginatedResponse";
 import DatalabelsPlugin from 'chartjs-plugin-datalabels';
-import { ChartConfiguration, ChartData, ChartType } from 'chart.js';
-import { BaseChartDirective } from 'ng2-charts';
+import {ChartConfiguration, ChartData, ChartType, TooltipItem, TooltipModel} from 'chart.js';
+import {BaseChartDirective} from 'ng2-charts';
 import {Utils} from "../../../../../../common/utils/Utils";
+import {ETransactionType} from "../../services/transaction/types/ETransactionType";
 
 @Component({
 	selector: 'app-transactions-list',
@@ -49,6 +50,13 @@ export class TransactionsListComponent implements OnInit {
 					}
 				},
 			},
+			tooltip: {
+				callbacks: {
+					label: function(this: TooltipModel<any>, item: TooltipItem<any>) {
+						return item.label + ': ' + item.formattedValue + 'Kč';
+					}
+				}
+			}
 		}
 	};
 	// public pieChartData: ChartData<'pie', number[], string | string[]> = {
@@ -76,11 +84,23 @@ export class TransactionsListComponent implements OnInit {
 	@Input()
 	public dataLoader: (id: number, offset: number, limit: number, filterBy: Partial<ITransaction>) => Promise<IPaginatedResponse<ITransaction>>
 
+	public get filterBy(): Partial<ITransaction> {
+		return this.#filterBy;
+	}
+
 	@Input()
-	public filterBy: Partial<ITransaction>;
+	public set filterBy(value: Partial<ITransaction>) {
+		this.#filterBy = value;
+		if(value) {
+			this.loadData()
+		}
+
+	}
 
 	@ViewChild(BaseChartDirective)
 	protected chart: BaseChartDirective | undefined;
+
+	#filterBy: Partial<ITransaction>;
 
 	constructor(
 		protected usersService: UsersService,
@@ -90,6 +110,10 @@ export class TransactionsListComponent implements OnInit {
 	}
 
 	public async ngOnInit(): Promise<void> {
+		this.loadData();
+	}
+
+	protected async loadData(): Promise<void> {
 		try {
 			const allTransactions = (await this.dataLoader(this.filterBy.id!, 0, 9999999, this.filterBy)).data;
 			this.dataSource = new MatTableDataSource<ITransaction>(allTransactions);
@@ -99,9 +123,13 @@ export class TransactionsListComponent implements OnInit {
 
 			// TODO: remove requesting every transaction after BE sends records in transaction (BE 18.)
 			for (const transaction of allTransactions) {
-				const transactionDetail = await this.transactionService.getTransaction(transaction.id);
+				const transactionDetail = await this.transactionService.getTransaction(transaction.id, ETransactionType.PAYMENT);
+				if(transactionDetail.type !== ETransactionType.PAYMENT) {
+					continue;
+				}
 
 				for(const record of transactionDetail.records) {
+
 					if(this.transactionRecordsMap[transaction.id] === undefined) {
 						this.transactionRecordsMap[transaction.id] = [record];
 					} else {
