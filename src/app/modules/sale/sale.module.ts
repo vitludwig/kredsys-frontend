@@ -14,6 +14,9 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {SaleRoutingModule} from './sale-routing.module';
 import {SharedModule} from '../../shared.module';
+import {StornoDialogComponent} from "./components/storno-dialog/storno-dialog.component";
+import {MatListModule} from "@angular/material/list";
+import {MatDividerModule} from "@angular/material/divider";
 
 
 @NgModule({
@@ -23,6 +26,7 @@ import {SharedModule} from '../../shared.module';
 		SaleSummaryComponent,
 		DashboardComponent,
 		ChargeDialogComponent,
+		StornoDialogComponent,
 	],
 	exports: [
 		SaleComponent,
@@ -38,6 +42,8 @@ import {SharedModule} from '../../shared.module';
 		MatDialogModule,
 		MatFormFieldModule,
 		MatInputModule,
+		MatListModule,
+		MatDividerModule,
 	],
 })
 export class SaleModule {

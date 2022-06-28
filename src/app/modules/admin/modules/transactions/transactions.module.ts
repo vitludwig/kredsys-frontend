@@ -11,6 +11,9 @@ import {NgChartsModule} from 'ng2-charts';
 import {MatTabsModule} from '@angular/material/tabs';
 import {PlaceTransactionsListComponent} from './components/place-transactions-list/place-transactions-list.component';
 import {UserTransactionsListComponent} from './components/user-transactions-list/user-transactions-list.component';
+import {MatAutocompleteModule} from "@angular/material/autocomplete";
+import {ReactiveFormsModule} from "@angular/forms";
+import {MatButton, MatButtonModule} from "@angular/material/button";
 
 @NgModule({
 	declarations: [
@@ -28,6 +31,9 @@ import {UserTransactionsListComponent} from './components/user-transactions-list
 		MatPaginatorModule,
 		NgChartsModule,
 		MatTabsModule,
+		MatAutocompleteModule,
+		ReactiveFormsModule,
+		MatButtonModule,
 	],
 })
 export class TransactionsModule {

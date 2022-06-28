@@ -47,8 +47,8 @@ export class GoodsService {
 	@cache(ETime.HOUR, [ECacheTag.GOODIE])
 	public async getGoodie(id: number): Promise<IGoods> {
 		// TODO: remove after backend has endpoint for one item by id
-		return this.goods.find((item) => item.id === id)!;
-		// return firstValueFrom(this.http.get<IGoods>(environment.apiUrl + 'goods/' + id));
+		// return this.goods.find((item) => item.id === id)!;
+		return firstValueFrom(this.http.get<IGoods>(environment.apiUrl + 'goods/' + id));
 	}
 
 	public async getGoodsTypes(): Promise<IGoodsType[]> {

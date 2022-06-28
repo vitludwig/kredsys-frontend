@@ -81,10 +81,9 @@
 				</div>
 			</div>
 
-			<div *ngIf="isWrongCredentials"
+			<div *ngFor="let error of errors"
 				class="alert alert-danger">
-
-				Špatné uživatelské jméno nebo heslo
+				{{ error }}
 			</div>
 		</ng-container>
 	</mat-card>

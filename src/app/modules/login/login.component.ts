@@ -19,7 +19,7 @@ export class LoginComponent {
 	});
 
 	public showValidationErrors: boolean = false;
-	public isWrongCredentials: boolean = false;
+	public errors: string[] = [];
 
 	public get username(): AbstractControl | null {
 		return this.loginForm.get('username');
@@ -40,10 +40,12 @@ export class LoginComponent {
 	}
 
 	public async login(): Promise<void> {
+		this.errors = [];
 		if(this.loginForm.invalid) {
 			this.showValidationErrors = true;
 			return;
 		}
+
 		try {
 			await this.authService.login(this.loginForm.get('username')?.value, this.loginForm.get('password')?.value);
 			this.router.navigate(['/' + ERoute.SALE]);
@@ -53,7 +55,10 @@ export class LoginComponent {
 			if(e instanceof HttpErrorResponse) {
 				if(e.error === 'Username or password is incorrect or user is blocked.') {
 					this.showValidationErrors = true;
-					this.isWrongCredentials = true;
+					this.errors.push('Špatné uživatelské jméno nebo heslo');
+				}
+				if([500,502,504].includes(e.status)) {
+					this.errors.push('Chyba spojení se serverem');
 				}
 			}
 		}
