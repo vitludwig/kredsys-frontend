@@ -3,6 +3,7 @@
   --cy__toolbar--height: 64px;
   --cy__sale-card--size: 200px;
 
+  --cy__color--background: #{rgb.toValues(map-get($dark-theme-background,background))};
   --cy__color--border: #{rgb.toValues(map-get($theme-primary,500))};
   --cy__color--primary-500: #{rgb.toValues(map-get($theme-primary,500))};
   --cy__color--primary-contrast-500: #{rgb.toValues(map_get($theme-primary, 'contrast',500))};
