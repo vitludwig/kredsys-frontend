@@ -36,10 +36,10 @@
 					class="w-100">
 					<mat-label>Role</mat-label>
 					<mat-select name="role"
-						[(ngModel)]="place.type">
+						[(ngModel)]="placeRole">
 						<mat-option [value]="EPlaceRole.BAR">Bar</mat-option>
-						<mat-option [value]="EPlaceRole.INFO">Info stánek</mat-option>
-						<mat-option [value]="EPlaceRole.NPC">NPC</mat-option>
+						<mat-option [value]="EPlaceRole.INFO_POINT">Info stánek</mat-option>
+						<mat-option [value]="EPlaceRole.REGISTRATION">Registrační místo</mat-option>
 					</mat-select>
 				</mat-form-field>
 

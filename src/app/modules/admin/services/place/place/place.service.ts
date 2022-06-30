@@ -48,7 +48,7 @@ export class PlaceService implements OnDestroy {
 		this.unsubscribe.next();
 	}
 
-	@cache(ETime.HOUR, [ECacheTag.PLACES])
+	@cache(ETime.MINUTE * 2, [ECacheTag.PLACES])
 	public async getAllPlaces(search: string = ''): Promise<IPlace[]> {
 		const params = {
 			offset: 0,
@@ -58,7 +58,7 @@ export class PlaceService implements OnDestroy {
 		return (await firstValueFrom(this.http.get<IPaginatedResponse<IPlace>>(environment.apiUrl + 'places', {params: params}))).data;
 	}
 
-	@cache(ETime.HOUR, [ECacheTag.PLACE])
+	@cache(ETime.MINUTE * 2, [ECacheTag.PLACE])
 	public async getPlaces(search: string = '', offset: number = 0, limit = this.limit): Promise<IPaginatedResponse<IPlace>> {
 		const params = {
 			offset: offset,
@@ -72,6 +72,11 @@ export class PlaceService implements OnDestroy {
 		return firstValueFrom(this.http.get<IPlace>(environment.apiUrl + 'places/' + id));
 	}
 
+	public async getPlaceRole(id: number): Promise<EPlaceRole> {
+		const result = await firstValueFrom(this.http.get<{ roles: EPlaceRole[]}>(environment.apiUrl + 'places/' + id + '/roles'));
+		return result.roles[0];
+	}
+
 	public async getPlaceGoods(id: number): Promise<IGoods[]> {
 		const params = {
 			offset: 0,
@@ -80,7 +85,7 @@ export class PlaceService implements OnDestroy {
 		return (await firstValueFrom(this.http.get<IPaginatedResponse<IGoods>>(environment.apiUrl + 'places/' + id + '/goods', {params: params}))).data;
 	}
 
-	@cache(ETime.HOUR, [ECacheTag.TRANSACTION, ECacheTag.TRANSACTIONS])
+	@cache(ETime.MINUTE * 2, [ECacheTag.TRANSACTION, ECacheTag.TRANSACTIONS])
 	public async getPlaceTransactions(id: number, offset: number = 0, limit: number = 15, filterBy: Partial<ITransaction>): Promise<IPaginatedResponse<ITransaction>> {
 		const params = {
 			offset: offset,
@@ -94,6 +99,13 @@ export class PlaceService implements OnDestroy {
 	@invalidateCache([ECacheTag.PLACES, ECacheTag.PLACE])
 	public async editPlace(item: IPlace): Promise<IPlace> {
 		return firstValueFrom(this.http.put<IPlace>(environment.apiUrl + 'places/' + item.id, item));
+	}
+
+	@invalidateCache([ECacheTag.PLACES, ECacheTag.PLACE])
+	public async editPlaceRole(itemId: number, role: EPlaceRole): Promise<{ roles: EPlaceRole[] }> {
+		return firstValueFrom(this.http.put<{ roles: EPlaceRole[] }>(environment.apiUrl + 'places/' + itemId + '/roles', {
+			roles: [role]
+		}));
 	}
 
 	@invalidateCache([ECacheTag.PLACES, ECacheTag.PLACE])

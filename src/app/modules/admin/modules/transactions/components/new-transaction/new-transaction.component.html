@@ -1,0 +1,38 @@
+<ng-container *ngIf="!isLoading">
+
+	<div class="row">
+		<div class="col-sx-12 col-md-6">
+			<h2>Nová transakce</h2>
+
+			<form #form="ngForm"
+				(ngSubmit)="form.valid && submit"
+			>
+				<app-input-autocomplete
+					[(value)]="selectedUser"
+					[dataLoader]="loadData"
+				></app-input-autocomplete>
+<!--				<mat-form-field>-->
+<!--					<input type="text" placeholder="Vyhledat podle jména"-->
+<!--						matInput-->
+<!--						[formControl]="selectedUser"-->
+<!--						[matAutocomplete]="auto"-->
+<!--						[value]="selectedUser.value.name"-->
+<!--					>-->
+<!--					<mat-autocomplete #auto="matAutocomplete">-->
+<!--						<mat-option *ngFor="let option of filteredOptions | async" [value]="option">-->
+<!--							{{option.name}} ({{ option.memberId }})-->
+<!--						</mat-option>-->
+<!--					</mat-autocomplete>-->
+<!--				</mat-form-field>-->
+
+					<button mat-raised-button
+						class="w-100"
+						color="primary"
+						type="submit"
+					>
+						Potvrdit
+					</button>
+			</form>
+		</div>
+	</div>
+</ng-container>

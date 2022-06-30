@@ -41,9 +41,9 @@ export class AuthService {
 	}
 
 	public async login(email: string, password: string): Promise<IAuthenticationResponse> {
-		const result = await firstValueFrom(this.http.post<IAuthenticationResponse>(environment.apiUrl + 'authentication', {
+		const result = await firstValueFrom(this.http.post<IAuthenticationResponse>(environment.apiUrl + 'authentication/user/email', {
 			email: email,
-			password: password,
+			secret: password,
 			apiToken: localStorage.getItem('placeToken') ?? undefined,
 		}));
 

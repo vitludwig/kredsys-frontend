@@ -16,7 +16,7 @@ export class CardService {
 		this.cards = Array.from({length: 2}, (_, k) => this.createNewCard(k + 1));
 	}
 
-	@cache(ETime.HOUR, [ECacheTag.CARDS])
+	@cache(ETime.MINUTE * 2, [ECacheTag.CARDS])
 	public async getCards(search: string = '', page: number = 1, limit = this.limit): Promise<IPaginatedResponse<ICard>> {
 		const params = {
 			offset: (page - 1) * this.limit,

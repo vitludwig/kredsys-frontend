@@ -24,7 +24,7 @@ export class UsersService {
 
 	}
 
-	@cache(ETime.HOUR, [ECacheTag.USERS])
+	@cache(ETime.MINUTE * 2, [ECacheTag.USERS])
 	public async getUsers(search: string = '', offset: number = 0, limit = this.limit): Promise<IPaginatedResponse<IUser>> {
 		const params = {
 			offset: offset,
@@ -36,7 +36,7 @@ export class UsersService {
 		return firstValueFrom(this.http.get<IPaginatedResponse<IUser>>(environment.apiUrl + 'users', {params: params}));
 	}
 
-	@cache(ETime.HOUR, [ECacheTag.USER])
+	@cache(ETime.MINUTE * 2, [ECacheTag.USER])
 	public async getUser(id: number): Promise<IUser> {
 		return firstValueFrom(this.http.get<IUser>(environment.apiUrl + 'users/' + id));
 	}
@@ -67,7 +67,7 @@ export class UsersService {
 		return firstValueFrom(this.http.post<IUser>(environment.apiUrl + 'users', user));
 	}
 
-	@cache(ETime.HOUR, [ECacheTag.USER_CARDS])
+	@cache(ETime.MINUTE * 2, [ECacheTag.USER_CARDS])
 	public async getUserCards(id: number): Promise<IPaginatedResponse<ICard>> {
 		const params = {
 			offset: 0,
@@ -77,7 +77,7 @@ export class UsersService {
 		return firstValueFrom(this.http.get<IPaginatedResponse<ICard>>(environment.apiUrl + 'users/' + id + '/cards', {params: params}));
 	}
 
-	@cache(ETime.HOUR, [ECacheTag.TRANSACTION, ECacheTag.TRANSACTIONS])
+	@cache(ETime.MINUTE * 2, [ECacheTag.TRANSACTION, ECacheTag.TRANSACTIONS])
 	public async getUserTransactions(id: number, offset: number = 0, limit: number = 15, filterBy?: Partial<ITransaction>): Promise<IPaginatedResponse<ITransaction>> {
 		const params = {
 			offset: offset,

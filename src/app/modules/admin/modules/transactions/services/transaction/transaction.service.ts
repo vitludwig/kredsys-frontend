@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {
 	ITransaction,
 	ITransactionRecordDeposit,
-	ITransactionRecordPayment,
+	ITransactionRecordPayment, ITransactionRecordWithdraw,
 	ITransactionResponse,
 } from './types/ITransaction';
 import {firstValueFrom} from 'rxjs';
@@ -13,6 +13,7 @@ import {environment} from '../../../../../../../environments/environment';
 import {IPaginatedResponse} from '../../../../../../common/types/IPaginatedResponse';
 import {cache} from '../../../../../../common/decorators/cache';
 import {ETransactionType} from "./types/ETransactionType";
+import {IStatisticsFilter, ITransactionStatistics} from "./types/ITransactionStatistics";
 
 @Injectable({
 	providedIn: 'root',
@@ -24,7 +25,7 @@ export class TransactionService {
 	) {
 	}
 
-	@cache(ETime.HOUR, [ECacheTag.TRANSACTION])
+	@cache(ETime.MINUTE * 2, [ECacheTag.TRANSACTION])
 	public getTransaction(id: number, type?: ETransactionType): Promise<ITransactionResponse> {
 		const params: Partial<ITransaction> = {};
 		if(type) {
@@ -34,15 +35,23 @@ export class TransactionService {
 		return firstValueFrom(this.http.get<ITransactionResponse>(environment.apiUrl + 'transactions/' + id, {params: params}));
 	}
 
-	// TODO: after backend support filtering, fix this method (limit)
-	@cache(ETime.HOUR, [ECacheTag.TRANSACTIONS])
-	public getTransactions(offset: number = 0, limit: number = 15, filterBy: Partial<ITransaction>): Promise<IPaginatedResponse<ITransaction>> {
+	@cache(ETime.MINUTE * 2, [ECacheTag.TRANSACTIONS])
+	public getTransactions(offset: number = 0, limit: number = 15, filterBy?: Partial<ITransaction>): Promise<IPaginatedResponse<ITransaction>> {
 		const params = {
-			offset: 0,
+			offset: offset,
 			limit: limit,
 			...filterBy
 		};
 		return firstValueFrom(this.http.get<IPaginatedResponse<ITransaction>>(environment.apiUrl + 'transactions', {params: params}));
+	}
+
+	@cache(ETime.MINUTE * 2, [ECacheTag.TRANSACTIONS])
+	public getStatistics(currencyId: number, filterBy?: Partial<IStatisticsFilter>): Promise<ITransactionStatistics> {
+		const params = {
+			ignoreCancellation: true,
+			...filterBy
+		};
+		return firstValueFrom(this.http.get<ITransactionStatistics>(environment.apiUrl + 'statistics/' + currencyId + '/goods', {params: params}));
 	}
 
 	public pay(userId: number, placeId: number, records: ITransactionRecordPayment[]): Promise<ITransactionResponse> {
@@ -56,6 +65,16 @@ export class TransactionService {
 
 	public deposit(userId: number, placeId: number, currencyId: number, records: ITransactionRecordDeposit[]): Promise<ITransactionResponse> {
 		return firstValueFrom(this.http.post<ITransactionResponse>(environment.apiUrl + 'transactions/deposit', {
+			info: '',
+			userId: userId,
+			placeId: placeId,
+			records: records,
+			currencyId: currencyId,
+		}));
+	}
+
+	public withDraw(userId: number, placeId: number, currencyId: number, records: ITransactionRecordWithdraw[]): Promise<ITransactionResponse> {
+		return firstValueFrom(this.http.post<ITransactionResponse>(environment.apiUrl + 'transactions/withDraw', {
 			info: '',
 			userId: userId,
 			placeId: placeId,
