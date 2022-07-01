@@ -11,6 +11,8 @@ import {IGoods, IGoodsTableSource, IGoodsType} from '../../../../common/types/IG
 import {CurrencyService} from '../../services/currency/currency.service';
 import {Utils} from '../../../../common/utils/Utils';
 import {ICurrency} from '../../../../common/types/ICurrency';
+import {HttpErrorResponse} from "@angular/common/http";
+import {AlertService} from "../../../../common/services/alert/alert.service";
 
 @Component({
 	selector: 'app-goods-list',
@@ -43,12 +45,14 @@ export class GoodsListComponent implements OnInit, OnDestroy {
 		public route: ActivatedRoute,
 		protected goodsService: GoodsService,
 		protected currencyService: CurrencyService,
+		protected alertService: AlertService,
 	) {
 
 	}
 
 	public async ngOnInit(): Promise<void> {
-		await this.loadData();
+		await this.loadGoods();
+		await this.loadGoodsTypes();
 
 		merge(this.paginator.page, this.paginator.pageSize)
 			.pipe(
@@ -83,16 +87,18 @@ export class GoodsListComponent implements OnInit, OnDestroy {
 
 	@debounce()
 	public onSearch(value: string): void {
-		this.loadData(value);
+		this.loadGoods(value);
 	}
 
-	protected async loadData(search: string = '', offset: number = 0, limit: number = 15): Promise<void> {
+	protected async loadGoods(search: string = '', offset: number = 0, limit: number = 15): Promise<void> {
 		const goods = await this.goodsService.getGoods(search, offset, limit);
-		const goodsTypes = await this.goodsService.getGoodsTypes();
 
 		this.goodsDataSource = new MatTableDataSource<IGoodsTableSource>(await this.transformGoodsToSource(goods.data));
 		this.goodsTotal = goods.total;
+	}
 
+	protected async loadGoodsTypes(): Promise<void> {
+		const goodsTypes = await this.goodsService.getGoodsTypes();
 		this.goodsTypesDataSource = new MatTableDataSource<IGoodsType>(goodsTypes);
 	}
 
@@ -118,6 +124,34 @@ export class GoodsListComponent implements OnInit, OnDestroy {
 
 		if(this.goodsDataSource.paginator) {
 			this.goodsDataSource.paginator.firstPage();
+		}
+	}
+
+	public async removeGoodsType(id: number): Promise<void> {
+		try {
+			await this.goodsService.removeGoodsType(id);
+			this.loadGoodsTypes();
+		} catch(e) {
+			console.error('Cannot remove goods type', e);
+			if(e instanceof HttpErrorResponse) {
+				this.alertService.error(e.error.Message);
+			} else {
+				this.alertService.error('Nepodařilo se odstranit typ zboží');
+			}
+		}
+	}
+
+	public async removeGoods(id: number): Promise<void> {
+		try {
+			await this.goodsService.removeGoods(id);
+			this.loadGoods();
+		} catch(e) {
+			console.error('Cannot remove goods', e);
+			if(e instanceof HttpErrorResponse) {
+				this.alertService.error(e.error.Message);
+			} else {
+				this.alertService.error('Nepodařilo se odstranit zboží');
+			}
 		}
 	}
 

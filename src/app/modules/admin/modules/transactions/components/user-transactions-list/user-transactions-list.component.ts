@@ -6,6 +6,7 @@ import {ActivatedRoute} from "@angular/router";
 import {IPaginatedResponse} from "../../../../../../common/types/IPaginatedResponse";
 import {IUser} from "../../../../../../common/types/IUser";
 import {Observable} from "rxjs";
+import {ETransactionType} from "../../services/transaction/types/ETransactionType";
 
 @Component({
 	selector: 'app-user-transactions-list',
@@ -13,10 +14,11 @@ import {Observable} from "rxjs";
 	styleUrls: ['./user-transactions-list.component.scss']
 })
 export class UserTransactionsListComponent implements OnInit {
-
 	public selectedUser: IUser;
 	public filterBy: Partial<ITransaction> = {};
 	public filteredOptions: Observable<any>;
+
+	public readonly ETransactionType = ETransactionType;
 	
 
 	constructor(

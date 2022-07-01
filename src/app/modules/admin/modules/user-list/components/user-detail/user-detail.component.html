@@ -72,8 +72,24 @@
 					placeholder="Heslo"
 					name="password"
 					type="password"
+					minlength="5"
 					required
 					[(ngModel)]="user.password"
+				>
+			</mat-form-field>
+
+			<mat-form-field *ngIf="!isEdit"
+				appearance="standard"
+				class="w-100"
+			>
+				<mat-label>Heslo znovu</mat-label>
+				<input matInput
+					placeholder="Heslo znovu"
+					name="passwordAgain"
+					type="password"
+					minlength="5"
+					required
+					[(ngModel)]="passwordAgain"
 				>
 			</mat-form-field>
 

@@ -36,7 +36,8 @@ export class GoodsService {
 		const params = {
 			offset: offset,
 			limit: limit,
-			Name: search
+			Name: search,
+			deleted: false,
 		};
 
 		const result = await firstValueFrom(this.http.get<IPaginatedResponse<IGoods>>(environment.apiUrl + 'goods', {params: params}));
@@ -81,6 +82,16 @@ export class GoodsService {
 	@invalidateCache([ECacheTag.GOODS, ECacheTag.GOODIE])
 	public async addGoodsType(item: IGoodsType): Promise<IGoodsType> {
 		return firstValueFrom(this.http.post<IGoodsType>(environment.apiUrl + 'goodstypes', item));
+	}
+
+	@invalidateCache([ECacheTag.GOODS, ECacheTag.GOODIE])
+	public async removeGoodsType(id: number): Promise<void> {
+		return firstValueFrom(this.http.delete<void>(environment.apiUrl + 'goodstypes/' + id));
+	}
+
+	@invalidateCache([ECacheTag.GOODS, ECacheTag.GOODIE])
+	public async removeGoods(id: number): Promise<void> {
+		return firstValueFrom(this.http.delete<void>(environment.apiUrl + 'goods/' + id));
 	}
 
 	public createNewGoodie(): IGoods {

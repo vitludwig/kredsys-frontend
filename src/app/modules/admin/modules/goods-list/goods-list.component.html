@@ -63,10 +63,17 @@
 				*matHeaderCellDef></th>
 			<td mat-cell
 				[align]="'right'"
-				*matCellDef="let row">
+				*matCellDef="let row"
+			>
 				<a [routerLink]="[row.id, ERoute.EDIT]"
 					mat-raised-button
 					color="accent">Upravit</a>
+
+				<button
+					mat-raised-button
+					(click)="removeGoods(row.id)"
+					color="warn"
+				>Odstranit</button>
 			</td>
 		</ng-container>
 
@@ -93,9 +100,9 @@
 </div>
 
 <div class="mt-5">
-	<h1>Typy zboží</h1>
+	<div class="w-100 d-flex justify-content-between align-items-center mb-3">
+		<h1 class="mb-0">Typy zboží</h1>
 
-	<div class="w-100 d-flex justify-content-end align-items-center mb-3">
 		<a mat-button
 			[routerLink]="[ERoute.ADMIN_GOODS_TYPES, ERoute.NEW]"
 			color="primary"
@@ -124,10 +131,19 @@
 					*matHeaderCellDef></th>
 				<td mat-cell
 					[align]="'right'"
-					*matCellDef="let row">
+					*matCellDef="let row"
+				>
 					<a [routerLink]="[ERoute.ADMIN_GOODS_TYPES, row.id, ERoute.EDIT]"
 						mat-raised-button
-						color="accent">Upravit</a>
+						color="accent"
+						class="me-3"
+					>Upravit</a>
+
+					<button
+						mat-raised-button
+						(click)="removeGoodsType(row.id)"
+						color="warn"
+					>Odstranit</button>
 				</td>
 			</ng-container>
 

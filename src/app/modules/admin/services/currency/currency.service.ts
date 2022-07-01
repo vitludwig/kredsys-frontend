@@ -25,6 +25,7 @@ export class CurrencyService {
 	    const params = {
 		    offset: offset,
 		    limit: limit,
+			Name: search,
 	    };
 
 	    return firstValueFrom(this.http.get<IPaginatedResponse<ICurrency>>(environment.apiUrl + 'currencies', {params: params}));

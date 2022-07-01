@@ -55,53 +55,54 @@
 				<button (click)="stornoTransaction(row.id)"
 					mat-raised-button
 					color="warn"
-				>Stornovat</button>
+				>Stornovat
+				</button>
 			</td>
 		</ng-container>
 
-<!--		<ng-container matColumnDef="expandedDetail">-->
-<!--			<td mat-cell-->
-<!--				*matCellDef="let row"-->
-<!--				[attr.colspan]="displayedColumns.length">-->
-<!--				<div class="element-detail"-->
-<!--					[@detailExpand]="row === expandedRow ? 'expanded' : 'collapsed'"-->
-<!--				>-->
-<!--					<div class="detail-content">-->
-<!--						<ng-container *ngIf="!detailLoading">-->
-<!--							<span>Uživatel: {{ row.userName ?? '' }}</span>-->
-<!--							<br>-->
-<!--							<h3 class="mb-1">Položky</h3>-->
-<!--							<div class="records">-->
-<!--								<div class="record" *ngFor="let record of transactionRecordsMap[row.id]">-->
-<!--									<span class="me-3">{{ goodsMap[record.goodsId].name }}</span>-->
-<!--									<span class="text-right">{{ goodsMap[record.goodsId].price }} Kč</span>-->
-<!--								</div>-->
-<!--							</div>-->
-<!--						</ng-container>-->
-<!--					</div>-->
-<!--				</div>-->
-<!--			</td>-->
-<!--		</ng-container>-->
+		<!--		<ng-container matColumnDef="expandedDetail">-->
+		<!--			<td mat-cell-->
+		<!--				*matCellDef="let row"-->
+		<!--				[attr.colspan]="displayedColumns.length">-->
+		<!--				<div class="element-detail"-->
+		<!--					[@detailExpand]="row === expandedRow ? 'expanded' : 'collapsed'"-->
+		<!--				>-->
+		<!--					<div class="detail-content">-->
+		<!--						<ng-container *ngIf="!detailLoading">-->
+		<!--							<span>Uživatel: {{ row.userName ?? '' }}</span>-->
+		<!--							<br>-->
+		<!--							<h3 class="mb-1">Položky</h3>-->
+		<!--							<div class="records">-->
+		<!--								<div class="record" *ngFor="let record of transactionRecordsMap[row.id]">-->
+		<!--									<span class="me-3">{{ goodsMap[record.goodsId].name }}</span>-->
+		<!--									<span class="text-right">{{ goodsMap[record.goodsId].price }} Kč</span>-->
+		<!--								</div>-->
+		<!--							</div>-->
+		<!--						</ng-container>-->
+		<!--					</div>-->
+		<!--				</div>-->
+		<!--			</td>-->
+		<!--		</ng-container>-->
 
 		<tr mat-header-row
 			*matHeaderRowDef="displayedColumns"></tr>
 
-<!--		<tr mat-row-->
-<!--			*matRowDef="let row; columns: displayedColumns;"-->
-<!--			class="table-row"-->
-<!--			[class.expanded-row]="expandedRow === row"-->
-<!--			(click)="showDetail(row)"-->
-<!--		></tr>-->
+		<!--		<tr mat-row-->
+		<!--			*matRowDef="let row; columns: displayedColumns;"-->
+		<!--			class="table-row"-->
+		<!--			[class.expanded-row]="expandedRow === row"-->
+		<!--			(click)="showDetail(row)"-->
+		<!--		></tr>-->
 
 		<tr mat-row
 			*matRowDef="let row; columns: displayedColumns;"
 			class="table-row"
 		></tr>
 
-<!--		<tr mat-row-->
-<!--			*matRowDef="let row; columns: ['expandedDetail']"-->
-<!--			class="detail-row">-->
-<!--		</tr>-->
+		<!--		<tr mat-row-->
+		<!--			*matRowDef="let row; columns: ['expandedDetail']"-->
+		<!--			class="detail-row">-->
+		<!--		</tr>-->
 	</table>
 	<mat-paginator [pageSizeOptions]="[5, 10, 15, 25, 100]"
 		[pageSize]="5"
@@ -109,6 +110,33 @@
 		showFirstLastButtons
 		aria-label="Select page of periodic elements">
 	</mat-paginator>
+</div>
+
+<br>
+
+<div class="d-flex justify-content-center align-items-center">
+	<mat-form-field appearance="standard">
+		<mat-label>Od</mat-label>
+		<input matInput type="datetime-local" [(ngModel)]="chartDataFrom">
+	</mat-form-field>
+
+	<mat-form-field appearance="standard"
+		class="ms-3 me-3"
+	>
+		<mat-label>Od</mat-label>
+		<input matInput type="datetime-local" [(ngModel)]="chartDataTo">
+	</mat-form-field>
+
+	<button mat-raised-button
+		color="primary"
+		(click)="filterChartData()"
+	>Filtrovat graf</button>
+
+	<button mat-raised-button
+		class="ms-3"
+		color="primary"
+		(click)="filterChartData(true)"
+	>Resetovat</button>
 </div>
 
 <div class="chart-wrapper">

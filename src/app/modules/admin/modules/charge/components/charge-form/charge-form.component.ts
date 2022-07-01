@@ -8,6 +8,7 @@ import {AuthService} from '../../../../../login/services/auth/auth.service';
 import {PlaceService} from '../../../../services/place/place/place.service';
 import {AlertService} from '../../../../../../common/services/alert/alert.service';
 import {IChargeResult} from '../../types/IChargeResult';
+import {HttpErrorResponse} from "@angular/common/http";
 
 @Component({
 	selector: 'app-charge-form',
@@ -21,19 +22,19 @@ export class ChargeFormComponent {
 	public currencyAccount: ICurrencyAccount | null;
 
 	@Input()
-	public set cardId(value: number) {
+	public set cardId(value: number | null) {
 		this.#cardId = value;
 		this.setCardId(value);
 	}
 
-	public get cardId(): number {
+	public get cardId(): number | null {
 		return this.#cardId;
 	}
 
 	@Output()
 	public charge: EventEmitter<IChargeResult> = new EventEmitter<IChargeResult>();
 
-	#cardId: number;
+	#cardId: number | null;
 
 	constructor(
 		protected transactionService: TransactionService,
@@ -45,9 +46,19 @@ export class ChargeFormComponent {
 	) {
 	}
 
-	public async setCardId(id: number): Promise<void> {
-		this.user = await this.usersService.getUserByCardUid(id);
-		this.currencyAccount = (await this.usersService.getUserCurrencyAccounts(this.user.id!))[0];
+	public async setCardId(id: number | null): Promise<void> {
+		if(id === null) {
+			return;
+		}
+		this.#cardId = id;
+		try {
+			this.user = await this.usersService.getUserByCardUid(id);
+			this.currencyAccount = (await this.usersService.getUserCurrencyAccounts(this.user.id!))[0];
+		} catch(e) {
+			console.error(e);
+			this.cardId = null;
+			this.alertService.error('Uživatel s touto kartou je blokovaný nebo karta neexistuje');
+		}
 	}
 
 	public async submit(): Promise<void> {
@@ -63,6 +74,7 @@ export class ChargeFormComponent {
 		this.user = null;
 		this.currencyAccount = null;
 		this.amount = null;
+		this.#cardId = null;
 	}
 
 }
