@@ -21,8 +21,9 @@
 			</th>
 			<td mat-cell
 				*matCellDef="let row">
-				<ng-container *ngIf="row.type === 'Payment'">Platba</ng-container>
-				<ng-container *ngIf="row.type === 'Deposit'">Vklad</ng-container>
+				<ng-container *ngIf="row.type === ETransactionType.PAYMENT">Platba</ng-container>
+				<ng-container *ngIf="row.type === ETransactionType.DEPOSIT">Vklad</ng-container>
+				<ng-container *ngIf="row.type === ETransactionType.WITHDRAW">Výběr</ng-container>
 			</td>
 
 		</ng-container>

@@ -41,6 +41,8 @@ export class TransactionsListComponent implements AfterViewInit, OnDestroy {
 	public chartDataTo: string = '';
 	public chartDataPrices: number[] = [];
 
+	public readonly ETransactionType = ETransactionType;
+
 	// Pie
 	public pieChartOptions: ChartConfiguration['options'] = {
 		responsive: true,

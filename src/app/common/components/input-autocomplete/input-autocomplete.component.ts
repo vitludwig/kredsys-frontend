@@ -14,7 +14,16 @@ export class InputAutocompleteComponent<T> implements OnInit {
 	public selectedValue: FormControl = new FormControl('');
 	public filterBy: Partial<unknown> = {};
 	public filteredOptions: Observable<any>;
-    
+
+	@Input()
+	public label: string = '';
+
+	@Input()
+	public placeholder: string = 'Vyhledat';
+
+	@Input()
+	public class: string = '';
+
 	@Input()
 	public dataLoader: (search: string) => Promise<IPaginatedResponse<T>>;
 

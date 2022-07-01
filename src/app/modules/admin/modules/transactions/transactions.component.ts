@@ -2,7 +2,8 @@ import {Component, OnInit} from '@angular/core';
 import {UsersService} from '../../services/users/users.service';
 import {PlaceService} from '../../services/place/place/place.service';
 import {TransactionService} from './services/transaction/transaction.service';
-import {ITransaction} from './services/transaction/types/ITransaction';
+import {AuthService} from "../../../login/services/auth/auth.service";
+import {EUserRole} from "../../../../common/types/IUser";
 
 @Component({
 	selector: 'app-transactions',
@@ -10,21 +11,17 @@ import {ITransaction} from './services/transaction/types/ITransaction';
 	styleUrls: ['./transactions.component.scss']
 })
 export class TransactionsComponent implements OnInit {
-	public allTransactions: ITransaction[];
-
+	public addTransactionAllowed: boolean = false
 
 	constructor(
+		public authService: AuthService,
 		protected transactionService: TransactionService,
 		protected usersService: UsersService,
 		protected placeService: PlaceService,
-
 	) {
 	}
 
-	public async ngOnInit(): Promise<void> {
-
+	public ngOnInit(): void {
+		this.addTransactionAllowed = this.authService.user!.roles!.some((role) => role === EUserRole.ADMIN || role === EUserRole.POWER_SALESMAN);
 	}
-
-
-
 }

@@ -1,37 +1,99 @@
 <ng-container *ngIf="!isLoading">
-
-	<div class="row">
+	<div class="row w-100">
 		<div class="col-sx-12 col-md-6">
 			<h2>Nová transakce</h2>
 
 			<form #form="ngForm"
-				(ngSubmit)="form.valid && submit"
+
 			>
+				<mat-form-field appearance="standard"
+					class="w-100"
+				>
+					<mat-label>Typ transakce</mat-label>
+					<mat-select [(ngModel)]="type"
+						required
+						name="type"
+					>
+						<mat-option [value]="ETransactionType.PAYMENT">Platba</mat-option>
+						<mat-option [value]="ETransactionType.DEPOSIT">Vklad</mat-option>
+						<mat-option [value]="ETransactionType.WITHDRAW">Výběr</mat-option>
+					</mat-select>
+				</mat-form-field>
+
 				<app-input-autocomplete
-					[(value)]="selectedUser"
-					[dataLoader]="loadData"
+					label="Uživatel"
+					placeholder="Vyhledat podle jména"
+					class="w-100"
+					(valueChange)="userId = $event.id"
+					[dataLoader]="loadUsers"
 				></app-input-autocomplete>
-<!--				<mat-form-field>-->
-<!--					<input type="text" placeholder="Vyhledat podle jména"-->
-<!--						matInput-->
-<!--						[formControl]="selectedUser"-->
-<!--						[matAutocomplete]="auto"-->
-<!--						[value]="selectedUser.value.name"-->
-<!--					>-->
-<!--					<mat-autocomplete #auto="matAutocomplete">-->
-<!--						<mat-option *ngFor="let option of filteredOptions | async" [value]="option">-->
-<!--							{{option.name}} ({{ option.memberId }})-->
-<!--						</mat-option>-->
-<!--					</mat-autocomplete>-->
-<!--				</mat-form-field>-->
+
+				<app-input-autocomplete
+					label="Místo"
+					placeholder="Vyhledat podle názvu"
+					class="w-100"
+					(valueChange)="placeId = $event.id"
+					[dataLoader]="loadPlaces"
+				></app-input-autocomplete>
+
+				<div class="records mb-5" *ngIf="type">
+					<h2>Položky transakce</h2>
+					<div *ngFor="let record of records">
+						<ng-container *ngIf="type === ETransactionType.PAYMENT">
+							<div class="d-flex justify-content-between align-items-center">
+
+								<app-input-autocomplete
+									label="Zboží"
+									placeholder="Vyhledat podle názvu"
+									class="w-100"
+									(valueChange)="record.goodsId = $event.id"
+									[dataLoader]="loadGoods"
+								></app-input-autocomplete>
+
+								<mat-form-field appearance="standard" class="ms-3">
+									<mat-label>Počet</mat-label>
+									<input matInput
+										placeholder="Počet"
+										name="amount"
+										required
+										[(ngModel)]="record.multiplier"
+									>
+								</mat-form-field>
+							</div>
+						</ng-container>
+
+						<ng-container *ngIf="type === ETransactionType.DEPOSIT || type === ETransactionType.WITHDRAW">
+							<div class="d-flex justify-content-between align-items-center">
+								<mat-form-field appearance="standard" class="ms-3">
+									<mat-label>Částka</mat-label>
+									<input matInput
+										placeholder="Počet"
+										name="amount"
+										required
+										[(ngModel)]="record.amount"
+									>
+									<span matSuffix>Kč</span>
+								</mat-form-field>
+							</div>
+						</ng-container>
+					</div>
 
 					<button mat-raised-button
-						class="w-100"
 						color="primary"
-						type="submit"
+						type="button"
+						(click)="addRecord()"
 					>
-						Potvrdit
+						Přidat záznam
 					</button>
+				</div>
+
+				<button mat-raised-button
+					class="w-100"
+					color="primary"
+					(click)="submit()"
+				>
+					Potvrdit
+				</button>
 			</form>
 		</div>
 	</div>

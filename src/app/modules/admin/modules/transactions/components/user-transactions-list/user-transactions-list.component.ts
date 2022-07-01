@@ -13,28 +13,18 @@ import {ETransactionType} from "../../services/transaction/types/ETransactionTyp
 	templateUrl: './user-transactions-list.component.html',
 	styleUrls: ['./user-transactions-list.component.scss']
 })
-export class UserTransactionsListComponent implements OnInit {
+export class UserTransactionsListComponent {
 	public selectedUser: IUser;
 	public filterBy: Partial<ITransaction> = {};
 	public filteredOptions: Observable<any>;
 
 	public readonly ETransactionType = ETransactionType;
-	
 
 	constructor(
 		protected transactionService: TransactionService,
 		protected usersService: UsersService,
 		protected route: ActivatedRoute,
 	) {
-	}
-
-	public async ngOnInit(): Promise<void> {
-	// this.places = await this.placeService.getAllPlaces();
-		//
-		// const id = Number(this.route.snapshot.paramMap.get('id'));
-		// if(id !== undefined) {
-		// 	this.selectedPlace = this.places.find((place) => place.id === id) ?? null;
-		// }
 	}
 
 	public getUsers = (search: string): Promise<IPaginatedResponse<IUser>> => {

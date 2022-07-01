@@ -12,7 +12,7 @@
             </ng-template>
         </mat-tab>
 
-        <mat-tab label="Nová transakce">
+        <mat-tab label="Nová transakce" *ngIf="addTransactionAllowed">
             <ng-template matTabContent>
                 <app-new-transaction></app-new-transaction>
             </ng-template>
