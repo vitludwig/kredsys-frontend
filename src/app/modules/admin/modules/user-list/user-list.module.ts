@@ -14,6 +14,7 @@ import {MatSelectModule} from '@angular/material/select';
 import {MatListModule} from '@angular/material/list';
 import {SharedModule} from '../../../../shared.module';
 import {CardDetailComponent} from './components/user-detail/components/card-detail/card-detail.component';
+import {MatCheckboxModule} from "@angular/material/checkbox";
 
 
 @NgModule({
@@ -35,6 +36,7 @@ import {CardDetailComponent} from './components/user-detail/components/card-deta
 		MatIconModule,
 		MatDialogModule,
 		MatListModule,
+		MatCheckboxModule,
 	],
 	exports: [
 		UserListComponent,

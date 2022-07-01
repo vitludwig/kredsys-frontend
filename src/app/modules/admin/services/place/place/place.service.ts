@@ -58,7 +58,7 @@ export class PlaceService implements OnDestroy {
 		return (await firstValueFrom(this.http.get<IPaginatedResponse<IPlace>>(environment.apiUrl + 'places', {params: params}))).data;
 	}
 
-	@cache(ETime.MINUTE * 2, [ECacheTag.PLACE])
+	@cache(ETime.MINUTE * 2, [ECacheTag.PLACE, ECacheTag.PLACES])
 	public async getPlaces(search: string = '', offset: number = 0, limit = this.limit): Promise<IPaginatedResponse<IPlace>> {
 		const params = {
 			offset: offset,
@@ -68,6 +68,7 @@ export class PlaceService implements OnDestroy {
 		return firstValueFrom(this.http.get<IPaginatedResponse<IPlace>>(environment.apiUrl + 'places', {params: params}));
 	}
 
+	@cache(ETime.MINUTE * 2, [ECacheTag.PLACE])
 	public async getPlace(id: number): Promise<IPlace> {
 		return firstValueFrom(this.http.get<IPlace>(environment.apiUrl + 'places/' + id));
 	}

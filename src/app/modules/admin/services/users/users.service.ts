@@ -25,11 +25,11 @@ export class UsersService {
 	}
 
 	@cache(ETime.MINUTE * 2, [ECacheTag.USERS])
-	public async getUsers(search: string = '', offset: number = 0, limit = this.limit): Promise<IPaginatedResponse<IUser>> {
+	public async getUsers(search: string = '', offset: number = 0, limit = this.limit, blocked: boolean = false): Promise<IPaginatedResponse<IUser>> {
 		const params = {
 			offset: offset,
 			limit: limit,
-			blocked: false, // TODO: create filtering of blocked users in grid
+			blocked: blocked, // TODO: create filtering of blocked users in grid
 			name: search,
 		};
 
@@ -55,10 +55,23 @@ export class UsersService {
 	 * TODO: make backend to allow sending only partial data
 	 *
 	 * @param user
+	 * @param value
 	 */
 	@invalidateCache([ECacheTag.USERS, ECacheTag.USER])
-	public async blockUser(user: IUser): Promise<IUser> {
-		user.blocked = true;
+	public async setUserBlocked(user: IUser, value: boolean): Promise<IUser> {
+		user.blocked = value;
+		return firstValueFrom(this.http.put<IUser>(environment.apiUrl + 'users/' + user.id, user));
+	}
+
+	/**
+	 * Unblocks user
+	 * TODO: make backend to allow sending only partial data
+	 *
+	 * @param user
+	 */
+	@invalidateCache([ECacheTag.USERS, ECacheTag.USER])
+	public async unblockUser(user: IUser): Promise<IUser> {
+		user.blocked = false;
 		return firstValueFrom(this.http.put<IUser>(environment.apiUrl + 'users/' + user.id, user));
 	}
 
