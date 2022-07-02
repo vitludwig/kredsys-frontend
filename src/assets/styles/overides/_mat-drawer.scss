@@ -4,7 +4,10 @@
   margin-bottom: -2px;
 
   &-container {
-    //height: 100vh;
+    height: 100vh;
+    app-top-menu ~ &, & & {
+      height: calc(100vh - var(--cy__toolbar--height));
+    }
   }
 
   &-backdrop.mat-drawer-shown {

@@ -1,7 +1,7 @@
 :root {
   --cy__gap: 1rem;
   --cy__toolbar--height: 64px;
-  --cy__sale-card--size: 200px;
+  --cy__sale-card--size: 240px;
 
   --cy__color--background: #{rgb.toValues(map-get($dark-theme-background,background))};
   --cy__color--border: #{rgb.toValues(map-get($theme-primary,500))};
