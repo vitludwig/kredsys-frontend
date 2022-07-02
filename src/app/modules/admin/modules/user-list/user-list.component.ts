@@ -28,12 +28,16 @@ export class UserListComponent implements OnInit, OnDestroy {
 	public usersData: IUser[];
 	public isUsersLoading: boolean = false;
 	public expandedRow: IUser | null;
+	public showBlockedUsers: boolean = false;
 
 	@ViewChild(MatPaginator)
 	public paginator: MatPaginator;
 
 	@ViewChild(MatSort)
 	public sort: MatSort;
+
+	@ViewChild('search')
+	public search: HTMLInputElement;
 
 	public readonly ERoute = ERoute;
 
@@ -62,6 +66,7 @@ export class UserListComponent implements OnInit, OnDestroy {
 						'',
 						offset >= 0 ? offset : 0,
 						this.paginator.pageSize,
+						this.showBlockedUsers,
 					);
 				}),
 				map((data) => {
@@ -82,19 +87,23 @@ export class UserListComponent implements OnInit, OnDestroy {
 			});
 	}
 
-	@debounce()
-	public onSearch(value: string): void {
-		this.loadUsers(value);
+	public onShowBlockedUsers(value: boolean): void {
+		this.loadUsers(this.search.value, 0, 15, value);
 	}
 
-	public async blockUser(user: IUser): Promise<void> {
+	@debounce()
+	public onSearch(value: string): void {
+		this.loadUsers(value, 0, 15, this.showBlockedUsers);
+	}
+
+	public async setUserBlocked(user: IUser, value: boolean): Promise<void> {
 		try {
-			await this.usersService.blockUser(user);
-			await this.loadUsers();
-			this.alertService.success('Uživatel zablokován');
+			await this.usersService.setUserBlocked(user, value);
+			await this.loadUsers('', 0, 15, this.showBlockedUsers);
+			this.alertService.success('Uživatel ' + (value ? 'zablokován' : 'odblokován'));
 		} catch(e) {
 			console.error('Cannot block user', e);
-			this.alertService.error('Nepodařilo se zablokovat uživatele');
+			this.alertService.error('Nepodařilo se ' + (value ? 'zablokovat' : 'odblokovat') + ' uživatele');
 		}
 	}
 
@@ -116,11 +125,11 @@ export class UserListComponent implements OnInit, OnDestroy {
 		});
 	}
 
-	protected async loadUsers(search: string = '', offset?: number, limit?: number): Promise<void> {
-		const users = await this.usersService.getUsers(search, offset, limit);
-		const data = users.data = users.data.filter((user) => !user.blocked);
+	protected async loadUsers(search: string = '', offset?: number, limit?: number, blocked?: boolean): Promise<void> {
+		const users = await this.usersService.getUsers(search, offset, limit, blocked);
+		// const data = users.data = users.data.filter((user) => !user.blocked);
 
-		this.usersData = data;
+		this.usersData = users.data;
 		this.usersTotal = users.total;
 	}
 

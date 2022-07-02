@@ -64,19 +64,35 @@
 				>
 			</mat-form-field>
 
-				<mat-form-field *ngIf="!isEdit"
-					appearance="standard"
-					class="w-100"
+			<mat-form-field *ngIf="!isEdit"
+				appearance="standard"
+				class="w-100"
+			>
+				<mat-label>Heslo</mat-label>
+				<input matInput
+					placeholder="Heslo"
+					name="password"
+					type="password"
+					minlength="5"
+					required
+					[(ngModel)]="user.password"
 				>
-					<mat-label>Heslo</mat-label>
-					<input matInput
-						placeholder="Heslo"
-						name="password"
-						type="password"
-						required
-						[(ngModel)]="user.password"
-					>
-				</mat-form-field>
+			</mat-form-field>
+
+			<mat-form-field *ngIf="!isEdit"
+				appearance="standard"
+				class="w-100"
+			>
+				<mat-label>Heslo znovu</mat-label>
+				<input matInput
+					placeholder="Heslo znovu"
+					name="passwordAgain"
+					type="password"
+					minlength="5"
+					required
+					[(ngModel)]="passwordAgain"
+				>
+			</mat-form-field>
 
 				<ng-container *ngIf="user.id">
 					<mat-form-field appearance="standard"

@@ -1,20 +1,13 @@
-<mat-form-field>
-	<input type="text" placeholder="Vyhledat podle jména"
-		matInput
-		[formControl]="selectedUser"
-		[matAutocomplete]="auto"
-		[value]="selectedUser.value.name"
-	>
-	<mat-autocomplete #auto="matAutocomplete">
-		<mat-option *ngFor="let option of filteredOptions | async" [value]="option">
-			{{option.name}}
-		</mat-option>
-	</mat-autocomplete>
-</mat-form-field>
+<app-input-autocomplete
+	label="Uživatel"
+	placeholder="Vyhledat podle jména"
+	[(value)]="selectedUser"
+	[dataLoader]="getUsers"
+></app-input-autocomplete>
 
-<app-transactions-list *ngIf="selectedUser.value"
+<app-transactions-list *ngIf="selectedUser"
 	[dataLoader]="loadData"
 	[filterBy]="{
-			id: selectedUser.value.id
+			userId: selectedUser.id
 		}"
 ></app-transactions-list>

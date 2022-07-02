@@ -1,4 +1,4 @@
-import {Component, Input, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {UsersService} from '../../../../services/users/users.service';
 import {HashMap} from '../../../../../../common/types/HashMap';
 import {Animations} from '../../../../../../common/utils/animations';
@@ -16,7 +16,8 @@ import {BaseChartDirective} from 'ng2-charts';
 import {Utils} from "../../../../../../common/utils/Utils";
 import {ETransactionType} from "../../services/transaction/types/ETransactionType";
 import {AlertService} from "../../../../../../common/services/alert/alert.service";
-import {MatSnackBar} from "@angular/material/snack-bar";
+import {filter, map, merge, startWith, Subject, switchMap, takeUntil} from "rxjs";
+import {CurrencyService} from "../../../../services/currency/currency.service";
 
 @Component({
 	selector: 'app-transactions-list',
@@ -26,16 +27,21 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 		Animations.expandableTable,
 	],
 })
-export class TransactionsListComponent implements OnInit {
-	public displayedColumns: string[] = ['amount', 'type', 'created', 'actions'];
-	public dataSource: MatTableDataSource<ITransaction>;
+export class TransactionsListComponent implements AfterViewInit, OnDestroy {
+	public displayedColumns: string[] = ['amount', 'type', 'created', 'userName', 'actions'];
 	public expandedRow: ITransaction | null;
 
-	public transactionsMap: HashMap<ITransactionResponse> = {};
-	public transactionRecordsMap: HashMap<ITransactionRecord[]> = {};
-	public goodsMap: HashMap<IGoods> = {};
+	public detailLoading: boolean = true;
+	public listLoading: boolean = true;
 
-	public detailReady: boolean = false;
+	public transactionData: ITransaction[] = [];
+	public transactionsTotal: number = 0;
+
+	public chartDataFrom: string = '';
+	public chartDataTo: string = '';
+	public chartDataPrices: number[] = [];
+
+	public readonly ETransactionType = ETransactionType;
 
 	// Pie
 	public pieChartOptions: ChartConfiguration['options'] = {
@@ -48,14 +54,15 @@ export class TransactionsListComponent implements OnInit {
 			datalabels: {
 				formatter: (value, ctx) => {
 					if (ctx.chart.data.labels) {
-						return ctx.chart.data.labels[ctx.dataIndex];
+						return ctx.chart.data.labels[ctx.dataIndex] + ' (' + this.chartDataPrices[ctx.dataIndex] + 'Kč)';
 					}
+					return '';
 				},
 			},
 			tooltip: {
 				callbacks: {
 					label: function(this: TooltipModel<any>, item: TooltipItem<any>) {
-						return item.label + ': ' + item.formattedValue + 'Kč';
+						return item.label + ': ' + item.formattedValue + 'ks';
 					}
 				}
 			}
@@ -69,16 +76,15 @@ export class TransactionsListComponent implements OnInit {
 	// };
 	public pieChartData: ChartData<'pie', number[], string | string[]> = {
 		labels: [],
-		datasets: [ {
-			data: []
-		} ]
+		datasets: [
+			{
+				data: [] // amount
+			},
+		]
 	};
 
 	public pieChartType: ChartType = 'pie';
 	public pieChartPlugins = [ DatalabelsPlugin ];
-
-	@ViewChild(MatSort)
-	public sort: MatSort;
 
 	@ViewChild(MatPaginator)
 	public paginator: MatPaginator;
@@ -94,13 +100,16 @@ export class TransactionsListComponent implements OnInit {
 	public set filterBy(value: Partial<ITransaction>) {
 		this.#filterBy = value;
 		if(value) {
-			this.loadData()
+			setTimeout(() => {
+				this.loadData();
+			})
 		}
 
 	}
 
 	@ViewChild(BaseChartDirective)
 	protected chart: BaseChartDirective | undefined;
+	protected unsubscribe: Subject<void> = new Subject<void>();
 
 	#filterBy: Partial<ITransaction>;
 
@@ -108,12 +117,42 @@ export class TransactionsListComponent implements OnInit {
 		protected usersService: UsersService,
 		protected transactionService: TransactionService,
 		protected goodsService: GoodsService,
+		protected currencyService: CurrencyService,
 		protected alertService: AlertService,
 	) {
 	}
 
-	public async ngOnInit(): Promise<void> {
-		this.loadData();
+	public async ngAfterViewInit(): Promise<void> {
+		merge(this.paginator.page, this.paginator.pageSize)
+			.pipe(
+				startWith({}),
+				switchMap(() => {
+					this.listLoading = true;
+					const offset = this.paginator.pageIndex * this.paginator.pageSize;
+
+					return this.transactionService.getTransactions(
+						offset >= 0 ? offset : 0,
+						this.paginator.pageSize,
+						this.filterBy
+					);
+				}),
+				map((data) => {
+					// Flip flag to show that loading has finished.
+					this.listLoading = false;
+
+					if(data === null) {
+						return [];
+					}
+
+					this.transactionsTotal = data.total;
+					return data.data;
+				}),
+				takeUntil(this.unsubscribe),
+			)
+			.subscribe((data) => {
+				console.log('nre data: ', data);
+				this.transactionData = data;
+			});
 	}
 
 	public async stornoTransaction(id: number): Promise<void> {
@@ -130,12 +169,14 @@ export class TransactionsListComponent implements OnInit {
 			this.expandedRow = null;
 			return;
 		}
-		this.detailReady = false;
+		this.detailLoading = true;
 		try {
 			this.expandedRow = row;
-			this.detailReady = true;
+
 		} catch(e) {
 			console.error('Cannot load transaction detail');
+		} finally {
+			this.detailLoading = false;
 		}
 	}
 
@@ -145,43 +186,82 @@ export class TransactionsListComponent implements OnInit {
 		// })
 	}
 
+	protected async loadChartData(): Promise<void> {
+		const currency = await this.currencyService.getDefaultCurrency();
+		let filterBy: {[key: string]: any} = {
+			usersFilter: this.filterBy.userId ? [this.filterBy.userId] : [],
+			placesFilter: this.filterBy.placeId ? [this.filterBy.placeId] : [],
+			fromDate: this.chartDataFrom,
+			toDate: this.chartDataTo,
+		};
+		const chartData = await this.transactionService.getStatistics(currency.id!, filterBy);
+
+		this.pieChartData.labels = chartData.goods.map((obj) => obj.goodsName);
+		this.pieChartData.datasets[0].data = chartData.goods.map((obj) => obj.sumGoods);
+		this.chartDataPrices = chartData.goods.map((obj) => obj.sumPrice);
+
+		this.chart?.update();
+	}
+
 	protected async loadData(): Promise<void> {
-		try {
-			const allTransactions = (await this.dataLoader(this.filterBy.id!, 0, 9999999, this.filterBy)).data;
-			this.dataSource = new MatTableDataSource<ITransaction>(allTransactions);
-			this.dataSource.paginator = this.paginator;
-			const chartData: HashMap<number> = {};
-			this.goodsMap = Utils.toHashMap(await this.goodsService.getAllGoods(), 'id');
-
-			// TODO: remove requesting every transaction after BE sends records in transaction (BE 18.)
-			for (const transaction of allTransactions) {
-				const transactionDetail = await this.transactionService.getTransaction(transaction.id, ETransactionType.PAYMENT);
-				if(transactionDetail.type !== ETransactionType.PAYMENT) {
-					continue;
-				}
-
-				for(const record of transactionDetail.records) {
-
-					if(this.transactionRecordsMap[transaction.id] === undefined) {
-						this.transactionRecordsMap[transaction.id] = [record];
-					} else {
-						this.transactionRecordsMap[transaction.id].push(record);
-					}
-
-					const goodie = this.goodsMap[record.goodsId] as IGoods;
-					if(chartData[goodie.name] === undefined) {
-						chartData[goodie.name] = goodie.price!
-					} else {
-						chartData[goodie.name] += goodie.price!
-					}
-				}
-			}
-
-			this.pieChartData.labels = Object.keys(chartData);
-			this.pieChartData.datasets[0].data = Object.values(chartData);
-			this.chart?.update();
-		} catch(e) {
-			console.error("Failed to load transactions", e);
+		if(!this.paginator) {
+			return;
 		}
+		const offset = this.paginator.pageIndex * this.paginator.pageSize;
+		const result = await this.transactionService.getTransactions(offset, this.paginator.pageSize, this.filterBy);
+
+		await this.loadChartData();
+
+		this.transactionData = result.data;
+		this.transactionsTotal = result.total;
+		// try {
+		// 	const allTransactions = (await this.dataLoader(this.filterBy.id!, 0, 9999999, this.filterBy)).data;
+		// 	this.dataSource = new MatTableDataSource<ITransaction>(allTransactions);
+		// 	this.dataSource.paginator = this.paginator;
+		// 	const chartData: HashMap<number> = {};
+		// 	this.goodsMap = Utils.toHashMap(await this.goodsService.getAllGoods(), 'id');
+		//
+		// 	// TODO: remove requesting every transaction after BE sends records in transaction (BE 18.)
+		// 	for (const transaction of allTransactions) {
+		// 		const transactionDetail = await this.transactionService.getTransaction(transaction.id, ETransactionType.PAYMENT);
+		// 		if(transactionDetail.type !== ETransactionType.PAYMENT) {
+		// 			continue;
+		// 		}
+		//
+		// 		for(const record of transactionDetail.records) {
+		//
+		// 			if(this.transactionRecordsMap[transaction.id] === undefined) {
+		// 				this.transactionRecordsMap[transaction.id] = [record];
+		// 			} else {
+		// 				this.transactionRecordsMap[transaction.id].push(record);
+		// 			}
+		//
+		// 			const goodie = this.goodsMap[record.goodsId] as IGoods;
+		// 			if(chartData[goodie.name] === undefined) {
+		// 				chartData[goodie.name] = goodie.price!
+		// 			} else {
+		// 				chartData[goodie.name] += goodie.price!
+		// 			}
+		// 		}
+		// 	}
+		//
+		// 	this.pieChartData.labels = Object.keys(chartData);
+		// 	this.pieChartData.datasets[0].data = Object.values(chartData);
+		// 	this.chart?.update();
+		// } catch(e) {
+		// 	console.error("Failed to load transactions", e);
+		// }
+	}
+
+	public async filterChartData(reset: boolean = false): Promise<void> {
+		if(reset) {
+			this.chartDataFrom = '';
+			this.chartDataTo = '';
+		}
+		this.loadChartData();
+	}
+
+	public ngOnDestroy(): void {
+		this.unsubscribe.next();
 	}
 }

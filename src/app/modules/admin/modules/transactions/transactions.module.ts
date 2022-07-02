@@ -13,14 +13,16 @@ import {PlaceTransactionsListComponent} from './components/place-transactions-li
 import {UserTransactionsListComponent} from './components/user-transactions-list/user-transactions-list.component';
 import {MatAutocompleteModule} from "@angular/material/autocomplete";
 import {ReactiveFormsModule} from "@angular/forms";
-import {MatButton, MatButtonModule} from "@angular/material/button";
+import {MatButtonModule} from "@angular/material/button";
+import {NewTransactionComponent} from "./components/new-transaction/new-transaction.component";
 
 @NgModule({
 	declarations: [
 		TransactionsListComponent,
 		TransactionsComponent,
 		PlaceTransactionsListComponent,
-		UserTransactionsListComponent
+		UserTransactionsListComponent,
+		NewTransactionComponent
 	],
 	imports: [
 		SharedModule,

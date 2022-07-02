@@ -1,10 +1,18 @@
 <div class="w-100 d-flex justify-content-between align-items-center">
-	<mat-form-field appearance="standard">
-		<mat-label>Vyhledávání</mat-label>
-		<input matInput
-			#search
-			(keyup)="onSearch(search.value)">
-	</mat-form-field>
+	<div>
+		<mat-form-field appearance="standard">
+			<mat-label>Vyhledávání</mat-label>
+			<input matInput
+                #search
+				(keyup)="onSearch(search.value)">
+		</mat-form-field>
+
+		<mat-checkbox color="primary"
+			class="ms-3"
+			[(ngModel)]="showBlockedUsers"
+			(change)="onShowBlockedUsers($event.checked)"
+		>Zobrazit blokované uživatele</mat-checkbox>
+	</div>
 
 	<a mat-button
 		[routerLink]="ERoute.NEW"
@@ -25,7 +33,7 @@
 		<ng-container matColumnDef="id">
 			<th mat-header-cell
 				*matHeaderCellDef
-				>Členské id
+			>Členské id
 			</th>
 
 			<td mat-cell
@@ -37,7 +45,7 @@
 		<ng-container matColumnDef="name">
 			<th mat-header-cell
 				*matHeaderCellDef
-				>Jméno
+			>Jméno
 			</th>
 
 			<td mat-cell
@@ -49,7 +57,7 @@
 		<ng-container matColumnDef="role">
 			<th mat-header-cell
 				*matHeaderCellDef
-				>Role
+			>Role
 			</th>
 
 			<td mat-cell
@@ -86,11 +94,21 @@
 					<div class="detail-content d-flex justify-content-between align-items-center w-100">
 						<div class="ms-auto">
 							<button mat-raised-button
+								*ngIf="!row.blocked"
 								color="warn"
 								class="ms-3"
-								(click)="blockUser(row)"
+								(click)="setUserBlocked(row, true)"
 							>
 								Zablokovat
+							</button>
+
+							<button mat-raised-button
+								*ngIf="row.blocked"
+								color="primary"
+								class="ms-3"
+								(click)="setUserBlocked(row, false)"
+							>
+								Odblokovat
 							</button>
 						</div>
 					</div>

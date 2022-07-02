@@ -1,0 +1,21 @@
+<mat-form-field appearance="standard" [class]="class">
+	<mat-label>{{ label }}</mat-label>
+	<input type="text"
+		[placeholder]="placeholder"
+		matInput
+		[formControl]="selectedValue"
+		[matAutocomplete]="auto"
+		[value]="selectedValue.value.name || ''"
+	>
+	<mat-autocomplete #auto="matAutocomplete">
+		<mat-option *ngFor="let option of filteredOptions | async"
+			[value]="option"
+			(onSelectionChange)="propagateValue(option)"
+		>
+			{{option.name}}
+			<ng-container *ngIf="option.memberId">
+				({{ option.memberId }})
+			</ng-container>
+		</mat-option>
+	</mat-autocomplete>
+</mat-form-field>

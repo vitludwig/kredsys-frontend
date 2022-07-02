@@ -13,17 +13,19 @@ import {ETime} from '../../../../common/types/ETime';
 })
 export class CurrencyService {
 	protected limit = 10;
+	protected defaultCurrency: ICurrency;
 
 	constructor(
 		protected http: HttpClient,
 	) {
 	}
 
-	@cache(ETime.HOUR, [ECacheTag.CURRENCIES])
+	@cache(ETime.MINUTE * 2, [ECacheTag.CURRENCIES])
 	public getCurrencies(search: string = '', offset: number = 0, limit = this.limit): Promise<IPaginatedResponse<ICurrency>> {
 	    const params = {
 		    offset: offset,
 		    limit: limit,
+			Name: search,
 	    };
 
 	    return firstValueFrom(this.http.get<IPaginatedResponse<ICurrency>>(environment.apiUrl + 'currencies', {params: params}));
@@ -32,12 +34,16 @@ export class CurrencyService {
 	/**
 	 * For now first currency, in future change this flow after currencies are discussed
 	 */
-	@cache(ETime.HOUR, [ECacheTag.CURRENCIES])
+	@cache(ETime.MINUTE * 2, [ECacheTag.CURRENCIES])
 	public async getDefaultCurrency(): Promise<ICurrency> {
-		return (await this.getCurrencies()).data[0];
+		if(!this.defaultCurrency) {
+			this.defaultCurrency = (await this.getCurrencies()).data[0];
+		}
+
+		return this.defaultCurrency;
 	}
 
-	@cache(ETime.HOUR, [ECacheTag.CURRENCY])
+	@cache(ETime.MINUTE * 2, [ECacheTag.CURRENCY])
 	public async getCurrency(id: number): Promise<ICurrency> {
 		return firstValueFrom(this.http.get<ICurrency>(environment.apiUrl + 'currencies/' + id));
 	}

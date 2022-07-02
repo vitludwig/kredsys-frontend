@@ -24,19 +24,19 @@ export class UsersService {
 
 	}
 
-	@cache(ETime.HOUR, [ECacheTag.USERS])
-	public async getUsers(search: string = '', offset: number = 0, limit = this.limit): Promise<IPaginatedResponse<IUser>> {
+	@cache(ETime.MINUTE * 2, [ECacheTag.USERS])
+	public async getUsers(search: string = '', offset: number = 0, limit = this.limit, blocked: boolean = false): Promise<IPaginatedResponse<IUser>> {
 		const params = {
 			offset: offset,
 			limit: limit,
-			blocked: false, // TODO: create filtering of blocked users in grid
+			blocked: blocked, // TODO: create filtering of blocked users in grid
 			name: search,
 		};
 
 		return firstValueFrom(this.http.get<IPaginatedResponse<IUser>>(environment.apiUrl + 'users', {params: params}));
 	}
 
-	@cache(ETime.HOUR, [ECacheTag.USER])
+	@cache(ETime.MINUTE * 2, [ECacheTag.USER])
 	public async getUser(id: number): Promise<IUser> {
 		return firstValueFrom(this.http.get<IUser>(environment.apiUrl + 'users/' + id));
 	}
@@ -55,10 +55,23 @@ export class UsersService {
 	 * TODO: make backend to allow sending only partial data
 	 *
 	 * @param user
+	 * @param value
 	 */
 	@invalidateCache([ECacheTag.USERS, ECacheTag.USER])
-	public async blockUser(user: IUser): Promise<IUser> {
-		user.blocked = true;
+	public async setUserBlocked(user: IUser, value: boolean): Promise<IUser> {
+		user.blocked = value;
+		return firstValueFrom(this.http.put<IUser>(environment.apiUrl + 'users/' + user.id, user));
+	}
+
+	/**
+	 * Unblocks user
+	 * TODO: make backend to allow sending only partial data
+	 *
+	 * @param user
+	 */
+	@invalidateCache([ECacheTag.USERS, ECacheTag.USER])
+	public async unblockUser(user: IUser): Promise<IUser> {
+		user.blocked = false;
 		return firstValueFrom(this.http.put<IUser>(environment.apiUrl + 'users/' + user.id, user));
 	}
 
@@ -67,7 +80,7 @@ export class UsersService {
 		return firstValueFrom(this.http.post<IUser>(environment.apiUrl + 'users', user));
 	}
 
-	@cache(ETime.HOUR, [ECacheTag.USER_CARDS])
+	@cache(ETime.MINUTE * 2, [ECacheTag.USER_CARDS])
 	public async getUserCards(id: number): Promise<IPaginatedResponse<ICard>> {
 		const params = {
 			offset: 0,
@@ -77,7 +90,7 @@ export class UsersService {
 		return firstValueFrom(this.http.get<IPaginatedResponse<ICard>>(environment.apiUrl + 'users/' + id + '/cards', {params: params}));
 	}
 
-	@cache(ETime.HOUR, [ECacheTag.TRANSACTION, ECacheTag.TRANSACTIONS])
+	@cache(ETime.MINUTE * 2, [ECacheTag.TRANSACTION, ECacheTag.TRANSACTIONS])
 	public async getUserTransactions(id: number, offset: number = 0, limit: number = 15, filterBy?: Partial<ITransaction>): Promise<IPaginatedResponse<ITransaction>> {
 		const params = {
 			offset: offset,

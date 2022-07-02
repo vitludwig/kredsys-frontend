@@ -11,6 +11,11 @@
                 <app-user-transactions-list></app-user-transactions-list>
             </ng-template>
         </mat-tab>
-    </mat-tab-group>
 
+        <mat-tab label="Nová transakce" *ngIf="addTransactionAllowed">
+            <ng-template matTabContent>
+                <app-new-transaction></app-new-transaction>
+            </ng-template>
+        </mat-tab>
+    </mat-tab-group>
 </div>

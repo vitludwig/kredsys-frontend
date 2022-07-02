@@ -7,7 +7,8 @@ export interface IPlace {
 }
 
 export enum EPlaceRole {
-	INFO = 'Info',
 	BAR = 'Bar',
-	NPC = 'Npc',
+	USER_INFO = 'UserInfo',
+	REGISTRATION = 'Registration',
+	INFO_POINT = 'AdminPoint'
 }

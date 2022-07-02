@@ -28,13 +28,19 @@ export interface ITransactionRecord {
 	multiplier: number
 }
 export interface ITransactionRecordPayment {
-	creatorId: number;
+	creatorId?: number;
 	goodsId: number;
 	multiplier: number;
 }
 
 export interface ITransactionRecordDeposit {
-	creatorId: number;
+	creatorId?: number;
+	text: string;
+	amount: number;
+}
+
+export interface ITransactionRecordWithdraw {
+	creatorId?: number;
 	text: string;
 	amount: number;
 }
