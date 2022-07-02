@@ -20,8 +20,9 @@
 
       .mat-card-content,
       .dashboard__item-icon {
-        filter: url(#filter);
-        @include animations.make-retro-vision;
+        // will be back ...
+        //filter: url(#filter);
+        //@include animations.make-retro-vision;
 
       }
     }
