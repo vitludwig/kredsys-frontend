@@ -1,3 +1,5 @@
+@use "styles/animations";
+
 .login-container {
   width: 100%;
   height: 100%;
@@ -10,6 +12,37 @@
 
     mat-card-title {
       text-align: center;
+    }
+
+
+    .app-logo {
+      height: 100px;
+      z-index: 999;
+      transform: translateX(0%);
+      margin-bottom: 12px;
+
+      img {
+        width: 100%;
+        height: 100%;
+      }
+
+      &__tag {
+        font-size: .75rem;
+        font-weight: 900;
+        text-transform: uppercase;
+        background: rgba(var(--cy__color--warn-500), .9);
+        padding: 0px 12px;
+        border: 1px solid var(--cy__color--var-500);
+        border-radius: 20px;
+        position: absolute;
+        left: 50%;
+        bottom: 26px;
+        transform: translateX(-50%);
+
+        // will be back ...
+        //filter: url(#filter);
+        //@include animations.make-retro-vision;
+      }
     }
   }
 
