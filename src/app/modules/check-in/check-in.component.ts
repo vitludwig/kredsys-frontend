@@ -29,7 +29,6 @@ export class CheckInComponent implements OnInit {
 	public users: IUser[] = [];
 	public user: IUser | undefined;
 	public newCard: number | null;
-	public deposit: number | null;
 
 	public roles: string[] = Object.values(EUserRole);
 	public selectedRole: EUserRole = EUserRole.MEMBER;
@@ -98,14 +97,14 @@ export class CheckInComponent implements OnInit {
 				await this.usersService.addUserCard(user.id, this.newCard);
 				await this.usersService.editRoles(user.id, [this.role?.value]);
 
-				if(this.deposit) {
+				if(this.userForm.get('deposit')!.value) {
 					await this.transactionService.deposit(
 						user.id,
 						this.placeService.selectedPlace!.id!,
 						this.defaultCurrency.id!,
 						[{
 							creatorId: this.authService.user!.id!,
-							amount: Number(this.deposit),
+							amount: Number(this.userForm.get('deposit')!.value),
 							text: '',
 						}]
 					)
