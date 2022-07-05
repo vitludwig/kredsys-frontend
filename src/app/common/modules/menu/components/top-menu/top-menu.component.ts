@@ -15,6 +15,7 @@ import {AuthService} from '../../../../../modules/login/services/auth/auth.servi
 import {TransactionService} from '../../../../../modules/admin/modules/transactions/services/transaction/transaction.service';
 import {ITransactionRecordDeposit} from '../../../../../modules/admin/modules/transactions/services/transaction/types/ITransaction';
 import {StornoDialogComponent} from "../../../../../modules/sale/components/storno-dialog/storno-dialog.component";
+import {AlertService} from "../../../../services/alert/alert.service";
 
 @Component({
 	selector: 'app-top-menu',
@@ -46,6 +47,7 @@ export class TopMenuComponent implements OnInit, OnDestroy {
 		protected orderService: OrderService,
 		protected dialog: MatDialog,
 		protected authService: AuthService,
+		protected alertService: AlertService,
 	) {
 		this.router.events
 			.subscribe((e) => {
@@ -128,11 +130,17 @@ export class TopMenuComponent implements OnInit, OnDestroy {
 		});
 
 		dialogRef.afterClosed().subscribe(async (result) => {
-			console.log('storning: ', result);
+			if(result === undefined) {
+				return;
+			}
+
 			try {
 				await this.transactionService.storno(result);
+				this.alertService.success('Transakce storována');
+				this.customerService.logout();
 			} catch(e) {
-				console.error('Cannot deposit money: ', e);
+				console.error('Cannot storno transaction: ', e);
+				this.alertService.success('Transakce se nepodařila storovat');
 			}
 		});
 	}

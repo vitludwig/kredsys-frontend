@@ -5,6 +5,7 @@ import {ITransaction} from "../../../admin/modules/transactions/services/transac
 import {TransactionService} from "../../../admin/modules/transactions/services/transaction/transaction.service";
 import {GoodsService} from "../../../admin/services/goods/goods.service";
 import {ETransactionType} from "../../../admin/modules/transactions/services/transaction/types/ETransactionType";
+import {PlaceService} from "../../../admin/services/place/place/place.service";
 
 @Component({
 	selector: 'app-storno-dialog',
@@ -19,6 +20,7 @@ export class StornoDialogComponent implements OnInit{
 		protected usersService: UsersService,
 		protected transactionService: TransactionService,
 		protected goodsService: GoodsService,
+		protected placeService: PlaceService,
 		protected dialogRef: MatDialogRef<StornoDialogComponent>,
 		@Inject(MAT_DIALOG_DATA) public userId: number,
 	) {
@@ -27,6 +29,7 @@ export class StornoDialogComponent implements OnInit{
 	public async ngOnInit(): Promise<void> {
 		const result = (await this.usersService.getUserTransactions(this.userId,0, 1, {
 			type: ETransactionType.PAYMENT,
+			placeId: this.placeService.selectedPlace!.id,
 			cancellation: false,
 		})).data;
 
