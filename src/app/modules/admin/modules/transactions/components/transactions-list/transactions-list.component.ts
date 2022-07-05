@@ -93,7 +93,10 @@ export class TransactionsListComponent implements AfterViewInit, OnDestroy {
 	public dataLoader: (id: number, offset: number, limit: number, filterBy: Partial<ITransaction>) => Promise<IPaginatedResponse<ITransaction>>
 
 	public get filterBy(): Partial<ITransaction> {
-		return this.#filterBy;
+		return {
+			...this.#filterBy,
+			cancellation: false,
+		};
 	}
 
 	@Input()
@@ -158,6 +161,8 @@ export class TransactionsListComponent implements AfterViewInit, OnDestroy {
 	public async stornoTransaction(id: number): Promise<void> {
 		try {
 			await this.transactionService.storno(id);
+			await this.loadData();
+			this.alertService.success('Transakce stornována');
 		} catch(e) {
 			console.error("Failed to storno transaction", e);
 			this.alertService.error("Nepodařilo se stornovat transakci");

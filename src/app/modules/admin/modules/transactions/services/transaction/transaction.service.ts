@@ -11,7 +11,7 @@ import {ETime} from '../../../../../../common/types/ETime';
 import {ECacheTag} from '../../../../../../common/types/ECacheTag';
 import {environment} from '../../../../../../../environments/environment';
 import {IPaginatedResponse} from '../../../../../../common/types/IPaginatedResponse';
-import {cache} from '../../../../../../common/decorators/cache';
+import {cache, invalidateCache} from '../../../../../../common/decorators/cache';
 import {ETransactionType} from "./types/ETransactionType";
 import {IStatisticsFilter, ITransactionStatistics} from "./types/ITransactionStatistics";
 
@@ -54,6 +54,7 @@ export class TransactionService {
 		return firstValueFrom(this.http.get<ITransactionStatistics>(environment.apiUrl + 'statistics/' + currencyId + '/goods', {params: params}));
 	}
 
+	@invalidateCache([ECacheTag.TRANSACTIONS, ECacheTag.TRANSACTION])
 	public pay(userId: number, placeId: number, records: ITransactionRecordPayment[]): Promise<ITransactionResponse> {
 		return firstValueFrom(this.http.post<ITransactionResponse>(environment.apiUrl + 'transactions/payment', {
 			info: '',
@@ -63,6 +64,7 @@ export class TransactionService {
 		}));
 	}
 
+	@invalidateCache([ECacheTag.TRANSACTIONS, ECacheTag.TRANSACTION])
 	public deposit(userId: number, placeId: number, currencyId: number, records: ITransactionRecordDeposit[]): Promise<ITransactionResponse> {
 		return firstValueFrom(this.http.post<ITransactionResponse>(environment.apiUrl + 'transactions/deposit', {
 			info: '',
@@ -73,6 +75,7 @@ export class TransactionService {
 		}));
 	}
 
+	@invalidateCache([ECacheTag.TRANSACTIONS, ECacheTag.TRANSACTION])
 	public withDraw(userId: number, placeId: number, currencyId: number, records: ITransactionRecordWithdraw[]): Promise<ITransactionResponse> {
 		return firstValueFrom(this.http.post<ITransactionResponse>(environment.apiUrl + 'transactions/withDraw', {
 			info: '',
@@ -83,6 +86,7 @@ export class TransactionService {
 		}));
 	}
 
+	@invalidateCache([ECacheTag.TRANSACTIONS, ECacheTag.TRANSACTION])
 	public storno(transactionId: number): Promise<ITransactionResponse> {
 		return firstValueFrom(this.http.put<ITransactionResponse>(environment.apiUrl + 'transactions/' + transactionId + '/cancellation', {}));
 	}
