@@ -1,99 +1,101 @@
 <div class="side-menu">
-	<mat-nav-list>
-		<a mat-list-item
-			*ngIf="userRoles | canAccessRoute: ERoute.SALE"
-			[routerLink]="ERoute.SALE"
-			[class.active]="router.url === '/' + ERoute.SALE">
-			Prodej
-		</a>
-		<ng-container *ngIf="userRoles | canAccessRoute: ERoute.ADMIN">
-			<mat-list-item class="expandable"
-				(click)="adminMenuOpened = !adminMenuOpened"
+	<ng-container *ngIf="placeService.placeRole">
+		<mat-nav-list>
+			<a mat-list-item
+				*ngIf="userRoles | canAccessRoute: ERoute.SALE"
+				[routerLink]="ERoute.SALE"
+				[class.active]="router.url === '/' + ERoute.SALE">
+				Prodej
+			</a>
+			<ng-container *ngIf="userRoles | canAccessRoute: ERoute.ADMIN">
+				<mat-list-item class="expandable"
+					(click)="adminMenuOpened = !adminMenuOpened"
+				>
+					<mat-icon> {{ adminMenuOpened ? 'expand_more' : 'chevron_right' }}</mat-icon>
+					Admin
+				</mat-list-item>
+
+				<div class="sub-menu"
+					*ngIf="adminMenuOpened"
+				>
+					<a mat-list-item
+						*ngIf="userRoles | canAccessRoute: ERoute.ADMIN_PLACES"
+						[class.active]="router.url === '/' + ERoute.ADMIN + '/' + ERoute.ADMIN_PLACES"
+						[routerLink]="[ERoute.ADMIN, ERoute.ADMIN_PLACES]"
+					>
+						Místa
+					</a>
+					<a mat-list-item
+						*ngIf="userRoles | canAccessRoute: ERoute.ADMIN_USERS"
+						[class.active]="router.url === '/' + ERoute.ADMIN + '/' + ERoute.ADMIN_USERS"
+						[routerLink]="[ERoute.ADMIN, ERoute.ADMIN_USERS]"
+					>
+						Uživatelé
+					</a>
+					<a mat-list-item
+						*ngIf="userRoles | canAccessRoute: ERoute.ADMIN_GOODS"
+						[class.active]="router.url === '/' + ERoute.ADMIN + '/' + ERoute.ADMIN_GOODS"
+						[routerLink]="[ERoute.ADMIN, ERoute.ADMIN_GOODS]"
+					>
+						Zboží
+					</a>
+					<a mat-list-item
+						*ngIf="userRoles | canAccessRoute: ERoute.ADMIN_TRANSACTIONS"
+						[class.active]="router.url === '/' + ERoute.ADMIN + '/' + ERoute.ADMIN_TRANSACTIONS"
+						[routerLink]="[ERoute.ADMIN, ERoute.ADMIN_TRANSACTIONS]"
+					>
+						Transakce
+					</a>
+					<a mat-list-item
+						*ngIf="userRoles | canAccessRoute: ERoute.ADMIN_CURRENCIES"
+						[class.active]="router.url === '/' + ERoute.ADMIN + '/' + ERoute.ADMIN_CURRENCIES"
+						[routerLink]="[ERoute.ADMIN, ERoute.ADMIN_CURRENCIES]"
+					>
+						Měny
+					</a>
+					<a mat-list-item
+						*ngIf="userRoles | canAccessRoute: ERoute.ADMIN_CHARGE"
+						[class.active]="router.url === '/' + ERoute.ADMIN + '/' + ERoute.ADMIN_CHARGE"
+						[routerLink]="[ERoute.ADMIN, ERoute.ADMIN_CHARGE]"
+					>
+						Nabíjedlo
+					</a>
+				</div>
+			</ng-container>
+
+			<a mat-list-item
+				*ngIf="userRoles | canAccessRoute: ERoute.PLACE_SELECT"
+				[routerLink]="ERoute.PLACE_SELECT"
+				[class.active]="router.url === '/' + ERoute.PLACE_SELECT">
+				Vybrat místo
+			</a>
+
+			<a mat-list-item
+				*ngIf="userRoles | canAccessRoute: ERoute.CHECK_IN"
+				[routerLink]="ERoute.CHECK_IN"
+				[class.active]="router.url === '/' + ERoute.CHECK_IN">
+				Rychloregistrace
+			</a>
+
+			<a mat-list-item
+				*ngIf="userRoles | canAccessRoute: ERoute.CARD_INFO"
+				[routerLink]="ERoute.CARD_INFO"
+				[class.active]="router.url === '/' + ERoute.CARD_INFO">
+				Infokartářka
+			</a>
+
+			<a mat-list-item
+				href="#"
+				*ngIf="authService.isLogged"
+				(click)="authService.logout()"
 			>
-				<mat-icon> {{ adminMenuOpened ? 'expand_more' : 'chevron_right' }}</mat-icon>
-				Admin
+				Odhlásit
+			</a>
+
+			<mat-list-item class="expandable mt-auto">
+				<mat-icon>person</mat-icon>
+				<span class="ms-2" *ngIf="user">{{ user.name }} ({{ user.roles[0] }})</span>
 			</mat-list-item>
-
-			<div class="sub-menu"
-				*ngIf="adminMenuOpened"
-			>
-				<a mat-list-item
-					*ngIf="userRoles | canAccessRoute: ERoute.ADMIN_PLACES"
-					[class.active]="router.url === '/' + ERoute.ADMIN + '/' + ERoute.ADMIN_PLACES"
-					[routerLink]="[ERoute.ADMIN, ERoute.ADMIN_PLACES]"
-				>
-					Místa
-				</a>
-				<a mat-list-item
-					*ngIf="userRoles | canAccessRoute: ERoute.ADMIN_USERS"
-					[class.active]="router.url === '/' + ERoute.ADMIN + '/' + ERoute.ADMIN_USERS"
-					[routerLink]="[ERoute.ADMIN, ERoute.ADMIN_USERS]"
-				>
-					Uživatelé
-				</a>
-				<a mat-list-item
-					*ngIf="userRoles | canAccessRoute: ERoute.ADMIN_GOODS"
-					[class.active]="router.url === '/' + ERoute.ADMIN + '/' + ERoute.ADMIN_GOODS"
-					[routerLink]="[ERoute.ADMIN, ERoute.ADMIN_GOODS]"
-				>
-					Zboží
-				</a>
-				<a mat-list-item
-					*ngIf="userRoles | canAccessRoute: ERoute.ADMIN_TRANSACTIONS"
-					[class.active]="router.url === '/' + ERoute.ADMIN + '/' + ERoute.ADMIN_TRANSACTIONS"
-					[routerLink]="[ERoute.ADMIN, ERoute.ADMIN_TRANSACTIONS]"
-				>
-					Transakce
-				</a>
-				<a mat-list-item
-					*ngIf="userRoles | canAccessRoute: ERoute.ADMIN_CURRENCIES"
-					[class.active]="router.url === '/' + ERoute.ADMIN + '/' + ERoute.ADMIN_CURRENCIES"
-					[routerLink]="[ERoute.ADMIN, ERoute.ADMIN_CURRENCIES]"
-				>
-					Měny
-				</a>
-				<a mat-list-item
-					*ngIf="userRoles | canAccessRoute: ERoute.ADMIN_CHARGE"
-					[class.active]="router.url === '/' + ERoute.ADMIN + '/' + ERoute.ADMIN_CHARGE"
-					[routerLink]="[ERoute.ADMIN, ERoute.ADMIN_CHARGE]"
-				>
-					Nabíjedlo
-				</a>
-			</div>
-		</ng-container>
-
-		<a mat-list-item
-			*ngIf="userRoles | canAccessRoute: ERoute.PLACE_SELECT"
-			[routerLink]="ERoute.PLACE_SELECT"
-			[class.active]="router.url === '/' + ERoute.PLACE_SELECT">
-			Vybrat místo
-		</a>
-
-		<a mat-list-item
-			*ngIf="userRoles | canAccessRoute: ERoute.CHECK_IN"
-			[routerLink]="ERoute.CHECK_IN"
-			[class.active]="router.url === '/' + ERoute.CHECK_IN">
-			Rychloregistrace
-		</a>
-
-		<a mat-list-item
-			*ngIf="userRoles | canAccessRoute: ERoute.CARD_INFO"
-			[routerLink]="ERoute.CARD_INFO"
-			[class.active]="router.url === '/' + ERoute.CARD_INFO">
-			Infokartářka
-		</a>
-
-		<a mat-list-item
-			href="#"
-			*ngIf="authService.isLogged"
-			(click)="authService.logout()"
-		>
-			Odhlásit
-		</a>
-
-		<mat-list-item class="expandable mt-auto">
-			<mat-icon>person</mat-icon>
-			<span class="ms-2" *ngIf="user">{{ user.name }} ({{ user.roles[0] }})</span>
-		</mat-list-item>
-	</mat-nav-list>
+		</mat-nav-list>
+	</ng-container>
 </div>

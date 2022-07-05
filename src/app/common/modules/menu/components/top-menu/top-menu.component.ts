@@ -78,8 +78,14 @@ export class TopMenuComponent implements OnInit, OnDestroy {
 			});
 
 		this.defaultCurrency = await this.currencyService.getDefaultCurrency();
-		// TODO: fix this properly with permission list
-		this.canChargeMoney = this.authService.user!.roles!.includes(EUserRole.POWER_SALESMAN) || this.authService.user!.roles!.includes(EUserRole.ADMIN);
+		this.authService.isLogged$
+			.pipe(takeUntil(this.unsubscribe))
+			.subscribe((isLogged) => {
+				if(isLogged) {
+					// TODO: fix this properly with permission list
+					this.canChargeMoney = this.authService.user!.roles!.includes(EUserRole.POWER_SALESMAN) || this.authService.user!.roles!.includes(EUserRole.ADMIN);
+				}
+			});
 	}
 
 	protected async loadCurrencyAccount(userId: number): Promise<void> {

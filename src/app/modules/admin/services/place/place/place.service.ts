@@ -16,6 +16,7 @@ import {ITransaction} from "../../../modules/transactions/services/transaction/t
 })
 export class PlaceService implements OnDestroy {
 	#selectedPlace: IPlace | null;
+	public placeRole: EPlaceRole | null;
 
 	public get selectedPlace(): IPlace | null {
 		return this.#selectedPlace;
@@ -23,6 +24,12 @@ export class PlaceService implements OnDestroy {
 
 	public set selectedPlace(value: IPlace | null) {
 		this.#selectedPlace = value;
+		if(value) {
+			console.log('loading place role');
+			this.getPlaceRole(value.id!).then((role) => {
+				this.placeRole = role;
+			})
+		}
 		localStorage.setItem('selectedPlaceId', value?.id + '');
 		localStorage.setItem('placeToken', value?.apiToken + '');
 	}

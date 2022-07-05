@@ -19,9 +19,6 @@ const allowedRoutes: EnumHashMap<EUserRole, ERoute[]> = {
 	],
 	[EUserRole.WORKER]: [
 		ERoute.SALE,
-		ERoute.ADMIN,
-		ERoute.ADMIN_PLACES,
-		ERoute.CHECK_IN,
 	],
 }
 

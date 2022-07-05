@@ -30,7 +30,6 @@ export class CheckInComponent implements OnInit {
 	public user: IUser | undefined;
 	public newCard: number | null;
 
-	public roles: string[] = Object.values(EUserRole);
 	public selectedRole: EUserRole = EUserRole.MEMBER;
 
 	public get memberId(): AbstractControl | null {

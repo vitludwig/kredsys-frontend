@@ -80,17 +80,6 @@
 				>
 			</mat-form-field>
 
-			<mat-form-field appearance="standard"
-				class="w-100"
-			>
-				<mat-label>Role</mat-label>
-				<mat-select [formControlName]="'role'"
-				>
-					<mat-option *ngFor="let role of roles"
-						[value]="role">{{ role }}</mat-option>
-				</mat-select>
-			</mat-form-field>
-
 			<app-card-loader *ngIf="!newCard"
 				(cardIdChange)="setCard($event)">
 			</app-card-loader>

@@ -5,6 +5,7 @@ import {AuthService} from '../../../../../modules/login/services/auth/auth.servi
 import AllowedRoutes from '../../../../../modules/login/services/auth/types/AllowedRoutes';
 import {EUserRole, IUser} from '../../../../types/IUser';
 import {Subject, takeUntil} from 'rxjs';
+import {PlaceService} from "../../../../../modules/admin/services/place/place/place.service";
 
 @Component({
 	selector: 'app-side-menu',
@@ -25,6 +26,7 @@ export class SideMenuComponent implements OnInit, OnDestroy {
 	constructor(
 		public router: Router,
 		public authService: AuthService,
+		public placeService: PlaceService,
 	) {
 	}
 
