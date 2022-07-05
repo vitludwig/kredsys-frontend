@@ -8,7 +8,7 @@ import {IPlace} from '../../../../types/IPlace';
 import {ICurrency, ICurrencyAccount} from '../../../../types/ICurrency';
 import {CurrencyService} from '../../../../../modules/admin/services/currency/currency.service';
 import {Subject, takeUntil} from 'rxjs';
-import {IUser} from '../../../../types/IUser';
+import {EUserRole, IUser} from '../../../../types/IUser';
 import {UsersService} from '../../../../../modules/admin/services/users/users.service';
 import {OrderService} from '../../../../../modules/sale/services/order/order.service';
 import {AuthService} from '../../../../../modules/login/services/auth/auth.service';
@@ -25,6 +25,7 @@ export class TopMenuComponent implements OnInit, OnDestroy {
 	public pageName: string = '';
 	public customer: IUser | null;
 	public currencyAccount: ICurrencyAccount | null; // TODO: this is here onl temporary until we can create CurrencyAccount
+	public canChargeMoney: boolean = false;
 
 	protected defaultCurrency: ICurrency;
 
@@ -75,6 +76,8 @@ export class TopMenuComponent implements OnInit, OnDestroy {
 			});
 
 		this.defaultCurrency = await this.currencyService.getDefaultCurrency();
+		// TODO: fix this properly with permission list
+		this.canChargeMoney = this.authService.user!.roles!.includes(EUserRole.POWER_SALESMAN) || this.authService.user!.roles!.includes(EUserRole.ADMIN);
 	}
 
 	protected async loadCurrencyAccount(userId: number): Promise<void> {

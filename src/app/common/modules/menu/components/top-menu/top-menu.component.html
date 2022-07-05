@@ -27,6 +27,7 @@
 					color="accent"
 					class="ms-3"
 					(click)="openChargeDialog()"
+					*ngIf="canChargeMoney"
 				>
 					Dobít
 				</button>
@@ -36,6 +37,7 @@
 					color="warn"
 					class="ms-3"
 					(click)="openStornoDialog()"
+					*ngIf="canChargeMoney"
 				>
 					Storno
 				</button>
