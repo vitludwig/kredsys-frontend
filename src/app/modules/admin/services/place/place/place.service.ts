@@ -1,7 +1,7 @@
 import {Injectable, OnDestroy} from '@angular/core';
 import {IPaginatedResponse} from '../../../../../common/types/IPaginatedResponse';
 import {EPlaceRole, IPlace} from '../../../../../common/types/IPlace';
-import {firstValueFrom, Subject, takeUntil} from 'rxjs';
+import {BehaviorSubject, firstValueFrom, Observable, Subject, takeUntil} from 'rxjs';
 import {environment} from '../../../../../../environments/environment';
 import {HttpClient} from '@angular/common/http';
 import {IGoods} from '../../../../../common/types/IGoods';
@@ -16,7 +16,12 @@ import {ITransaction} from "../../../modules/transactions/services/transaction/t
 })
 export class PlaceService implements OnDestroy {
 	#selectedPlace: IPlace | null;
-	public placeRole: EPlaceRole | null;
+	public placeRole: EPlaceRole;
+	public placeRoleSubject: BehaviorSubject<EPlaceRole | null>;
+	public placeRole$: Observable<EPlaceRole | null>;
+
+	public selectedPlaceSubject: BehaviorSubject<IPlace | null>;
+	public selectedPlace$: Observable<IPlace | null>;
 
 	public get selectedPlace(): IPlace | null {
 		return this.#selectedPlace;
@@ -28,8 +33,10 @@ export class PlaceService implements OnDestroy {
 			console.log('loading place role');
 			this.getPlaceRole(value.id!).then((role) => {
 				this.placeRole = role;
+				this.placeRoleSubject.next(role);
 			})
 		}
+		this.selectedPlaceSubject.next(value);
 		localStorage.setItem('selectedPlaceId', value?.id + '');
 		localStorage.setItem('placeToken', value?.apiToken + '');
 	}
@@ -41,14 +48,27 @@ export class PlaceService implements OnDestroy {
 		protected http: HttpClient,
 		protected authService: AuthService,
 	) {
+		this.selectedPlaceSubject = new BehaviorSubject<IPlace | null>(null);
+		this.selectedPlace$ = this.selectedPlaceSubject.asObservable();
+
+		this.placeRoleSubject = new BehaviorSubject<EPlaceRole | null>(null);
+		this.placeRole$ = this.placeRoleSubject.asObservable();
+
 		this.authService.isLogged$
 			.pipe(takeUntil(this.unsubscribe))
 			.subscribe(async (isLogged) => {
 				const placeId = localStorage.getItem('selectedPlaceId');
 				if(isLogged && placeId) {
-					this.#selectedPlace = await this.getPlace(Number(placeId));
+					this.selectedPlace = await this.getPlace(Number(placeId));
 				}
 			})
+
+		if(this.selectedPlace?.id) {
+			this.getPlaceRole(this.selectedPlace.id).then((role) => {
+				this.placeRole = role;
+				this.placeRoleSubject.next(role);
+			})
+		}
 	}
 
 	public ngOnDestroy() {

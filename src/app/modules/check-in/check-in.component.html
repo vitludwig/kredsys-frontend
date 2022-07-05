@@ -48,6 +48,12 @@
 		<form [formGroup]="userForm"
 			(ngSubmit)=" onSubmit()"
 		>
+			<input matInput
+				name="id"
+				type="number"
+				formControlName="id"
+				hidden
+			>
 			<mat-form-field appearance="standard"
 				class="w-100">
 				<mat-label>Členské ID</mat-label>

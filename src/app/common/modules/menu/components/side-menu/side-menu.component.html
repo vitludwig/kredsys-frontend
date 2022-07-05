@@ -1,5 +1,5 @@
 <div class="side-menu">
-	<ng-container *ngIf="placeService.placeRole">
+	<ng-container *ngIf="placeRole">
 		<mat-nav-list>
 			<a mat-list-item
 				*ngIf="userRoles | canAccessRoute: ERoute.SALE"

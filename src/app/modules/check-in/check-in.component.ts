@@ -17,6 +17,7 @@ import {HttpErrorResponse} from '@angular/common/http';
 })
 export class CheckInComponent implements OnInit {
 	public userForm: FormGroup = new FormGroup({
+		id: new FormControl('', []),
 		memberId: new FormControl('', [Validators.required]),
 		name: new FormControl('', [Validators.required]),
 		email: new FormControl('', [Validators.required, Validators.email]),
@@ -29,6 +30,7 @@ export class CheckInComponent implements OnInit {
 	public users: IUser[] = [];
 	public user: IUser | undefined;
 	public newCard: number | null;
+	public userFromList: boolean = false;
 
 	public selectedRole: EUserRole = EUserRole.MEMBER;
 
@@ -75,7 +77,9 @@ export class CheckInComponent implements OnInit {
 	}
 
 	public selectUser(user: IUser): void {
+		this.userFromList = true;
 		this.userForm.patchValue({
+			id: user.id,
 			memberId: user.memberId,
 			name: user.name,
 			email: user.email,
@@ -90,7 +94,14 @@ export class CheckInComponent implements OnInit {
 		}
 
 		try {
-			const user = await this.usersService.addUser(this.userForm.value);
+			let user;
+
+			if(this.userFromList) {
+				user = await this.usersService.editUser(this.userForm.value);
+			} else {
+				user = await this.usersService.addUser(this.userForm.value);
+			}
+
 
 			if(user.id && this.newCard) {
 				await this.usersService.addUserCard(user.id, this.newCard);
@@ -129,6 +140,7 @@ export class CheckInComponent implements OnInit {
 	public resetForm(): void {
 		this.userForm.patchValue(this.usersService.createNewUser());
 		this.newCard = null;
+		this.userFromList = false;
 	}
 
 

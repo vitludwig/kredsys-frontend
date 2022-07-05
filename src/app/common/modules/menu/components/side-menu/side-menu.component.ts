@@ -6,6 +6,7 @@ import AllowedRoutes from '../../../../../modules/login/services/auth/types/Allo
 import {EUserRole, IUser} from '../../../../types/IUser';
 import {Subject, takeUntil} from 'rxjs';
 import {PlaceService} from "../../../../../modules/admin/services/place/place/place.service";
+import {EPlaceRole} from "../../../../types/IPlace";
 
 @Component({
 	selector: 'app-side-menu',
@@ -16,10 +17,10 @@ export class SideMenuComponent implements OnInit, OnDestroy {
 	public adminMenuOpened: boolean = false;
 	public userRoles: EUserRole[];
 	public user: IUser;
+	public placeRole: EPlaceRole | null;
 
 	public readonly ERoute = ERoute;
 	public readonly allowedRoutes = AllowedRoutes;
-
 
 	protected unsubscribe: Subject<void> = new Subject();
 
@@ -45,6 +46,12 @@ export class SideMenuComponent implements OnInit, OnDestroy {
 				this.adminMenuOpened = event.url.includes(ERoute.ADMIN);
 			}
 		});
+
+		this.placeService.placeRole$
+			.pipe(takeUntil(this.unsubscribe))
+			.subscribe(async (role) => {
+				this.placeRole = role;
+			})
 	}
 
 	public ngOnDestroy(): void {
