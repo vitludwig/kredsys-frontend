@@ -21,7 +21,6 @@ export class CheckInComponent implements OnInit {
 		memberId: new FormControl('', [Validators.required]),
 		name: new FormControl('', [Validators.required]),
 		email: new FormControl('', [Validators.required, Validators.email]),
-		role: new FormControl('', [Validators.required]),
 		deposit: new FormControl(''),
 	});
 	public showValidationErrors: boolean = false;
@@ -105,7 +104,7 @@ export class CheckInComponent implements OnInit {
 
 			if(user.id && this.newCard) {
 				await this.usersService.addUserCard(user.id, this.newCard);
-				await this.usersService.editRoles(user.id, [this.role?.value]);
+				await this.usersService.editRoles(user.id, [EUserRole.MEMBER]);
 
 				if(this.userForm.get('deposit')!.value) {
 					await this.transactionService.deposit(

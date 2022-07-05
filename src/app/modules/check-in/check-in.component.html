@@ -31,66 +31,55 @@
 				</div>
 			</div>
 
-			<div *ngIf="role.invalid"
-				class="alert alert-danger">
-
-				<div *ngIf="role.errors?.['required']">
-					Vyplňte roli
-				</div>
-			</div>
-
 			<div *ngFor="let error of errors"
 				class="alert alert-danger">
-					{{ error }}
+				{{ error }}
 			</div>
 		</ng-container>
 
 		<form [formGroup]="userForm"
 			(ngSubmit)=" onSubmit()"
 		>
-			<input matInput
-				name="id"
-				type="number"
-				formControlName="id"
-				hidden
-			>
-			<mat-form-field appearance="standard"
-				class="w-100">
-				<mat-label>Členské ID</mat-label>
-				<input matInput
-					placeholder="Členské ID"
-					name="memberId"
-					type="number"
-					min="0"
-					formControlName="memberId"
-				>
-			</mat-form-field>
-
-			<mat-form-field appearance="standard"
-				class="w-100">
-				<mat-label>Jméno</mat-label>
-				<input matInput
-					placeholder="Jméno"
-					name="name"
-					formControlName="name"
-				>
-			</mat-form-field>
-
-			<mat-form-field appearance="standard"
-				class="w-100">
-				<mat-label>E-mail</mat-label>
-				<input matInput
-					placeholder="E-mail"
-					name="email"
-					formControlName="email"
-				>
-			</mat-form-field>
-
-			<app-card-loader *ngIf="!newCard"
-				(cardIdChange)="setCard($event)">
-			</app-card-loader>
-
 			<div [hidden]="!newCard">
+				<input matInput
+					name="id"
+					type="number"
+					formControlName="id"
+					hidden
+				>
+				<mat-form-field appearance="standard"
+					class="w-100">
+					<mat-label>Členské ID</mat-label>
+					<input matInput
+						placeholder="Členské ID"
+						name="memberId"
+						type="number"
+						min="0"
+						formControlName="memberId"
+					>
+				</mat-form-field>
+
+				<mat-form-field appearance="standard"
+					class="w-100">
+					<mat-label>Jméno</mat-label>
+					<input matInput
+						placeholder="Jméno"
+						name="name"
+						formControlName="name"
+					>
+				</mat-form-field>
+
+				<mat-form-field appearance="standard"
+					class="w-100">
+					<mat-label>E-mail</mat-label>
+					<input matInput
+						placeholder="E-mail"
+						name="email"
+						formControlName="email"
+					>
+				</mat-form-field>
+
+
 				<mat-form-field appearance="standard"
 					class="w-100"
 				>
@@ -115,6 +104,10 @@
 				</mat-form-field>
 			</div>
 
+			<app-card-loader *ngIf="!newCard"
+				(cardIdChange)="setCard($event)">
+			</app-card-loader>
+
 			<div>
 				<button mat-raised-button
 					class="w-100 submit-btn"
@@ -134,7 +127,7 @@
 				class="w-100">
 				<mat-label>Vyhledat podle jména</mat-label>
 				<input matInput
-					#search
+                    #search
 					(keyup)="onUserSearch(search.value)">
 			</mat-form-field>
 		</div>
