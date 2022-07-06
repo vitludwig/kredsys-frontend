@@ -66,7 +66,7 @@ export class CardLoaderComponent implements OnInit, OnDestroy {
 			 * Card loader events are firing cca in 0.02ms to 0.2ms interval
 			 * If this interval is bigger, it means user made keydown event himself - reset userId so user input won't be in card id we are listening to
  			 */
-			if(timeDiff > 0.2 && this.prevEventTime !== 0) {
+			if(timeDiff > 3 && this.prevEventTime !== 0) {
 				userId = '';
 			}
 
