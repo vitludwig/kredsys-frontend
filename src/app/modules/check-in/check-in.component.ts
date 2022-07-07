@@ -92,6 +92,12 @@ export class CheckInComponent implements OnInit {
 			return;
 		}
 
+    if(this.userForm.get('deposit')!.value > 50000) {
+      this.showValidationErrors = true;
+      this.errors.push("Takhle velkou částku nejde nabít");
+      return;
+    }
+
 		try {
 			let user;
 

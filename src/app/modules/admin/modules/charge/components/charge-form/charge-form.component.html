@@ -2,7 +2,7 @@
 	(cardIdChange)="setCardId($event)">
 </app-card-loader>
 
-<ng-container *ngIf="user && currencyAccount">
+<ng-container *ngIf="cardId">
 	<h2>Stav: {{ currencyAccount?.currentAmount ?? 0 }} Kč</h2>
 	<mat-form-field appearance="standard"
 		class="w-100">
@@ -22,6 +22,11 @@
 			(click)="amount = value"
 		>{{ value }} Kč
 		</button>
+    <button mat-stroked-button
+            class="me-2"
+            (click)="amount = 60"
+    >Kelímek
+    </button>
 	</div>
 
 	<button mat-raised-button

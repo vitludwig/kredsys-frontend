@@ -65,6 +65,7 @@ export class ChargeFormComponent {
 		if(!this.user || !this.currencyAccount) {
 			return;
 		}
+
 		this.charge.emit({
 			amount: this.amount ?? 0,
 			user: this.user,
