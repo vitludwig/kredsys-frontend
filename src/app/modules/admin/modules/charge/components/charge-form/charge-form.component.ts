@@ -1,6 +1,6 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {IUser} from '../../../../../../common/types/IUser';
-import {ICurrencyAccount} from '../../../../../../common/types/ICurrency';
+import {ICurrency, ICurrencyAccount} from '../../../../../../common/types/ICurrency';
 import {TransactionService} from '../../../transactions/services/transaction/transaction.service';
 import {UsersService} from '../../../../services/users/users.service';
 import {CurrencyService} from '../../../../services/currency/currency.service';
@@ -15,7 +15,7 @@ import {HttpErrorResponse} from "@angular/common/http";
 	templateUrl: './charge-form.component.html',
 	styleUrls: ['./charge-form.component.scss']
 })
-export class ChargeFormComponent {
+export class ChargeFormComponent implements OnInit {
 	public amount: number | null;
 	public predefinedAmounts: number[] = [500, 800, 1000, 1500, 2000];
 	public user: IUser | null;
@@ -35,6 +35,7 @@ export class ChargeFormComponent {
 	public charge: EventEmitter<IChargeResult> = new EventEmitter<IChargeResult>();
 
 	#cardId: number | null;
+  protected defaultCurrency: ICurrency;
 
 	constructor(
 		protected transactionService: TransactionService,
@@ -45,6 +46,10 @@ export class ChargeFormComponent {
 		protected alertService: AlertService,
 	) {
 	}
+
+  public async ngOnInit(): Promise<void> {
+    this.defaultCurrency = await this.currencyService.getDefaultCurrency();
+  }
 
 	public async setCardId(id: number | null): Promise<void> {
 		if(id === null) {
@@ -62,14 +67,14 @@ export class ChargeFormComponent {
 	}
 
 	public async submit(): Promise<void> {
-		if(!this.user || !this.currencyAccount) {
+		if(!this.user) {
 			return;
 		}
 
 		this.charge.emit({
 			amount: this.amount ?? 0,
 			user: this.user,
-			currencyAccount: this.currencyAccount,
+			currencyId: this.currencyAccount?.currencyId ?? this.defaultCurrency.id!,
 		});
 
 		this.user = null;

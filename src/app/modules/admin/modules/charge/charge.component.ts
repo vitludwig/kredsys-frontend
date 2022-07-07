@@ -33,7 +33,7 @@ export class ChargeComponent {
 		}];
 
 		try {
-			let currencyId = chargeData.currencyAccount?.currencyId;
+			let currencyId = chargeData.currencyId;
 			if(!currencyId) {
 				currencyId = (await this.currencyService.getDefaultCurrency()).id!;
 			}
