@@ -32,6 +32,17 @@
 					Dobít
 				</button>
 
+        <button mat-button
+                mat-raised-button
+                color="warn"
+                class="ms-3"
+                style="background: #f44336; color: white"
+                (click)="openDischargeDialog()"
+                *ngIf="canChargeMoney"
+        >
+          Vybít
+        </button>
+
 				<button mat-button
 					mat-raised-button
 					color="warn"

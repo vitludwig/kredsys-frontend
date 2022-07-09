@@ -16,6 +16,9 @@ import {TransactionService} from '../../../../../modules/admin/modules/transacti
 import {ITransactionRecordDeposit} from '../../../../../modules/admin/modules/transactions/services/transaction/types/ITransaction';
 import {StornoDialogComponent} from "../../../../../modules/sale/components/storno-dialog/storno-dialog.component";
 import {AlertService} from "../../../../services/alert/alert.service";
+import {
+  DischargeDialogComponent
+} from "../../../../../modules/sale/components/discharge-dialog/discharge-dialog.component";
 
 @Component({
 	selector: 'app-top-menu',
@@ -126,6 +129,47 @@ export class TopMenuComponent implements OnInit, OnDestroy {
 			}
 		});
 	}
+
+  public openDischargeDialog(): void {
+    const dialogRef = this.dialog.open<DischargeDialogComponent, { user: IUser; currencyAccount: ICurrencyAccount}>(
+      DischargeDialogComponent, {
+      width: '350px',
+      minWidth: '250px',
+      autoFocus: 'dialog',
+      data: {
+        user: this.customer!,
+        currencyAccount: this.currencyAccount!,
+      },
+    });
+
+    dialogRef.afterClosed().subscribe(async (result) => {
+      if(!result || this.currencyAccount!.currentAmount <= 0) {
+        return;
+      }
+      const records: ITransactionRecordDeposit[] = [{
+        creatorId: this.authService.user!.id,
+        amount: this.currencyAccount!.currentAmount,
+        text: 'Vybití peněz',
+      }];
+      try {
+
+        await this.transactionService.withDraw(
+          this.customer!.id!,
+          this.place.id!,
+          this.currencyAccount?.currencyId ?? this.defaultCurrency.id!,
+          records,
+        );
+        await this.loadCurrencyAccount(this.customer!.id!);
+        this.customerService.propagateRefreshCustomer();
+
+        if(this.currencyAccount) {
+          this.currencyAccount.currentAmount = 0;
+        }
+      } catch(e) {
+        console.error('Cannot deposit money: ', e);
+      }
+    });
+  }
 
 	public openStornoDialog(): void {
 		const dialogRef = this.dialog.open<StornoDialogComponent, number>(StornoDialogComponent, {

@@ -17,6 +17,7 @@ import {SharedModule} from '../../shared.module';
 import {StornoDialogComponent} from "./components/storno-dialog/storno-dialog.component";
 import {MatListModule} from "@angular/material/list";
 import {MatDividerModule} from "@angular/material/divider";
+import { DischargeDialogComponent } from './components/discharge-dialog/discharge-dialog.component';
 
 
 @NgModule({
@@ -27,6 +28,7 @@ import {MatDividerModule} from "@angular/material/divider";
 		DashboardComponent,
 		ChargeDialogComponent,
 		StornoDialogComponent,
+  DischargeDialogComponent,
 	],
 	exports: [
 		SaleComponent,
