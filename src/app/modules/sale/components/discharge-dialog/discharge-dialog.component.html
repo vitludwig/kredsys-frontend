@@ -1,0 +1,24 @@
+<button mat-icon-button
+        class="close-btn"
+        mat-dialog-close
+>
+  <mat-icon class="close-icon">close</mat-icon>
+</button>
+
+<h2 mat-dialog-title>Vybít kredit</h2>
+
+<div mat-dialog-content>
+  <h3>Opravdu chceš vybít kredit a vrátit uživateli jeho peníze?</h3>
+  <hr>
+  <h3 class="text-center">{{ data.user.name }}</h3>
+  <h2 class="text-center" style="font-size: 30px">{{ data.currencyAccount.currentAmount }}Kč</h2>
+
+  <button mat-raised-button
+          color="primary"
+          class="submit-btn"
+          mat-dialog-close
+          (click)="submit()"
+  >
+    Vybít
+  </button>
+</div>
