@@ -62,7 +62,7 @@
   $delta: round(math.div(100, $numberOfKeys));
 
   @for $i from 1 through $numberOfKeys {
-    $time: ($i*$delta - random($delta)) +'%';
+    $time: ($i*$delta - random($delta)) + '%';
     #{$time} {
       stroke-width: random(200) + px;
     }

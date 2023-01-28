@@ -1,5 +1,5 @@
-@use "styles/functions/hex2rgb" as rgb;
-@import '~@angular/material/theming';
+@use "assets/styles/functions/hex2rgb" as rgb;
+@import '@angular/material/theming';
 
 // always include only once per project
 @include mat-core();
@@ -12,6 +12,7 @@
 
 
 // use our theme with angular-material-theme mixin
+@include angular-material-theme($theme);
 @include angular-material-theme($theme);
 
 @import "styles/variables";
