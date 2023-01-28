@@ -1,5 +1,5 @@
 import {Component, EventEmitter, forwardRef, Input, OnInit, Output} from '@angular/core';
-import {ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR} from "@angular/forms";
+import {ControlValueAccessor, UntypedFormControl, NG_VALUE_ACCESSOR} from "@angular/forms";
 import {debounceTime, distinctUntilChanged, Observable, startWith, switchMap} from "rxjs";
 import {IPaginatedResponse} from "../../types/IPaginatedResponse";
 
@@ -11,7 +11,7 @@ import {IPaginatedResponse} from "../../types/IPaginatedResponse";
 })
 export class InputAutocompleteComponent<T> implements OnInit {
 	
-	public selectedValue: FormControl = new FormControl('');
+	public selectedValue: UntypedFormControl = new UntypedFormControl('');
 	public filterBy: Partial<unknown> = {};
 	public filteredOptions: Observable<any>;
 

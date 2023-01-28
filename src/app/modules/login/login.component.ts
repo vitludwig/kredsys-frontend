@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {AbstractControl, FormControl, FormGroup, Validators} from '@angular/forms';
+import {AbstractControl, UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
 import {AuthService} from './services/auth/auth.service';
 import {Router} from '@angular/router';
 import {ERoute} from '../../common/types/ERoute';
@@ -13,9 +13,9 @@ import {HttpErrorResponse} from '@angular/common/http';
 })
 export class LoginComponent {
 
-	public loginForm: FormGroup = new FormGroup({
-		username: new FormControl('', [Validators.required, Validators.email]),
-		password: new FormControl('', [Validators.required]),
+	public loginForm: UntypedFormGroup = new UntypedFormGroup({
+		username: new UntypedFormControl('', [Validators.required, Validators.email]),
+		password: new UntypedFormControl('', [Validators.required]),
 	});
 
 	public showValidationErrors: boolean = false;

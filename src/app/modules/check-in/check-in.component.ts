@@ -7,7 +7,7 @@ import {PlaceService} from '../admin/services/place/place/place.service';
 import {ICurrency} from '../../common/types/ICurrency';
 import {CurrencyService} from '../admin/services/currency/currency.service';
 import {AuthService} from '../login/services/auth/auth.service';
-import {AbstractControl, FormControl, FormGroup, Validators} from '@angular/forms';
+import {AbstractControl, UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
 import {HttpErrorResponse} from '@angular/common/http';
 
 @Component({
@@ -16,12 +16,12 @@ import {HttpErrorResponse} from '@angular/common/http';
 	styleUrls: ['./check-in.component.scss']
 })
 export class CheckInComponent implements OnInit {
-	public userForm: FormGroup = new FormGroup({
-		id: new FormControl('', []),
-		memberId: new FormControl('', [Validators.required]),
-		name: new FormControl('', [Validators.required]),
-		email: new FormControl('', [Validators.required, Validators.email]),
-		deposit: new FormControl(''),
+	public userForm: UntypedFormGroup = new UntypedFormGroup({
+		id: new UntypedFormControl('', []),
+		memberId: new UntypedFormControl('', [Validators.required]),
+		name: new UntypedFormControl('', [Validators.required]),
+		email: new UntypedFormControl('', [Validators.required, Validators.email]),
+		deposit: new UntypedFormControl(''),
 	});
 	public showValidationErrors: boolean = false;
 	public errors: string[] = [];
