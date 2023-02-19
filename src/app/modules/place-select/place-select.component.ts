@@ -32,6 +32,8 @@ export class PlaceSelectComponent implements OnInit{
 				if(e.status === 403) {
 					this.errorMsg = 'Nejste oprávněn vybrat místo, zavolejte někoho s oprávněním nastavit zařízení';
 				}
+			} else {
+				this.errorMsg = 'Nepodařilo se načíst seznam míst';
 			}
 		}
 	}

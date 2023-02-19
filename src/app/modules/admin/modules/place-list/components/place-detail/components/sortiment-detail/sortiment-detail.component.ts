@@ -6,6 +6,7 @@ import {GoodsService} from '../../../../../../services/goods/goods.service';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import {MatChipInputEvent} from '@angular/material/chips';
 import {MatAutocompleteSelectedEvent} from '@angular/material/autocomplete';
+import {AlertService} from '../../../../../../../../common/services/alert/alert.service';
 
 @Component({
 	selector: 'app-sortiment-detail',
@@ -30,6 +31,7 @@ export class SortimentDetailComponent implements OnInit {
 	constructor(
 		public goodsService: GoodsService,
 		protected dialogRef: MatDialogRef<SortimentDetailComponent>,
+		protected alertService: AlertService,
 		@Inject(MAT_DIALOG_DATA) protected data: { existingItems: IGoods[] },
 	) {
 	}
@@ -42,6 +44,7 @@ export class SortimentDetailComponent implements OnInit {
 				.filter((obj) => !existingItemsId.includes(obj.id));
 			this.allOptions = this.allGoods.map((obj) => obj.name);
 		} catch(e) {
+			this.alertService.error('Nepodařilo se načíst zboží');
 			console.error('Cannot load goods: ', e);
 		} finally {
 			this.isLoading = false;

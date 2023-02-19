@@ -18,7 +18,7 @@
 			<form #form="ngForm"
 				(ngSubmit)="form.valid && onSubmit()"
 			>
-				<mat-form-field appearance="standard"
+				<mat-form-field
 					class="w-100">
 					<mat-label>Název</mat-label>
 					<input matInput
@@ -29,7 +29,7 @@
 					>
 				</mat-form-field>
 
-				<mat-form-field appearance="standard"
+				<mat-form-field
 					class="w-100">
 					<mat-label>Cena</mat-label>
 					<input matInput
@@ -41,7 +41,7 @@
 					>
 				</mat-form-field>
 
-				<mat-form-field appearance="standard"
+				<mat-form-field
 					class="w-100">
 					<mat-label>Typ</mat-label>
 					<mat-select name="type"
@@ -50,7 +50,7 @@
 					</mat-select>
 				</mat-form-field>
 
-				<mat-form-field appearance="standard"
+				<mat-form-field
 					class="w-100">
 					<mat-label>Měna</mat-label>
 					<mat-select name="currency"

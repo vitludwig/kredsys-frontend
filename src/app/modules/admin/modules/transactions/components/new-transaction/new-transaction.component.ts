@@ -9,7 +9,6 @@ import {
 	ITransactionRecordWithdraw,
 	ITransactionResponse
 } from "../../services/transaction/types/ITransaction";
-import {IUser} from "../../../../../../common/types/IUser";
 import {UsersService} from "../../../../services/users/users.service";
 import {GoodsService} from "../../../../services/goods/goods.service";
 import {PlaceService} from "../../../../services/place/place/place.service";
@@ -56,7 +55,8 @@ export class NewTransactionComponent implements OnInit {
 			this.isLoading = true;
 			this.currency = await this.currencyService.getDefaultCurrency();
 		} catch(e) {
-			console.error('Cannot load data: ', e);
+			this.alertService.success('Nepodařilo se načíst měnu');
+			console.error('Cannot load currency data: ', e);
 		} finally {
 			this.isLoading = false;
 		}

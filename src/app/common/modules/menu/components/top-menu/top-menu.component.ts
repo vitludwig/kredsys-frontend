@@ -12,12 +12,16 @@ import {EUserRole, IUser} from '../../../../types/IUser';
 import {UsersService} from '../../../../../modules/admin/services/users/users.service';
 import {OrderService} from '../../../../../modules/sale/services/order/order.service';
 import {AuthService} from '../../../../../modules/login/services/auth/auth.service';
-import {TransactionService} from '../../../../../modules/admin/modules/transactions/services/transaction/transaction.service';
-import {ITransactionRecordDeposit} from '../../../../../modules/admin/modules/transactions/services/transaction/types/ITransaction';
+import {
+	TransactionService
+} from '../../../../../modules/admin/modules/transactions/services/transaction/transaction.service';
+import {
+	ITransactionRecordDeposit
+} from '../../../../../modules/admin/modules/transactions/services/transaction/types/ITransaction';
 import {StornoDialogComponent} from "../../../../../modules/sale/components/storno-dialog/storno-dialog.component";
 import {AlertService} from "../../../../services/alert/alert.service";
 import {
-  DischargeDialogComponent
+	DischargeDialogComponent
 } from "../../../../../modules/sale/components/discharge-dialog/discharge-dialog.component";
 
 @Component({
@@ -124,52 +128,56 @@ export class TopMenuComponent implements OnInit, OnDestroy {
 				if(this.currencyAccount) {
 					this.currencyAccount.currentAmount += result.amount;
 				}
+				this.alertService.error('Peníze nabity');
 			} catch(e) {
 				console.error('Cannot deposit money: ', e);
+				this.alertService.error('Nepodařilo se nabít peníze');
 			}
 		});
 	}
 
-  public openDischargeDialog(): void {
-    const dialogRef = this.dialog.open<DischargeDialogComponent, { user: IUser; currencyAccount: ICurrencyAccount}>(
-      DischargeDialogComponent, {
-      width: '350px',
-      minWidth: '250px',
-      autoFocus: 'dialog',
-      data: {
-        user: this.customer!,
-        currencyAccount: this.currencyAccount!,
-      },
-    });
+	public openDischargeDialog(): void {
+		const dialogRef = this.dialog.open<DischargeDialogComponent, { user: IUser; currencyAccount: ICurrencyAccount }>(
+			DischargeDialogComponent, {
+				width: '350px',
+				minWidth: '250px',
+				autoFocus: 'dialog',
+				data: {
+					user: this.customer!,
+					currencyAccount: this.currencyAccount!,
+				},
+			});
 
-    dialogRef.afterClosed().subscribe(async (result) => {
-      if(!result || this.currencyAccount!.currentAmount <= 0) {
-        return;
-      }
-      const records: ITransactionRecordDeposit[] = [{
-        creatorId: this.authService.user!.id,
-        amount: this.currencyAccount!.currentAmount,
-        text: 'Vybití peněz',
-      }];
-      try {
+		dialogRef.afterClosed().subscribe(async (result) => {
+			if(!result || this.currencyAccount!.currentAmount <= 0) {
+				return;
+			}
+			const records: ITransactionRecordDeposit[] = [{
+				creatorId: this.authService.user!.id,
+				amount: this.currencyAccount!.currentAmount,
+				text: 'Vybití peněz',
+			}];
+			try {
 
-        await this.transactionService.withDraw(
-          this.customer!.id!,
-          this.place.id!,
-          this.currencyAccount?.currencyId ?? this.defaultCurrency.id!,
-          records,
-        );
-        await this.loadCurrencyAccount(this.customer!.id!);
-        this.customerService.propagateRefreshCustomer();
+				await this.transactionService.withDraw(
+					this.customer!.id!,
+					this.place.id!,
+					this.currencyAccount?.currencyId ?? this.defaultCurrency.id!,
+					records,
+				);
+				await this.loadCurrencyAccount(this.customer!.id!);
+				this.customerService.propagateRefreshCustomer();
 
-        if(this.currencyAccount) {
-          this.currencyAccount.currentAmount = 0;
-        }
-      } catch(e) {
-        console.error('Cannot deposit money: ', e);
-      }
-    });
-  }
+				if(this.currencyAccount) {
+					this.currencyAccount.currentAmount = 0;
+				}
+				this.alertService.success('Peníze vybity');
+			} catch(e) {
+				console.error('Cannot discharge money: ', e);
+				this.alertService.error('Nepodřilo se vybít peníze');
+			}
+		});
+	}
 
 	public openStornoDialog(): void {
 		const dialogRef = this.dialog.open<StornoDialogComponent, number>(StornoDialogComponent, {
@@ -190,7 +198,7 @@ export class TopMenuComponent implements OnInit, OnDestroy {
 				this.customerService.logout();
 			} catch(e) {
 				console.error('Cannot storno transaction: ', e);
-				this.alertService.success('Transakce se nepodařila storovat');
+				this.alertService.error('Transakce se nepodařila storovat');
 			}
 		});
 	}

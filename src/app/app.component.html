@@ -13,6 +13,8 @@
 	<div class="main-content" tabindex="0" #mainContent>
 		<router-outlet></router-outlet>
 	</div>
-
 </mat-drawer-container>
 
+<div class="network-alert" *ngIf="showNetworkAlert">
+	<span>Nejste připojeni k internetu. Bez internetu nelze aplikaci používat.</span>
+</div>

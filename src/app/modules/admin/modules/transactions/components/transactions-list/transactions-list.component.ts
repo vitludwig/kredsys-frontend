@@ -1,22 +1,17 @@
-import {AfterViewInit, Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, Input, OnDestroy, ViewChild} from '@angular/core';
 import {UsersService} from '../../../../services/users/users.service';
-import {HashMap} from '../../../../../../common/types/HashMap';
 import {Animations} from '../../../../../../common/utils/animations';
-import {MatSort} from '@angular/material/sort';
-import {MatTableDataSource} from '@angular/material/table';
 import {MatPaginator} from '@angular/material/paginator';
-import {ITransaction, ITransactionRecord, ITransactionResponse} from '../../services/transaction/types/ITransaction';
+import {ITransaction,} from '../../services/transaction/types/ITransaction';
 import {TransactionService} from '../../services/transaction/transaction.service';
 import {GoodsService} from '../../../../services/goods/goods.service';
-import {IGoods} from '../../../../../../common/types/IGoods';
 import {IPaginatedResponse} from "../../../../../../common/types/IPaginatedResponse";
 import DatalabelsPlugin from 'chartjs-plugin-datalabels';
-import {ChartConfiguration, ChartData, ChartType, TooltipItem, TooltipModel} from 'chart.js';
+import {ChartConfiguration, ChartData, TooltipItem, TooltipModel} from 'chart.js';
 import {BaseChartDirective} from 'ng2-charts';
-import {Utils} from "../../../../../../common/utils/Utils";
 import {ETransactionType} from "../../services/transaction/types/ETransactionType";
 import {AlertService} from "../../../../../../common/services/alert/alert.service";
-import {filter, map, merge, startWith, Subject, switchMap, takeUntil} from "rxjs";
+import {map, merge, startWith, Subject, switchMap, takeUntil} from "rxjs";
 import {CurrencyService} from "../../../../services/currency/currency.service";
 
 @Component({
@@ -44,7 +39,7 @@ export class TransactionsListComponent implements AfterViewInit, OnDestroy {
 	public readonly ETransactionType = ETransactionType;
 
 	// Pie
-	public pieChartOptions: ChartConfiguration['options'] = {
+	public pieChartOptions: ChartConfiguration<'pie'>['options'] = {
 		responsive: true,
 		plugins: {
 			legend: {
@@ -53,7 +48,7 @@ export class TransactionsListComponent implements AfterViewInit, OnDestroy {
 			},
 			datalabels: {
 				formatter: (value, ctx) => {
-					if (ctx.chart.data.labels) {
+					if(ctx.chart.data.labels) {
 						return ctx.chart.data.labels[ctx.dataIndex] + ' (' + this.chartDataPrices[ctx.dataIndex] + 'Kč)';
 					}
 					return '';
@@ -83,8 +78,7 @@ export class TransactionsListComponent implements AfterViewInit, OnDestroy {
 		]
 	};
 
-	public pieChartType: ChartType = 'pie';
-	public pieChartPlugins = [ DatalabelsPlugin ];
+	public pieChartPlugins = [DatalabelsPlugin];
 
 	@ViewChild(MatPaginator)
 	public paginator: MatPaginator;
@@ -185,15 +179,9 @@ export class TransactionsListComponent implements AfterViewInit, OnDestroy {
 		}
 	}
 
-	public onSearch(value: string): void {
-		// this.transactions = this.transactions.filter((transaction) => {
-		// 	return transaction.
-		// })
-	}
-
 	protected async loadChartData(): Promise<void> {
 		const currency = await this.currencyService.getDefaultCurrency();
-		let filterBy: {[key: string]: any} = {
+		let filterBy: { [key: string]: any } = {
 			usersFilter: this.filterBy.userId ? [this.filterBy.userId] : [],
 			placesFilter: this.filterBy.placeId ? [this.filterBy.placeId] : [],
 			fromDate: this.chartDataFrom,

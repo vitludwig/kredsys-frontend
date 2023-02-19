@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, Input, OnInit} from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {SaleService} from '../../services/sale/sale.service';
 import {OrderService} from '../../services/order/order.service';
 import {IPlace} from '../../../../common/types/IPlace';
@@ -8,6 +8,7 @@ import {ISaleItem} from '../../types/ISaleItem';
 import {GoodsService} from '../../../admin/services/goods/goods.service';
 import {Utils} from '../../../../common/utils/Utils';
 import {CustomerService} from '../../services/customer/customer.service';
+import {AlertService} from '../../../../common/services/alert/alert.service';
 
 @Component({
 	selector: 'app-dashboard',
@@ -37,6 +38,7 @@ export class DashboardComponent {
 		protected placeService: PlaceService,
 		protected goodsService: GoodsService,
 		protected customerService: CustomerService,
+		protected alertService: AlertService,
 	) {
 
 	}
@@ -57,6 +59,7 @@ export class DashboardComponent {
 			}
 		} catch(e) {
 			console.error('Cannot load place goods: ', e);
+			this.alertService.error('Nepodařilo se načíst zboží');
 		}
 	}
 

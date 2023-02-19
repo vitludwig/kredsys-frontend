@@ -116,12 +116,12 @@
 <br>
 
 <div class="d-flex justify-content-center align-items-center">
-	<mat-form-field appearance="standard">
+	<mat-form-field>
 		<mat-label>Od</mat-label>
 		<input matInput type="datetime-local" [(ngModel)]="chartDataFrom">
 	</mat-form-field>
 
-	<mat-form-field appearance="standard"
+	<mat-form-field
 		class="ms-3 me-3"
 	>
 		<mat-label>Od</mat-label>
@@ -144,7 +144,7 @@
 	<div class="chart">
 		<canvas baseChart
 			[data]="pieChartData"
-			[type]="pieChartType"
+			[type]="'pie'"
 			[options]="pieChartOptions"
 			[plugins]="pieChartPlugins">
 		</canvas>

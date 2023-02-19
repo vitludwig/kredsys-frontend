@@ -65,7 +65,7 @@ export class UserDetailComponent implements OnInit {
 				this.isEdit = false;
 			}
 		} catch(e) {
-			// TODO: handle
+			this.alertService.error('Nepodařilo se načíst detail uživatele');
 			console.error(e);
 		} finally {
 			this.isLoading = false;

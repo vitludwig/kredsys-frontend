@@ -8,14 +8,11 @@
 <h2 mat-dialog-title>Přidat položku</h2>
 
 <div mat-dialog-content>
-	<mat-form-field appearance="standard"
-		required
+	<mat-form-field
 		class="w-100">
 		<mat-label>Vyber zboží</mat-label>
-		<mat-chip-list #itemSelect
-			multiple
-		>
-			<mat-chip
+		<mat-chip-grid #itemSelect>
+			<mat-chip-row
 				*ngFor="let item of selectedOptions"
 				(removed)="removeItem(item)"
 			>
@@ -23,17 +20,17 @@
 				<button matChipRemove>
 					<mat-icon>cancel</mat-icon>
 				</button>
-			</mat-chip>
-
-			<input
-				placeholder="Přidat položku"
-				class="mt-3"
-				#itemInput
-				[matChipInputFor]="itemSelect"
-				[matAutocomplete]="autocomplete"
-				[matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-				(matChipInputTokenEnd)="addItem($event)">
-		</mat-chip-list>
+			</mat-chip-row>
+		</mat-chip-grid>
+		<input
+			placeholder="Přidat položku"
+			class="mt-3"
+			required
+            #itemInput
+			[matChipInputFor]="itemSelect"
+			[matAutocomplete]="autocomplete"
+			[matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+			(matChipInputTokenEnd)="addItem($event)">
 
 		<mat-autocomplete #autocomplete="matAutocomplete" (optionSelected)="itemSelected($event)">
 			<mat-option *ngFor="let item of allOptions" [value]="item">

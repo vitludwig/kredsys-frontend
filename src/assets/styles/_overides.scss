@@ -4,8 +4,10 @@
 @import "overides/mat-option";
 @import "overides/mat-table";
 @import "overides/mat-toolbar";
+@import "overides/mat-button";
+@import "overides/mat-snackbar";
 
-.main-content, .login-container{
+.main-content, .login-container {
   min-height: calc(100vh - var(--cy__toolbar--height));
   padding: 15px;
 }

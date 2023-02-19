@@ -1,0 +1,9 @@
+.mat-flat-button, .mat-raised-button, .mat-fab, .mat-mini-fab {
+  background-color: #424242;
+  color: #eeeeee;
+
+	&.mat-warn {
+	  background-color: #ffeb3b;
+	  color: rgba(0, 0, 0, 0.87);
+	}
+}

@@ -1,6 +1,7 @@
-import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, Renderer2} from '@angular/core';
+import {Component, EventEmitter, HostListener, Input, OnDestroy, OnInit, Output, Renderer2} from '@angular/core';
 import {Subject, takeUntil} from 'rxjs';
 import {CustomerService} from '../../../modules/sale/services/customer/customer.service';
+import {AlertService} from '../../services/alert/alert.service';
 
 @Component({
 	selector: 'app-card-loader',
@@ -29,10 +30,12 @@ export class CardLoaderComponent implements OnInit, OnDestroy {
 		'é': 0,
 	};
 	protected prevEventTime: number = 0;
+	protected focused: boolean = true;
 
 	constructor(
 		public customerService: CustomerService,
 		protected renderer: Renderer2,
+		protected alertService: AlertService,
 	) {
 	}
 
@@ -54,6 +57,18 @@ export class CardLoaderComponent implements OnInit, OnDestroy {
 
 	public async debugLoadCard(): Promise<void> {
 		this.cardIdChange.emit(2866252548);
+	}
+
+	@HostListener("window:blur", ['$event'])
+	protected checkBlur($event: any) {
+		console.log($event);
+		this.focused = false;
+	}
+
+	@HostListener("window:focus", ['$event'])
+	protected checkFocus($event: any) {
+		console.log($event);
+		this.focused = true;
 	}
 
 	protected initCardListener(): void {
@@ -82,7 +97,8 @@ export class CardLoaderComponent implements OnInit, OnDestroy {
 					}
 					this.cardIdChange.emit(numberId);
 				} catch(e) {
-					console.error('Token loading error: ', e);
+					console.error('Card id loading error: ', e);
+					this.alertService.error('Nepodařilo se načíst kartu. Zkontroluj, jestli máš nastavenou CZ klávesnici.');
 				}
 			} else if(event.key.length === 1) {
 				userId += event.key;

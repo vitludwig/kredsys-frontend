@@ -1,10 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import {IGoods, IGoodsType} from '../../../../../../common/types/IGoods';
-import {ICurrency} from '../../../../../../common/types/ICurrency';
+import {Component, OnInit} from '@angular/core';
+import {IGoodsType} from '../../../../../../common/types/IGoods';
 import {GoodsService} from '../../../../services/goods/goods.service';
-import {CurrencyService} from '../../../../services/currency/currency.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {ERoute} from '../../../../../../common/types/ERoute';
+import {AlertService} from '../../../../../../common/services/alert/alert.service';
 
 @Component({
 	selector: 'app-goods-type-detail',
@@ -21,6 +20,7 @@ export class GoodsTypeDetailComponent implements OnInit {
 		public goodsService: GoodsService,
 		protected route: ActivatedRoute,
 		protected router: Router,
+		protected alertService: AlertService,
 	) {
 	}
 
@@ -38,7 +38,7 @@ export class GoodsTypeDetailComponent implements OnInit {
 				this.isEdit = false;
 			}
 		} catch(e) {
-			// TODO: handle
+			this.alertService.error('Nepodařilo se načíst typy zboží');
 			console.error(e);
 		} finally {
 			this.isLoading = false;
@@ -46,13 +46,16 @@ export class GoodsTypeDetailComponent implements OnInit {
 	}
 
 	public async onSubmit(): Promise<void> {
-		// TODO: pridat osetren erroru, globalne
-		if(this.isEdit) {
-			await this.goodsService.editGoodsType(this.item);
-		} else {
-			await this.goodsService.addGoodsType(this.item);
+		try {
+			if(this.isEdit) {
+				await this.goodsService.editGoodsType(this.item);
+			} else {
+				await this.goodsService.addGoodsType(this.item);
+			}
+			this.router.navigate([ERoute.ADMIN, ERoute.ADMIN_GOODS]);
+		} catch(e) {
+			this.alertService.error('Chyba při zpracování typu zboží');
 		}
-		this.router.navigate([ERoute.ADMIN, ERoute.ADMIN_GOODS]);
 	}
 
 }

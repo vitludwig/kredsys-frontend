@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {ICurrency} from '../../../../../../common/types/ICurrency';
-import {GoodsService} from '../../../../services/goods/goods.service';
 import {CurrencyService} from '../../../../services/currency/currency.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {ERoute} from '../../../../../../common/types/ERoute';
+import {AlertService} from '../../../../../../common/services/alert/alert.service';
 
 @Component({
 	selector: 'app-currency-detail',
@@ -16,10 +16,10 @@ export class CurrencyDetailComponent implements OnInit {
 	public isEdit: boolean = false;
 
 	constructor(
-		public goodsService: GoodsService,
 		protected currencyService: CurrencyService,
 		protected route: ActivatedRoute,
 		protected router: Router,
+		protected alertService: AlertService,
 	) {
 	}
 
@@ -37,7 +37,7 @@ export class CurrencyDetailComponent implements OnInit {
 				this.isEdit = false;
 			}
 		} catch(e) {
-			// TODO: handle
+			this.alertService.error('Nepodařilo se načíst měnu');
 			console.error(e);
 		} finally {
 			this.isLoading = false;
@@ -46,13 +46,16 @@ export class CurrencyDetailComponent implements OnInit {
 
 
 	public async onSubmit(): Promise<void> {
-		// TODO: pridat osetren erroru, globalne
-		if(this.isEdit) {
-			await this.currencyService.editCurrency(this.item);
-		} else {
-			await this.currencyService.addCurrency(this.item);
+		try {
+			if(this.isEdit) {
+				await this.currencyService.editCurrency(this.item);
+			} else {
+				await this.currencyService.addCurrency(this.item);
+			}
+			this.router.navigate([ERoute.ADMIN, ERoute.ADMIN_CURRENCIES]);
+		} catch(e) {
+			this.alertService.error('Chyba při zpracování měny');
 		}
-		this.router.navigate([ERoute.ADMIN, ERoute.ADMIN_CURRENCIES]);
 	}
 
 }

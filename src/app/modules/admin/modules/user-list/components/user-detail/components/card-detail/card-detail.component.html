@@ -1,6 +1,6 @@
 <button mat-icon-button
 	class="close-btn"
-	mat-dialog-close
+	mat-dialog-close=""
 >
 	<mat-icon class="close-icon">close</mat-icon>
 </button>
@@ -16,7 +16,7 @@
 			<app-card-loader (cardIdChange)="setCardId($event)"></app-card-loader>
 		</div>
 
-		<mat-form-field appearance="standard"
+		<mat-form-field
 			class="w-100"
 			*ngIf="data.uid"
 		>
@@ -28,7 +28,7 @@
 			>
 		</mat-form-field>
 
-		<mat-form-field appearance="standard"
+		<mat-form-field
 			class="w-100"
 			*ngIf="data.uid"
 		>

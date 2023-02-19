@@ -5,6 +5,7 @@ import {IGoods, IGoodsType} from '../../../../../../common/types/IGoods';
 import {GoodsService} from '../../../../services/goods/goods.service';
 import {ICurrency} from '../../../../../../common/types/ICurrency';
 import {CurrencyService} from '../../../../services/currency/currency.service';
+import {AlertService} from '../../../../../../common/services/alert/alert.service';
 
 @Component({
 	selector: 'app-goods-detail',
@@ -25,6 +26,7 @@ export class GoodsDetailComponent implements OnInit {
 		protected currencyService: CurrencyService,
 		protected route: ActivatedRoute,
 		protected router: Router,
+		protected alertService: AlertService,
 	) {
 	}
 
@@ -44,7 +46,7 @@ export class GoodsDetailComponent implements OnInit {
 				this.isEdit = false;
 			}
 		} catch(e) {
-			// TODO: handle
+			this.alertService.error('Nepodařilo se načíst zboží');
 			console.error(e);
 		} finally {
 			this.isLoading = false;
@@ -53,13 +55,16 @@ export class GoodsDetailComponent implements OnInit {
 
 
 	public async onSubmit(): Promise<void> {
-		// TODO: pridat osetren erroru, globalne
-		if(this.isEdit) {
-			await this.goodsService.editGoods(this.item);
-		} else {
-			await this.goodsService.addGoods(this.item);
+		try {
+			if(this.isEdit) {
+				await this.goodsService.editGoods(this.item);
+			} else {
+				await this.goodsService.addGoods(this.item);
+			}
+			this.router.navigate([ERoute.ADMIN, ERoute.ADMIN_GOODS]);
+		} catch(e) {
+			this.alertService.error('Chyba při zpracování zboží');
 		}
-		this.router.navigate([ERoute.ADMIN, ERoute.ADMIN_GOODS]);
 	}
 
 }

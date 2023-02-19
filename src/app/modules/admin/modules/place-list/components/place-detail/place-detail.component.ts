@@ -48,7 +48,7 @@ export class PlaceDetailComponent implements OnInit {
 				this.isEdit = false;
 			}
 		} catch(e) {
-			// TODO: handle
+			this.alertService.error('Nepodařilo se načíst detail místa');
 			console.error(e);
 		} finally {
 			this.isLoading = false;
@@ -58,18 +58,24 @@ export class PlaceDetailComponent implements OnInit {
 
 	public async onSubmit(): Promise<void> {
 		// TODO: pridat osetren erroru, globalne
-		if(this.isEdit) {
-			await this.placeService.editPlace(this.place!);
-			await this.placeService.editPlaceRole(this.place!.id!, this.placeRole);
-		} else {
-			const place = await this.placeService.addPlace(this.place!);
-			await this.placeService.editPlaceRole(place.id!, this.placeRole);
+		try {
+			if(this.isEdit) {
+				await this.placeService.editPlace(this.place!);
+				await this.placeService.editPlaceRole(this.place!.id!, this.placeRole);
+				this.alertService.success('Místo upraveno!');
+			} else {
+				const place = await this.placeService.addPlace(this.place!);
+				await this.placeService.editPlaceRole(place.id!, this.placeRole);
 
-			for(const item of this.goods) {
-				this.placeService.addGoods(item.id!, place.id!);
+				for(const item of this.goods) {
+					this.placeService.addGoods(item.id!, place.id!);
+				}
+				this.alertService.success('Místo přidáno!');
 			}
+			this.router.navigate([ERoute.ADMIN, ERoute.ADMIN_PLACES]);
+		} catch(e) {
+			this.alertService.error('Chyba při zpracování místa');
 		}
-		this.router.navigate([ERoute.ADMIN, ERoute.ADMIN_PLACES]);
 	}
 
 	public async drop(event: CdkDragDrop<string[]>): Promise<void> {
@@ -78,6 +84,7 @@ export class PlaceDetailComponent implements OnInit {
 			moveItemInArray(this.goods, event.previousIndex, event.currentIndex);
 		} catch(e) {
 			console.error('Canot move goods: ', e);
+			this.alertService.error('Chyba při změně pořadí sortimentu');
 		}
 	}
 
@@ -86,6 +93,7 @@ export class PlaceDetailComponent implements OnInit {
 			await this.placeService.removeGoods(id, this.place!.id!);
 			this.goods = this.goods.filter((obj) => obj.id !== id);
 		} catch(e) {
+			this.alertService.success('Nepodařilo se odebrat zboží');
 			console.error('Cannot remove item', e)
 		}
 	}

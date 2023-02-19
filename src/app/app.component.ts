@@ -1,10 +1,10 @@
-import {Component, ElementRef, OnDestroy, OnInit, Renderer2, ViewChild} from '@angular/core';
-import {Subject, takeUntil} from 'rxjs';
+import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {fromEvent, map, merge, Subject, takeUntil} from 'rxjs';
 import {NavigationEnd, Router} from '@angular/router';
 import {MatDrawer} from '@angular/material/sidenav';
 import {AuthService} from './modules/login/services/auth/auth.service';
 import {PlaceService} from './modules/admin/services/place/place/place.service';
-import {CustomerService} from './modules/sale/services/customer/customer.service';
+import {AlertService} from './common/services/alert/alert.service';
 
 
 @Component({
@@ -20,14 +20,15 @@ export class AppComponent implements OnInit, OnDestroy {
 	protected mainContent: ElementRef;
 
 	protected unsubscribe: Subject<void> = new Subject();
-	protected keydownListener: any;
 	protected userId: string = '';
+	protected isOnline: boolean = true;
+	protected showNetworkAlert: boolean = false;
 
 	constructor(
 		public authService: AuthService,
 		public placeService: PlaceService,
-		protected customerService: CustomerService,
 		protected router: Router,
+		protected alertService: AlertService,
 	) {
 	}
 
@@ -40,6 +41,25 @@ export class AppComponent implements OnInit, OnDestroy {
 					this.mainContent.nativeElement.focus();
 				}
 			});
+
+		merge(
+			fromEvent(window, 'online'),
+			fromEvent(window, 'offline'),
+		).pipe(
+			takeUntil(this.unsubscribe),
+			map(() => navigator.onLine),
+		).subscribe((newStatus) => {
+			this.showNetworkAlert = false;
+
+			if(!this.isOnline && newStatus) {
+				this.alertService.success('Připojení k internetu je zpět!');
+			}
+			if(this.isOnline && !newStatus) {
+				this.showNetworkAlert = true;
+			}
+
+			this.isOnline = newStatus;
+		});
 	}
 
 

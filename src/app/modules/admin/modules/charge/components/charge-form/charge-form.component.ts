@@ -8,7 +8,6 @@ import {AuthService} from '../../../../../login/services/auth/auth.service';
 import {PlaceService} from '../../../../services/place/place/place.service';
 import {AlertService} from '../../../../../../common/services/alert/alert.service';
 import {IChargeResult} from '../../types/IChargeResult';
-import {HttpErrorResponse} from "@angular/common/http";
 
 @Component({
 	selector: 'app-charge-form',
@@ -35,7 +34,7 @@ export class ChargeFormComponent implements OnInit {
 	public charge: EventEmitter<IChargeResult> = new EventEmitter<IChargeResult>();
 
 	#cardId: number | null;
-  protected defaultCurrency: ICurrency;
+	protected defaultCurrency: ICurrency;
 
 	constructor(
 		protected transactionService: TransactionService,
@@ -47,9 +46,9 @@ export class ChargeFormComponent implements OnInit {
 	) {
 	}
 
-  public async ngOnInit(): Promise<void> {
-    this.defaultCurrency = await this.currencyService.getDefaultCurrency();
-  }
+	public async ngOnInit(): Promise<void> {
+		this.defaultCurrency = await this.currencyService.getDefaultCurrency();
+	}
 
 	public async setCardId(id: number | null): Promise<void> {
 		if(id === null) {

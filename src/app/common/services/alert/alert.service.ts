@@ -21,13 +21,13 @@ export class AlertService {
 	}
 	public success(message: string): void {
 		this.showMessage(message, {
-			panelClass: 'alert-success',
+			panelClass: 'mdc-snackbar--success',
 		});
 	}
 
 	public error(message: string): void {
 		this.showMessage(message, {
-			panelClass: 'alert-error',
+			panelClass: 'mdc-snackbar--danger',
 		});
 	}
 }

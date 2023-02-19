@@ -13,7 +13,7 @@
 
 // use our theme with angular-material-theme mixin
 @include angular-material-theme($theme);
-@include angular-material-theme($theme);
+//@include angular-material-theme($theme);
 
 @import "styles/variables";
 @import "styles/overides";
