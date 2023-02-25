@@ -30,12 +30,12 @@ import {
 	styleUrls: ['./top-menu.component.scss'],
 })
 export class TopMenuComponent implements OnInit, OnDestroy {
-	public pageName: string = '';
-	public customer: IUser | null;
-	public currencyAccount: ICurrencyAccount | null; // TODO: this is here onl temporary until we can create CurrencyAccount
-	public canChargeMoney: boolean = false;
-
+	protected pageName: string = '';
+	protected customer: IUser | null;
+	protected currencyAccount: ICurrencyAccount | null; // TODO: this is here onl temporary until we can create CurrencyAccount
+	protected canChargeMoney: boolean = false;
 	protected defaultCurrency: ICurrency;
+	protected amountLoading: boolean = false;
 
 	@Input()
 	public sideMenu: MatDrawer;
@@ -68,12 +68,14 @@ export class TopMenuComponent implements OnInit, OnDestroy {
 		this.customerService.customer$
 			.pipe(takeUntil(this.unsubscribe))
 			.subscribe(async (customer) => {
-				this.customer = customer;
 				if(customer) {
 					this.loadCurrencyAccount(customer.id!);
+					customer.name = this.getTransformedCustomerName(customer.name);
 				} else {
 					this.currencyAccount = null;
 				}
+
+				this.customer = customer;
 			});
 
 		this.orderService.balance$
@@ -93,6 +95,26 @@ export class TopMenuComponent implements OnInit, OnDestroy {
 					this.canChargeMoney = this.authService.user!.roles!.includes(EUserRole.POWER_SALESMAN) || this.authService.user!.roles!.includes(EUserRole.ADMIN);
 				}
 			});
+	}
+
+	/**
+	 * Return shortened name
+	 * Only
+	 * Example: John Doe -> John D.
+	 *
+	 * @param name
+	 * @protected
+	 */
+	protected getTransformedCustomerName(name: string): string {
+		let result = '';
+		const nameParts = name.split(' ');
+
+		result = nameParts[0];
+		if(nameParts[1]) {
+			result += ' ' + nameParts[1][0] + '.';
+		}
+
+		return result;
 	}
 
 	protected async loadCurrencyAccount(userId: number): Promise<void> {
@@ -115,19 +137,15 @@ export class TopMenuComponent implements OnInit, OnDestroy {
 				text: '',
 			}];
 			try {
-
-				const result = await this.transactionService.deposit(
+				await this.transactionService.deposit(
 					this.customer!.id!,
 					this.place.id!,
 					this.currencyAccount?.currencyId ?? this.defaultCurrency.id!,
 					records,
 				);
-				await this.loadCurrencyAccount(this.customer!.id!);
-				this.customerService.propagateRefreshCustomer();
 
-				if(this.currencyAccount) {
-					this.currencyAccount.currentAmount += result.amount;
-				}
+				await this.loadCurrencyAccount(this.customer!.id!);
+
 				this.alertService.error('Peníze nabity');
 			} catch(e) {
 				console.error('Cannot deposit money: ', e);
@@ -158,7 +176,7 @@ export class TopMenuComponent implements OnInit, OnDestroy {
 				text: 'Vybití peněz',
 			}];
 			try {
-
+				this.amountLoading = true;
 				await this.transactionService.withDraw(
 					this.customer!.id!,
 					this.place.id!,
@@ -166,15 +184,13 @@ export class TopMenuComponent implements OnInit, OnDestroy {
 					records,
 				);
 				await this.loadCurrencyAccount(this.customer!.id!);
-				this.customerService.propagateRefreshCustomer();
 
-				if(this.currencyAccount) {
-					this.currencyAccount.currentAmount = 0;
-				}
 				this.alertService.success('Peníze vybity');
 			} catch(e) {
 				console.error('Cannot discharge money: ', e);
 				this.alertService.error('Nepodřilo se vybít peníze');
+			} finally {
+				this.amountLoading = false;
 			}
 		});
 	}
@@ -193,12 +209,15 @@ export class TopMenuComponent implements OnInit, OnDestroy {
 			}
 
 			try {
+				this.amountLoading = true;
 				await this.transactionService.storno(result);
 				this.alertService.success('Transakce storována');
 				this.customerService.logout();
 			} catch(e) {
 				console.error('Cannot storno transaction: ', e);
 				this.alertService.error('Transakce se nepodařila storovat');
+			} finally {
+				this.amountLoading = false;
 			}
 		});
 	}

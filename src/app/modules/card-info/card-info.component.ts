@@ -3,7 +3,6 @@ import {IUser} from '../../common/types/IUser';
 import {ICurrencyAccount} from '../../common/types/ICurrency';
 import {UsersService} from '../admin/services/users/users.service';
 import {ETime} from '../../common/types/ETime';
-import {ITransaction} from '../admin/modules/transactions/services/transaction/types/ITransaction';
 
 @Component({
 	selector: 'app-card-info',
@@ -11,9 +10,9 @@ import {ITransaction} from '../admin/modules/transactions/services/transaction/t
 	styleUrls: ['./card-info.component.scss']
 })
 export class CardInfoComponent {
-	public user: IUser | null;
-	public currencyAccount: ICurrencyAccount | null;
-	public lastTransaction: ITransaction;
+	protected user: IUser | null;
+	protected currencyAccount: ICurrencyAccount | null;
+	protected loading: boolean = false;
 
 	constructor(
 		protected usersService: UsersService,
@@ -21,8 +20,15 @@ export class CardInfoComponent {
 	}
 
 	public async setCardId(id: number): Promise<void> {
-		this.user = await this.usersService.getUserByCardUid(id);
-		this.currencyAccount = (await this.usersService.getUserCurrencyAccounts(this.user.id!))[0];
+		try {
+			this.loading = true;
+			this.user = await this.usersService.getUserByCardUid(id);
+			this.currencyAccount = (await this.usersService.getUserCurrencyAccounts(this.user.id!))[0];
+		} catch(e) {
+			console.error('Cannot display user currency data: ', e);
+		} finally {
+			this.loading = false;
+		}
 
 		setTimeout(() => {
 			this.user = null;

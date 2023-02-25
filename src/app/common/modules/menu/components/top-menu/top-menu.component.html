@@ -8,12 +8,16 @@
 				<mat-icon>menu</mat-icon>
 			</button>
 			{{ pageName }}
-			<span class="place-name" *ngIf="place && pageName === 'Prodej'">({{ place.name }})</span>
+			<span class="place-name"
+				*ngIf="place && pageName === 'Prodej'"
+			>
+				({{ place.name }})
+			</span>
 		</div>
 		<ng-container *ngIf="customer">
-			<div>{{ customer.name }} (ID: {{ customer.memberId }})</div>
+			<div [matTooltip]="'ID: ' + customer.memberId">{{ customer.name }}</div>
 
-			<div class="d-flex align-center">
+			<div class="d-flex align-center flex-wrap">
 				<ng-container *ngIf="currencyAccount">
 					<span class="currency-amount">Zůstatek: {{currencyAccount.currentAmount ?? 0 }} Kč</span>
 				</ng-container>
@@ -32,16 +36,16 @@
 					Dobít
 				</button>
 
-        <button mat-button
-                mat-raised-button
-                color="warn"
-                class="ms-3"
-                style="background: #f44336; color: white"
-                (click)="openDischargeDialog()"
-                *ngIf="canChargeMoney"
-        >
-          Vybít
-        </button>
+				<button mat-button
+					mat-raised-button
+					color="warn"
+					class="ms-3"
+					style="background: #f44336; color: white"
+					(click)="openDischargeDialog()"
+					*ngIf="canChargeMoney"
+				>
+					Vybít
+				</button>
 
 				<button mat-button
 					mat-raised-button
@@ -56,7 +60,7 @@
 				<button mat-button
 					mat-raised-button
 					color="basic"
-					class="ms-5"
+					class="ms-3"
 					(click)="customerService.logout()"
 				>
 					Odhlásit

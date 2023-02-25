@@ -4,9 +4,9 @@
 			(cardIdChange)="setCardId($event)">
 		</app-card-loader>
 
-		<ng-container *ngIf="user">
+		<ng-container *ngIf="user && currencyAccount">
 			<h2 class="text-center">{{ user.name }} (Členské id: {{ user.memberId }})</h2>
-			<h1 class="very-big text-center">{{ currencyAccount?.currentAmount ?? 0 }} Kč</h1>
+			<h1 class="very-big text-center">{{ currencyAccount.currentAmount }} Kč</h1>
 		</ng-container>
 	</div>
 </div>

@@ -2,6 +2,7 @@ import {Component, EventEmitter, HostListener, Input, OnDestroy, OnInit, Output,
 import {Subject, takeUntil} from 'rxjs';
 import {CustomerService} from '../../../modules/sale/services/customer/customer.service';
 import {AlertService} from '../../services/alert/alert.service';
+import {environment} from '../../../../environments/environment';
 
 @Component({
 	selector: 'app-card-loader',
@@ -31,6 +32,7 @@ export class CardLoaderComponent implements OnInit, OnDestroy {
 	};
 	protected prevEventTime: number = 0;
 	protected focused: boolean = true;
+	protected debug = environment.debug;
 
 	constructor(
 		public customerService: CustomerService,

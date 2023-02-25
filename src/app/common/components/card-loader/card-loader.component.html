@@ -1,18 +1,21 @@
-<div class="card-loader" [class.hidden]="hidden || (customerService.customer$ | async) !== null">
-	<svg viewBox="0 0 24 24" class="card-loader__icon">
+<div class="card-loader"
+	[class.hidden]="hidden || (customerService.customer$ | async) !== null">
+	<svg viewBox="0 0 24 24"
+		class="card-loader__icon">
 		<use xlink:href="assets/images/icons.svg#icon--signal"></use>
 	</svg>
 	<h3>Načtěte kartu</h3>
 
-	<!--	<button-->
-	<!--		class="ms-2 btn btn-outline-dark"-->
-	<!--		(click)="debugLoadCard()"-->
-	<!--	>-->
-	<!--		Simulovat kartu-->
-	<!--	</button>-->
+	<button *ngIf="debug"
+		class="ms-2 btn btn-outline-dark"
+		(click)="debugLoadCard()"
+	>
+		Simulovat kartu
+	</button>
 
 </div>
-<div class="blur-overlay" *ngIf="!focused">
+<div class="blur-overlay"
+	*ngIf="!focused">
 	<div class="overlay-background"></div>
 	<h1>Pro načítání karet klikni do aplikace</h1>
 </div>

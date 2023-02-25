@@ -1,13 +1,16 @@
 mat-toolbar {
-  height: var(--cy__toolbar--height);
+  min-height: var(--cy__toolbar--height);
   position: relative;
+  height: auto;
   z-index: 2;
+  padding: 5px 15px;
 
   .toolbar-content {
     display: flex;
     justify-content: space-between;
     align-items: center;
     width: 100%;
+    flex-wrap: wrap;
 
     .place-name {
       font-size: 14px;
