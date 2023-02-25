@@ -1,9 +1,11 @@
-.mat-flat-button, .mat-raised-button, .mat-fab, .mat-mini-fab {
-  background-color: #424242;
-  color: #eeeeee;
+.mat-mdc-unelevated-button, .mat-mdc-raised-button, .mat-mdc-fab, .mat-mdc-mini-fab {
+	&.mat-unthemed {
+		background-color: #1e1e1e !important;
+		color: #eeeeee;
+	}
 
 	&.mat-warn {
-	  background-color: #ffeb3b;
-	  color: rgba(0, 0, 0, 0.87);
+		background-color: #ffeb3b;
+		color: rgba(0, 0, 0, 0.87);
 	}
 }

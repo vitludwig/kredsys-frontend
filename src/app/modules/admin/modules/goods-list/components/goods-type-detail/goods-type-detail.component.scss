@@ -1,6 +1,7 @@
 .icon-option {
   ::ng-deep {
-    .mat-option-text {
+
+    .mdc-list-item__primary-text {
       display: flex;
       justify-content: space-between;
       align-items: center;

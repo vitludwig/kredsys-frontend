@@ -4,15 +4,19 @@
   display: flex;
   flex-direction: column;
 
-  .mat-nav-list {
+  .mat-mdc-nav-list {
     height: 100%;
     display: flex;
     flex-direction: column;
   }
 
-  .mat-list-item {
+  .mat-mdc-list-item {
     &:not(.expandable) {
       padding-left: 1.5rem; // due to expand icon
+    }
+    .mdc-list-item__primary-text {
+      display: flex;
+      align-items: center;
     }
   }
 
@@ -25,4 +29,8 @@
   .user-info {
     margin-top: auto;
   }
+}
+.mdc-list-item__primary-text {
+  display: flex;
+  align-items: center;
 }

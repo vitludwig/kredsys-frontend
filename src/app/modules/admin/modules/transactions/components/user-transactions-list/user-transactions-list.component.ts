@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component} from '@angular/core';
 import {ITransaction} from "../../services/transaction/types/ITransaction";
 import {TransactionService} from "../../services/transaction/transaction.service";
 import {UsersService} from "../../../../services/users/users.service";

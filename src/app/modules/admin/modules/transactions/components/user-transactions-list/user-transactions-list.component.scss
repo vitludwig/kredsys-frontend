@@ -1,4 +1,4 @@
-.mat-option{
+.mat-mdc-option{
   word-wrap:break-word !important;
   white-space:normal !important;
   min-height: 60px;
@@ -9,6 +9,7 @@
   padding-top: 0.5rem;
 }
 
+/* TODO(mdc-migration): The following rule targets internal classes of option that may no longer apply for the MDC version. */
 .mat-option-text{
   line-height:initial !important;
 }

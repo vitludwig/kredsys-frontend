@@ -1,0 +1,5 @@
+.mat-mdc-standard-chip {
+	&:not(.mdc-evolution-chip--disabled) {
+		background-color: rgb(var(--cy__color--warn-500)) !important;
+	}
+}

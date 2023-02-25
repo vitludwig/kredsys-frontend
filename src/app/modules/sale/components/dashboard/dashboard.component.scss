@@ -20,7 +20,7 @@
     &:hover {
       box-shadow: inset 0px 0px 2rem rgb(var(--cy__color--primary-500));
 
-      .mat-card-content,
+      .mat-mdc-card-content,
       .dashboard__item-icon {
         // will be back ...
         //filter: url(#filter);
@@ -69,7 +69,7 @@
       }
     }
 
-    mat-card-content {
+    .dashboard__content {
       text-align: center;
       position: absolute;
       bottom: 0;

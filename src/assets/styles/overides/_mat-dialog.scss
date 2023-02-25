@@ -1,8 +1,10 @@
-.mat-dialog-container {
+.mat-mdc-dialog-container {
   .close-btn {
-    float: right;
-    top: -24px;
-    right: -24px;
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    z-index: 1;
+    color: var(--mdc-dialog-subhead-color, black);
   }
 
   .submit-btn {
