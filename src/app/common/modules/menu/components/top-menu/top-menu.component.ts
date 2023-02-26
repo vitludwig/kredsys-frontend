@@ -106,6 +106,11 @@ export class TopMenuComponent implements OnInit, OnDestroy {
 	 * @protected
 	 */
 	protected getTransformedCustomerName(name: string): string {
+		// return full name for admin, otherwise shorten
+		if(this.authService.hasRole(EUserRole.ADMIN)) {
+			return name;
+		}
+
 		let result = '';
 		const nameParts = name.split(' ');
 

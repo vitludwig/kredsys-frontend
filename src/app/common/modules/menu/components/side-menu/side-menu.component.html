@@ -11,8 +11,8 @@
 				<mat-list-item class="expandable"
 					(click)="adminMenuOpened = !adminMenuOpened"
 				>
-					<mat-icon> {{ adminMenuOpened ? 'expand_more' : 'chevron_right' }}</mat-icon>
-					Admin
+					<mat-icon matListItemIcon> {{ adminMenuOpened ? 'expand_more' : 'chevron_right' }}</mat-icon>
+					<div matListItemTitle>Admin</div>
 				</mat-list-item>
 
 				<div class="sub-menu"
@@ -93,8 +93,8 @@
 			</a>
 
 			<mat-list-item class="expandable mt-auto">
-				<mat-icon>person</mat-icon>
-				<span class="ms-2" *ngIf="user">{{ user.name }} ({{ user.roles[0] }})</span>
+				<mat-icon matListItemIcon>person</mat-icon>
+				<span matListItemTitle *ngIf="user">{{ user.name }} ({{ user.roles[0] }})</span>
 			</mat-list-item>
 		</mat-nav-list>
 	</ng-container>

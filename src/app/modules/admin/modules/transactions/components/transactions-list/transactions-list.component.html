@@ -53,7 +53,10 @@
 				[align]="'right'"
 				*matCellDef="let row"
 			>
-				<button (click)="stornoTransaction(row.id)"
+				<button
+					(clickConfirm)="stornoTransaction(row.id)"
+					confirmTitle="Storno"
+					confirmText="Opravdu chceš stornovat tuto transakci?"
 					mat-raised-button
 					color="warn"
 				>Stornovat

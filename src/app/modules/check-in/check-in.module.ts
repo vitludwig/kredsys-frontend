@@ -8,6 +8,7 @@ import {CheckInRoutingModule} from './check-in-routing.module';
 import {MatListModule} from '@angular/material/list';
 import {ChargeModule} from '../admin/modules/charge/charge.module';
 import {ReactiveFormsModule} from '@angular/forms';
+import {CardLoaderComponent} from '../../common/components/card-loader/card-loader.component';
 
 
 @NgModule({
@@ -23,6 +24,7 @@ import {ReactiveFormsModule} from '@angular/forms';
 		MatInputModule,
 		MatListModule,
 		ChargeModule,
+		CardLoaderComponent,
 	]
 })
 export class CheckInModule {

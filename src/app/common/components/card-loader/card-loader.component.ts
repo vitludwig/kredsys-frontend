@@ -3,11 +3,15 @@ import {Subject, takeUntil} from 'rxjs';
 import {CustomerService} from '../../../modules/sale/services/customer/customer.service';
 import {AlertService} from '../../services/alert/alert.service';
 import {environment} from '../../../../environments/environment';
+import {MatButtonModule} from '@angular/material/button';
+import {CommonModule} from '@angular/common';
 
 @Component({
 	selector: 'app-card-loader',
 	templateUrl: './card-loader.component.html',
 	styleUrls: ['./card-loader.component.scss'],
+	standalone: true,
+	imports: [CommonModule, MatButtonModule],
 })
 export class CardLoaderComponent implements OnInit, OnDestroy {
 	@Input()

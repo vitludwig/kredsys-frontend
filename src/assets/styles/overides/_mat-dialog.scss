@@ -1,4 +1,8 @@
 .mat-mdc-dialog-container {
+  .mdc-dialog__surface {
+    background-color: var(--mdc-theme-surface) !important;
+  }
+
   .close-btn {
     position: absolute;
     top: 8px;

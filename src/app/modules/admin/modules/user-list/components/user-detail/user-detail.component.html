@@ -36,6 +36,7 @@
 					name="memberId"
 					type="number"
 					required
+					appAutofocus
 					[(ngModel)]="user.memberId"
 				>
 			</mat-form-field>
@@ -148,7 +149,8 @@
 					<div class="card-item">
 						<span>{{ card.type }} (id:{{ card.uid }})</span>
 						<button mat-raised-button
-							(click)="deleteCard(card.id)"
+							(clickConfirm)="deleteCard(card.id)"
+							confirmPreset="remove"
 							color="warn"
 						>
 							Odstranit

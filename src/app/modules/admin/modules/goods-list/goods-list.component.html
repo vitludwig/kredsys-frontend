@@ -71,8 +71,10 @@
 
 				<button
 					mat-raised-button
-					(click)="removeGoods(row.id)"
+					(clickConfirm)="removeGoods(row.id)"
+					[confirmPreset]="'remove'"
 					color="warn"
+					class="ms-3"
 				>Odstranit</button>
 			</td>
 		</ng-container>
@@ -140,7 +142,8 @@
 
 					<button
 						mat-raised-button
-						(click)="removeGoodsType(row.id)"
+						(clickConfirm)="removeGoodsType(row.id)"
+						[confirmPreset]="'remove'"
 						color="warn"
 					>Odstranit</button>
 				</td>

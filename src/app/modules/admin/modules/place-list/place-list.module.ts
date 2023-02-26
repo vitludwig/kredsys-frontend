@@ -16,6 +16,8 @@ import {MatDialogModule} from '@angular/material/dialog';
 import {MatChipsModule} from '@angular/material/chips';
 import {MatSelectModule} from '@angular/material/select';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import {AutofocusDirective} from '../../../../common/directives/mat-input-autofocus.directive';
+import {ClickConfirmDirective} from '../../../../common/directives/click-confirm/click-confirm.directive';
 
 
 @NgModule({
@@ -39,6 +41,8 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
 		MatIconModule,
 		MatDialogModule,
 		DragDropModule,
+		AutofocusDirective,
+		ClickConfirmDirective,
 	],
 })
 export class PlaceListModule {

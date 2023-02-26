@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {IUser} from '../../../../common/types/IUser';
+import {EUserRole, IUser} from '../../../../common/types/IUser';
 import {HttpClient} from '@angular/common/http';
 import {environment} from '../../../../../environments/environment';
 import {IAuthenticationResponse} from './types/IAuthenticationResponse';
@@ -59,5 +59,14 @@ export class AuthService {
 		this.user = null;
 		localStorage.removeItem('userId');
 		localStorage.removeItem('apiToken');
+	}
+
+	/**
+	 * Checks if logged user (not customer) has given role
+	 *
+	 * @param role
+	 */
+	public hasRole(role: EUserRole): boolean {
+		return this.#user?.roles?.includes(role) ?? false;
 	}
 }

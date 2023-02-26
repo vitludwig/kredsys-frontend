@@ -13,6 +13,7 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {MatDialogModule} from '@angular/material/dialog';
 import {GoodsTypeDetailComponent} from './components/goods-type-detail/goods-type-detail.component';
+import {ClickConfirmDirective} from '../../../../common/directives/click-confirm/click-confirm.directive';
 
 
 @NgModule({
@@ -33,6 +34,7 @@ import {GoodsTypeDetailComponent} from './components/goods-type-detail/goods-typ
 		MatButtonModule,
 		MatIconModule,
 		MatDialogModule,
+		ClickConfirmDirective,
 	],
 })
 export class GoodsListModule {

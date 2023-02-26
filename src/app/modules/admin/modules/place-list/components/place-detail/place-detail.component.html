@@ -22,13 +22,13 @@
 				<form #userForm="ngForm"
 					(ngSubmit)="userForm.valid && onSubmit()"
 				>
-					<mat-form-field
-						class="w-100">
+					<mat-form-field class="w-100">
 						<mat-label>Jméno</mat-label>
 						<input matInput
 							placeholder="Jméno"
 							name="userName"
 							required
+							appAutofocus
 							[(ngModel)]="place.name"
 						>
 					</mat-form-field>
@@ -81,7 +81,8 @@
 							<button mat-icon-button
 								color="warn"
 								aria-label="Delete item"
-								(click)="removeItem(item.id)"
+								(clickConfirm)="removeItem(item.id)"
+								confirmPreset="remove"
 							>
 								<mat-icon>delete</mat-icon>
 							</button>

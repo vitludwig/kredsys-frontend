@@ -17,7 +17,8 @@ import {SharedModule} from '../../shared.module';
 import {StornoDialogComponent} from "./components/storno-dialog/storno-dialog.component";
 import {MatListModule} from "@angular/material/list";
 import {MatDividerModule} from "@angular/material/divider";
-import { DischargeDialogComponent } from './components/discharge-dialog/discharge-dialog.component';
+import {DischargeDialogComponent} from './components/discharge-dialog/discharge-dialog.component';
+import {CardLoaderComponent} from '../../common/components/card-loader/card-loader.component';
 
 
 @NgModule({
@@ -28,7 +29,7 @@ import { DischargeDialogComponent } from './components/discharge-dialog/discharg
 		DashboardComponent,
 		ChargeDialogComponent,
 		StornoDialogComponent,
-  DischargeDialogComponent,
+		DischargeDialogComponent,
 	],
 	exports: [
 		SaleComponent,
@@ -46,6 +47,7 @@ import { DischargeDialogComponent } from './components/discharge-dialog/discharg
 		MatInputModule,
 		MatListModule,
 		MatDividerModule,
+		CardLoaderComponent,
 	],
 })
 export class SaleModule {

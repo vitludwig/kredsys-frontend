@@ -8,7 +8,14 @@
 @import "overides/mat-snackbar";
 @import "overides/mat-chip";
 
+:root {
+  --mdc-theme-surface: #1e1e1e
+}
 .main-content, .login-container {
   min-height: calc(100vh - var(--cy__toolbar--height));
   padding: 15px;
+}
+
+.mdc-menu-surface {
+  background-color: var(--mdc-theme-surface, #1e1e1e)
 }
