@@ -10,6 +10,7 @@ import {RouterModule} from '@angular/router';
 import {SharedModule} from '../../../shared.module';
 import {LoginModule} from '../../../modules/login/login.module';
 import {MatTooltipModule} from '@angular/material/tooltip';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 @NgModule({
 	declarations: [
@@ -27,6 +28,7 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 		MatTooltipModule,
 		SharedModule,
 		LoginModule,
+		MatProgressSpinnerModule,
 	],
 	exports: [
 		TopMenuComponent,

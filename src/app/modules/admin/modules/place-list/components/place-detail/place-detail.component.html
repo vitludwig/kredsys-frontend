@@ -1,4 +1,4 @@
-<ng-container *ngIf="!isLoading">
+<ng-container *ngIf="!isLoading; else loading">
 	<div class="container p-5"
 		data-augmented-ui="tl-2-clip-x tr-2-clip-x br-2-clip-x bl-2-clip-x both">
 		<div class="d-flex justify-content-between mb-4">
@@ -93,3 +93,9 @@
 		</div>
 	</div>
 </ng-container>
+
+<ng-template #loading>
+	<div class="d-flex align-items-center justify-content-center w-100">
+		<mat-spinner></mat-spinner>
+	</div>
+</ng-template>

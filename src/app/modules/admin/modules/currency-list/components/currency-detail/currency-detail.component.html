@@ -10,7 +10,7 @@
 	</div>
 
 	<div class="row"
-		*ngIf="!isLoading"
+		*ngIf="!isLoading; else loading"
 	>
 		<div class="col-sx-12 col-md-6">
 			<h2>{{ isEdit ? item.name : 'Nová měna' }}</h2>
@@ -91,3 +91,9 @@
 		</div>
 	</div>
 </div>
+
+<ng-template #loading>
+	<div class="d-flex align-items-center justify-content-center w-100">
+		<mat-spinner></mat-spinner>
+	</div>
+</ng-template>

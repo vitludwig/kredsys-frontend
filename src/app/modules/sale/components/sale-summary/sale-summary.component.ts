@@ -104,6 +104,8 @@ export class SaleSummaryComponent implements OnInit, OnDestroy {
 
 			this.orderService.clearOrder();
 			this.customerService.logout();
+
+			this.alertService.success('Prodáno!');
 		} catch(e) {
 			console.error('Cannot make payment: ', e);
 			if(e instanceof HttpErrorResponse) {

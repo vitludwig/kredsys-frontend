@@ -1,7 +1,7 @@
 <app-input-autocomplete
 	label="Uživatel"
 	placeholder="Vyhledat podle jména"
-	appAutofocus
+	[autoFocus]="true"
 	[(value)]="selectedUser"
 	[dataLoader]="getUsers"
 ></app-input-autocomplete>

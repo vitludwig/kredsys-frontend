@@ -11,10 +11,14 @@ import {Subject, takeUntil} from 'rxjs';
 import {EUserRole, IUser} from '../../../../types/IUser';
 import {UsersService} from '../../../../../modules/admin/services/users/users.service';
 import {AuthService} from '../../../../../modules/login/services/auth/auth.service';
-import {TransactionService} from '../../../../../modules/admin/modules/transactions/services/transaction/transaction.service';
+import {
+	TransactionService
+} from '../../../../../modules/admin/modules/transactions/services/transaction/transaction.service';
 import {StornoDialogComponent} from "../../../../../modules/sale/components/storno-dialog/storno-dialog.component";
 import {AlertService} from "../../../../services/alert/alert.service";
-import {DischargeDialogComponent} from "../../../../../modules/sale/components/discharge-dialog/discharge-dialog.component";
+import {
+	DischargeDialogComponent
+} from "../../../../../modules/sale/components/discharge-dialog/discharge-dialog.component";
 
 @Component({
 	selector: 'app-top-menu',
@@ -84,13 +88,20 @@ export class TopMenuComponent implements OnInit, OnDestroy {
 		});
 
 		dialogRef.afterClosed().subscribe(async (result) => {
+			if(!result) {
+				return;
+			}
+
 			try {
+				this.amountLoading = true;
 				await this.customerService.chargeMoney(result, this.place)
 
 				this.alertService.success('Peníze nabity');
 			} catch(e) {
 				console.error('Cannot deposit money: ', e);
 				this.alertService.error('Nepodařilo se nabít peníze');
+			} finally {
+				this.amountLoading = false;
 			}
 		});
 	}
@@ -134,14 +145,14 @@ export class TopMenuComponent implements OnInit, OnDestroy {
 			data: this.customer?.id,
 		});
 
-		dialogRef.afterClosed().subscribe(async (result) => {
-			if(result === undefined) {
+		dialogRef.afterClosed().subscribe(async (transactionId) => {
+			if(transactionId === undefined) {
 				return;
 			}
 
 			try {
 				this.amountLoading = true;
-				await this.transactionService.storno(result);
+				await this.customerService.stornoLastTransaction(transactionId);
 
 				this.alertService.success('Transakce storována');
 			} catch(e) {

@@ -16,8 +16,9 @@ import {SharedModule} from '../../../../shared.module';
 import {CardDetailComponent} from './components/user-detail/components/card-detail/card-detail.component';
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import {CardLoaderComponent} from '../../../../common/components/card-loader/card-loader.component';
-import {AutofocusDirective} from '../../../../common/directives/mat-input-autofocus.directive';
+import {AutofocusDirective} from '../../../../common/directives/autofocus.directive';
 import {ClickConfirmDirective} from '../../../../common/directives/click-confirm/click-confirm.directive';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 
 @NgModule({
@@ -43,6 +44,7 @@ import {ClickConfirmDirective} from '../../../../common/directives/click-confirm
 		CardLoaderComponent,
 		AutofocusDirective,
 		ClickConfirmDirective,
+		MatProgressSpinnerModule,
 	],
 	exports: [
 		UserListComponent,

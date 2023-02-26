@@ -1,8 +1,9 @@
 <mat-form-field [class]="class">
 	<mat-label>{{ label }}</mat-label>
 	<input type="text"
-		[placeholder]="placeholder"
 		matInput
+		#inputElement
+		[placeholder]="placeholder"
 		[formControl]="selectedValue"
 		[matAutocomplete]="auto"
 		[value]="selectedValue.value.name || ''"

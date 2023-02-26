@@ -1,7 +1,17 @@
-import {Component, EventEmitter, forwardRef, Input, OnInit, Output} from '@angular/core';
-import {ControlValueAccessor, UntypedFormControl, NG_VALUE_ACCESSOR} from "@angular/forms";
+import {
+	AfterViewInit,
+	Component,
+	ElementRef,
+	EventEmitter,
+	Input,
+	OnInit,
+	Output,
+	ViewChild
+} from '@angular/core';
+import {UntypedFormControl} from "@angular/forms";
 import {debounceTime, distinctUntilChanged, Observable, startWith, switchMap} from "rxjs";
 import {IPaginatedResponse} from "../../types/IPaginatedResponse";
+import {MatAutocompleteTrigger} from '@angular/material/autocomplete';
 
 @Component({
 	selector: 'app-input-autocomplete',
@@ -9,7 +19,7 @@ import {IPaginatedResponse} from "../../types/IPaginatedResponse";
 	styleUrls: ['./input-autocomplete.component.scss'],
 
 })
-export class InputAutocompleteComponent<T> implements OnInit {
+export class InputAutocompleteComponent<T> implements OnInit, AfterViewInit {
 	
 	public selectedValue: UntypedFormControl = new UntypedFormControl('');
 	public filterBy: Partial<unknown> = {};
@@ -30,8 +40,17 @@ export class InputAutocompleteComponent<T> implements OnInit {
 	@Input()
 	public value: T;
 
+	@Input()
+	public autoFocus: boolean = false;
+
 	@Output()
 	public valueChange: EventEmitter<T> = new EventEmitter<T>();
+
+	@ViewChild('inputElement')
+	public inputElement: ElementRef;
+
+	@ViewChild(MatAutocompleteTrigger)
+	public autocompleteTrigger: MatAutocompleteTrigger;
   
 	constructor() { }
 
@@ -45,6 +64,15 @@ export class InputAutocompleteComponent<T> implements OnInit {
 					return this.getData(value || '');
 				})
 			);
+	}
+
+	public ngAfterViewInit(): void {
+		if(this.autoFocus) {
+			setTimeout(() => {
+				this.inputElement.nativeElement.focus();
+				this.autocompleteTrigger.closePanel();
+			}, 100)
+		}
 	}
 
 	public filterData(value: string): Promise<T[]> {

@@ -18,12 +18,18 @@
 			<div [matTooltip]="'ID: ' + customer.memberId">{{ customer.name }}</div>
 
 			<div class="d-flex align-center flex-wrap">
-				<ng-container *ngIf="customerService.currencyAccount">
-					<span class="currency-amount">Zůstatek: {{(customerService.currencyAccount$ | async)?.currentAmount ?? 0 }} Kč</span>
+				<ng-container *ngIf="customerService.currencyAccount$ | async">
+					<span class="currency-amount">
+						Zůstatek:
+						<ng-container *ngIf="amountLoading"><mat-spinner diameter="20"></mat-spinner></ng-container>
+						<ng-container *ngIf="!amountLoading">
+							{{(customerService.currencyAccount$ | async)?.currentAmount ?? 0 }} Kč
+						</ng-container>
+					</span>
 				</ng-container>
 
-				<ng-container *ngIf="!customerService.currencyAccount$">
-					<strong>Uživatel ještě neprovedl první nabití</strong>
+				<ng-container *ngIf="(customerService.currencyAccount$ | async) === undefined">
+					<small>Uživatel ještě neprovedl první nabití</small>
 				</ng-container>
 
 				<button mat-button

@@ -16,8 +16,9 @@ import {MatDialogModule} from '@angular/material/dialog';
 import {MatChipsModule} from '@angular/material/chips';
 import {MatSelectModule} from '@angular/material/select';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
-import {AutofocusDirective} from '../../../../common/directives/mat-input-autofocus.directive';
+import {AutofocusDirective} from '../../../../common/directives/autofocus.directive';
 import {ClickConfirmDirective} from '../../../../common/directives/click-confirm/click-confirm.directive';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 
 @NgModule({
@@ -43,6 +44,7 @@ import {ClickConfirmDirective} from '../../../../common/directives/click-confirm
 		DragDropModule,
 		AutofocusDirective,
 		ClickConfirmDirective,
+		MatProgressSpinnerModule,
 	],
 })
 export class PlaceListModule {

@@ -1,4 +1,5 @@
-<div class="container p-5" data-augmented-ui="tl-2-clip-x tr-2-clip-x br-2-clip-x bl-2-clip-x both">
+<div class="container p-5"
+	data-augmented-ui="tl-2-clip-x tr-2-clip-x br-2-clip-x bl-2-clip-x both">
 	<div class="row mb-4">
 		<div class="col-12">
 			<button backButton
@@ -9,37 +10,37 @@
 		</div>
 	</div>
 
-<div class="row"
-	*ngIf="!isLoading"
->
-	<div class="col-xs-12 col-md-6">
-		<div class="d-flex justify-content-between">
-			<h2>{{ isEdit ? user.name : 'Nový uživatel' }}</h2>
-			<h3 *ngIf="accounts[0]">Zůstatek: {{ accounts[0].currentAmount }} Kč</h3>
-		</div>
-
-		<ng-container *ngIf="showValidationErrors">
-			<div *ngFor="let error of errors"
-				class="alert alert-danger">
-				{{ error }}
+	<div *ngIf="!isLoading; else loading"
+		class="row"
+	>
+		<div class="col-xs-12 col-md-6">
+			<div class="d-flex justify-content-between">
+				<h2>{{ isEdit ? user.name : 'Nový uživatel' }}</h2>
+				<h3 *ngIf="accounts[0]">Zůstatek: {{ accounts[0].currentAmount }} Kč</h3>
 			</div>
-		</ng-container>
 
-		<form #userForm="ngForm"
-			(ngSubmit)="userForm.valid && onSubmit()"
-		>
-			<mat-form-field
-				class="w-100">
-				<mat-label>Členské ID</mat-label>
-				<input matInput
-					placeholder="Členské ID"
-					name="memberId"
-					type="number"
-					required
-					appAutofocus
-					[(ngModel)]="user.memberId"
-				>
-			</mat-form-field>
+			<ng-container *ngIf="showValidationErrors">
+				<div *ngFor="let error of errors"
+					class="alert alert-danger">
+					{{ error }}
+				</div>
+			</ng-container>
+
+			<form #userForm="ngForm"
+				(ngSubmit)="userForm.valid && onSubmit()"
+			>
+				<mat-form-field
+					class="w-100">
+					<mat-label>Členské ID</mat-label>
+					<input [(ngModel)]="user.memberId"
+						appAutofocus
+						matInput
+						name="memberId"
+						placeholder="Členské ID"
+						required
+						type="number"
+					>
+				</mat-form-field>
 
 				<mat-form-field
 					class="w-100">
@@ -52,46 +53,46 @@
 					>
 				</mat-form-field>
 
-			<mat-form-field
-				class="w-100">
-				<mat-label>E-mail</mat-label>
-				<input matInput
-					type="email"
-					pattern="[a-zA-Z0-9.-_]{1,}@[a-zA-Z.-]{2,}[.]{1}[a-zA-Z]{2,}"
-					placeholder="E-mail"
-					name="email"
-					required
-					[(ngModel)]="user.email"
-				>
-			</mat-form-field>
+				<mat-form-field
+					class="w-100">
+					<mat-label>E-mail</mat-label>
+					<input [(ngModel)]="user.email"
+						matInput
+						name="email"
+						pattern="[a-zA-Z0-9.-_]{1,}@[a-zA-Z.-]{2,}[.]{1}[a-zA-Z]{2,}"
+						placeholder="E-mail"
+						required
+						type="email"
+					>
+				</mat-form-field>
 
-			<mat-form-field *ngIf="!isEdit"
-				class="w-100"
-			>
-				<mat-label>Heslo</mat-label>
-				<input matInput
-					placeholder="Heslo"
-					name="password"
-					type="password"
-					minlength="5"
-					required
-					[(ngModel)]="user.password"
+				<mat-form-field *ngIf="!isEdit"
+					class="w-100"
 				>
-			</mat-form-field>
+					<mat-label>Heslo</mat-label>
+					<input [(ngModel)]="user.password"
+						matInput
+						minlength="5"
+						name="password"
+						placeholder="Heslo"
+						required
+						type="password"
+					>
+				</mat-form-field>
 
-			<mat-form-field *ngIf="!isEdit"
-				class="w-100"
-			>
-				<mat-label>Heslo znovu</mat-label>
-				<input matInput
-					placeholder="Heslo znovu"
-					name="passwordAgain"
-					type="password"
-					minlength="5"
-					required
-					[(ngModel)]="passwordAgain"
+				<mat-form-field *ngIf="!isEdit"
+					class="w-100"
 				>
-			</mat-form-field>
+					<mat-label>Heslo znovu</mat-label>
+					<input [(ngModel)]="passwordAgain"
+						matInput
+						minlength="5"
+						name="passwordAgain"
+						placeholder="Heslo znovu"
+						required
+						type="password"
+					>
+				</mat-form-field>
 
 				<ng-container *ngIf="user.id">
 					<mat-form-field
@@ -161,3 +162,9 @@
 		</div>
 	</div>
 </div>
+
+<ng-template #loading>
+	<div class="d-flex align-items-center justify-content-center w-100">
+		<mat-spinner></mat-spinner>
+	</div>
+</ng-template>

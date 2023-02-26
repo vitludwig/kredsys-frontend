@@ -12,7 +12,7 @@ import {ETime} from '../../common/types/ETime';
 export class CardInfoComponent {
 	protected user: IUser | null;
 	protected currencyAccount: ICurrencyAccount | null;
-	protected loading: boolean = false;
+	protected isLoading: boolean = false;
 
 	constructor(
 		protected usersService: UsersService,
@@ -21,13 +21,13 @@ export class CardInfoComponent {
 
 	public async setCardId(id: number): Promise<void> {
 		try {
-			this.loading = true;
+			this.isLoading = true;
 			this.user = await this.usersService.getUserByCardUid(id);
 			this.currencyAccount = (await this.usersService.getUserCurrencyAccounts(this.user.id!))[0];
 		} catch(e) {
 			console.error('Cannot display user currency data: ', e);
 		} finally {
-			this.loading = false;
+			this.isLoading = false;
 		}
 
 		setTimeout(() => {

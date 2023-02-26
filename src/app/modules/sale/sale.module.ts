@@ -19,6 +19,7 @@ import {MatListModule} from "@angular/material/list";
 import {MatDividerModule} from "@angular/material/divider";
 import {DischargeDialogComponent} from './components/discharge-dialog/discharge-dialog.component';
 import {CardLoaderComponent} from '../../common/components/card-loader/card-loader.component';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 
 @NgModule({
@@ -48,6 +49,7 @@ import {CardLoaderComponent} from '../../common/components/card-loader/card-load
 		MatListModule,
 		MatDividerModule,
 		CardLoaderComponent,
+		MatProgressSpinnerModule,
 	],
 })
 export class SaleModule {

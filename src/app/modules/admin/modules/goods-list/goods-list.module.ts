@@ -14,6 +14,7 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatDialogModule} from '@angular/material/dialog';
 import {GoodsTypeDetailComponent} from './components/goods-type-detail/goods-type-detail.component';
 import {ClickConfirmDirective} from '../../../../common/directives/click-confirm/click-confirm.directive';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 
 @NgModule({
@@ -35,6 +36,7 @@ import {ClickConfirmDirective} from '../../../../common/directives/click-confirm
 		MatIconModule,
 		MatDialogModule,
 		ClickConfirmDirective,
+		MatProgressSpinnerModule,
 	],
 })
 export class GoodsListModule {

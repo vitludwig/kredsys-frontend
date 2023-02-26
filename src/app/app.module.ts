@@ -1,7 +1,7 @@
 import {APP_INITIALIZER, NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {AppComponent} from './app.component';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {SaleModule} from './modules/sale/sale.module';
 import {AppRoutingModule} from './app-routing.module';
 import {MenuModule} from './common/modules/menu/menu.module';
@@ -18,7 +18,7 @@ import {InitService} from './common/services/init/init.service';
 		SharedModule,
 		BrowserModule,
 		AppRoutingModule,
-		NoopAnimationsModule,
+		BrowserAnimationsModule,
 		MatSidenavModule,
 		MenuModule,
 		SaleModule,

@@ -4,9 +4,17 @@
 			(cardIdChange)="setCardId($event)">
 		</app-card-loader>
 
-		<ng-container *ngIf="user && currencyAccount">
-			<h2 class="text-center">{{ user.name }} (Členské id: {{ user.memberId }})</h2>
-			<h1 class="very-big text-center">{{ currencyAccount.currentAmount }} Kč</h1>
+		<ng-container *ngIf="!isLoading; else loading">
+			<ng-container *ngIf="user && currencyAccount">
+				<h2 class="text-center">{{ user.name }} (Členské id: {{ user.memberId }})</h2>
+				<h1 class="very-big text-center">{{ currencyAccount.currentAmount }} Kč</h1>
+			</ng-container>
 		</ng-container>
 	</div>
 </div>
+
+<ng-template #loading>
+	<div class="d-flex align-items-center justify-content-center w-100">
+		<mat-spinner></mat-spinner>
+	</div>
+</ng-template>

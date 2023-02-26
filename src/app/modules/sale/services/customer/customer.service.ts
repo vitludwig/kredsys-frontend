@@ -95,6 +95,15 @@ export class CustomerService {
 		}
 	}
 
+	public async stornoLastTransaction(transactionId: number): Promise<void> {
+		try {
+			await this.transactionService.storno(transactionId);
+			await this.loadCurrencyAccount(this.customer!.id!);
+		} catch(e) {
+			throw e;
+		}
+	}
+
 	public logout(): void {
 		this.customer = null;
 		this.currencyAccount = null;
