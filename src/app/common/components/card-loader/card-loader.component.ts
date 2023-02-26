@@ -65,15 +65,13 @@ export class CardLoaderComponent implements OnInit, OnDestroy {
 		this.cardIdChange.emit(2866252548);
 	}
 
-	@HostListener("window:blur", ['$event'])
-	protected checkBlur($event: any) {
-		console.log($event);
+	@HostListener("window:blur")
+	protected checkBlur(): void {
 		this.focused = false;
 	}
 
-	@HostListener("window:focus", ['$event'])
-	protected checkFocus($event: any) {
-		console.log($event);
+	@HostListener("window:focus")
+	protected checkFocus(): void {
 		this.focused = true;
 	}
 

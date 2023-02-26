@@ -1,5 +1,4 @@
-import {AfterViewInit, Directive, ElementRef, OnInit} from '@angular/core';
-import {MatInput} from '@angular/material/input';
+import {Directive, ElementRef, OnInit} from '@angular/core';
 
 /**
  * Angular cdkFocusInitial is buggy and native autofocus doesn't work inside most mat-form-field
@@ -8,13 +7,13 @@ import {MatInput} from '@angular/material/input';
 	selector: '[appAutofocus]',
 	standalone: true
 })
-export class AutofocusDirective implements AfterViewInit {
+export class AutofocusDirective implements OnInit {
 
 	constructor(private elem: ElementRef) {
 	}
 
-	public ngAfterViewInit(): void {
-		this.elem.nativeElement.focus();
+	public ngOnInit(): void {
+		setTimeout(() => this.elem.nativeElement.focus());
 	}
 
 }

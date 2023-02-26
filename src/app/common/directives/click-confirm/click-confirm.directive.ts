@@ -54,7 +54,6 @@ export class ClickConfirmDirective implements OnInit {
 			if(result) {
 				this.clickConfirm.emit($event);
 			}
-			console.log(result);
 		});
 	}
 }

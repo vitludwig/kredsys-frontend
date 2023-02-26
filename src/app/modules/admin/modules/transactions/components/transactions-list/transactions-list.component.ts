@@ -147,7 +147,6 @@ export class TransactionsListComponent implements AfterViewInit, OnDestroy {
 				takeUntil(this.unsubscribe),
 			)
 			.subscribe((data) => {
-				console.log('nre data: ', data);
 				this.transactionData = data;
 			});
 	}

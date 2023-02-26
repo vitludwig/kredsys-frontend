@@ -30,7 +30,6 @@ export class PlaceService implements OnDestroy {
 	public set selectedPlace(value: IPlace | null) {
 		this.#selectedPlace = value;
 		if(value) {
-			console.log('loading place role');
 			this.getPlaceRole(value.id!).then((role) => {
 				this.placeRole = role;
 				this.placeRoleSubject.next(role);
@@ -76,7 +75,7 @@ export class PlaceService implements OnDestroy {
 	}
 
 	@cache(ETime.MINUTE * 2, [ECacheTag.PLACES])
-	public async getAllPlaces(search: string = ''): Promise<IPlace[]> {
+	public async getAllPlaces(): Promise<IPlace[]> {
 		const params = {
 			offset: 0,
 			limit: 999,
