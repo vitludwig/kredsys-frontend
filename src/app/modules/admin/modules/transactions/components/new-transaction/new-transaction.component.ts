@@ -55,7 +55,7 @@ export class NewTransactionComponent implements OnInit {
 			this.isLoading = true;
 			this.currency = await this.currencyService.getDefaultCurrency();
 		} catch(e) {
-			this.alertService.success('Nepodařilo se načíst měnu');
+			this.alertService.error('Nepodařilo se načíst měnu');
 			console.error('Cannot load currency data: ', e);
 		} finally {
 			this.isLoading = false;
@@ -97,6 +97,11 @@ export class NewTransactionComponent implements OnInit {
 	}
 
 	public async submit(): Promise<void> {
+		if(this.records.length === 0) {
+			this.alertService.error('Vyber položky transakce');
+			return;
+		}
+
 		try {
 			switch (this._type) {
 				case ETransactionType.PAYMENT:
@@ -113,7 +118,11 @@ export class NewTransactionComponent implements OnInit {
 		} catch (e) {
 			console.error("Transaction error", e);
 			if(e instanceof HttpErrorResponse) {
-				this.alertService.error(e.error.Message);
+				if(e.error.Message) {
+					this.alertService.error(e.error.Message);
+				} else {
+					this.alertService.error(e.error.title);
+				}
 			} else {
 				this.alertService.error("Nepodařilo se přidat transakci");
 			}

@@ -1,6 +1,5 @@
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {OrderService} from '../../services/order/order.service';
-import {SaleService} from '../../services/sale/sale.service';
 import {IOrderItem} from '../../types/IOrderItem';
 import {IPlace} from '../../../../common/types/IPlace';
 import {UsersService} from '../../../admin/services/users/users.service';
@@ -9,7 +8,6 @@ import {AlertService} from '../../../../common/services/alert/alert.service';
 import {HttpErrorResponse} from '@angular/common/http';
 import {TransactionService} from '../../../admin/modules/transactions/services/transaction/transaction.service';
 import {ITransactionRecordPayment} from '../../../admin/modules/transactions/services/transaction/types/ITransaction';
-import {ICurrencyAccount} from '../../../../common/types/ICurrency';
 import {Subject, takeUntil} from 'rxjs';
 
 @Component({
@@ -22,14 +20,12 @@ export class SaleSummaryComponent implements OnInit, OnDestroy {
 	public place: IPlace;
 
 	public totalLeft: number;
-	public currencyAccount: ICurrencyAccount | null;
 	public isUserLoaded: boolean = false;
 
 	protected unsubscribe: Subject<void> = new Subject();
 
 	constructor(
 		public orderService: OrderService,
-		public saleService: SaleService,
 		public usersService: UsersService,
 		public customerService: CustomerService,
 		protected transactionService: TransactionService,
@@ -40,20 +36,27 @@ export class SaleSummaryComponent implements OnInit, OnDestroy {
 	public ngOnInit(): void {
 		this.orderService.orderChange$
 			.pipe(takeUntil(this.unsubscribe))
-			.subscribe((items) => {
-				if(this.currencyAccount) {
-					this.totalLeft = this.currencyAccount.currentAmount - this.orderService.total;
+			.subscribe(() => {
+				if(this.customerService.currencyAccount) {
+					this.totalLeft = this.customerService.currencyAccount.currentAmount - this.orderService.total;
 				}
 			})
+
+		this.customerService.currencyAccount$
+			.pipe(takeUntil(this.unsubscribe))
+			.subscribe(async (currencyAccount) => {
+				if(currencyAccount) {
+					this.totalLeft = currencyAccount.currentAmount - this.orderService.total;
+				} else {
+					this.totalLeft = 0;
+				}
+			});
 
 		this.customerService.customer$
 			.pipe(takeUntil(this.unsubscribe))
 			.subscribe(async (user) => {
 				if(!user) {
 					this.isUserLoaded = false;
-				}
-				if(!this.currencyAccount && this.customerService.customer) {
-					this.currencyAccount = (await this.usersService.getUserCurrencyAccounts(this.customerService.customer.id!))[0];
 				}
 			})
 	}
@@ -65,7 +68,6 @@ export class SaleSummaryComponent implements OnInit, OnDestroy {
 	public async loadUserId(uid: number): Promise<void> {
 		try {
 			this.customerService.customer = await this.usersService.getUserByCardUid(uid);
-			this.currencyAccount = (await this.usersService.getUserCurrencyAccounts(this.customerService.customer.id!))[0];
 			this.isUserLoaded = true;
 
 		} catch(e) {
@@ -108,7 +110,7 @@ export class SaleSummaryComponent implements OnInit, OnDestroy {
 				if(e.error.Code === 404) {
 					this.alertService.error('Nebyl nalezen uživatelům účet, hybaj na infostánek!');
 				} else {
-					this.alertService.error(e.error.Message);
+					this.alertService.error(e.error.Message ?? 'Vyskytla se neznámá chyba');
 				}
 			} else {
 				this.alertService.error('Vyskytla se neznámá chyba');

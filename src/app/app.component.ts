@@ -42,6 +42,10 @@ export class AppComponent implements OnInit, OnDestroy {
 				}
 			});
 
+		this.initNetworkStatusCheck();
+	}
+
+	protected initNetworkStatusCheck(): void {
 		merge(
 			fromEvent(window, 'online'),
 			fromEvent(window, 'offline'),

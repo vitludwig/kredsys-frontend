@@ -18,11 +18,11 @@
 			<div [matTooltip]="'ID: ' + customer.memberId">{{ customer.name }}</div>
 
 			<div class="d-flex align-center flex-wrap">
-				<ng-container *ngIf="currencyAccount">
-					<span class="currency-amount">Zůstatek: {{currencyAccount.currentAmount ?? 0 }} Kč</span>
+				<ng-container *ngIf="customerService.currencyAccount">
+					<span class="currency-amount">Zůstatek: {{(customerService.currencyAccount$ | async)?.currentAmount ?? 0 }} Kč</span>
 				</ng-container>
 
-				<ng-container *ngIf="!currencyAccount">
+				<ng-container *ngIf="!customerService.currencyAccount$">
 					<strong>Uživatel ještě neprovedl první nabití</strong>
 				</ng-container>
 

@@ -16,6 +16,7 @@ import {ReactiveFormsModule} from "@angular/forms";
 import {MatButtonModule} from "@angular/material/button";
 import {NewTransactionComponent} from "./components/new-transaction/new-transaction.component";
 import {ClickConfirmDirective} from '../../../../common/directives/click-confirm/click-confirm.directive';
+import {AutofocusDirective} from '../../../../common/directives/mat-input-autofocus.directive';
 
 @NgModule({
 	declarations: [
@@ -38,6 +39,7 @@ import {ClickConfirmDirective} from '../../../../common/directives/click-confirm
 		ReactiveFormsModule,
 		MatButtonModule,
 		ClickConfirmDirective,
+		AutofocusDirective,
 	],
 })
 export class TransactionsModule {

@@ -13,7 +13,7 @@ import {ETime} from '../../../../common/types/ETime';
 })
 export class CurrencyService {
 	protected limit = 10;
-	protected defaultCurrency: ICurrency;
+	public defaultCurrency: ICurrency; // filled in app init or on first request
 
 	constructor(
 		protected http: HttpClient,

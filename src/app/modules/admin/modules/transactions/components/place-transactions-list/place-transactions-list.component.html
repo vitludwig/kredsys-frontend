@@ -1,17 +1,18 @@
 <mat-form-field>
 	<mat-select [(ngModel)]="selectedPlace"
-			placeholder="Místo"
+		appAutofocus
+		placeholder="Místo"
 	>
 		<mat-option *ngFor="let place of places"
-				[value]="place">
+			[value]="place">
 			{{ place.name }}
 		</mat-option>
 	</mat-select>
 </mat-form-field>
 
 <app-transactions-list *ngIf="selectedPlace"
-		[dataLoader]="loadData"
-		[filterBy]="{
+	[dataLoader]="loadData"
+	[filterBy]="{
 			placeId: selectedPlace.id
 		}"
 ></app-transactions-list>
