@@ -4,6 +4,7 @@ import {CurrencyService} from "../../../../services/currency/currency.service";
 import {ICurrency} from "../../../../../../common/types/ICurrency";
 import {ETransactionType} from "../../services/transaction/types/ETransactionType";
 import {
+	ITransactionRecord,
 	ITransactionRecordDeposit,
 	ITransactionRecordPayment,
 	ITransactionRecordWithdraw,
@@ -82,6 +83,10 @@ export class NewTransactionComponent implements OnInit {
 				})
 				break;
 		}
+	}
+
+	public removeRecord(record: ITransactionRecord): void {
+		this.records = this.records.filter((obj) => obj !== record);
 	}
 
 	public loadUsers = (value: string) => {

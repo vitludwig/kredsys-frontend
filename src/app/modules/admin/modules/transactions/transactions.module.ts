@@ -17,6 +17,7 @@ import {MatButtonModule} from "@angular/material/button";
 import {NewTransactionComponent} from "./components/new-transaction/new-transaction.component";
 import {ClickConfirmDirective} from '../../../../common/directives/click-confirm/click-confirm.directive';
 import {AutofocusDirective} from '../../../../common/directives/autofocus.directive';
+import {MatIconModule} from '@angular/material/icon';
 
 @NgModule({
 	declarations: [
@@ -40,6 +41,7 @@ import {AutofocusDirective} from '../../../../common/directives/autofocus.direct
 		MatButtonModule,
 		ClickConfirmDirective,
 		AutofocusDirective,
+		MatIconModule,
 	],
 })
 export class TransactionsModule {

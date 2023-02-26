@@ -35,12 +35,12 @@
 					[dataLoader]="loadPlaces"
 				></app-input-autocomplete>
 
-				<div class="records mb-5" *ngIf="type">
+				<div *ngIf="type"
+					class="records mb-5">
 					<h2>Položky transakce</h2>
 					<div *ngFor="let record of records">
-						<ng-container *ngIf="type === ETransactionType.PAYMENT">
-							<div class="d-flex justify-content-between align-items-center">
-
+						<div class="d-flex justify-content-between align-items-center">
+							<ng-container *ngIf="type === ETransactionType.PAYMENT">
 								<app-input-autocomplete
 									label="Zboží"
 									placeholder="Vyhledat podle názvu"
@@ -58,23 +58,30 @@
 										[(ngModel)]="record.multiplier"
 									>
 								</mat-form-field>
-							</div>
-						</ng-container>
+							</ng-container>
 
-						<ng-container *ngIf="type === ETransactionType.DEPOSIT || type === ETransactionType.WITHDRAW">
-							<div class="d-flex justify-content-between align-items-center">
+							<ng-container *ngIf="type === ETransactionType.DEPOSIT || type === ETransactionType.WITHDRAW">
 								<mat-form-field class="ms-3">
 									<mat-label>Částka</mat-label>
 									<input matInput
 										placeholder="Počet"
 										name="amount"
 										required
+										type="number"
 										[(ngModel)]="record.amount"
 									>
 									<span matSuffix>Kč</span>
 								</mat-form-field>
-							</div>
-						</ng-container>
+							</ng-container>
+
+							<button (click)="removeRecord(record)"
+								class="ms-3"
+								color="warn"
+								mat-icon-button
+							>
+								<mat-icon>delete</mat-icon>
+							</button>
+						</div>
 					</div>
 
 					<button mat-raised-button
