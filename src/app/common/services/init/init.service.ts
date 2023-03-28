@@ -1,15 +1,21 @@
 import {Injectable} from '@angular/core';
 import {CurrencyService} from '../../../modules/admin/services/currency/currency.service';
+import {AuthService} from '../../../modules/login/services/auth/auth.service';
 
 @Injectable({
 	providedIn: 'root'
 })
 export class InitService {
 
-	constructor(protected currencyService: CurrencyService) {
+	constructor(
+		private currencyService: CurrencyService,
+		private authService: AuthService,
+	) {
 	}
 
 	public async init(): Promise<void> {
-		this.currencyService.defaultCurrency = await this.currencyService.getDefaultCurrency();
+		if(this.authService.isLogged) {
+			this.currencyService.defaultCurrency = await this.currencyService.getDefaultCurrency();
+		}
 	}
 }
