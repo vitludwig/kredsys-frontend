@@ -120,7 +120,7 @@ export class UsersService {
 			uid: cardUid,
 			type: type,
 			description: description,
-			expirationDate: '2023-04-13T17:54:35.542Z',
+			expirationDate: null,
 		}));
 	}
 
