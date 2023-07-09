@@ -30,7 +30,7 @@ export class CardInfoComponent {
 
 			this.walletData = JSON.stringify({
 				userId: this.user.id,
-				token: Md5.hashStr(this.user.id + '' + environment.walletApiSecret),
+				token: Md5.hashStr(environment.walletApiSecret + (this.user.id + '')),
 			});
 
 		} catch(e) {
