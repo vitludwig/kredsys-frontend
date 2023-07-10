@@ -27,5 +27,6 @@ export class FilterPanelComponent {
 
 	protected clearFilter(): void {
 		this.filter = [];
+		this.filterChange.emit(this.filter);
 	}
 }
