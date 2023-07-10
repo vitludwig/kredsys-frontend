@@ -18,6 +18,7 @@ import {NewTransactionComponent} from "./components/new-transaction/new-transact
 import {ClickConfirmDirective} from '../../../../common/directives/click-confirm/click-confirm.directive';
 import {AutofocusDirective} from '../../../../common/directives/autofocus.directive';
 import {MatIconModule} from '@angular/material/icon';
+import {StatisticsTableComponent} from './components/statistics-table/statistics-table.component';
 
 @NgModule({
 	declarations: [
@@ -25,7 +26,8 @@ import {MatIconModule} from '@angular/material/icon';
 		TransactionsComponent,
 		PlaceTransactionsListComponent,
 		UserTransactionsListComponent,
-		NewTransactionComponent
+		NewTransactionComponent,
+		StatisticsTableComponent,
 	],
 	imports: [
 		SharedModule,

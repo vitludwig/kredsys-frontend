@@ -3,12 +3,14 @@ export interface ITransactionStatistics {
 	sumGoods: number;
 	sumPrice: number;
 	sumTransactions: number;
-	goods: {
-		goodsId: number;
-		goodsName: string;
-		sumGoods: number;
-		sumPrice: number;
-	}[];
+	goods: ITransactionStatisticsGoods[];
+}
+
+export interface ITransactionStatisticsGoods {
+	goodsId: number;
+	goodsName: string;
+	sumGoods: number;
+	sumPrice: number;
 }
 
 export interface IStatisticsFilter {

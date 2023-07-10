@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, Input, OnDestroy, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {UsersService} from '../../../../services/users/users.service';
 import {Animations} from '../../../../../../common/utils/animations';
 import {MatPaginator} from '@angular/material/paginator';
@@ -13,6 +13,8 @@ import {ETransactionType} from "../../services/transaction/types/ETransactionTyp
 import {AlertService} from "../../../../../../common/services/alert/alert.service";
 import {map, merge, startWith, Subject, switchMap, takeUntil} from "rxjs";
 import {CurrencyService} from "../../../../services/currency/currency.service";
+import {ITransactionStatistics} from '../../services/transaction/types/ITransactionStatistics';
+import {PlaceService} from '../../../../services/place/place/place.service';
 
 @Component({
 	selector: 'app-transactions-list',
@@ -22,63 +24,17 @@ import {CurrencyService} from "../../../../services/currency/currency.service";
 		Animations.expandableTable,
 	],
 })
-export class TransactionsListComponent implements AfterViewInit, OnDestroy {
-	public displayedColumns: string[] = ['amount', 'type', 'created', 'userName', 'actions'];
-	public expandedRow: ITransaction | null;
-
-	public detailLoading: boolean = true;
+export class TransactionsListComponent implements OnInit, AfterViewInit, OnDestroy {
+	public displayedColumns: string[] = ['amount', 'type', 'place', 'userName', 'created', 'actions'];
 	public listLoading: boolean = true;
 
 	public transactionData: ITransaction[] = [];
 	public transactionsTotal: number = 0;
 
-	public chartDataFrom: string = '';
-	public chartDataTo: string = '';
-	public chartDataPrices: number[] = [];
-
-	public readonly ETransactionType = ETransactionType;
-
-	// Pie
-	public pieChartOptions: ChartConfiguration<'pie'>['options'] = {
-		responsive: true,
-		plugins: {
-			legend: {
-				display: true,
-				position: 'top',
-			},
-			datalabels: {
-				formatter: (value, ctx) => {
-					if(ctx.chart.data.labels) {
-						return ctx.chart.data.labels[ctx.dataIndex] + ' (' + this.chartDataPrices[ctx.dataIndex] + 'Kč)';
-					}
-					return '';
-				},
-			},
-			tooltip: {
-				callbacks: {
-					label: function(this: TooltipModel<any>, item: TooltipItem<any>) {
-						return item.label + ': ' + item.formattedValue + 'ks';
-					}
-				}
-			}
-		}
-	};
-	// public pieChartData: ChartData<'pie', number[], string | string[]> = {
-	// 	labels: [ 'Download', 'Store', 'Mail Sales' ],
-	// 	datasets: [ {
-	// 		data: [ 300, 500, 100 ]
-	// 	} ]
-	// };
-	public pieChartData: ChartData<'pie', number[], string | string[]> = {
-		labels: [],
-		datasets: [
-			{
-				data: [] // amount
-			},
-		]
-	};
-
-	public pieChartPlugins = [DatalabelsPlugin];
+	public statsDataFrom: string = '';
+	public statsDataTo: string = '';
+	public statistics: ITransactionStatistics;
+	public placesById: Record<number, string> = {};
 
 	@ViewChild(MatPaginator)
 	public paginator: MatPaginator;
@@ -101,11 +57,10 @@ export class TransactionsListComponent implements AfterViewInit, OnDestroy {
 				this.loadData();
 			})
 		}
-
 	}
 
-	@ViewChild(BaseChartDirective)
-	protected chart: BaseChartDirective | undefined;
+	public readonly ETransactionType = ETransactionType;
+
 	protected unsubscribe: Subject<void> = new Subject<void>();
 
 	#filterBy: Partial<ITransaction>;
@@ -113,10 +68,17 @@ export class TransactionsListComponent implements AfterViewInit, OnDestroy {
 	constructor(
 		protected usersService: UsersService,
 		protected transactionService: TransactionService,
-		protected goodsService: GoodsService,
 		protected currencyService: CurrencyService,
 		protected alertService: AlertService,
+		protected placeService: PlaceService,
 	) {
+	}
+
+	public async ngOnInit(): Promise<void> {
+		const places = await this.placeService.getAllPlaces();
+		for(const place of places) {
+			this.placesById[place.id!] = place.name;
+		}
 	}
 
 	public async ngAfterViewInit(): Promise<void> {
@@ -162,37 +124,23 @@ export class TransactionsListComponent implements AfterViewInit, OnDestroy {
 		}
 	}
 
-	public async showDetail(row: ITransaction): Promise<void> {
-		if(row === this.expandedRow) {
-			this.expandedRow = null;
-			return;
+	public async filterStatsData(reset: boolean = false): Promise<void> {
+		if(reset) {
+			this.statsDataFrom = '';
+			this.statsDataTo = '';
 		}
-		this.detailLoading = true;
-		try {
-			this.expandedRow = row;
-
-		} catch(e) {
-			console.error('Cannot load transaction detail');
-		} finally {
-			this.detailLoading = false;
-		}
+		this.loadStatisticsData();
 	}
 
-	protected async loadChartData(): Promise<void> {
+	protected async loadStatisticsData(): Promise<void> {
 		const currency = await this.currencyService.getDefaultCurrency();
 		let filterBy: { [key: string]: any } = {
 			usersFilter: this.filterBy.userId ? [this.filterBy.userId] : [],
 			placesFilter: this.filterBy.placeId ? [this.filterBy.placeId] : [],
-			fromDate: this.chartDataFrom,
-			toDate: this.chartDataTo,
+			fromDate: this.statsDataFrom,
+			toDate: this.statsDataTo,
 		};
-		const chartData = await this.transactionService.getStatistics(currency.id!, filterBy);
-
-		this.pieChartData.labels = chartData.goods.map((obj) => obj.goodsName);
-		this.pieChartData.datasets[0].data = chartData.goods.map((obj) => obj.sumGoods);
-		this.chartDataPrices = chartData.goods.map((obj) => obj.sumPrice);
-
-		this.chart?.update();
+		this.statistics = await this.transactionService.getStatistics(currency.id!, filterBy);
 	}
 
 	protected async loadData(): Promise<void> {
@@ -202,55 +150,10 @@ export class TransactionsListComponent implements AfterViewInit, OnDestroy {
 		const offset = this.paginator.pageIndex * this.paginator.pageSize;
 		const result = await this.transactionService.getTransactions(offset, this.paginator.pageSize, this.filterBy);
 
-		await this.loadChartData();
+		await this.loadStatisticsData();
 
 		this.transactionData = result.data;
 		this.transactionsTotal = result.total;
-		// try {
-		// 	const allTransactions = (await this.dataLoader(this.filterBy.id!, 0, 9999999, this.filterBy)).data;
-		// 	this.dataSource = new MatTableDataSource<ITransaction>(allTransactions);
-		// 	this.dataSource.paginator = this.paginator;
-		// 	const chartData: HashMap<number> = {};
-		// 	this.goodsMap = Utils.toHashMap(await this.goodsService.getAllGoods(), 'id');
-		//
-		// 	// TODO: remove requesting every transaction after BE sends records in transaction (BE 18.)
-		// 	for (const transaction of allTransactions) {
-		// 		const transactionDetail = await this.transactionService.getTransaction(transaction.id, ETransactionType.PAYMENT);
-		// 		if(transactionDetail.type !== ETransactionType.PAYMENT) {
-		// 			continue;
-		// 		}
-		//
-		// 		for(const record of transactionDetail.records) {
-		//
-		// 			if(this.transactionRecordsMap[transaction.id] === undefined) {
-		// 				this.transactionRecordsMap[transaction.id] = [record];
-		// 			} else {
-		// 				this.transactionRecordsMap[transaction.id].push(record);
-		// 			}
-		//
-		// 			const goodie = this.goodsMap[record.goodsId] as IGoods;
-		// 			if(chartData[goodie.name] === undefined) {
-		// 				chartData[goodie.name] = goodie.price!
-		// 			} else {
-		// 				chartData[goodie.name] += goodie.price!
-		// 			}
-		// 		}
-		// 	}
-		//
-		// 	this.pieChartData.labels = Object.keys(chartData);
-		// 	this.pieChartData.datasets[0].data = Object.values(chartData);
-		// 	this.chart?.update();
-		// } catch(e) {
-		// 	console.error("Failed to load transactions", e);
-		// }
-	}
-
-	public async filterChartData(reset: boolean = false): Promise<void> {
-		if(reset) {
-			this.chartDataFrom = '';
-			this.chartDataTo = '';
-		}
-		this.loadChartData();
 	}
 
 	public ngOnDestroy(): void {
