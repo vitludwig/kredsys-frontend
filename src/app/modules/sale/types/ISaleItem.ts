@@ -3,4 +3,5 @@ export interface ISaleItem {
 	name: string;
 	price: number;
 	icon: string;
+	type: number | null;
 }

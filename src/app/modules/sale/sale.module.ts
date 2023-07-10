@@ -20,6 +20,9 @@ import {MatDividerModule} from "@angular/material/divider";
 import {DischargeDialogComponent} from './components/discharge-dialog/discharge-dialog.component';
 import {CardLoaderComponent} from '../../common/components/card-loader/card-loader.component';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {IsIncludedPipe} from '../../common/pipes/is-included/is-included.pipe';
+import {FilterSaleItemsPipe} from './components/dashboard/pipes/filter-sale-items.pipe';
+import { FilterPanelComponent } from './components/dashboard/components/filter-panel/filter-panel.component';
 
 
 @NgModule({
@@ -31,6 +34,7 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 		ChargeDialogComponent,
 		StornoDialogComponent,
 		DischargeDialogComponent,
+  FilterPanelComponent,
 	],
 	exports: [
 		SaleComponent,
@@ -50,6 +54,8 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 		MatDividerModule,
 		CardLoaderComponent,
 		MatProgressSpinnerModule,
+		IsIncludedPipe,
+		FilterSaleItemsPipe,
 	],
 })
 export class SaleModule {

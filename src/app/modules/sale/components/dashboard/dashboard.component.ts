@@ -1,5 +1,4 @@
 import {Component, Input} from '@angular/core';
-import {SaleService} from '../../services/sale/sale.service';
 import {OrderService} from '../../services/order/order.service';
 import {IPlace} from '../../../../common/types/IPlace';
 import {PlaceService} from '../../../admin/services/place/place/place.service';
@@ -32,8 +31,10 @@ export class DashboardComponent {
 	#place: IPlace;
 	public items: ISaleItem[] = [];
 
+	public itemTypes: Record<number, {name: string; id: number}> = {};
+	public filter: number[] = [];
+
 	constructor(
-		protected saleService: SaleService,
 		protected orderService: OrderService,
 		protected placeService: PlaceService,
 		protected goodsService: GoodsService,
@@ -55,7 +56,15 @@ export class DashboardComponent {
 					name: item.name,
 					price: item.price!,
 					icon: goodsTypes[item.goodsTypeId!].icon ?? 'other',
+					type: item.goodsTypeId,
 				});
+
+				if(!this.itemTypes[item.goodsTypeId!]) {
+					this.itemTypes[item.goodsTypeId!] = {
+						id: item.goodsTypeId!,
+						name: goodsTypes[item.goodsTypeId!].name,
+					}
+				}
 			}
 		} catch(e) {
 			console.error('Cannot load place goods: ', e);

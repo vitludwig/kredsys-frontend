@@ -1,0 +1,14 @@
+.filter-panel {
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+
+	.filter-btn {
+		padding: 25px 15px;
+
+		&.active {
+			background: #ffeb3b;
+			color: black;
+		}
+	}
+}

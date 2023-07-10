@@ -1,0 +1,19 @@
+<div class="filter-panel">
+	<button (click)="clearFilter()"
+		color="warn"
+		mat-icon-button
+	>
+		<mat-icon>clear</mat-icon>
+	</button>
+
+	<button (click)="toggleFilter(type.value.id)"
+		*ngFor="let type of itemTypes | keyvalue"
+		[class.active]="(type.value.id | isIncluded: filter)"
+		class="filter-btn"
+		color="warn"
+		mat-stroked-button
+	>
+		{{ type.value.name}}
+		<mat-icon *ngIf="type.value.id | isIncluded: filter">check</mat-icon>
+	</button>
+</div>

@@ -1,19 +1,27 @@
 <div class="dashboard">
+	<app-filter-panel [(filter)]="filter"
+		[itemTypes]="itemTypes">
+	</app-filter-panel>
+
 	<div class="dashboard__grid">
-		<mat-card appearance="outlined" *ngFor="let item of items" class="dashboard__item mat-elevation-z4"
+		<mat-card *ngFor="let item of items | filterSaleItems: filter"
+			appearance="outlined"
+			class="dashboard__item mat-elevation-z4"
 			mat-ripple
 			(click)="addItem(item)"
 			data-augmented-ui="tl-clip br-2-clip-y both"
 		>
 			<div class="dashboard__item-image">
 
-				<svg viewBox="0 0 24 24" class="dashboard__item-icon">
+				<svg class="dashboard__item-icon"
+					viewBox="0 0 24 24">
 					<use [attr.xlink:href]="'assets/images/icons.svg#icon--' + item.icon"></use>
 				</svg>
 			</div>
 			<mat-card-content class="dashboard__content">
 				<h2 class="mb-0">{{ item.name }}</h2>
-				<div class="dashboard__item-price" data-augmented-ui="tl-2-clip-x both">{{ item.price }}<small>Kč</small></div>
+				<div class="dashboard__item-price"
+					data-augmented-ui="tl-2-clip-x both">{{ item.price }}<small>Kč</small></div>
 			</mat-card-content>
 		</mat-card>
 	</div>
