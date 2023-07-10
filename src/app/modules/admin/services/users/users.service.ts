@@ -129,6 +129,13 @@ export class UsersService {
 		return firstValueFrom(this.http.delete<void>(environment.apiUrl + 'cards/' + id));
 	}
 
+	public changePassword(userId: number, oldPassword: string, newPassword: string): Promise<void> {
+		return firstValueFrom(this.http.put<void>(environment.apiUrl + `users/${userId}/changepassword`, {
+			oldPassword,
+			newPassword,
+		}));
+	}
+
 	public createNewUser(id?: number): IUser {
 		return {
 			name: '',

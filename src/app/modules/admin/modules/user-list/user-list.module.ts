@@ -19,6 +19,7 @@ import {CardLoaderComponent} from '../../../../common/components/card-loader/car
 import {AutofocusDirective} from '../../../../common/directives/autofocus.directive';
 import {ClickConfirmDirective} from '../../../../common/directives/click-confirm/click-confirm.directive';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {ChangePasswordComponent} from './components/change-password/change-password.component';
 
 
 @NgModule({
@@ -26,6 +27,7 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 		UserListComponent,
 		UserDetailComponent,
 		CardDetailComponent,
+		ChangePasswordComponent,
 	],
 	imports: [
 		SharedModule,

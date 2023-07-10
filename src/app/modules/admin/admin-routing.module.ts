@@ -13,6 +13,7 @@ import {GoodsTypeDetailComponent} from './modules/goods-list/components/goods-ty
 import {ChargeComponent} from './modules/charge/charge.component';
 import {TransactionsComponent} from './modules/transactions/transactions.component';
 import {PlaceGuard} from '../../common/utils/place.guard';
+import {ChangePasswordComponent} from './modules/user-list/components/change-password/change-password.component';
 
 const routes: Routes = [
 	{
@@ -30,6 +31,13 @@ const routes: Routes = [
 				component: UserDetailComponent,
 				data: {
 					name: 'Upravit uživatele',
+				},
+			},
+			{
+				path: ':id/' + ERoute.ADMIN_CHANGE_PASSWORD,
+				component: ChangePasswordComponent,
+				data: {
+					name: 'Změnit heslo',
 				},
 			},
 			{

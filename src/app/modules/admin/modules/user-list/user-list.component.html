@@ -93,6 +93,14 @@
 				>
 					<div class="detail-content d-flex justify-content-between align-items-center w-100">
 						<div class="ms-auto">
+							<button [routerLink]="[row.id, ERoute.ADMIN_CHANGE_PASSWORD]"
+								class="ms-3"
+								color="primary"
+								mat-raised-button
+							>
+								Změnit heslo
+							</button>
+
 							<button mat-raised-button
 								*ngIf="!row.blocked"
 								color="warn"
