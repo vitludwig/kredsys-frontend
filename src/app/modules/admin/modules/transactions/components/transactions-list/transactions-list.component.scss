@@ -1,33 +1,13 @@
 .transaction-table {
 
-  .element-detail {
+	.element-detail {
 
-	.detail-content {
-	  padding: 1rem 0.5rem;
-	  display: flex;
-	  justify-content: flex-start;
-	  width: 100%;
-	  flex-direction: column;
-
-	  .records {
-		.record {
-		  display: flex;
-		  width: 300px;
-		  justify-content: space-between;
+		.detail-content {
+			padding: 1rem 0.5rem;
+			display: flex;
+			justify-content: flex-start;
+			width: 100%;
+			flex-direction: column;
 		}
-	  }
 	}
-  }
-}
-
-.chart-wrapper {
-  width: 100%;
-  margin-top: 2rem;
-  display: flex;
-  justify-content: center;
-
-  .chart {
-	width: 500px;
-
-  }
 }

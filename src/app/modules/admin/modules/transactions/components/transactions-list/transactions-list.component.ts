@@ -2,13 +2,10 @@ import {AfterViewInit, Component, Input, OnDestroy, OnInit, ViewChild} from '@an
 import {UsersService} from '../../../../services/users/users.service';
 import {Animations} from '../../../../../../common/utils/animations';
 import {MatPaginator} from '@angular/material/paginator';
-import {ITransaction,} from '../../services/transaction/types/ITransaction';
+import {ITransaction} from '../../services/transaction/types/ITransaction';
 import {TransactionService} from '../../services/transaction/transaction.service';
 import {GoodsService} from '../../../../services/goods/goods.service';
 import {IPaginatedResponse} from "../../../../../../common/types/IPaginatedResponse";
-import DatalabelsPlugin from 'chartjs-plugin-datalabels';
-import {ChartConfiguration, ChartData, TooltipItem, TooltipModel} from 'chart.js';
-import {BaseChartDirective} from 'ng2-charts';
 import {ETransactionType} from "../../services/transaction/types/ETransactionType";
 import {AlertService} from "../../../../../../common/services/alert/alert.service";
 import {map, merge, startWith, Subject, switchMap, takeUntil} from "rxjs";
@@ -27,6 +24,9 @@ import {PlaceService} from '../../../../services/place/place/place.service';
 export class TransactionsListComponent implements OnInit, AfterViewInit, OnDestroy {
 	public displayedColumns: string[] = ['amount', 'type', 'place', 'userName', 'created', 'actions'];
 	public listLoading: boolean = true;
+	public detailLoading: boolean = true;
+	public expandedRow: ITransaction | null;
+	public transactionDetails: {goodsName: string, amount: number, price: number}[] = [];
 
 	public transactionData: ITransaction[] = [];
 	public transactionsTotal: number = 0;
@@ -71,6 +71,7 @@ export class TransactionsListComponent implements OnInit, AfterViewInit, OnDestr
 		protected currencyService: CurrencyService,
 		protected alertService: AlertService,
 		protected placeService: PlaceService,
+		protected goodsService: GoodsService,
 	) {
 	}
 
@@ -130,6 +131,35 @@ export class TransactionsListComponent implements OnInit, AfterViewInit, OnDestr
 			this.statsDataTo = '';
 		}
 		this.loadStatisticsData();
+	}
+
+	public async showDetail(row: ITransaction): Promise<void> {
+		if(row === this.expandedRow) {
+			this.expandedRow = null;
+			return;
+		}
+		this.detailLoading = true;
+
+		try {
+			this.expandedRow = row;
+			this.transactionDetails = [];
+
+			if(row.type === ETransactionType.PAYMENT) {
+				const records = (await this.transactionService.getTransaction(row.id!)).records;
+				for(const record of records) {
+					const goods = await this.goodsService.getGoodie(record.goodsId);
+					this.transactionDetails.push({
+						goodsName: goods.name,
+						amount: record.multiplier,
+						price: record.amountSum,
+					})
+				}
+			}
+		} catch(e) {
+			console.error('Cannot load transaction detail');
+		} finally {
+			this.detailLoading = false;
+		}
 	}
 
 	protected async loadStatisticsData(): Promise<void> {

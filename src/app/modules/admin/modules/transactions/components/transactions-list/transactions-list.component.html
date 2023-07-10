@@ -74,13 +74,39 @@
 			</td>
 		</ng-container>
 
-		<tr mat-header-row
-			*matHeaderRowDef="displayedColumns"></tr>
+		<ng-container matColumnDef="expandedDetail">
+			<td *matCellDef="let row"
+				[attr.colspan]="displayedColumns.length"
+				mat-cell>
+				<div [@detailExpand]="row === expandedRow ? 'expanded' : 'collapsed'"
+					class="element-detail"
+				>
+					<div class="detail-content">
+						<ng-container *ngIf="!detailLoading">
+							<h3 class="mb-1">Položky</h3>
+							<div class="records">
+								<div *ngFor="let item of transactionDetails" class="record">
+									<span class="me-3">Název: {{ item.goodsName }} ({{item.amount}}ks)</span>
+									<span class="text-right">Celkem: {{ item.price }} Kč</span>
+								</div>
+							</div>
+						</ng-container>
+					</div>
+				</div>
+			</td>
+		</ng-container>
 
 		<tr mat-row
 			*matRowDef="let row; columns: displayedColumns;"
 			class="table-row"
+			(click)="showDetail(row)"
+			[class.expanded-row]="expandedRow === row"
 		></tr>
+
+		<tr *matRowDef="let row; columns: ['expandedDetail']"
+			class="detail-row"
+			mat-row>
+		</tr>
 	</table>
 	<mat-paginator [pageSizeOptions]="[5, 10, 15, 25, 100]"
 		[pageSize]="5"
