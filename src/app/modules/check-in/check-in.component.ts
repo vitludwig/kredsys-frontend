@@ -61,8 +61,9 @@ export class CheckInComponent implements OnInit {
 	}
 
 	public async ngOnInit(): Promise<void> {
-		this.user = this.usersService.createNewUser();
+		this.user = this.createNewUser();
 		this.user.roles = [EUserRole.MEMBER];
+		this.userForm.patchValue(this.user);
 		this.defaultCurrency = await this.currencyService.getDefaultCurrency();
 	}
 
@@ -105,6 +106,8 @@ export class CheckInComponent implements OnInit {
 				user = await this.usersService.editUser(this.userForm.value);
 			} else {
 				user = await this.usersService.addUser(this.userForm.value);
+				const lastMemberId = Number(localStorage.getItem('lastMemberId')) + 1;
+				localStorage.setItem('lastMemberId', lastMemberId.toString() ?? '0');
 			}
 
 			if(user.id && this.newCard) {
@@ -142,10 +145,21 @@ export class CheckInComponent implements OnInit {
 	}
 
 	public resetForm(): void {
-		this.userForm.patchValue(this.usersService.createNewUser());
+		this.userForm.patchValue(this.createNewUser());
 		this.newCard = null;
 		this.userFromList = false;
 	}
 
+	private createNewUser(): IUser {
+		const user = this.usersService.createNewUser();
+		user.memberId = this.getMemberIdSequence();
+		user.email = user.memberId + '@cybertown.cz';
+
+		return user;
+	}
+	private getMemberIdSequence(): number {
+		const lastMemberId = Number(localStorage.getItem('lastMemberId')) ?? 1;
+		return Number('99999' + (lastMemberId + 1));
+	}
 
 }
