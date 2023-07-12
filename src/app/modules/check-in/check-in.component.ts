@@ -92,11 +92,11 @@ export class CheckInComponent implements OnInit {
 			return;
 		}
 
-    if(this.userForm.get('deposit')!.value > 50000) {
-      this.showValidationErrors = true;
-      this.errors.push("Takhle velkou částku nejde nabít");
-      return;
-    }
+		if(this.userForm.get('deposit')!.value > 50000) {
+			this.showValidationErrors = true;
+			this.errors.push("Takhle velkou částku nejde nabít");
+			return;
+		}
 
 		try {
 			let user;
@@ -106,7 +106,6 @@ export class CheckInComponent implements OnInit {
 			} else {
 				user = await this.usersService.addUser(this.userForm.value);
 			}
-
 
 			if(user.id && this.newCard) {
 				await this.usersService.addUserCard(user.id, this.newCard);

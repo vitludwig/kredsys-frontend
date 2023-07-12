@@ -9,10 +9,24 @@
 				<h2 class="text-center">{{ user.name }} (Členské id: {{ user.memberId }})</h2>
 				<h1 class="very-big text-center">{{ currencyAccount.currentAmount }} Kč</h1>
 
-				<div class="wallet-qrcode mt-5">
+				<div *ngIf="walletData"
+					class="wallet-qrcode mt-5">
 					<h4>Načtěte tento kód ve vaší mobilní aplikaci pro propojení peněženky</h4>
-					<qrcode [errorCorrectionLevel]="'M'" [qrdata]="walletData" [width]="256"></qrcode>
+					<qrcode [errorCorrectionLevel]="'M'"
+						[qrdata]="walletData"
+						[width]="256"></qrcode>
 				</div>
+			</ng-container>
+
+			<ng-container *ngIf="cardLoaded">
+				<ng-container *ngIf="!currencyAccount">
+					<h2 class="text-center">Ještě sis nenabil žádné peníze. Bež na infostánek, nabij si a pak to zkus
+						znovu.</h2>
+				</ng-container>
+
+				<ng-container *ngIf="!user">
+					<h2 class="text-center">Tenhle čip není registrovaný k žádnému uživateli. Bež na infostánek.</h2>
+				</ng-container>
 			</ng-container>
 		</ng-container>
 	</div>
