@@ -85,7 +85,7 @@ export class CustomerService {
 			await this.transactionService.withDraw(
 				this.customer!.id!,
 				place.id!,
-				this.currencyAccount?.currencyId ?? this.currencyService.defaultCurrency.id!,
+				this.currencyAccount?.currencyId ?? (await this.currencyService.getDefaultCurrency()).id!,
 				records,
 			);
 
