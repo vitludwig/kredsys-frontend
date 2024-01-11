@@ -1,11 +1,11 @@
 import {Injectable} from '@angular/core';
-import {Router, CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot} from '@angular/router';
+import { Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import {PlaceService} from '../../modules/admin/services/place/place/place.service';
 import {ERoute} from '../types/ERoute';
 
 
 @Injectable({providedIn: 'root'})
-export class PlaceGuard implements CanActivate {
+export class PlaceGuard  {
 	constructor(
 		protected router: Router,
 		protected placeService: PlaceService,
