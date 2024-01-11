@@ -22,10 +22,10 @@ export class CanAccessRoutePipe implements PipeTransform {
 		}
 
 		const userCanAccess = Object.entries(allowedRoutes).some(([role, allowedRoutes]) => roles.includes(role as EUserRole) && allowedRoutes.includes(route));
-		// const placeCanAccess = Object.entries(allowedPlaceRoutes).some(([role, allowedRoutes]) => roles.includes(role as EPlaceRole) && allowedRoutes.includes(route));
 		let placeCanAccess = true;
+
 		if(this.placeService.placeRole) {
-			placeCanAccess = allowedPlaceRoutes[this.placeService.placeRole!].includes(route);
+			placeCanAccess = allowedPlaceRoutes[this.placeService.placeRole].includes(route);
 		}
 		return userCanAccess || placeCanAccess;
 	}
