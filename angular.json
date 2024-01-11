@@ -81,10 +81,10 @@
           },
           "configurations": {
             "production": {
-              "browserTarget": "kredsys:build:production"
+              "buildTarget": "kredsys:build:production"
             },
             "development": {
-              "browserTarget": "kredsys:build:development"
+              "buildTarget": "kredsys:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -92,7 +92,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "kredsys:build"
+            "buildTarget": "kredsys:build"
           }
         },
         "test": {

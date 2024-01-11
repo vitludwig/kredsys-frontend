@@ -9,7 +9,22 @@
 @import "overides/mat-chip";
 
 :root {
-  --mdc-theme-surface: #1e1e1e
+  --input-text-color-label: rgba(238, 238, 238, 0.67); // #eeeeee
+  --input-text-color-label-disabled: rgba(238, 238, 238, 0.37); // #eeeeee
+  --input-text-color-filled: rgba(238, 238, 238); // #eeeeee
+  --mdc-theme-surface: #1e1e1e;
+
+  --mdc-filled-text-field-input-text-color: var(--input-text-color-filled);
+  --mdc-filled-text-field-label-text-color: var(--input-text-color-label);
+  --mdc-filled-text-field-disabled-input-text-color: var(--input-text-color-label-disabled);
+
+  --mat-select-enabled-trigger-text-color: var(--input-text-color-filled);
+  --mat-select-placeholder-text-color: var(--input-text-color-label);
+
+  .mat-mdc-dialog-container {
+    --mdc-dialog-subhead-color: var(--input-text-color-filled) !important;
+    --mdc-dialog-supporting-text-color: var(--input-text-color-filled) !important;;
+  }
 }
 .main-content, .login-container {
   min-height: calc(100vh - var(--cy__toolbar--height));
