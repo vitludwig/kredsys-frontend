@@ -52,7 +52,7 @@
             "FunctionExpression": {
               "parameters": "first"
             },
-            "ObjectExpression":  1,
+            "ObjectExpression": 1,
             "SwitchCase": 1
           }
         ]
