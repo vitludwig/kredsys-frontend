@@ -3,7 +3,7 @@
 		<h2>Uživatel</h2>
 
 		<ng-container *ngIf="showValidationErrors">
-			<div *ngIf="memberId.invalid"
+			<div *ngIf="memberId?.invalid"
 				class="alert alert-danger">
 
 				<div *ngIf="memberId.errors?.['required']">
@@ -11,7 +11,7 @@
 				</div>
 			</div>
 
-			<div *ngIf="name.invalid"
+			<div *ngIf="name?.invalid"
 				class="alert alert-danger">
 
 				<div *ngIf="name.errors?.['required']">
@@ -19,14 +19,14 @@
 				</div>
 			</div>
 
-			<div *ngIf="email.invalid"
+			<div *ngIf="email?.invalid"
 				class="alert alert-danger">
 
-				<div *ngIf="email.errors?.['required']">
+				<div *ngIf="email?.errors?.['required']">
 					Vyplňte email
 				</div>
 
-				<div *ngIf="email.errors?.['email']">
+				<div *ngIf="email?.errors?.['email']">
 					Email není validní emailová adresa
 				</div>
 			</div>
@@ -123,21 +123,25 @@
 	<div class="col-md-6 col-xs-12">
 		<div class="d-flex align-items-center justify-content-between">
 			<h2 class="mb-0 me-5">Uživatelé</h2>
-			<mat-form-field
-				class="w-100">
-				<mat-label>Vyhledat podle jména</mat-label>
-				<input matInput
-                    #search
-					(keyup)="onUserSearch(search.value)">
-			</mat-form-field>
-		</div>
 
+			@if(newCard) {
+				<mat-form-field
+					class="w-100">
+					<mat-label>Vyhledat podle jména</mat-label>
+					<input matInput
+						#search
+						(keyup)="onUserSearch(search.value)">
+				</mat-form-field>
+			} @else {
+				<h3 class="mb-0">Pro vyhledávání naskenuj kartu</h3>
+			}
+		</div>
 		<mat-action-list>
 			<button mat-list-item
 				*ngFor="let user of users"
 				(click)="selectUser(user)"
 			>
-				{{ user.name }} (id: {{ user.memberId }}) | {{ user.email }}
+				<span>{{ user.name }} (id: {{ user.memberId }}) | {{ user.email }}</span>
 				<button mat-raised-button
 					color="accent"
 					class="ms-auto"

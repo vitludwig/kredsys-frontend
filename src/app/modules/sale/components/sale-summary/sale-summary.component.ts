@@ -17,7 +17,7 @@ import {Subject, takeUntil} from 'rxjs';
 })
 export class SaleSummaryComponent implements OnInit, OnDestroy {
 	@Input()
-	public place: IPlace;
+	public place: IPlace | null = null
 
 	public totalLeft: number;
 	public isUserLoaded: boolean = false;
@@ -86,7 +86,7 @@ export class SaleSummaryComponent implements OnInit, OnDestroy {
 	}
 
 	public async submitOrder(): Promise<void> {
-		if(this.orderService.items.length === 0) {
+		if(this.orderService.items.length === 0 || !this.place) {
 			return;
 		}
 

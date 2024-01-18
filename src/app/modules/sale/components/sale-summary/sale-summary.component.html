@@ -1,4 +1,4 @@
-<div class="summary">
+<div class="summary h-100">
 	<div class="p-5 h-100 d-flex align-items-center justify-content-center" *ngIf="!isUserLoaded">
 		<app-card-loader (cardIdChange)="loadUserId($event)"></app-card-loader>
 	</div>
@@ -58,4 +58,8 @@
 			</button>
 		</div>
 	</ng-container>
+
+	<div *ngIf="isUserLoaded && !customerService.currencyAccount" class="d-flex justify-content-center align-items-center h-100 text-center">
+		<h3>Uživatel ještě neprovedl první nabití</h3>
+	</div>
 </div>

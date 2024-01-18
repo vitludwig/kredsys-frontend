@@ -5,4 +5,5 @@ export interface IAuthenticationResponse {
 	userId: number;
 	placeId: number;
 	roles: EUserRole[];
+	permissions: string[]; // TODO: create enum by App/Services/Auth/AclMaps.cs
 }

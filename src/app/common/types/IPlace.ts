@@ -1,3 +1,4 @@
+import {IGoods} from './IGoods';
 
 export interface IPlace {
 	id?: number;
@@ -11,4 +12,9 @@ export enum EPlaceRole {
 	USER_INFO = 'UserInfo',
 	REGISTRATION = 'Registration',
 	INFO_POINT = 'AdminPoint'
+}
+
+export interface IPlaceGoodsResponse {
+	position: number;
+	goods: IGoods;
 }

@@ -41,7 +41,7 @@ export class PlaceDetailComponent implements OnInit {
 			if(placeId) {
 				this.place = Object.assign({}, await this.placeService.getPlace(placeId));
 				this.placeRole = await this.placeService.getPlaceRole(placeId);
-				this.goods = await this.placeService.getPlaceGoods(placeId);
+				this.goods = (await this.placeService.getPlaceGoods(placeId)).map((obj) => obj.goods);
 				this.isEdit = true;
 			} else {
 				this.place = Object.assign({}, this.placeService.createNewPlace());

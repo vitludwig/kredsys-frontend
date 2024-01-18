@@ -1,6 +1,6 @@
 import {Injectable, OnDestroy} from '@angular/core';
 import {IPaginatedResponse} from '../../../../../common/types/IPaginatedResponse';
-import {EPlaceRole, IPlace} from '../../../../../common/types/IPlace';
+import {EPlaceRole, IPlace, IPlaceGoodsResponse} from '../../../../../common/types/IPlace';
 import {BehaviorSubject, firstValueFrom, Observable, Subject, takeUntil} from 'rxjs';
 import {environment} from '../../../../../../environments/environment';
 import {HttpClient} from '@angular/common/http';
@@ -104,12 +104,12 @@ export class PlaceService implements OnDestroy {
 		return result.roles[0];
 	}
 
-	public async getPlaceGoods(id: number): Promise<IGoods[]> {
+	public async getPlaceGoods(id: number): Promise<IPlaceGoodsResponse[]> {
 		const params = {
 			offset: 0,
 			limit: 999,
 		};
-		return (await firstValueFrom(this.http.get<IPaginatedResponse<IGoods>>(environment.apiUrl + 'places/' + id + '/goods', {params: params}))).data;
+		return (await firstValueFrom(this.http.get<IPaginatedResponse<IPlaceGoodsResponse>>(environment.apiUrl + 'places/' + id + '/goods', {params: params}))).data;
 	}
 
 	@cache(ETime.MINUTE * 2, [ECacheTag.TRANSACTION, ECacheTag.TRANSACTIONS])

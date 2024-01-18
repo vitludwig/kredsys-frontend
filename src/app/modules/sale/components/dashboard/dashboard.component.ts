@@ -21,7 +21,7 @@ export class DashboardComponent {
 	}
 
 	@Input()
-	public set place(value: IPlace) {
+	public set place(value: IPlace | null) {
 		if(value && JSON.stringify(value) !== JSON.stringify(this.#place)) {
 			this.#place = value;
 			this.loadItems();
@@ -50,19 +50,19 @@ export class DashboardComponent {
 			const goods = await this.placeService.getPlaceGoods(this.place.id!);
 			const goodsTypes = Utils.toHashMap<IGoodsType>(await this.goodsService.getGoodsTypes(), 'id');
 
-			for(const item of goods) {
+			for(const item of goods.map((obj) => obj.goods)) {
 				this.items.push({
 					id: item.id!,
 					name: item.name,
 					price: item.price!,
-					icon: goodsTypes[item.goodsTypeId!].icon ?? 'other',
+					icon: goodsTypes[item.goodsTypeId!]?.icon ?? 'other',
 					type: item.goodsTypeId,
 				});
 
 				if(!this.itemTypes[item.goodsTypeId!]) {
 					this.itemTypes[item.goodsTypeId!] = {
 						id: item.goodsTypeId!,
-						name: goodsTypes[item.goodsTypeId!].name,
+						name: goodsTypes[item.goodsTypeId!]?.name,
 					}
 				}
 			}
