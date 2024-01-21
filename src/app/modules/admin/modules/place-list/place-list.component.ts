@@ -63,7 +63,7 @@ export class PlaceListComponent implements OnInit, OnDestroy {
 						return [];
 					}
 
-					this.placesTotal = data.total;
+					this.placesTotal = data.count;
 					return data.data;
 				}),
 				takeUntil(this.unsubscribe),
@@ -82,7 +82,7 @@ export class PlaceListComponent implements OnInit, OnDestroy {
 		const users = await this.placeService.getPlaces(search, offset, limit);
 
 		this.placesData = users.data;
-		this.placesTotal = users.total;
+		this.placesTotal = users.count;
 	}
 
 	public applyFilter(event: Event): void {

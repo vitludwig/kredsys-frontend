@@ -25,6 +25,14 @@
     --mdc-dialog-subhead-color: var(--input-text-color-filled) !important;
     --mdc-dialog-supporting-text-color: var(--input-text-color-filled) !important;;
   }
+
+  .mat-mdc-tab {
+    &, &:hover {
+      .mdc-tab__text-label {
+        color: var(--input-text-color-filled);
+      }
+    }
+  }
 }
 .main-content, .login-container {
   min-height: calc(100vh - var(--cy__toolbar--height));

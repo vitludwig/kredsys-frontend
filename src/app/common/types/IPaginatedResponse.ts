@@ -1,6 +1,4 @@
 export interface IPaginatedResponse<T> {
-	limit: number;
-	offset: number;
-	total: number;
+	count: number; // total count of items
 	data: T[];
 }

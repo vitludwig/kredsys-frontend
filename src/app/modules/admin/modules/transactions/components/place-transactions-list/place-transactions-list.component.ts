@@ -1,11 +1,9 @@
 import {Component, OnInit} from '@angular/core';
-import {ITransaction} from "../../services/transaction/types/ITransaction";
 import {IPlace} from "../../../../../../common/types/IPlace";
 import {TransactionService} from "../../services/transaction/transaction.service";
 import {UsersService} from "../../../../services/users/users.service";
 import {PlaceService} from "../../../../services/place/place/place.service";
 import {ActivatedRoute} from "@angular/router";
-import {IPaginatedResponse} from "../../../../../../common/types/IPaginatedResponse";
 
 @Component({
 	selector: 'app-place-transactions-list',
@@ -15,7 +13,6 @@ import {IPaginatedResponse} from "../../../../../../common/types/IPaginatedRespo
 export class PlaceTransactionsListComponent implements OnInit {
 	public places: IPlace[];
 	public selectedPlace: IPlace | null;
-	public filterBy: Partial<ITransaction> = {};
 
 	constructor(
 		public placeService: PlaceService,
@@ -32,9 +29,5 @@ export class PlaceTransactionsListComponent implements OnInit {
 		if(id !== undefined) {
 			this.selectedPlace = this.places.find((place) => place.id === id) ?? null;
 		}
-	}
-
-	public loadData = (id: number, offset: number = 0, limit: number = 15, filterBy: Partial<ITransaction>): Promise<IPaginatedResponse<ITransaction>> => {
-		return this.placeService.getPlaceTransactions(id, offset, limit, filterBy);
 	}
 }

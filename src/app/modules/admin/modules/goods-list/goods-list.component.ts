@@ -75,7 +75,7 @@ export class GoodsListComponent implements OnInit, OnDestroy {
 						return [];
 					}
 
-					this.goodsTotal = data.total;
+					this.goodsTotal = data.count;
 					return data.data;
 				}),
 				takeUntil(this.unsubscribe),
@@ -94,7 +94,7 @@ export class GoodsListComponent implements OnInit, OnDestroy {
 		const goods = await this.goodsService.getGoods(search, offset, limit);
 
 		this.goodsDataSource = new MatTableDataSource<IGoodsTableSource>(await this.transformGoodsToSource(goods.data));
-		this.goodsTotal = goods.total;
+		this.goodsTotal = goods.count;
 	}
 
 	protected async loadGoodsTypes(): Promise<void> {

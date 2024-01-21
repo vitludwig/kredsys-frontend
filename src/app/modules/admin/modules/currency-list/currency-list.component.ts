@@ -64,7 +64,7 @@ export class CurrencyListComponent implements OnInit, OnDestroy {
 						return [];
 					}
 
-					this.total = data.total;
+					this.total = data.count;
 					return data.data;
 				}),
 				takeUntil(this.unsubscribe),
@@ -83,7 +83,7 @@ export class CurrencyListComponent implements OnInit, OnDestroy {
 		const data = await this.currencyService.getCurrencies(search, offset, limit);
 
 		this.dataSource = new MatTableDataSource<ICurrency>(data.data);
-		this.total = data.total;
+		this.total = data.count;
 	}
 
 

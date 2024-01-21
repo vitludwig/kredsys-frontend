@@ -77,7 +77,7 @@ export class UserListComponent implements OnInit, OnDestroy {
 						return [];
 					}
 
-					this.usersTotal = data.total;
+					this.usersTotal = data.count;
 					return data.data;
 				}),
 				takeUntil(this.unsubscribe),
@@ -130,7 +130,7 @@ export class UserListComponent implements OnInit, OnDestroy {
 		// const data = users.data = users.data.filter((user) => !user.blocked);
 
 		this.usersData = users.data;
-		this.usersTotal = users.total;
+		this.usersTotal = users.count;
 	}
 
 	public ngOnDestroy(): void {

@@ -1,5 +1,4 @@
-import {AfterViewInit, Component, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {UsersService} from '../../../../services/users/users.service';
+import {AfterViewInit, Component, inject, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Animations} from '../../../../../../common/utils/animations';
 import {MatPaginator} from '@angular/material/paginator';
 import {ITransaction} from '../../services/transaction/types/ITransaction';
@@ -8,10 +7,12 @@ import {GoodsService} from '../../../../services/goods/goods.service';
 import {IPaginatedResponse} from "../../../../../../common/types/IPaginatedResponse";
 import {ETransactionType} from "../../services/transaction/types/ETransactionType";
 import {AlertService} from "../../../../../../common/services/alert/alert.service";
-import {map, merge, startWith, Subject, switchMap, takeUntil} from "rxjs";
+import {map, merge, of, startWith, Subject, switchMap, takeUntil} from "rxjs";
 import {CurrencyService} from "../../../../services/currency/currency.service";
-import {ITransactionStatistics} from '../../services/transaction/types/ITransactionStatistics';
+import {ITransactionStatistics,} from '../../services/transaction/types/ITransactionStatistics';
 import {PlaceService} from '../../../../services/place/place/place.service';
+import {MatSort, Sort} from '@angular/material/sort';
+import {MatTableDataSource} from '@angular/material/table';
 
 @Component({
 	selector: 'app-transactions-list',
@@ -22,57 +23,69 @@ import {PlaceService} from '../../../../services/place/place/place.service';
 	],
 })
 export class TransactionsListComponent implements OnInit, AfterViewInit, OnDestroy {
-	public displayedColumns: string[] = ['amount', 'type', 'place', 'userName', 'created', 'actions'];
-	public listLoading: boolean = true;
-	public detailLoading: boolean = true;
-	public expandedRow: ITransaction | null;
-	public transactionDetails: {goodsName: string, amount: number, price: number}[] = [];
-
-	public transactionData: ITransaction[] = [];
-	public transactionsTotal: number = 0;
-
-	public statsDataFrom: string = '';
-	public statsDataTo: string = '';
-	public statistics: ITransactionStatistics;
-	public placesById: Record<number, string> = {};
+	@ViewChild(MatSort)
+	public sort: MatSort;
+	protected displayedColumns: string[] = ['amount', 'type', 'place', 'userName', 'created', 'actions'];
+	protected detailLoading: boolean = true;
+	protected expandedRow: ITransaction | null;
+	protected transactionDetails: {goodsName: string, amount: number, price: number}[] = [];
+	protected dataSource: MatTableDataSource<ITransaction>;
+	protected transactionsTotal: number = 0;
+	protected statsDataFrom: string = '';
+	protected statsDataTo: string = '';
+	protected statistics: ITransactionStatistics;
+	protected placesById: Record<number, string> = {};
+	protected listLoading: boolean = true;
+	protected readonly ETransactionType = ETransactionType;
+	private transactionService: TransactionService = inject(TransactionService);
+	private currencyService: CurrencyService = inject(CurrencyService);
+	private alertService: AlertService = inject(AlertService);
 
 	@ViewChild(MatPaginator)
 	public paginator: MatPaginator;
+	private placeService: PlaceService = inject(PlaceService);
+	private goodsService: GoodsService = inject(GoodsService);
+	private unsubscribe: Subject<void> = new Subject<void>();
+	#filterBy: string;
+	#filterByRecord: Partial<ITransaction>;
 
-	@Input()
-	public dataLoader: (id: number, offset: number, limit: number, filterBy: Partial<ITransaction>) => Promise<IPaginatedResponse<ITransaction>>
-
-	public get filterBy(): Partial<ITransaction> {
-		return {
-			...this.#filterBy,
-			cancellation: false,
-		};
+	public get filterBy(): string {
+		return this.#filterBy;
 	}
 
 	@Input()
 	public set filterBy(value: Partial<ITransaction>) {
-		this.#filterBy = value;
-		if(value) {
-			setTimeout(() => {
-				this.loadData();
-			})
-		}
+		this.#filterBy = this.transformFilterBy(value);
+		this.#filterByRecord = value; // TODO: new paging, remove after api for statistics is gridify ready
 	}
 
-	public readonly ETransactionType = ETransactionType;
+	public async ngAfterViewInit(): Promise<void> {
+		const data = await this.getData();
+		this.loadDataSource(data.data, data.count);
 
-	protected unsubscribe: Subject<void> = new Subject<void>();
+		merge(this.paginator.page, this.paginator.pageSize)
+			.pipe(
+				startWith({}),
+				switchMap(() => {
+					this.listLoading = true;
 
-	#filterBy: Partial<ITransaction>;
+					return this.getData();
+				}),
+				map((data) => {
+					// Flip flag to show that loading has finished.
+					this.listLoading = false;
 
-	constructor(
-		protected usersService: UsersService,
-		protected transactionService: TransactionService,
-		protected currencyService: CurrencyService,
-		protected alertService: AlertService,
-		protected placeService: PlaceService,
-		protected goodsService: GoodsService,
-	) {
+					if(data === null) {
+						return {count: 0, data: []};
+					}
+
+					return data;
+				}),
+				takeUntil(this.unsubscribe),
+			)
+			.subscribe((data) => {
+				this.loadDataSource(data.data, data.count);
+			});
 	}
 
 	public async ngOnInit(): Promise<void> {
@@ -82,47 +95,28 @@ export class TransactionsListComponent implements OnInit, AfterViewInit, OnDestr
 		}
 	}
 
-	public async ngAfterViewInit(): Promise<void> {
-		merge(this.paginator.page, this.paginator.pageSize)
-			.pipe(
-				startWith({}),
-				switchMap(() => {
-					this.listLoading = true;
-					const offset = this.paginator.pageIndex * this.paginator.pageSize;
-
-					return this.transactionService.getTransactions(
-						offset >= 0 ? offset : 0,
-						this.paginator.pageSize,
-						this.filterBy
-					);
-				}),
-				map((data) => {
-					// Flip flag to show that loading has finished.
-					this.listLoading = false;
-
-					if(data === null) {
-						return [];
-					}
-
-					this.transactionsTotal = data.total;
-					return data.data;
-				}),
-				takeUntil(this.unsubscribe),
-			)
-			.subscribe((data) => {
-				this.transactionData = data;
-			});
-	}
-
 	public async stornoTransaction(id: number): Promise<void> {
 		try {
 			await this.transactionService.storno(id);
-			await this.loadData();
+			this.loadDataSource(this.dataSource.data.filter((transaction) => transaction.id !== id), this.transactionsTotal - 1);
+			await this.loadStatisticsData();
 			this.alertService.success('Transakce stornována');
 		} catch(e) {
 			console.error("Failed to storno transaction", e);
 			this.alertService.error("Nepodařilo se stornovat transakci");
 		}
+	}
+
+	protected async loadStatisticsData(): Promise<void> {
+		const currency = await this.currencyService.getDefaultCurrency();
+		let filterBy: { [key: string]: any } = {
+			usersFilter: this.#filterByRecord.userId ? [this.#filterByRecord.userId] : [],
+			placesFilter: this.#filterByRecord.placeId ? [this.#filterByRecord.placeId] : [],
+			fromDate: this.statsDataFrom,
+			toDate: this.statsDataTo,
+		};
+		// const filterBy = `${this.filterBy}, created >= ${this.statsDataFrom}, created <= ${this.statsDataTo}`; // TODO: new paging
+		this.statistics = await this.transactionService.getStatistics(currency.id!, filterBy);
 	}
 
 	public async filterStatsData(reset: boolean = false): Promise<void> {
@@ -162,28 +156,50 @@ export class TransactionsListComponent implements OnInit, AfterViewInit, OnDestr
 		}
 	}
 
-	protected async loadStatisticsData(): Promise<void> {
-		const currency = await this.currencyService.getDefaultCurrency();
-		let filterBy: { [key: string]: any } = {
-			usersFilter: this.filterBy.userId ? [this.filterBy.userId] : [],
-			placesFilter: this.filterBy.placeId ? [this.filterBy.placeId] : [],
-			fromDate: this.statsDataFrom,
-			toDate: this.statsDataTo,
-		};
-		this.statistics = await this.transactionService.getStatistics(currency.id!, filterBy);
+	protected async getData(
+		page: number = this.paginator.pageIndex,
+		pageSize: number = this.paginator.pageSize,
+		filter: string = this.filterBy,
+		sort: string =  ''
+	): Promise<IPaginatedResponse<ITransaction>> {
+		if(!this.paginator) {
+			return {
+				count: 0,
+				data: [],
+			};
+		}
+
+		try {
+			// add 1 to page because paginator starts from 0
+			return this.transactionService.getTransactions(page + 1, pageSize, filter, sort);
+		} catch(e) {
+			throw e;
+		}
 	}
 
-	protected async loadData(): Promise<void> {
-		if(!this.paginator) {
-			return;
+	protected async sortData(value: Sort): Promise<void> {
+		const sortedData = await this.getData(this.paginator.pageIndex,  this.paginator.pageSize, this.filterBy,`${value.active} ${value.direction}`);
+		this.loadDataSource(sortedData.data, sortedData.count);
+	}
+
+	private loadDataSource(data: ITransaction[], total: number): void {
+		if(!this.dataSource) {
+			this.dataSource = new MatTableDataSource(data);
+			// this.dataSource.paginator = this.paginator;
+			this.dataSource.sort = this.sort;
+		} else {
+			this.dataSource.data = data;
 		}
-		const offset = this.paginator.pageIndex * this.paginator.pageSize;
-		const result = await this.transactionService.getTransactions(offset, this.paginator.pageSize, this.filterBy);
 
-		await this.loadStatisticsData();
+		this.transactionsTotal = total;
+	}
 
-		this.transactionData = result.data;
-		this.transactionsTotal = result.total;
+	private transformFilterBy(filterBy: Partial<ITransaction>): string {
+		filterBy = {
+			...filterBy,
+			cancellation: false,
+		};
+		return Object.entries(filterBy).map(([key, value]) => `${key} = ${value}`).join(', ');
 	}
 
 	public ngOnDestroy(): void {

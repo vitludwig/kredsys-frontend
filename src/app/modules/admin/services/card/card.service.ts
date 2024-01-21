@@ -28,9 +28,7 @@ export class CardService {
 		}
 
 		return {
-			total: this.cards.length,
-			offset: params.offset,
-			limit: params.limit,
+			count: this.cards.length,
 			data: data,
 		};
 	}

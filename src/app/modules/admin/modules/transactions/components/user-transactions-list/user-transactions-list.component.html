@@ -7,8 +7,7 @@
 ></app-input-autocomplete>
 
 <app-transactions-list *ngIf="selectedUser"
-	[dataLoader]="loadData"
 	[filterBy]="{
-			userId: selectedUser.id
-		}"
+		userId: selectedUser.id
+	}"
 ></app-transactions-list>
