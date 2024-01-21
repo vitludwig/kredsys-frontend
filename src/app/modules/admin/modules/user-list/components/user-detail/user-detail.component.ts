@@ -6,7 +6,6 @@ import {ERoute} from '../../../../../../common/types/ERoute';
 import {MatDialog} from '@angular/material/dialog';
 import {CardDetailComponent} from './components/card-detail/card-detail.component';
 import {ICard} from '../../../../../../common/types/ICard';
-import {CardService} from '../../../../services/card/card.service';
 import {AlertService} from '../../../../../../common/services/alert/alert.service';
 import {ICurrency, ICurrencyAccount} from '../../../../../../common/types/ICurrency';
 import {Utils} from '../../../../../../common/utils/Utils';
@@ -38,7 +37,6 @@ export class UserDetailComponent implements OnInit {
 
 	constructor(
 		public usersService: UsersService,
-		protected cardService: CardService,
 		protected currencyService: CurrencyService,
 		protected route: ActivatedRoute,
 		protected router: Router,

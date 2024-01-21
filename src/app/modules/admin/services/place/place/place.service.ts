@@ -77,18 +77,18 @@ export class PlaceService implements OnDestroy {
 	@cache(ETime.MINUTE * 2, [ECacheTag.PLACES])
 	public async getAllPlaces(): Promise<IPlace[]> {
 		const params = {
-			offset: 0,
-			limit: 999,
+			pageSize: 999,
 		};
 
 		return (await firstValueFrom(this.http.get<IPaginatedResponse<IPlace>>(environment.apiUrl + 'places', {params: params}))).data;
 	}
 
 	@cache(ETime.MINUTE * 2, [ECacheTag.PLACE, ECacheTag.PLACES])
-	public async getPlaces(search: string = '', offset: number = 0, limit = this.limit): Promise<IPaginatedResponse<IPlace>> {
+	public async getPlaces(filter: string = '', page: number = 0, pageSize: number = this.limit): Promise<IPaginatedResponse<IPlace>> {
 		const params = {
-			offset: offset,
-			limit: limit,
+			filter,
+			page,
+			pageSize
 		};
 
 		return firstValueFrom(this.http.get<IPaginatedResponse<IPlace>>(environment.apiUrl + 'places', {params: params}));
@@ -106,18 +106,17 @@ export class PlaceService implements OnDestroy {
 
 	public async getPlaceGoods(id: number): Promise<IPlaceGoodsResponse[]> {
 		const params = {
-			offset: 0,
-			limit: 999,
+			pageSize: 999,
 		};
 		return (await firstValueFrom(this.http.get<IPaginatedResponse<IPlaceGoodsResponse>>(environment.apiUrl + 'places/' + id + '/goods', {params: params}))).data;
 	}
 
 	@cache(ETime.MINUTE * 2, [ECacheTag.TRANSACTION, ECacheTag.TRANSACTIONS])
-	public async getPlaceTransactions(id: number, offset: number = 0, limit: number = 15, filterBy: Partial<ITransaction>): Promise<IPaginatedResponse<ITransaction>> {
+	public async getPlaceTransactions(id: number, page: number = 0, pageSize: number = 15, filter: string): Promise<IPaginatedResponse<ITransaction>> {
 		const params = {
-			offset: offset,
-			limit: limit,
-			...filterBy,
+			filter,
+			page,
+			pageSize
 		};
 
 		return firstValueFrom(this.http.get<IPaginatedResponse<ITransaction>>(environment.apiUrl + 'places/' + id + '/transactions', {params: params}));

@@ -157,7 +157,7 @@ export class TransactionsListComponent implements OnInit, AfterViewInit, OnDestr
 	}
 
 	protected async getData(
-		page: number = this.paginator.pageIndex,
+		page: number = this.paginator.pageIndex + 1,
 		pageSize: number = this.paginator.pageSize,
 		filter: string = this.filterBy,
 		sort: string =  ''
@@ -178,7 +178,7 @@ export class TransactionsListComponent implements OnInit, AfterViewInit, OnDestr
 	}
 
 	protected async sortData(value: Sort): Promise<void> {
-		const sortedData = await this.getData(this.paginator.pageIndex,  this.paginator.pageSize, this.filterBy,`${value.active} ${value.direction}`);
+		const sortedData = await this.getData(this.paginator.pageIndex + 1,  this.paginator.pageSize, this.filterBy,`${value.active} ${value.direction}`);
 		this.loadDataSource(sortedData.data, sortedData.count);
 	}
 

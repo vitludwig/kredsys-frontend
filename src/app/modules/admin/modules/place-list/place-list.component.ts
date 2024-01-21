@@ -47,11 +47,10 @@ export class PlaceListComponent implements OnInit, OnDestroy {
 				startWith({}),
 				switchMap(() => {
 					this.isPlacesLoading = true;
-					const offset = this.paginator.pageIndex * this.paginator.pageSize;
 
 					return this.placeService.getPlaces(
 						'',
-						offset >= 0 ? offset : 0,
+						this.paginator.pageIndex + 1,
 						this.paginator.pageSize
 					);
 				}),
@@ -78,8 +77,8 @@ export class PlaceListComponent implements OnInit, OnDestroy {
 		this.loadPlaces(value);
 	}
 
-	protected async loadPlaces(search: string = '', offset?: number, limit?: number): Promise<void> {
-		const users = await this.placeService.getPlaces(search, offset, limit);
+	protected async loadPlaces(filter: string = '', page?: number, pageSize?: number): Promise<void> {
+		const users = await this.placeService.getPlaces(filter, page, pageSize);
 
 		this.placesData = users.data;
 		this.placesTotal = users.count;

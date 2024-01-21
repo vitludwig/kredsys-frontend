@@ -24,19 +24,19 @@ export class GoodsService {
 	@cache(ETime.MINUTE * 2, [ECacheTag.GOODS])
 	public async getAllGoods(): Promise<IGoods[]> {
 		const params = {
-			offset: 0,
-			limit: 999,
+			pageSize: 999,
 		};
 
 		return (await firstValueFrom(this.http.get<IPaginatedResponse<IGoods>>(environment.apiUrl + 'goods', {params: params}))).data;
 	}
 
 	@cache(ETime.MINUTE * 2, [ECacheTag.GOODS])
-	public async getGoods(search: string = '', offset: number = 0, limit = this.limit): Promise<IPaginatedResponse<IGoods>> {
+	public async getGoods(filter: string = '', page: number = 0, pageSize = this.limit): Promise<IPaginatedResponse<IGoods>> {
+		[filter, 'deleted=false'].join(',');
 		const params = {
-			offset: offset,
-			limit: limit,
-			Name: search,
+			filter,
+			page,
+			pageSize,
 			deleted: false,
 		};
 
@@ -54,8 +54,7 @@ export class GoodsService {
 
 	public async getGoodsTypes(): Promise<IGoodsType[]> {
 		const params = {
-			offset: 0,
-			limit: 999, // we dont need to paginate goods types for now
+			pageSize: 999, // we dont need to paginate goods types for now
 		};
 		return (await firstValueFrom(this.http.get<IPaginatedResponse<IGoodsType>>(environment.apiUrl + 'goodstypes', {params: params}))).data;
 	}

@@ -48,11 +48,10 @@ export class CurrencyListComponent implements OnInit, OnDestroy {
 				startWith({}),
 				switchMap(() => {
 					this.isLoading = true;
-					const offset = this.paginator.pageIndex * this.paginator.pageSize;
 
 					return this.currencyService.getCurrencies(
 						'',
-						offset >= 0 ? offset : 0,
+						this.paginator.pageIndex + 1,
 						this.paginator.pageSize
 					);
 				}),
@@ -79,8 +78,8 @@ export class CurrencyListComponent implements OnInit, OnDestroy {
 		this.loadData(value);
 	}
 
-	protected async loadData(search: string = '', offset?: number, limit?: number): Promise<void> {
-		const data = await this.currencyService.getCurrencies(search, offset, limit);
+	protected async loadData(filter: string = '', page?: number, pageSize?: number): Promise<void> {
+		const data = await this.currencyService.getCurrencies(filter, page, pageSize);
 
 		this.dataSource = new MatTableDataSource<ICurrency>(data.data);
 		this.total = data.count;

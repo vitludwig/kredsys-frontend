@@ -15,10 +15,6 @@ import {ETransactionType} from "../../services/transaction/types/ETransactionTyp
 })
 export class UserTransactionsListComponent {
 	public selectedUser: IUser;
-	public filterBy: Partial<ITransaction> = {};
-	public filteredOptions: Observable<any>;
-
-	public readonly ETransactionType = ETransactionType;
 
 	constructor(
 		protected transactionService: TransactionService,
@@ -29,9 +25,5 @@ export class UserTransactionsListComponent {
 
 	public getUsers = (search: string): Promise<IPaginatedResponse<IUser>> => {
 		return this.usersService.getUsers(search);
-	}
-
-	public loadData = (id: number, offset: number = 0, limit: number = 15, filterBy: Partial<ITransaction>): Promise<IPaginatedResponse<ITransaction>> => {
-		return this.usersService.getUserTransactions(id, offset, limit, filterBy);
 	}
 }

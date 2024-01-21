@@ -36,12 +36,12 @@ export class TransactionService {
 	}
 
 	@cache(ETime.MINUTE * 2, [ECacheTag.TRANSACTIONS])
-	public getTransactions(page: number = 1, pageSize: number = 15, filter: string = '', order: string = ''): Promise<IPaginatedResponse<ITransaction>> {
+	public getTransactions(page: number = 1, pageSize: number = 15, filter: string = '', orderBy: string = ''): Promise<IPaginatedResponse<ITransaction>> {
 		const params = {
 			page,
 			pageSize,
 			filter,
-			order,
+			orderBy,
 		};
 		return firstValueFrom(this.http.get<IPaginatedResponse<ITransaction>>(environment.apiUrl + 'transactions', {params: params}));
 	}

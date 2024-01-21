@@ -24,13 +24,18 @@ export class UsersService {
 
 	}
 
+	// TODO: create filtering of blocked users in grid
 	@cache(ETime.MINUTE * 2, [ECacheTag.USERS])
-	public async getUsers(search: string = '', offset: number = 0, limit = this.limit, blocked: boolean = false): Promise<IPaginatedResponse<IUser>> {
+	public async getUsers(search: string = '', page: number = 0, pageSize = this.limit, blocked: boolean = false): Promise<IPaginatedResponse<IUser>> {
+		let filter = `blocked=${blocked}`;
+
+		if(search) {
+			filter += `,name=${search}`;
+		}
 		const params = {
-			offset: offset,
-			limit: limit,
-			blocked: blocked, // TODO: create filtering of blocked users in grid
-			name: search,
+			filter,
+			page,
+			pageSize,
 		};
 
 		return firstValueFrom(this.http.get<IPaginatedResponse<IUser>>(environment.apiUrl + 'users', {params: params}));
@@ -83,19 +88,18 @@ export class UsersService {
 	@cache(ETime.MINUTE * 2, [ECacheTag.USER_CARDS])
 	public async getUserCards(id: number): Promise<IPaginatedResponse<ICard>> {
 		const params = {
-			offset: 0,
-			limit: 999,
+			pageSize: 999,
 		};
 
 		return firstValueFrom(this.http.get<IPaginatedResponse<ICard>>(environment.apiUrl + 'users/' + id + '/cards', {params: params}));
 	}
 
 	@cache(ETime.MINUTE * 2, [ECacheTag.TRANSACTION, ECacheTag.TRANSACTIONS])
-	public async getUserTransactions(id: number, offset: number = 0, limit: number = 15, filterBy?: Partial<ITransaction>): Promise<IPaginatedResponse<ITransaction>> {
+	public async getUserTransactions(id: number, page: number = 0, pageSize: number = 15, filter: string = ''): Promise<IPaginatedResponse<ITransaction>> {
 		const params = {
-			offset: offset,
-			limit: limit,
-			...filterBy,
+			filter,
+			page,
+			pageSize,
 		};
 
 		return firstValueFrom(this.http.get<IPaginatedResponse<ITransaction>>(environment.apiUrl + 'users/' + id + '/transactions', {params: params}));
@@ -107,8 +111,7 @@ export class UsersService {
 
 	public async getUserCurrencyAccounts(userId: number): Promise<ICurrencyAccount[]> {
 		const params = {
-			offset: 0,
-			limit: 999,
+			pageSize: 999,
 		};
 
 		return (await firstValueFrom(this.http.get<IPaginatedResponse<ICurrencyAccount>>(environment.apiUrl + 'users/' + userId + '/accounts', {params: params}))).data;

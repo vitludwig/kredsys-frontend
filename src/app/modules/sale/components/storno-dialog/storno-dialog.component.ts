@@ -27,11 +27,12 @@ export class StornoDialogComponent implements OnInit{
 	}
     
 	public async ngOnInit(): Promise<void> {
-		const result = (await this.usersService.getUserTransactions(this.userId,0, 1, {
-			type: ETransactionType.PAYMENT,
-			placeId: this.placeService.selectedPlace!.id,
-			cancellation: false,
-		})).data;
+		const filter = `
+			type=${ETransactionType.PAYMENT},
+			placeId=${this.placeService.selectedPlace!.id},
+			cancellation=false
+		`
+		const result = (await this.usersService.getUserTransactions(this.userId,0, 1, filter)).data;
 
 		if(result.length === 0) {
 			return;

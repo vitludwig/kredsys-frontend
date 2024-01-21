@@ -60,11 +60,10 @@ export class UserListComponent implements OnInit, OnDestroy {
 				startWith({}),
 				switchMap(() => {
 					this.isUsersLoading = true;
-					const offset = this.paginator.pageIndex * this.paginator.pageSize;
 
 					return this.usersService.getUsers(
 						'',
-						offset >= 0 ? offset : 0,
+						this.paginator.pageIndex + 1,
 						this.paginator.pageSize,
 						this.showBlockedUsers,
 					);
@@ -125,9 +124,8 @@ export class UserListComponent implements OnInit, OnDestroy {
 		});
 	}
 
-	protected async loadUsers(search: string = '', offset?: number, limit?: number, blocked?: boolean): Promise<void> {
-		const users = await this.usersService.getUsers(search, offset, limit, blocked);
-		// const data = users.data = users.data.filter((user) => !user.blocked);
+	protected async loadUsers(search: string = '', page?: number, pageSize?: number, blocked?: boolean): Promise<void> {
+		const users = await this.usersService.getUsers(search, page, pageSize, blocked);
 
 		this.usersData = users.data;
 		this.usersTotal = users.count;

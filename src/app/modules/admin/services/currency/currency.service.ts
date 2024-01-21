@@ -21,11 +21,11 @@ export class CurrencyService {
 	}
 
 	@cache(ETime.MINUTE * 2, [ECacheTag.CURRENCIES])
-	public getCurrencies(search: string = '', offset: number = 0, limit = this.limit): Promise<IPaginatedResponse<ICurrency>> {
+	public getCurrencies(filter: string = '', page: number = 0, pageSize: number = this.limit): Promise<IPaginatedResponse<ICurrency>> {
 	    const params = {
-		    offset: offset,
-		    limit: limit,
-			Name: search,
+		    filter,
+		    page,
+		    pageSize
 	    };
 
 	    return firstValueFrom(this.http.get<IPaginatedResponse<ICurrency>>(environment.apiUrl + 'currencies', {params: params}));
