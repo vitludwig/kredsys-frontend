@@ -17,13 +17,11 @@ import {MatAutocompleteTrigger} from '@angular/material/autocomplete';
 	selector: 'app-input-autocomplete',
 	templateUrl: './input-autocomplete.component.html',
 	styleUrls: ['./input-autocomplete.component.scss'],
-
 })
 export class InputAutocompleteComponent<T> implements OnInit, AfterViewInit {
-	
+
 	public selectedValue: UntypedFormControl = new UntypedFormControl('');
-	public filterBy: Partial<unknown> = {};
-	public filteredOptions: Observable<any>;
+	public filteredOptions: Observable<T[]>;
 
 	@Input()
 	public label: string = '';
@@ -42,6 +40,12 @@ export class InputAutocompleteComponent<T> implements OnInit, AfterViewInit {
 
 	@Input()
 	public autoFocus: boolean = false;
+
+	@Input({required: true})
+	public primaryDisplayProperty: keyof T;
+
+	@Input()
+	public secondaryDisplayProperty: keyof T;
 
 	@Output()
 	public valueChange: EventEmitter<T> = new EventEmitter<T>();
@@ -75,34 +79,12 @@ export class InputAutocompleteComponent<T> implements OnInit, AfterViewInit {
 		}
 	}
 
-	public filterData(value: string): Promise<T[]> {
-		// call the service which makes the http-request
-		return this.getData(value);
-	}
-
 	protected async getData(search: string): Promise<T[]> {
 		return (await this.dataLoader(search)).data;
 	}
     
 	public propagateValue(value: T): void {
 		this.valueChange.emit(value);
-		// this.onTouch();
-		// this.onChange(value);
-	}
-
-	public onChange: (_: any) => void = (_: any) => {};
-	public onTouch: () => void = () => {};
-
-	public registerOnChange(fn: any): void {
-		this.onChange = fn;
-	}
-
-	public registerOnTouched(fn: any): void {
-		this.onTouch = fn;
-	}
-
-	public writeValue(value: T): void {
-		this.selectedValue.setValue(value);
 	}
 
 }

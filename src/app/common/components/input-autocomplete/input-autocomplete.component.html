@@ -8,14 +8,13 @@
 		[matAutocomplete]="auto"
 		[value]="selectedValue.value.name || ''"
 	>
-	<mat-autocomplete #auto="matAutocomplete">
+	<mat-autocomplete #auto="matAutocomplete" (optionSelected)="propagateValue($event.option.value)">
 		<mat-option *ngFor="let option of filteredOptions | async"
 			[value]="option"
-			(onSelectionChange)="propagateValue(option)"
 		>
-			{{option.name}}
-			<ng-container *ngIf="option.memberId">
-				({{ option.memberId }})
+			{{option[primaryDisplayProperty]}}
+			<ng-container *ngIf="secondaryDisplayProperty && option[secondaryDisplayProperty]">
+				({{ option[secondaryDisplayProperty] }})
 			</ng-container>
 		</mat-option>
 	</mat-autocomplete>

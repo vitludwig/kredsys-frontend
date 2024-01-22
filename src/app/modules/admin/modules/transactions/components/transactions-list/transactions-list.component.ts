@@ -23,12 +23,21 @@ import {MatTableDataSource} from '@angular/material/table';
 	],
 })
 export class TransactionsListComponent implements OnInit, AfterViewInit, OnDestroy {
+	@ViewChild(MatPaginator)
+	public paginator: MatPaginator;
+	protected transactionDetails: { goodsName: string, amount: number, price: number }[] = [];
+	private transactionService: TransactionService = inject(TransactionService);
+	private currencyService: CurrencyService = inject(CurrencyService);
+	private alertService: AlertService = inject(AlertService);
+
 	@ViewChild(MatSort)
 	public sort: MatSort;
+	private placeService: PlaceService = inject(PlaceService);
+
 	protected displayedColumns: string[] = ['amount', 'type', 'place', 'userName', 'created', 'actions'];
 	protected detailLoading: boolean = true;
 	protected expandedRow: ITransaction | null;
-	protected transactionDetails: {goodsName: string, amount: number, price: number}[] = [];
+	private goodsService: GoodsService = inject(GoodsService);
 	protected dataSource: MatTableDataSource<ITransaction>;
 	protected transactionsTotal: number = 0;
 	protected statsDataFrom: string = '';
@@ -36,16 +45,11 @@ export class TransactionsListComponent implements OnInit, AfterViewInit, OnDestr
 	protected statistics: ITransactionStatistics;
 	protected placesById: Record<number, string> = {};
 	protected listLoading: boolean = true;
-	protected readonly ETransactionType = ETransactionType;
-	private transactionService: TransactionService = inject(TransactionService);
-	private currencyService: CurrencyService = inject(CurrencyService);
-	private alertService: AlertService = inject(AlertService);
 
-	@ViewChild(MatPaginator)
-	public paginator: MatPaginator;
-	private placeService: PlaceService = inject(PlaceService);
-	private goodsService: GoodsService = inject(GoodsService);
+	protected readonly ETransactionType = ETransactionType;
+
 	private unsubscribe: Subject<void> = new Subject<void>();
+
 	#filterBy: string;
 	#filterByRecord: Partial<ITransaction>;
 
@@ -55,13 +59,15 @@ export class TransactionsListComponent implements OnInit, AfterViewInit, OnDestr
 
 	@Input()
 	public set filterBy(value: Partial<ITransaction>) {
+		console.log('filter', value);
 		this.#filterBy = this.transformFilterBy(value);
 		this.#filterByRecord = value; // TODO: new paging, remove after api for statistics is gridify ready
+
+		this.loadData(this.paginator?.pageIndex ?? 0, this.paginator?.pageSize ?? 15, this.#filterBy);
 	}
 
 	public async ngAfterViewInit(): Promise<void> {
-		const data = await this.getData();
-		this.loadDataSource(data.data, data.count);
+		await this.loadStatisticsData();
 
 		merge(this.paginator.page, this.paginator.pageSize)
 			.pipe(
@@ -157,10 +163,10 @@ export class TransactionsListComponent implements OnInit, AfterViewInit, OnDestr
 	}
 
 	protected async getData(
-		page: number = this.paginator.pageIndex + 1,
+		page: number = this.paginator.pageIndex,
 		pageSize: number = this.paginator.pageSize,
 		filter: string = this.filterBy,
-		sort: string =  ''
+		sort: string = this.sort.active ? `${this.sort.active} ${this.sort.direction}` : '',
 	): Promise<IPaginatedResponse<ITransaction>> {
 		if(!this.paginator) {
 			return {
@@ -177,9 +183,18 @@ export class TransactionsListComponent implements OnInit, AfterViewInit, OnDestr
 		}
 	}
 
-	protected async sortData(value: Sort): Promise<void> {
-		const sortedData = await this.getData(this.paginator.pageIndex + 1,  this.paginator.pageSize, this.filterBy,`${value.active} ${value.direction}`);
-		this.loadDataSource(sortedData.data, sortedData.count);
+	protected sortData(value: Sort): Promise<void> {
+		return this.loadData(this.paginator.pageIndex, this.paginator.pageSize, this.filterBy, `${value.active} ${value.direction}`);
+	}
+
+	private async loadData(
+		page: number = this.paginator.pageIndex,
+		pageSize: number = this.paginator.pageSize,
+		filter: string = this.filterBy,
+		sort: string = '',
+	): Promise<void> {
+		const data = await this.getData(page, pageSize, filter, sort);
+		this.loadDataSource(data.data, data.count);
 	}
 
 	private loadDataSource(data: ITransaction[], total: number): void {
@@ -199,7 +214,7 @@ export class TransactionsListComponent implements OnInit, AfterViewInit, OnDestr
 			...filterBy,
 			cancellation: false,
 		};
-		return Object.entries(filterBy).map(([key, value]) => `${key} = ${value}`).join(', ');
+		return Object.entries(filterBy).map(([key, value]) => `${key}=${value}`).join(', ');
 	}
 
 	public ngOnDestroy(): void {

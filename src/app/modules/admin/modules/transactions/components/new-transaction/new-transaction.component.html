@@ -25,6 +25,8 @@
 					class="w-100"
 					(valueChange)="userId = $event.id"
 					[dataLoader]="loadUsers"
+					primaryDisplayProperty="name"
+					secondaryDisplayProperty="memberId"
 				></app-input-autocomplete>
 
 				<app-input-autocomplete
@@ -33,6 +35,7 @@
 					class="w-100"
 					(valueChange)="placeId = $event.id"
 					[dataLoader]="loadPlaces"
+					primaryDisplayProperty="name"
 				></app-input-autocomplete>
 
 				<div *ngIf="type"
@@ -47,6 +50,7 @@
 									class="w-100"
 									(valueChange)="record.goodsId = $event.id"
 									[dataLoader]="loadGoods"
+									primaryDisplayProperty="name"
 								></app-input-autocomplete>
 
 								<mat-form-field class="ms-3">

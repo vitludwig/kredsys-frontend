@@ -5,8 +5,6 @@ import {UsersService} from "../../../../services/users/users.service";
 import {ActivatedRoute} from "@angular/router";
 import {IPaginatedResponse} from "../../../../../../common/types/IPaginatedResponse";
 import {IUser} from "../../../../../../common/types/IUser";
-import {Observable} from "rxjs";
-import {ETransactionType} from "../../services/transaction/types/ETransactionType";
 
 @Component({
 	selector: 'app-user-transactions-list',
@@ -14,7 +12,18 @@ import {ETransactionType} from "../../services/transaction/types/ETransactionTyp
 	styleUrls: ['./user-transactions-list.component.scss']
 })
 export class UserTransactionsListComponent {
-	public selectedUser: IUser;
+	protected filterBy: Partial<ITransaction> = {};
+
+	private _selectedUser: IUser;
+
+	public get selectedUser(): IUser {
+		return this._selectedUser;
+	}
+
+	public set selectedUser(value: IUser) {
+		this._selectedUser = value;
+		this.filterBy = {userId: value.id};
+	}
 
 	constructor(
 		protected transactionService: TransactionService,

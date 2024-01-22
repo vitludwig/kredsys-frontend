@@ -2,12 +2,13 @@
 	label="Uživatel"
 	placeholder="Vyhledat podle jména"
 	[autoFocus]="true"
-	[(value)]="selectedUser"
+	(valueChange)="selectedUser = $event"
+	[value]="selectedUser"
 	[dataLoader]="getUsers"
-></app-input-autocomplete>
+	primaryDisplayProperty="name"
+	secondaryDisplayProperty="memberId"
+/>
 
 <app-transactions-list *ngIf="selectedUser"
-	[filterBy]="{
-		userId: selectedUser.id
-	}"
-></app-transactions-list>
+	[filterBy]="filterBy"
+/>
