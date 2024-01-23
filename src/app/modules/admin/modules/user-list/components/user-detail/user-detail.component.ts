@@ -125,7 +125,7 @@ export class UserDetailComponent implements OnInit {
 			type: 'Card',
 		};
 		const dialog = this.dialog.open<CardDetailComponent, ICard>(CardDetailComponent, {
-			width: '300px',
+			width: '350px',
 			minWidth: '250px',
 			autoFocus: 'dialog',
 			data: newCard,
