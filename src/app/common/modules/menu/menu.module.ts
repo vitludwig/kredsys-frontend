@@ -11,6 +11,8 @@ import {SharedModule} from '../../../shared.module';
 import {LoginModule} from '../../../modules/login/login.module';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+import {IsIncludedPipe} from '../../pipes/is-included/is-included.pipe';
 
 @NgModule({
 	declarations: [
@@ -29,6 +31,8 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 		SharedModule,
 		LoginModule,
 		MatProgressSpinnerModule,
+		MatSlideToggleModule,
+		IsIncludedPipe,
 	],
 	exports: [
 		TopMenuComponent,

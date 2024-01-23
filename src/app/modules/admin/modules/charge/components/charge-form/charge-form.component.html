@@ -1,6 +1,7 @@
 <app-card-loader *ngIf="!cardId"
-	(cardIdChange)="setCardId($event)">
-</app-card-loader>
+	(cardIdChange)="setCardId($event)"
+	[showNewCardButton]="false"
+/>
 
 <ng-container *ngIf="cardId">
 	<h2>Stav: {{ currencyAccount?.currentAmount ?? 0 }} Kč</h2>

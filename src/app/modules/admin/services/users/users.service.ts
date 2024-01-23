@@ -15,7 +15,6 @@ import {ITransaction} from "../../modules/transactions/services/transaction/type
 	providedIn: 'root',
 })
 export class UsersService {
-	protected users: IUser[];
 	protected limit = 15;
 
 	constructor(
@@ -24,7 +23,6 @@ export class UsersService {
 
 	}
 
-	// TODO: create filtering of blocked users in grid
 	@cache(ETime.MINUTE * 2, [ECacheTag.USERS])
 	public async getUsers(search: string = '', page: number = 0, pageSize = this.limit, blocked: boolean = false): Promise<IPaginatedResponse<IUser>> {
 		let filter = `blocked=${blocked}`;

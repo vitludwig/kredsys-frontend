@@ -19,6 +19,14 @@ export class AuthService {
 		this.isLoggedSubject.next(value !== null);
 	}
 
+	public get isDebug(): boolean {
+		return localStorage.getItem('isDebug') === 'true' || environment.debug;
+	}
+
+	public set isDebug(value: boolean) {
+		localStorage.setItem('isDebug', value + '');
+	}
+
 	public get isLogged(): boolean {
 		// return true;
 		return this.#user !== null || !!localStorage.getItem('userId');

@@ -2,7 +2,6 @@
 	<div class="toolbar-content">
 		<div class="d-flex align-items-center">
 			<button mat-icon-button
-				#menuBtn
 				(click)="sideMenu.toggle()"
 			>
 				<mat-icon>menu</mat-icon>
@@ -48,7 +47,7 @@
 					class="ms-3"
 					style="background: #f44336; color: white"
 					(click)="openDischargeDialog()"
-					*ngIf="canChargeMoney"
+					*ngIf="canChargeMoney && (customerService.currencyAccount$ | async) !== undefined"
 				>
 					Vybít
 				</button>
@@ -58,7 +57,7 @@
 					color="warn"
 					class="ms-3"
 					(click)="openStornoDialog()"
-					*ngIf="canChargeMoney"
+					*ngIf="canChargeMoney && (customerService.currencyAccount$ | async) !== undefined"
 				>
 					Storno
 				</button>

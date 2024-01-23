@@ -7,6 +7,7 @@
 			mat-list-item>
 			Prodej
 		</a>
+
 		<ng-container *ngIf="userRoles | canAccessRoute: ERoute.ADMIN">
 			<mat-list-item (click)="adminMenuOpened = !adminMenuOpened"
 				class="expandable"
@@ -92,10 +93,17 @@
 			Odhlásit
 		</a>
 
-		<mat-list-item class="expandable mt-auto">
-			<mat-icon matListItemIcon>person</mat-icon>
-			<span *ngIf="user"
-				matListItemTitle>{{ user.name }} ({{ user.roles[0] }})</span>
-		</mat-list-item>
+		<div class="mt-auto">
+			<mat-list-item *ngIf="EUserRole.ADMIN | isIncluded : userRoles">
+				<mat-icon matListItemIcon>bug_report</mat-icon>
+				<mat-slide-toggle (ngModelChange)="reloadPage()" [(ngModel)]="authService.isDebug">Debug</mat-slide-toggle>
+			</mat-list-item>
+
+			<mat-list-item>
+				<mat-icon matListItemIcon>person</mat-icon>
+				<span *ngIf="user"
+					matListItemTitle>{{ user.name }} ({{ user.roles?.[0] }})</span>
+			</mat-list-item>
+		</div>
 	</mat-nav-list>
 </div>

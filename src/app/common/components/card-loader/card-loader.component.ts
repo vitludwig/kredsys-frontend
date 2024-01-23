@@ -1,28 +1,53 @@
-import {Component, EventEmitter, HostListener, Input, OnDestroy, OnInit, Output, Renderer2} from '@angular/core';
+import {
+	Component,
+	EventEmitter,
+	HostListener,
+	inject,
+	Input,
+	OnDestroy,
+	OnInit,
+	Output,
+	Renderer2
+} from '@angular/core';
 import {Subject, takeUntil} from 'rxjs';
 import {CustomerService} from '../../../modules/sale/services/customer/customer.service';
 import {AlertService} from '../../services/alert/alert.service';
-import {environment} from '../../../../environments/environment';
 import {MatButtonModule} from '@angular/material/button';
 import {CommonModule} from '@angular/common';
+import {UsersService} from '../../../modules/admin/services/users/users.service';
+import {IUser} from '../../types/IUser';
+import {CardsService} from '../../../modules/admin/services/cards/cards.service';
+import {Utils} from '../../utils/Utils';
+import {MatIconModule} from '@angular/material/icon';
+import {MatTooltipModule} from '@angular/material/tooltip';
+import {AuthService} from '../../../modules/login/services/auth/auth.service';
 
 @Component({
 	selector: 'app-card-loader',
 	templateUrl: './card-loader.component.html',
 	styleUrls: ['./card-loader.component.scss'],
 	standalone: true,
-	imports: [CommonModule, MatButtonModule],
+	imports: [CommonModule, MatButtonModule, MatIconModule, MatTooltipModule],
 })
 export class CardLoaderComponent implements OnInit, OnDestroy {
 	@Input()
+	public showNewCardButton: boolean = true;
+	protected customerService: CustomerService = inject(CustomerService);
+	protected authService: AuthService = inject(AuthService);
+	protected userCards: Record<string, number> = {};
+	private renderer: Renderer2 = inject(Renderer2);
+	private alertService: AlertService = inject(AlertService);
+
+	@Input()
 	public hidden: boolean = false;
+	private usersService: UsersService = inject(UsersService);
 
 	@Output()
 	public cardIdChange: EventEmitter<number> = new EventEmitter<number>();
-
-	protected unsubscribe: Subject<void> = new Subject();
-	protected keydownListener: any;
-	protected czechEnglishKeymap: {[key: string]: number} = {
+	private cardsService: CardsService = inject(CardsService);
+	private unsubscribe: Subject<void> = new Subject();
+	private keydownListener: any;
+	private czechEnglishKeymap: {[key: string]: number} = {
 		'+': 1,
 		'ě': 2,
 		'š': 3,
@@ -34,18 +59,10 @@ export class CardLoaderComponent implements OnInit, OnDestroy {
 		'í': 9,
 		'é': 0,
 	};
-	protected prevEventTime: number = 0;
 	protected focused: boolean = true;
-	protected debug = environment.debug;
+	private prevEventTime: number = 0;
 
-	constructor(
-		public customerService: CustomerService,
-		protected renderer: Renderer2,
-		protected alertService: AlertService,
-	) {
-	}
-
-	public ngOnInit(): void {
+	public async ngOnInit(): Promise<void> {
 		this.customerService.customer$
 			.pipe(takeUntil(this.unsubscribe))
 			.subscribe((user) => {
@@ -54,6 +71,17 @@ export class CardLoaderComponent implements OnInit, OnDestroy {
 					this.initCardListener();
 				}
 			});
+
+		if(this.authService.isDebug) {
+			const users = Utils.toHashMap((await this.usersService.getUsers('', 0, 10)).data, 'id') as Record<number, IUser>;
+			const cards = (await this.cardsService.getCards(0, 10)).data;
+
+			for(const card of cards) {
+				if(card.userId !== undefined && card.uid) {
+					this.userCards[users[card.userId].name] = card.uid;
+				}
+			}
+		}
 	}
 
 	public ngOnDestroy(): void {
@@ -61,8 +89,12 @@ export class CardLoaderComponent implements OnInit, OnDestroy {
 		this.removeKeydownListener();
 	}
 
-	public async debugLoadCard(): Promise<void> {
-		this.cardIdChange.emit(2866252548);
+	public async debugLoadNewCard(): Promise<void> {
+		this.cardIdChange.emit(this.generateRandomCardId());
+	}
+
+	protected loadUserCard(cardId: number): void {
+		this.cardIdChange.emit(cardId);
 	}
 
 	@HostListener("window:blur")
@@ -75,7 +107,11 @@ export class CardLoaderComponent implements OnInit, OnDestroy {
 		this.focused = true;
 	}
 
-	protected initCardListener(): void {
+	private generateRandomCardId(): number {
+		return Math.floor(Math.random() * 9000000000) + 1000000000;
+	}
+
+	private initCardListener(): void {
 		let userId = '';
 
 		this.keydownListener = this.renderer.listen('document', 'keydown', (event) => {
@@ -119,7 +155,7 @@ export class CardLoaderComponent implements OnInit, OnDestroy {
 	 * @param id
 	 * @protected
 	 */
-	protected convertFromCzechToNumbers(id: string): number {
+	private convertFromCzechToNumbers(id: string): number {
 		let numberId = '';
 		for(const char of id) {
 			if(this.czechEnglishKeymap[char] !== undefined) {
@@ -131,7 +167,7 @@ export class CardLoaderComponent implements OnInit, OnDestroy {
 		return Number(numberId);
 	}
 
-	protected removeKeydownListener(): void {
+	private removeKeydownListener(): void {
 		if(this.keydownListener) {
 			this.keydownListener();
 			this.keydownListener = undefined;

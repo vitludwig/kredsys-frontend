@@ -10,7 +10,7 @@
 		</div>
 	</div>
 
-	<div *ngIf="!isLoading; else loading"
+	<div *ngIf="!isLoading && user; else loading"
 		class="row"
 	>
 		<div class="col-xs-12 col-md-6">

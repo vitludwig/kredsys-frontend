@@ -1,6 +1,6 @@
 <div class="summary h-100">
 	<div class="p-5 h-100 d-flex align-items-center justify-content-center" *ngIf="!isUserLoaded">
-		<app-card-loader (cardIdChange)="loadUserId($event)"></app-card-loader>
+		<app-card-loader (cardIdChange)="loadUserId($event)" [showNewCardButton]="false"></app-card-loader>
 	</div>
 
 	<ng-container *ngIf="isUserLoaded && customerService.currencyAccount">

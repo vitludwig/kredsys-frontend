@@ -8,6 +8,7 @@ export class Utils {
 	 * @param data
 	 * @param indexBy
 	 */
+	// TODO: rewrite to Record instead of HashMap
 	public static toHashMap<T>(data: any[], indexBy: string): HashMap<T> {
 		const result: HashMap<T> = {};
 		for(const obj of data) {
