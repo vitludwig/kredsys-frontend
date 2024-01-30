@@ -11,7 +11,7 @@ export enum EPlaceRole {
 	BAR = 'Bar',
 	USER_INFO = 'UserInfo',
 	REGISTRATION = 'Registration',
-	INFO_POINT = 'AdminPoint'
+	INFO_POINT = 'Info'
 }
 
 export interface IPlaceGoodsResponse {

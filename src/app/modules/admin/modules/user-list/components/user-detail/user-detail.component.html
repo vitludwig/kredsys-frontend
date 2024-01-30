@@ -10,91 +10,89 @@
 		</div>
 	</div>
 
-	<div *ngIf="!isLoading && user; else loading"
+	<div *ngIf="!isLoading; else loading"
 		class="row"
 	>
 		<div class="col-xs-12 col-md-6">
 			<div class="d-flex justify-content-between">
-				<h2>{{ isEdit ? user.name : 'Nový uživatel' }}</h2>
+				<h2>{{ user?.name ?? 'Nový uživatel' }}</h2>
 				<h3 *ngIf="accounts[0]">Zůstatek: {{ accounts[0].currentAmount }} Kč</h3>
 			</div>
 
-			<ng-container *ngIf="showValidationErrors">
-				<div *ngFor="let error of errors"
-					class="alert alert-danger">
-					{{ error }}
-				</div>
-			</ng-container>
-
-			<form #userForm="ngForm"
-				(ngSubmit)="userForm.valid && onSubmit()"
+			<form (ngSubmit)="onSubmit()"
+				[formGroup]="userFormGroup"
 			>
-				<mat-form-field
-					class="w-100">
+				<mat-form-field class="w-100">
 					<mat-label>Členské ID</mat-label>
-					<input [(ngModel)]="user.memberId"
-						appAutofocus
-						matInput
-						name="memberId"
+					<input #memberId="matInput"
+						formControlName="memberId"
 						placeholder="Členské ID"
-						required
 						type="number"
+						matInput
 					>
+					<mat-error>
+						<ng-container *ngTemplateOutlet="errorMessage; context: { control: memberId.ngControl }"></ng-container>
+					</mat-error>
 				</mat-form-field>
 
-				<mat-form-field
-					class="w-100">
+
+				<mat-form-field class="w-100">
 					<mat-label>Jméno</mat-label>
 					<input matInput
 						placeholder="Jméno"
-						name="userName"
-						required
-						[(ngModel)]="user.name"
+						#name="matInput"
+						formControlName="name"
 					>
+					<mat-error>
+						<ng-container *ngTemplateOutlet="errorMessage; context: { control: name.ngControl }"></ng-container>
+					</mat-error>
 				</mat-form-field>
 
 				<mat-form-field
 					class="w-100">
 					<mat-label>E-mail</mat-label>
-					<input [(ngModel)]="user.email"
-						matInput
-						name="email"
-						pattern="[a-zA-Z0-9.-_]{1,}@[a-zA-Z.-]{2,}[.]{1}[a-zA-Z]{2,}"
+					<input #email="matInput"
+						formControlName="email"
 						placeholder="E-mail"
-						required
 						type="email"
-					>
-				</mat-form-field>
-
-				<mat-form-field *ngIf="!isEdit"
-					class="w-100"
-				>
-					<mat-label>Heslo</mat-label>
-					<input [(ngModel)]="user.password"
 						matInput
-						minlength="5"
-						name="password"
-						placeholder="Heslo"
-						required
-						type="password"
 					>
+					<mat-error>
+						<ng-container *ngTemplateOutlet="errorMessage; context: { control: email.ngControl }"></ng-container>
+					</mat-error>
 				</mat-form-field>
 
-				<mat-form-field *ngIf="!isEdit"
-					class="w-100"
-				>
-					<mat-label>Heslo znovu</mat-label>
-					<input [(ngModel)]="passwordAgain"
-						matInput
-						minlength="5"
-						name="passwordAgain"
-						placeholder="Heslo znovu"
-						required
-						type="password"
-					>
-				</mat-form-field>
+				@if(!isEdit) {
+					<mat-form-field class="w-100">
+						<mat-label>Heslo</mat-label>
+						<input matInput
+							minlength="5"
+							formControlName="password"
+							placeholder="Heslo"
+							type="password"
+							#password="matInput"
+						>
+						<mat-error>
+							<ng-container *ngTemplateOutlet="errorMessage; context: { control: password.ngControl }"></ng-container>
+						</mat-error>
+					</mat-form-field>
 
-				<ng-container *ngIf="user.id">
+					<mat-form-field class="w-100">
+						<mat-label>Heslo znovu</mat-label>
+						<input matInput
+							minlength="5"
+							formControlName="passwordAgain"
+							placeholder="Heslo znovu"
+							type="password"
+							#passwordAgain="matInput"
+						>
+						<mat-error>
+							<ng-container *ngTemplateOutlet="errorMessage; context: { control: passwordAgain.ngControl }"></ng-container>
+						</mat-error>
+					</mat-form-field>
+				}
+
+				@if(isEdit) {
 					<mat-form-field
 						class="w-100"
 						*ngFor="let account of accounts"
@@ -108,14 +106,11 @@
 						>
 						<span matSuffix>{{ currencies[account.currencyId].symbol }}</span>
 					</mat-form-field>
-				</ng-container>
+				}
 
-				<mat-form-field
-					class="w-100">
+				<mat-form-field class="w-100">
 					<mat-label>Role</mat-label>
-					<mat-select name="role"
-						required
-						[(ngModel)]="user.roles[0]"
+					<mat-select formControlName="role"
 					>
 						<mat-option *ngFor="let role of roles"
 							[value]="role">{{ role }}
@@ -128,12 +123,14 @@
 						class="w-100"
 						color="primary"
 						type="submit"
+						[disabled]="userFormGroup.invalid"
 					>
 						Potvrdit
 					</button>
 				</div>
 			</form>
 		</div>
+
 		<div class="col-xs-12 col-md-6">
 			<h2 class="d-flex justify-content-between">
 				<span>Napárované karty</span>
@@ -144,9 +141,11 @@
 					Přidat kartu
 				</button>
 			</h2>
+
 			<mat-list role="list">
 				<mat-list-item role="listitem"
-					*ngFor="let card of cards">
+					*ngFor="let card of cards"
+				>
 					<div class="card-item">
 						<span>{{ card.type }} (id:{{ card.uid }})</span>
 						<button mat-raised-button
@@ -167,4 +166,28 @@
 	<div class="d-flex align-items-center justify-content-center w-100">
 		<mat-spinner></mat-spinner>
 	</div>
+</ng-template>
+
+<ng-template #errorMessage let-control="control">
+	@if(control.invalid && (control.dirty || control.touched)) {
+		<span *ngIf="control.errors?.['required']">
+			Povinné pole
+		</span>
+
+		<span *ngIf="control.errors?.['matching']">
+			Hesla se neshodují
+		</span>
+
+		<span *ngIf="control.errors?.['email']">
+			E-mail musí být ve formátu 'neco{{'@'}}neco.neco'
+		</span>
+
+		<span *ngIf="control.errors?.['minlength']">
+			Minimální délka je {{ control.errors?.['minlength']['requiredLength'] }}
+		</span>
+
+		<span *ngIf="control.errors?.['conflict']">
+			Uživatel se zadaným členským id nebo e-mailem nebo kartou již existuje
+		</span>
+	}
 </ng-template>

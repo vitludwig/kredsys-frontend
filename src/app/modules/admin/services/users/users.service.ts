@@ -28,7 +28,7 @@ export class UsersService {
 		let filter = `blocked=${blocked}`;
 
 		if(search) {
-			filter += `,name ^ ${search}/i`;
+			filter += `,name^${search}/i`;
 		}
 		const params = {
 			filter,
@@ -137,12 +137,13 @@ export class UsersService {
 		}));
 	}
 
-	public createNewUser(id?: number): IUser {
+	public createNewUser(): IUser {
 		return {
 			name: '',
 			email: '',
 			memberId: null,
 			blocked: false,
+			roles: [],
 		};
 	}
 }

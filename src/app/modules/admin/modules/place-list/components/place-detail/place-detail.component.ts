@@ -65,7 +65,7 @@ export class PlaceDetailComponent implements OnInit {
 				this.alertService.success('Místo upraveno!');
 			} else {
 				const place = await this.placeService.addPlace(this.place!);
-				await this.placeService.editPlaceRole(place.id!, this.placeRole);
+				// await this.placeService.editPlaceRole(place.id!, this.placeRole);
 
 				for(const item of this.goods) {
 					this.placeService.addGoods(item.id!, place.id!);

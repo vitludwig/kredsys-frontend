@@ -20,6 +20,7 @@ import {AutofocusDirective} from '../../../../common/directives/autofocus.direct
 import {ClickConfirmDirective} from '../../../../common/directives/click-confirm/click-confirm.directive';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {ChangePasswordComponent} from './components/change-password/change-password.component';
+import {ReactiveFormsModule} from '@angular/forms';
 
 
 @NgModule({
@@ -47,6 +48,7 @@ import {ChangePasswordComponent} from './components/change-password/change-passw
 		AutofocusDirective,
 		ClickConfirmDirective,
 		MatProgressSpinnerModule,
+		ReactiveFormsModule,
 	],
 	exports: [
 		UserListComponent,

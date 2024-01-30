@@ -160,11 +160,11 @@ export class PlaceService implements OnDestroy {
 		return firstValueFrom(this.http.patch<void>(environment.apiUrl + 'places/' + placeId + '/goods/' + goodsId, {params: params}));
 	}
 
-	public createNewPlace(id?: number): IPlace {
+	public createNewPlace(id?: number, name?: string, role?: EPlaceRole): IPlace {
 		return {
 			id: id,
-			name: id ? 'New Place ' + id : '',
-			type: EPlaceRole.BAR,
+			name: name ?? '',
+			type: role ?? EPlaceRole.BAR,
 		};
 	}
 }

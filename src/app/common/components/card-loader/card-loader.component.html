@@ -21,7 +21,7 @@
 
 		<h5 class="mt-4 mb-2 d-flex align-items-center gap-2">
 			Karty uživatelů
-			<mat-icon [matTooltip]="'Zobrazuje se pouze prvních 10 uživatelů'">info</mat-icon>
+			<mat-icon [matTooltip]="'Zobrazuje se pouze prvních 10 uživatelů, bere se vždy jeho poslední karta'">info</mat-icon>
 		</h5>
 		<div class="d-flex flex-wrap gap-2 justify-content-center">
 			@for (userCard of userCards | keyvalue; track $index) {

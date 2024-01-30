@@ -4,7 +4,7 @@ export interface IUser {
 	email: string;
 	password?: string;
 	memberId: number | null;
-	roles?: EUserRole[]; // basic, band, org...
+	roles: EUserRole[]; // basic, band, org...
 	blocked: boolean;
 }
 

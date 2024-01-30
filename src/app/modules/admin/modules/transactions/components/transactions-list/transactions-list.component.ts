@@ -59,7 +59,6 @@ export class TransactionsListComponent implements OnInit, AfterViewInit, OnDestr
 
 	@Input()
 	public set filterBy(value: Partial<ITransaction>) {
-		console.log('filter', value);
 		this.#filterBy = this.transformFilterBy(value);
 		this.#filterByRecord = value; // TODO: new paging, remove after api for statistics is gridify ready
 

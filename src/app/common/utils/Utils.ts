@@ -1,4 +1,5 @@
 import {HashMap} from '../types/HashMap';
+import {IUser} from '../types/IUser';
 
 export class Utils {
 	/**
@@ -17,5 +18,23 @@ export class Utils {
 			}
 		}
 		return result;
+	}
+
+	/**
+	 * Map common properties from source object to target object
+	 *
+	 * @param targetObject
+	 * @param sourceObject
+	 */
+	public static mapValues<T extends object, S extends T>(targetObject: T, sourceObject: S): T {
+		const newObject = Object.assign({}, targetObject);
+
+		Object.entries(newObject).map(([key, value]) => {
+			if(sourceObject[key as keyof T]) {
+				newObject[key as keyof T] = sourceObject[key as keyof T];
+			}
+		});
+
+		return newObject;
 	}
 }

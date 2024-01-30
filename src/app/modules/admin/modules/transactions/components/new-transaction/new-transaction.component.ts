@@ -89,16 +89,16 @@ export class NewTransactionComponent implements OnInit {
 		this.records = this.records.filter((obj) => obj !== record);
 	}
 
-	public loadUsers = (value: string) => {
-		return this.usersService.getUsers(value);
+	public loadUsers = () => {
+		return this.usersService.getUsers();
 	}
 
-	public loadPlaces = (value: string) => {
-		return this.placeService.getPlaces(value);
+	public loadPlaces = () => {
+		return this.placeService.getPlaces();
 	}
 
-	public loadGoods = (value: string) => {
-		return this.goodsService.getGoods(value);
+	public loadGoods = () => {
+		return this.goodsService.getGoods();
 	}
 
 	public async submit(): Promise<void> {
@@ -119,19 +119,37 @@ export class NewTransactionComponent implements OnInit {
 					await this.submitWithdraw();
 					break;
 			}
+			this.alertService.success('Transakce byla úspěšně přidána');
 			this.resetForm();
 		} catch (e) {
 			console.error("Transaction error", e);
 			if(e instanceof HttpErrorResponse) {
 				if(e.error.Message) {
-					this.alertService.error(e.error.Message);
+					this.alertService.error(this.getErrorMessage(e.error.Message));
 				} else {
-					this.alertService.error(e.error.title);
+					this.alertService.error('Nepodařilo se přidat transakci');
 				}
 			} else {
-				this.alertService.error("Nepodařilo se přidat transakci");
+				this.alertService.error('Nepodařilo se přidat transakci');
 			}
 		}
+	}
+
+	private getErrorMessage(message: string): string {
+		let errorMsg = message;
+		if(message.includes('Currency account')) {
+			errorMsg = 'Uživatel ještě neprovedl první nabití';
+		}
+
+		if(message.includes('Not enough money')) {
+			errorMsg = 'Uživatel nemá dostatek peněz';
+		}
+
+		if(message.includes('Entity not found')) {
+			errorMsg = 'Položka nenalezena';
+		}
+
+		return errorMsg;
 	}
     
 	protected async submitPayment(): Promise<ITransactionResponse> {

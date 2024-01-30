@@ -9,6 +9,8 @@ import {MatSidenavModule} from '@angular/material/sidenav';
 import {SharedModule} from './shared.module';
 import {appInitializerFactory} from './common/services/app-initializer.factory';
 import {InitService} from './common/services/init/init.service';
+import {MatPaginatorIntl} from '@angular/material/paginator';
+import {CustomPaginatorConfiguration} from './common/providers/CustomPaginatorConfiguration';
 
 @NgModule({
 	declarations: [
@@ -24,7 +26,8 @@ import {InitService} from './common/services/init/init.service';
 		SaleModule,
 	],
 	providers: [
-		{provide: APP_INITIALIZER, useFactory: appInitializerFactory, deps: [InitService], multi: true},
+		{ provide: APP_INITIALIZER, useFactory: appInitializerFactory, deps: [InitService], multi: true },
+		{ provide: MatPaginatorIntl, useValue: CustomPaginatorConfiguration() }
 	],
 	bootstrap: [AppComponent],
 })
