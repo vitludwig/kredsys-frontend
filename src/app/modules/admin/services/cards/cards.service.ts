@@ -19,6 +19,6 @@ export class CardsService {
       filter,
     };
 
-    return firstValueFrom(this.http.get<IPaginatedResponse<ICard>>(`${environment.apiUrl}/cards`, {params}));
+    return firstValueFrom(this.http.get<IPaginatedResponse<ICard>>(`${environment.apiUrl}cards`, {params}));
   }
 }
