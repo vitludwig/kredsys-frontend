@@ -1,18 +1,19 @@
-import {Component} from '@angular/core';
+import {Component, OnDestroy} from '@angular/core';
 import {AbstractControl, UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
 import {AuthService} from './services/auth/auth.service';
 import {Router} from '@angular/router';
 import {ERoute} from '../../common/types/ERoute';
 import {AlertService} from '../../common/services/alert/alert.service';
 import {HttpErrorResponse} from '@angular/common/http';
+import {PlaceService} from '../admin/services/place/place/place.service';
+import {Subject, takeUntil} from 'rxjs';
 
 @Component({
 	selector: 'app-login',
 	templateUrl: './login.component.html',
 	styleUrls: ['./login.component.scss'],
 })
-export class LoginComponent {
-
+export class LoginComponent implements OnDestroy {
 	public loginForm: UntypedFormGroup = new UntypedFormGroup({
 		username: new UntypedFormControl('', [Validators.required, Validators.email]),
 		password: new UntypedFormControl('', [Validators.required]),
@@ -29,10 +30,13 @@ export class LoginComponent {
 		return this.loginForm.get('password');
 	}
 
+	private unsubscribe$: Subject<void> = new Subject<void>();
+
 	constructor(
 		protected authService: AuthService,
 		protected router: Router,
 		protected alertService: AlertService,
+		private placeService: PlaceService,
 	) {
 		if(this.authService.isLogged) {
 			this.router.navigate([ERoute.SALE]);
@@ -51,31 +55,36 @@ export class LoginComponent {
 			this.router.navigate(['/' + ERoute.SALE]);
 		} catch(e) {
 			console.error('Login failed: ', e);
-			// backend send information about wrong credentials as plain string
+
 			if(e instanceof HttpErrorResponse) {
 				if(e.error === 'Username or password is incorrect or user is blocked.') {
 					this.showValidationErrors = true;
 					this.errors.push('Špatné uživatelské jméno nebo heslo');
-				}
-				if([500,502,504].includes(e.status)) {
+
+				} else if([500,502,504].includes(e.status)) {
 					this.errors.push('Chyba spojení se serverem');
+				} else if(e.status === 404 && e.error.Message.includes('Place with API token')) {
+					this.showBadPlaceError();
+				} else {
+					this.errors.push('Vyskytla se chyba přihlašování, kontaktuj administrátora');
 				}
+
+			} else {
+				this.errors.push('Vyskytla se chyba přihlašování, kontaktuj administrátora');
 			}
 		}
 	}
 
-	/**
-	 * TODO: only for debugging purposes
-	 *
-	 * @param username
-	 */
-	public async loginAs(username: string): Promise<void> {
-		try {
-			await this.authService.login(username, 'test');
-			this.router.navigate(['/' + ERoute.SALE]);
-		} catch(e) {
-			console.error('Debug login failed: ', e);
-		}
+	public ngOnDestroy(): void {
+		this.unsubscribe$.next();
+	}
+
+	private showBadPlaceError(): void {
+		const alert = this.alertService.error('Vybrané místo neexistuje', { duration: 10000 }, 'Smazat uložené místo');
+		alert.onAction().pipe(takeUntil(this.unsubscribe$)).subscribe(() => {
+			this.placeService.removeSavedPlace();
+			window.location.reload();
+		});
 	}
 
 }

@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {MatSnackBar, MatSnackBarConfig} from '@angular/material/snack-bar';
+import {MatSnackBar, MatSnackBarConfig, MatSnackBarRef, TextOnlySnackBar} from '@angular/material/snack-bar';
 
 @Injectable({
 	providedIn: 'root',
@@ -13,21 +13,24 @@ export class AlertService {
 		protected snackbar: MatSnackBar,
 	) {
 	}
-	protected showMessage(message: string, config: MatSnackBarConfig): void {
-		this.snackbar.open(message, '', {
-			...this.config,
+	public success(message: string, config?: MatSnackBarConfig, action: string = ''): MatSnackBarRef<TextOnlySnackBar> {
+		return this.showMessage(message, {
 			...config,
-		});
-	}
-	public success(message: string): void {
-		this.showMessage(message, {
 			panelClass: 'mdc-snackbar--success',
-		});
+		}, action);
 	}
 
-	public error(message: string, config?: MatSnackBarConfig): void {
-		this.showMessage(message, {
+	public error(message: string, config?: MatSnackBarConfig, action: string = ''): MatSnackBarRef<TextOnlySnackBar> {
+		return this.showMessage(message, {
+			...config,
 			panelClass: 'mdc-snackbar--danger',
+			...config,
+		}, action);
+	}
+
+	protected showMessage(message: string, config: MatSnackBarConfig, action: string = ''): MatSnackBarRef<TextOnlySnackBar> {
+		return this.snackbar.open(message, action, {
+			...this.config,
 			...config,
 		});
 	}

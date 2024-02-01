@@ -167,4 +167,9 @@ export class PlaceService implements OnDestroy {
 			type: role ?? EPlaceRole.BAR,
 		};
 	}
+
+	public removeSavedPlace(): void {
+		localStorage.removeItem('placeToken');
+		localStorage.removeItem('selectedPlaceId');
+	}
 }
