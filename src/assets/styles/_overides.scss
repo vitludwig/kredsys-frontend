@@ -18,6 +18,7 @@
   --mdc-filled-text-field-input-text-color: var(--input-text-color-filled);
   --mdc-filled-text-field-label-text-color: var(--input-text-color-label);
   --mdc-filled-text-field-disabled-input-text-color: var(--input-text-color-label-disabled);
+  --mdc-filled-text-field-active-indicator-color: #d2348a; // color primary, TODO: fix loading css variables
 
   --mat-select-enabled-trigger-text-color: var(--input-text-color-filled);
   --mat-select-placeholder-text-color: var(--input-text-color-label);
