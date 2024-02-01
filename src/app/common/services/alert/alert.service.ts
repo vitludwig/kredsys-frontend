@@ -25,9 +25,10 @@ export class AlertService {
 		});
 	}
 
-	public error(message: string): void {
+	public error(message: string, config?: MatSnackBarConfig): void {
 		this.showMessage(message, {
 			panelClass: 'mdc-snackbar--danger',
+			...config,
 		});
 	}
 }

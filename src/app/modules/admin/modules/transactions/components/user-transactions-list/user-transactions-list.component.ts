@@ -33,6 +33,9 @@ export class UserTransactionsListComponent {
 	}
 
 	public getUsers = (search: string): Promise<IPaginatedResponse<IUser>> => {
+		if(typeof search !== 'string') {
+
+		}
 		return this.usersService.getUsers(search);
 	}
 }

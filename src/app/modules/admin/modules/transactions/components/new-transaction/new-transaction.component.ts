@@ -15,6 +15,7 @@ import {GoodsService} from "../../../../services/goods/goods.service";
 import {PlaceService} from "../../../../services/place/place/place.service";
 import {HttpErrorResponse} from "@angular/common/http";
 import {AlertService} from "../../../../../../common/services/alert/alert.service";
+import {IUser} from '../../../../../../common/types/IUser';
 
 @Component({
 	selector: 'app-new-transaction',
@@ -22,7 +23,7 @@ import {AlertService} from "../../../../../../common/services/alert/alert.servic
 	styleUrls: ['./new-transaction.component.scss']
 })
 export class NewTransactionComponent implements OnInit {
-	public userId: number | null;
+	public user: IUser | null;
 	public placeId: number | null;
 	public records: any[] = [];
     
@@ -125,7 +126,7 @@ export class NewTransactionComponent implements OnInit {
 			console.error("Transaction error", e);
 			if(e instanceof HttpErrorResponse) {
 				if(e.error.Message) {
-					this.alertService.error(this.getErrorMessage(e.error.Message));
+					this.alertService.error(await this.getErrorMessage(e.error.Message), { duration: 5000 });
 				} else {
 					this.alertService.error('Nepodařilo se přidat transakci');
 				}
@@ -135,39 +136,62 @@ export class NewTransactionComponent implements OnInit {
 		}
 	}
 
-	private getErrorMessage(message: string): string {
-		let errorMsg = message;
-		if(message.includes('Currency account')) {
-			errorMsg = 'Uživatel ještě neprovedl první nabití';
+	protected async submitPayment(): Promise<ITransactionResponse> {
+		if(!this.user?.id) {
+			this.alertService.error('Vyber uživatele');
+			throw new Error('User not selected');
 		}
 
-		if(message.includes('Not enough money')) {
-			errorMsg = 'Uživatel nemá dostatek peněz';
-		}
-
-		if(message.includes('Entity not found')) {
-			errorMsg = 'Položka nenalezena';
-		}
-
-		return errorMsg;
+		return this.transactionService.pay(this.user.id, this.placeId!, this.records as ITransactionRecordPayment[]);
 	}
     
-	protected async submitPayment(): Promise<ITransactionResponse> {
-		return this.transactionService.pay(this.userId!, this.placeId!, this.records as ITransactionRecordPayment[]);
-	}
-
 	protected async submitDeposit(): Promise<ITransactionResponse> {
-		return this.transactionService.deposit(this.userId!, this.placeId!, this.currency.id!, this.records as ITransactionRecordDeposit[]);
+		if(!this.user?.id) {
+			this.alertService.error('Vyber uživatele');
+			throw new Error('User not selected');
+		}
+
+		return this.transactionService.deposit(this.user.id, this.placeId!, this.currency.id!, this.records as ITransactionRecordDeposit[]);
 	}
 
 	protected async submitWithdraw(): Promise<ITransactionResponse> {
-		return this.transactionService.withDraw(this.userId!, this.placeId!, this.currency.id!, this.records as ITransactionRecordWithdraw[]);
+		if(!this.user?.id) {
+			this.alertService.error('Vyber uživatele');
+			throw new Error('User not selected');
+		}
+
+		return this.transactionService.withDraw(this.user.id, this.placeId!, this.currency.id!, this.records as ITransactionRecordWithdraw[]);
 	}
 
 	protected resetForm(): void {
 		this.type = null;
-		this.userId = null;
+		this.user = null;
 		this.placeId = null;
 		this.records = [];
+	}
+
+	private async getErrorMessage(message: string): Promise<string> {
+		if(message.includes('Currency account')) {
+			return  'Uživatel ještě neprovedl první nabití';
+		}
+
+		if(message.includes('Not enough money')) {
+			return 'Uživatel nemá dostatek peněz';
+		}
+
+		if(message.includes('Entity not found')) {
+			return 'Položka nenalezena';
+		}
+
+		if(message.includes('dont have too many for withdraw')) {
+			if(this.user?.id !== undefined) {
+				const userAccount = await this.usersService.getUserCurrencyAccounts(this.user!.id!);
+				return `Uživatel může vybrat maximálně ${userAccount[0].currentAmount} Kč`;
+			}
+			return `Uživatel nemůže vybrat tolik peněz`;
+
+		}
+
+		return message;
 	}
 }

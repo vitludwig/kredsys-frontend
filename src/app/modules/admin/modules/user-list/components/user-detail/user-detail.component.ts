@@ -131,16 +131,19 @@ export class UserDetailComponent implements OnInit {
 		});
 	}
 
-	protected async deleteCard(id?: number): Promise<void> {
-		if(!id) {
+	protected async deleteCard(card: ICard): Promise<void> {
+		// card not yet added, so we only remove it from list
+		if(!card.id) {
+			this.cards = this.cards.filter((c) => c.uid !== card.uid);
 			return;
 		}
 
+		const cardId = card.id;
 		try {
 			if(this.user?.id) {
-				await this.usersService.deleteUserCard(id);
+				await this.usersService.deleteUserCard(cardId);
 			}
-			this.cards = this.cards.filter((card) => card.id !== id);
+			this.cards = this.cards.filter((c) => c.id !== cardId);
 			this.newCards = this.cards;
 		} catch(e) {
 			if(e instanceof HttpErrorResponse) {

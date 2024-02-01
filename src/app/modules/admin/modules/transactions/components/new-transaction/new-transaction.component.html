@@ -23,7 +23,7 @@
 					label="Uživatel"
 					placeholder="Vyhledat podle jména"
 					class="w-100"
-					(valueChange)="userId = $event.id"
+					(valueChange)="user = $event"
 					[dataLoader]="loadUsers"
 					primaryDisplayProperty="name"
 					secondaryDisplayProperty="memberId"

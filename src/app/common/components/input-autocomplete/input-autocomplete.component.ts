@@ -9,7 +9,7 @@ import {
 	ViewChild
 } from '@angular/core';
 import {UntypedFormControl} from "@angular/forms";
-import {debounceTime, distinctUntilChanged, Observable, startWith, switchMap} from "rxjs";
+import {debounceTime, distinctUntilChanged, filter, Observable, startWith, switchMap} from "rxjs";
 import {IPaginatedResponse} from "../../types/IPaginatedResponse";
 import {MatAutocompleteTrigger} from '@angular/material/autocomplete';
 
@@ -62,6 +62,7 @@ export class InputAutocompleteComponent<T> implements OnInit, AfterViewInit {
 		this.filteredOptions = this.selectedValue.valueChanges
 			.pipe(
 				startWith(''),
+				filter((value) => typeof value === 'string'),
 				debounceTime(400),
 				distinctUntilChanged(),
 				switchMap((value) => {
