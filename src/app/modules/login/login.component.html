@@ -48,3 +48,19 @@
 		</mat-card-content>
 	</mat-card>
 </div>
+
+
+<div (click)="showAdminTools = !showAdminTools"
+	[class.opacity-100]="showAdminTools"
+	class="admin-tools"
+>
+	Admin tools
+
+	@if(showAdminTools) {
+		<button mat-raised-button
+			(click)="emptyLocalStorage()"
+		>
+			Vymazat localstorage
+		</button>
+	}
+</div>

@@ -58,3 +58,19 @@
 		}
 	}
 }
+
+
+.admin-tools {
+	position: absolute;
+	top: 0;
+	right: 0;
+	padding: 3px;
+	background-color: rgba(var(--cy__color--warn-500), .9);
+	cursor: pointer;
+	color: black;
+	opacity: 0;
+
+	&:hover {
+		opacity: 1;
+	}
+}

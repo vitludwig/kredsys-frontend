@@ -21,14 +21,16 @@ import {Subject, takeUntil} from 'rxjs';
 	styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent implements OnDestroy {
-	public loginForm: FormGroup = new FormGroup({
-		username: new FormControl<string>('', [Validators.required, Validators.email]),
-		password: new FormControl<string>('', [Validators.required]),
-	});
 	protected authService: AuthService = inject(AuthService);
 	protected router: Router = inject(Router);
 	protected alertService: AlertService = inject(AlertService);
 	private placeService: PlaceService = inject(PlaceService);
+
+	public loginForm: FormGroup = new FormGroup({
+		username: new FormControl<string>('', [Validators.required, Validators.email]),
+		password: new FormControl<string>('', [Validators.required]),
+	});
+	protected showAdminTools: boolean = false;
 
 	private unsubscribe$: Subject<void> = new Subject<void>();
 
@@ -65,6 +67,11 @@ export class LoginComponent implements OnDestroy {
 				this.alertService.error('Vyskytla se chyba přihlašování, kontaktuj administrátora');
 			}
 		}
+	}
+
+	protected emptyLocalStorage(): void {
+		localStorage.clear();
+		window.location.reload();
 	}
 
 	public ngOnDestroy(): void {
