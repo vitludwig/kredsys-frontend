@@ -28,7 +28,6 @@ export class AuthService {
 	}
 
 	public get isLogged(): boolean {
-		// return true;
 		return this.#user !== null || !!localStorage.getItem('userId');
 	}
 	public isLogged$: Observable<boolean>

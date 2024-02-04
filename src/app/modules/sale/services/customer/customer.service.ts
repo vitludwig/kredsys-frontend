@@ -1,6 +1,6 @@
-import {Injectable} from '@angular/core';
-import {BehaviorSubject, Observable} from 'rxjs';
-import {IUser} from '../../../../common/types/IUser';
+import {Injectable, signal} from '@angular/core';
+import {BehaviorSubject, map, Observable} from 'rxjs';
+import {EUserRole, IUser} from '../../../../common/types/IUser';
 import {OrderService} from '../order/order.service';
 import {TransactionService} from '../../../admin/modules/transactions/services/transaction/transaction.service';
 import {IPlace} from '../../../../common/types/IPlace';
@@ -9,6 +9,7 @@ import {CurrencyService} from '../../../admin/services/currency/currency.service
 import {ICurrencyAccount} from '../../../../common/types/ICurrency';
 import {UsersService} from '../../../admin/services/users/users.service';
 import {AuthService} from '../../../login/services/auth/auth.service';
+import {toSignal} from '@angular/core/rxjs-interop';
 
 @Injectable({
 	providedIn: 'root',
@@ -16,7 +17,12 @@ import {AuthService} from '../../../login/services/auth/auth.service';
 export class CustomerService {
 
 	#customerSubject: BehaviorSubject<IUser | null> = new BehaviorSubject<IUser | null>(null);
-	public customer$: Observable<IUser | null> = this.#customerSubject.asObservable();
+	public customer$: Observable<IUser | null> = this.#customerSubject.asObservable().pipe(
+		map((customer) => {
+			this.transformUserName(customer?.name ?? '');
+			return customer;
+		}),
+	);
 
 	#currencyAccountSubject: BehaviorSubject<ICurrencyAccount | null> = new BehaviorSubject<ICurrencyAccount | null>(null);
 	public currencyAccount$: Observable<ICurrencyAccount | null> = this.#currencyAccountSubject.asObservable();
@@ -117,5 +123,22 @@ export class CustomerService {
 
 		this.currencyAccount = (await this.usersService.getUserCurrencyAccounts(userId))[0];
 		this.orderService.balance = this.currencyAccount?.currentAmount;
+	}
+
+	private transformUserName(name: string): string {
+		// return full name for admin, otherwise shorten
+		if(this.authService.hasRole(EUserRole.ADMIN)) {
+			return name;
+		}
+
+		let result;
+		const nameParts = name.split(' ');
+
+		result = nameParts[0];
+		if(nameParts[1]) {
+			result += ' ' + nameParts[1][0] + '.';
+		}
+
+		return result;
 	}
 }

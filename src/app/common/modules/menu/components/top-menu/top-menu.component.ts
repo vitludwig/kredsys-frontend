@@ -2,18 +2,13 @@ import {Component, inject, Input, OnDestroy, OnInit} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {ChargeDialogComponent} from '../../../../../modules/sale/components/charge-dialog/charge-dialog.component';
 import {MatDrawer} from '@angular/material/sidenav';
-import {ActivationEnd, Router} from '@angular/router';
+import {Router} from '@angular/router';
 import {CustomerService} from '../../../../../modules/sale/services/customer/customer.service';
 import {IPlace} from '../../../../types/IPlace';
 import {ICurrencyAccount} from '../../../../types/ICurrency';
-import {CurrencyService} from '../../../../../modules/admin/services/currency/currency.service';
-import {Subject, takeUntil} from 'rxjs';
+import {Observable, Subject, takeUntil} from 'rxjs';
 import {EUserRole, IUser} from '../../../../types/IUser';
-import {UsersService} from '../../../../../modules/admin/services/users/users.service';
 import {AuthService} from '../../../../../modules/login/services/auth/auth.service';
-import {
-	TransactionService
-} from '../../../../../modules/admin/modules/transactions/services/transaction/transaction.service';
 import {StornoDialogComponent} from "../../../../../modules/sale/components/storno-dialog/storno-dialog.component";
 import {AlertService} from "../../../../services/alert/alert.service";
 import {
@@ -32,8 +27,6 @@ export class TopMenuComponent implements OnInit, OnDestroy {
 	private authService: AuthService = inject(AuthService);
 	private alertService: AlertService = inject(AlertService);
 
-	protected customer: IUser | null;
-
 	protected canChargeMoney: boolean = false;
 	protected amountLoading: boolean = false;
 
@@ -41,20 +34,11 @@ export class TopMenuComponent implements OnInit, OnDestroy {
 	public sideMenu: MatDrawer;
 
 	@Input()
-	public place: IPlace;
+	public place: IPlace | null;
+
 	private unsubscribe$: Subject<void> = new Subject();
 
 	public async ngOnInit(): Promise<void> {
-		this.customerService.customer$
-			.pipe(takeUntil(this.unsubscribe$))
-			.subscribe(async (customer) => {
-				if(customer) {
-					customer.name = this.getTransformedCustomerName(customer.name);
-				}
-
-				this.customer = customer;
-			});
-
 		this.authService.isLogged$
 			.pipe(takeUntil(this.unsubscribe$))
 			.subscribe((isLogged) => {
@@ -77,109 +61,104 @@ export class TopMenuComponent implements OnInit, OnDestroy {
 			data: 0,
 		});
 
-		dialogRef.afterClosed().subscribe(async (result) => {
-			if(!result) {
-				return;
-			}
-
-			try {
-				this.amountLoading = true;
-				await this.customerService.chargeMoney(result, this.place)
-
-				this.alertService.success('Peníze nabity');
-			} catch(e) {
-				console.error('Cannot deposit money: ', e);
-				this.alertService.error('Nepodařilo se nabít peníze');
-			} finally {
-				this.amountLoading = false;
+		dialogRef.afterClosed().subscribe((amount) => {
+			if(amount !== undefined) {
+				this.chargeMoney(amount)
 			}
 		});
 	}
 
 	protected openDischargeDialog(): void {
-		const dialogRef = this.dialog.open<DischargeDialogComponent, { user: IUser; currencyAccount: ICurrencyAccount }>(
+		const dialogRef = this.dialog.open<DischargeDialogComponent, { user: Observable<IUser | null>; currencyAccount: ICurrencyAccount }>(
 			DischargeDialogComponent, {
 				width: '350px',
 				minWidth: '250px',
 				autoFocus: 'dialog',
 				data: {
-					user: this.customer!,
+					user: this.customerService.customer$,
 					currencyAccount: this.customerService.currencyAccount!,
 				},
 			});
 
-		dialogRef.afterClosed().subscribe(async (result) => {
-			if(!result || this.customerService.currencyAccount!.currentAmount <= 0) {
-				return;
+		dialogRef.afterClosed()
+			.pipe(takeUntil(this.unsubscribe$))
+			.subscribe(async (result) => {
+				if(result) {
+					this.dischargeMoney();
+				}
 			}
-
-			try {
-				this.amountLoading = true;
-				await this.customerService.dischargeMoney(this.place)
-
-				this.alertService.success('Peníze vybity');
-			} catch(e) {
-				console.error('Cannot discharge money: ', e);
-				this.alertService.error('Nepodařilo se vybít peníze');
-			} finally {
-				this.amountLoading = false;
-			}
-		});
+		);
 	}
 
 	protected openStornoDialog(): void {
-		if(this.customer?.id === undefined) {
-			return;
-		}
-
-		const dialogRef = this.dialog.open<StornoDialogComponent, number>(StornoDialogComponent, {
+		const dialogRef = this.dialog.open<StornoDialogComponent, {user: Observable<IUser | null>}>(StornoDialogComponent, {
 			width: '400px',
 			minWidth: '250px',
 			autoFocus: 'dialog',
-			data: this.customer.id,
+			data: {
+				user: this.customerService.customer$
+			},
 		});
 
-		dialogRef.afterClosed().subscribe(async (transactionId) => {
-			if(!Number.isInteger(transactionId)) {
-				return;
+		dialogRef.afterClosed()
+			.pipe(takeUntil(this.unsubscribe$))
+			.subscribe((transactionId) => {
+				this.stornoLastTransaction(transactionId);
 			}
-
-			try {
-				this.amountLoading = true;
-				await this.customerService.stornoLastTransaction(transactionId);
-
-				this.alertService.success('Transakce storována');
-			} catch(e) {
-				console.error('Cannot storno transaction: ', e);
-				this.alertService.error('Transakce se nepodařila storovat');
-			} finally {
-				this.amountLoading = false;
-			}
-		});
+		);
 	}
 
-	/**
-	 * Return shortened name
-	 * Only
-	 * Example: John Doe -> John D.
-	 *
-	 * @param name
-	 * @protected
-	 */
-	private getTransformedCustomerName(name: string): string {
-		// return full name for admin, otherwise shorten
-		if(this.authService.hasRole(EUserRole.ADMIN)) {
-			return name;
+	private async chargeMoney(amount: number): Promise<void> {
+		if(!this.place) {
+			return;
 		}
 
-		let result;
-		const nameParts = name.split(' ');
+		try {
+			this.amountLoading = true;
+			await this.customerService.chargeMoney(amount, this.place)
 
-		result = nameParts[0];
-		if(nameParts[1]) {
-			result += ' ' + nameParts[1][0] + '.';
+			this.alertService.success('Peníze nabity');
+		} catch(e) {
+			console.error('Cannot deposit money: ', e);
+			this.alertService.error('Nepodařilo se nabít peníze');
+		} finally {
+			this.amountLoading = false;
+		}
+	}
+
+	private async dischargeMoney(): Promise<void> {
+		if(this.customerService.currencyAccount!.currentAmount <= 0 || !this.place) {
+			return;
 		}
 
-		return result;
+		try {
+			this.amountLoading = true;
+			await this.customerService.dischargeMoney(this.place)
+
+			this.alertService.success('Peníze vybity');
+		} catch(e) {
+			console.error('Cannot discharge money: ', e);
+			this.alertService.error('Nepodařilo se vybít peníze');
+		} finally {
+			this.amountLoading = false;
+		}
+	}
+
+	private async stornoLastTransaction(transactionId: number): Promise<void> {
+		if(!Number.isInteger(transactionId)) {
+			return;
+		}
+
+		try {
+			this.amountLoading = true;
+			await this.customerService.stornoLastTransaction(transactionId);
+
+			this.alertService.success('Transakce storována');
+		} catch(e) {
+			console.error('Cannot storno transaction: ', e);
+			this.alertService.error('Transakce se nepodařila storovat');
+		} finally {
+			this.amountLoading = false;
+		}
 	}
 }

@@ -1,10 +1,11 @@
-import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, inject, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {fromEvent, map, merge, Subject, takeUntil} from 'rxjs';
-import {NavigationEnd, Router} from '@angular/router';
+import {ActivatedRoute, ActivationEnd, NavigationEnd, Router} from '@angular/router';
 import {MatDrawer} from '@angular/material/sidenav';
 import {AuthService} from './modules/login/services/auth/auth.service';
 import {PlaceService} from './modules/admin/services/place/place/place.service';
 import {AlertService} from './common/services/alert/alert.service';
+import {ERoute} from './common/types/ERoute';
 
 
 @Component({
@@ -13,6 +14,11 @@ import {AlertService} from './common/services/alert/alert.service';
 	styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit, OnDestroy {
+	public authService: AuthService = inject(AuthService);
+	public placeService: PlaceService = inject(PlaceService);
+	protected router: Router = inject(Router);
+	protected alertService: AlertService = inject(AlertService);
+
 	@ViewChild('sideMenu')
 	protected sideMenu: MatDrawer;
 
@@ -23,14 +29,7 @@ export class AppComponent implements OnInit, OnDestroy {
 	protected userId: string = '';
 	protected isOnline: boolean = true;
 	protected showNetworkAlert: boolean = false;
-
-	constructor(
-		public authService: AuthService,
-		public placeService: PlaceService,
-		protected router: Router,
-		protected alertService: AlertService,
-	) {
-	}
+	protected fullPageHeight: boolean = false;
 
 	public async ngOnInit(): Promise<void> {
 		this.router.events
@@ -39,6 +38,9 @@ export class AppComponent implements OnInit, OnDestroy {
 				if(event instanceof NavigationEnd) {
 					this.sideMenu.close();
 					this.mainContent.nativeElement.focus();
+				}
+				if(event instanceof ActivationEnd) {
+					this.fullPageHeight = [ERoute.LOGIN_SIGN_IN, ERoute.LOGIN].includes(event.snapshot.routeConfig?.path as ERoute);
 				}
 			});
 

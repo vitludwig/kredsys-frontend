@@ -2,6 +2,7 @@ import {Component, inject} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {IUser} from "../../../../common/types/IUser";
 import {ICurrencyAccount} from "../../../../common/types/ICurrency";
+import {Observable} from 'rxjs';
 
 @Component({
 	selector: 'app-discharge-dialog',
@@ -9,7 +10,7 @@ import {ICurrencyAccount} from "../../../../common/types/ICurrency";
 	styleUrls: ['./discharge-dialog.component.scss']
 })
 export class DischargeDialogComponent {
-	protected data: { user: IUser; currencyAccount: ICurrencyAccount } = inject(MAT_DIALOG_DATA);
+	protected data: { user: Observable<IUser | null>; currencyAccount: ICurrencyAccount } = inject(MAT_DIALOG_DATA);
 	private dialogRef: MatDialogRef<DischargeDialogComponent> = inject(MatDialogRef);
 
 	protected submit(): void {

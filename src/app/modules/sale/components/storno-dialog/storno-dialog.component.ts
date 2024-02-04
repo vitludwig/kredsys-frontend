@@ -6,6 +6,8 @@ import {TransactionService} from "../../../admin/modules/transactions/services/t
 import {GoodsService} from "../../../admin/services/goods/goods.service";
 import {ETransactionType} from "../../../admin/modules/transactions/services/transaction/types/ETransactionType";
 import {PlaceService} from "../../../admin/services/place/place/place.service";
+import {firstValueFrom, Observable} from 'rxjs';
+import {IUser} from '../../../../common/types/IUser';
 
 @Component({
 	selector: 'app-storno-dialog',
@@ -20,7 +22,7 @@ export class StornoDialogComponent implements OnInit{
 	private goodsService: GoodsService = inject(GoodsService);
 	private placeService: PlaceService = inject(PlaceService);
 	private dialogRef: MatDialogRef<StornoDialogComponent> = inject(MatDialogRef);
-	private userId: number = inject<number>(MAT_DIALOG_DATA);
+	private data: {user: Observable<IUser | null>} = inject<{user: Observable<IUser | null>}>(MAT_DIALOG_DATA);
 
 	public async ngOnInit(): Promise<void> {
 		this.loadTransactions();
@@ -37,7 +39,12 @@ export class StornoDialogComponent implements OnInit{
 			cancellation=false
 		`;
 		const sortBy = 'created desc';
-		const result = (await this.usersService.getUserTransactions(this.userId,0, 1, filter, sortBy)).data;
+		const userId = (await firstValueFrom(this.data.user))?.id;
+		if(!userId) {
+			console.error('User not found in storno dialog');
+			return;
+		}
+		const result = (await this.usersService.getUserTransactions(userId,0, 1, filter, sortBy)).data;
 
 		if(result.length === 0) {
 			return;

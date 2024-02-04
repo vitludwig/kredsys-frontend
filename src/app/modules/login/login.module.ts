@@ -7,6 +7,7 @@ import {MatCardModule} from '@angular/material/card';
 import {LoginRoutingModule} from './login-routing.module';
 import {ReactiveFormsModule} from '@angular/forms';
 import {CanAccessRoutePipe} from './services/auth/pipes/can-access-route/can-access-route.pipe';
+import {ErrorMessageComponent} from '../../common/components/error-message/error-message.component';
 
 
 @NgModule({
@@ -21,6 +22,7 @@ import {CanAccessRoutePipe} from './services/auth/pipes/can-access-route/can-acc
 		MatCardModule,
 		MatInputModule,
 		MatButtonModule,
+		ErrorMessageComponent,
 	],
 	exports: [
 		CanAccessRoutePipe,

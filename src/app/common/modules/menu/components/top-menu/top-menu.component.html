@@ -15,7 +15,7 @@
 				}
 			}
 		</div>
-		@if(customer) {
+		@if(customerService.customer$ | async; as customer) {
 			<div [matTooltip]="'ID: ' + customer.memberId">{{ customer.name }}</div>
 
 			<div class="d-flex align-center flex-wrap">

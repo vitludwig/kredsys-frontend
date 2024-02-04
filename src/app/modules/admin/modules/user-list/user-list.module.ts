@@ -21,6 +21,7 @@ import {ClickConfirmDirective} from '../../../../common/directives/click-confirm
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {ChangePasswordComponent} from './components/change-password/change-password.component';
 import {ReactiveFormsModule} from '@angular/forms';
+import {ErrorMessageComponent} from '../../../../common/components/error-message/error-message.component';
 
 
 @NgModule({
@@ -49,6 +50,7 @@ import {ReactiveFormsModule} from '@angular/forms';
 		ClickConfirmDirective,
 		MatProgressSpinnerModule,
 		ReactiveFormsModule,
+		ErrorMessageComponent,
 	],
 	exports: [
 		UserListComponent,

@@ -1,5 +1,12 @@
-import {Component, OnDestroy} from '@angular/core';
-import {AbstractControl, UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
+import {Component, inject, OnDestroy} from '@angular/core';
+import {
+	AbstractControl,
+	FormControl,
+	FormGroup,
+	UntypedFormControl,
+	UntypedFormGroup,
+	Validators
+} from '@angular/forms';
 import {AuthService} from './services/auth/auth.service';
 import {Router} from '@angular/router';
 import {ERoute} from '../../common/types/ERoute';
@@ -14,39 +21,25 @@ import {Subject, takeUntil} from 'rxjs';
 	styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent implements OnDestroy {
-	public loginForm: UntypedFormGroup = new UntypedFormGroup({
-		username: new UntypedFormControl('', [Validators.required, Validators.email]),
-		password: new UntypedFormControl('', [Validators.required]),
+	public loginForm: FormGroup = new FormGroup({
+		username: new FormControl<string>('', [Validators.required, Validators.email]),
+		password: new FormControl<string>('', [Validators.required]),
 	});
-
-	public showValidationErrors: boolean = false;
-	public errors: string[] = [];
-
-	public get username(): AbstractControl | null {
-		return this.loginForm.get('username');
-	}
-
-	public get password(): AbstractControl | null {
-		return this.loginForm.get('password');
-	}
+	protected authService: AuthService = inject(AuthService);
+	protected router: Router = inject(Router);
+	protected alertService: AlertService = inject(AlertService);
+	private placeService: PlaceService = inject(PlaceService);
 
 	private unsubscribe$: Subject<void> = new Subject<void>();
 
-	constructor(
-		protected authService: AuthService,
-		protected router: Router,
-		protected alertService: AlertService,
-		private placeService: PlaceService,
-	) {
+	constructor() {
 		if(this.authService.isLogged) {
 			this.router.navigate([ERoute.SALE]);
 		}
 	}
 
 	public async login(): Promise<void> {
-		this.errors = [];
 		if(this.loginForm.invalid) {
-			this.showValidationErrors = true;
 			return;
 		}
 
@@ -58,19 +51,18 @@ export class LoginComponent implements OnDestroy {
 
 			if(e instanceof HttpErrorResponse) {
 				if(e.error === 'Username or password is incorrect or user is blocked.') {
-					this.showValidationErrors = true;
-					this.errors.push('Špatné uživatelské jméno nebo heslo');
+					this.alertService.error('Špatné uživatelské jméno nebo heslo');
 
 				} else if([500,502,504].includes(e.status)) {
-					this.errors.push('Chyba spojení se serverem');
+					this.alertService.error('Chyba spojení se serverem');
 				} else if(e.status === 404 && e.error.Message.includes('Place with API token')) {
 					this.showBadPlaceError();
 				} else {
-					this.errors.push('Vyskytla se chyba přihlašování, kontaktuj administrátora');
+					this.alertService.error('Vyskytla se chyba přihlašování, kontaktuj administrátora');
 				}
 
 			} else {
-				this.errors.push('Vyskytla se chyba přihlašování, kontaktuj administrátora');
+				this.alertService.error('Vyskytla se chyba přihlašování, kontaktuj administrátora');
 			}
 		}
 	}

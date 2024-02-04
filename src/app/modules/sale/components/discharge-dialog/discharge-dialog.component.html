@@ -10,7 +10,7 @@
 <div mat-dialog-content>
   <h3>Opravdu chceš vybít kredit a vrátit uživateli jeho peníze?</h3>
   <hr>
-  <h3 class="text-center">{{ data.user.name }}</h3>
+  <h3 class="text-center">{{ (data.user | async)?.name }}</h3>
   <h2 class="text-center" style="font-size: 30px">{{ data.currencyAccount.currentAmount }}Kč</h2>
 
   <button mat-raised-button

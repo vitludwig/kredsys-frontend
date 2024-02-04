@@ -10,7 +10,11 @@
 		<app-side-menu></app-side-menu>
 	</mat-drawer>
 
-	<div class="main-content" tabindex="0" #mainContent>
+	<div #mainContent
+		[class.full-height]="fullPageHeight"
+		class="main-content"
+		tabindex="0"
+	>
 		<router-outlet></router-outlet>
 	</div>
 </mat-drawer-container>

@@ -31,7 +31,7 @@
 						matInput
 					>
 					<mat-error>
-						<ng-container *ngTemplateOutlet="errorMessage; context: { control: memberId.ngControl }"></ng-container>
+						<app-error-message [control]="memberId.ngControl"></app-error-message>
 					</mat-error>
 				</mat-form-field>
 
@@ -44,7 +44,7 @@
 						formControlName="name"
 					>
 					<mat-error>
-						<ng-container *ngTemplateOutlet="errorMessage; context: { control: name.ngControl }"></ng-container>
+						<app-error-message [control]="name.ngControl"></app-error-message>
 					</mat-error>
 				</mat-form-field>
 
@@ -58,7 +58,7 @@
 						matInput
 					>
 					<mat-error>
-						<ng-container *ngTemplateOutlet="errorMessage; context: { control: email.ngControl }"></ng-container>
+						<app-error-message [control]="email.ngControl"></app-error-message>
 					</mat-error>
 				</mat-form-field>
 
@@ -73,7 +73,7 @@
 							#password="matInput"
 						>
 						<mat-error>
-							<ng-container *ngTemplateOutlet="errorMessage; context: { control: password.ngControl }"></ng-container>
+							<app-error-message [control]="password.ngControl"></app-error-message>
 						</mat-error>
 					</mat-form-field>
 
@@ -87,7 +87,7 @@
 							#passwordAgain="matInput"
 						>
 						<mat-error>
-							<ng-container *ngTemplateOutlet="errorMessage; context: { control: passwordAgain.ngControl }"></ng-container>
+							<app-error-message [control]="passwordAgain.ngControl"></app-error-message>
 						</mat-error>
 					</mat-form-field>
 				}
@@ -166,28 +166,4 @@
 	<div class="d-flex align-items-center justify-content-center w-100">
 		<mat-spinner></mat-spinner>
 	</div>
-</ng-template>
-
-<ng-template #errorMessage let-control="control">
-	@if(control.invalid && (control.dirty || control.touched)) {
-		<span *ngIf="control.errors?.['required']">
-			Povinné pole
-		</span>
-
-		<span *ngIf="control.errors?.['matching']">
-			Hesla se neshodují
-		</span>
-
-		<span *ngIf="control.errors?.['email']">
-			E-mail musí být ve formátu 'neco{{'@'}}neco.neco'
-		</span>
-
-		<span *ngIf="control.errors?.['minlength']">
-			Minimální délka je {{ control.errors?.['minlength']['requiredLength'] }}
-		</span>
-
-		<span *ngIf="control.errors?.['conflict']">
-			Uživatel se zadaným členským id nebo e-mailem nebo kartou již existuje
-		</span>
-	}
 </ng-template>
