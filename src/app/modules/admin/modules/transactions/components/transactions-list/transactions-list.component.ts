@@ -144,7 +144,7 @@ export class TransactionsListComponent implements OnInit, AfterViewInit, OnDestr
 			this.transactionDetails = [];
 
 			if(row.type === ETransactionType.PAYMENT) {
-				const records = (await this.transactionService.getTransaction(row.id!)).records;
+				const records = (await this.transactionService.getTransactionDetail(row.id!)).records;
 				for(const record of records) {
 					const goods = await this.goodsService.getGoodie(record.goodsId);
 					this.transactionDetails.push({

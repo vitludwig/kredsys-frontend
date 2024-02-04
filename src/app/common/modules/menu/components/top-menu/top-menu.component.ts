@@ -1,4 +1,4 @@
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {Component, inject, Input, OnDestroy, OnInit} from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
 import {ChargeDialogComponent} from '../../../../../modules/sale/components/charge-dialog/charge-dialog.component';
 import {MatDrawer} from '@angular/material/sidenav';
@@ -26,7 +26,12 @@ import {
 	styleUrls: ['./top-menu.component.scss'],
 })
 export class TopMenuComponent implements OnInit, OnDestroy {
-	protected pageName: string = '';
+	protected router: Router = inject(Router);
+	protected customerService: CustomerService = inject(CustomerService);
+	private dialog: MatDialog = inject(MatDialog);
+	private authService: AuthService = inject(AuthService);
+	private alertService: AlertService = inject(AlertService);
+
 	protected customer: IUser | null;
 
 	protected canChargeMoney: boolean = false;
@@ -37,30 +42,11 @@ export class TopMenuComponent implements OnInit, OnDestroy {
 
 	@Input()
 	public place: IPlace;
-
-	protected unsubscribe: Subject<void> = new Subject();
-
-	constructor(
-		public router: Router,
-		public customerService: CustomerService,
-		public usersService: UsersService,
-		protected transactionService: TransactionService,
-		protected currencyService: CurrencyService,
-		protected dialog: MatDialog,
-		protected authService: AuthService,
-		protected alertService: AlertService,
-	) {
-		this.router.events
-			.subscribe((e) => {
-				if(e instanceof ActivationEnd && e.snapshot.data.hasOwnProperty('name')) {
-					this.pageName = e.snapshot.data['name'] ?? '';
-				}
-			});
-	}
+	private unsubscribe$: Subject<void> = new Subject();
 
 	public async ngOnInit(): Promise<void> {
 		this.customerService.customer$
-			.pipe(takeUntil(this.unsubscribe))
+			.pipe(takeUntil(this.unsubscribe$))
 			.subscribe(async (customer) => {
 				if(customer) {
 					customer.name = this.getTransformedCustomerName(customer.name);
@@ -70,7 +56,7 @@ export class TopMenuComponent implements OnInit, OnDestroy {
 			});
 
 		this.authService.isLogged$
-			.pipe(takeUntil(this.unsubscribe))
+			.pipe(takeUntil(this.unsubscribe$))
 			.subscribe((isLogged) => {
 				if(isLogged) {
 					// TODO: fix this properly with permission list
@@ -79,7 +65,11 @@ export class TopMenuComponent implements OnInit, OnDestroy {
 			});
 	}
 
-	public openChargeDialog(): void {
+	public ngOnDestroy() {
+		this.unsubscribe$.next();
+	}
+
+	protected openChargeDialog(): void {
 		const dialogRef = this.dialog.open<ChargeDialogComponent, number>(ChargeDialogComponent, {
 			width: '300px',
 			minWidth: '250px',
@@ -106,7 +96,7 @@ export class TopMenuComponent implements OnInit, OnDestroy {
 		});
 	}
 
-	public openDischargeDialog(): void {
+	protected openDischargeDialog(): void {
 		const dialogRef = this.dialog.open<DischargeDialogComponent, { user: IUser; currencyAccount: ICurrencyAccount }>(
 			DischargeDialogComponent, {
 				width: '350px',
@@ -137,16 +127,20 @@ export class TopMenuComponent implements OnInit, OnDestroy {
 		});
 	}
 
-	public openStornoDialog(): void {
+	protected openStornoDialog(): void {
+		if(this.customer?.id === undefined) {
+			return;
+		}
+
 		const dialogRef = this.dialog.open<StornoDialogComponent, number>(StornoDialogComponent, {
-			width: '300px',
+			width: '400px',
 			minWidth: '250px',
 			autoFocus: 'dialog',
-			data: this.customer?.id,
+			data: this.customer.id,
 		});
 
 		dialogRef.afterClosed().subscribe(async (transactionId) => {
-			if(transactionId === undefined) {
+			if(!Number.isInteger(transactionId)) {
 				return;
 			}
 
@@ -172,7 +166,7 @@ export class TopMenuComponent implements OnInit, OnDestroy {
 	 * @param name
 	 * @protected
 	 */
-	protected getTransformedCustomerName(name: string): string {
+	private getTransformedCustomerName(name: string): string {
 		// return full name for admin, otherwise shorten
 		if(this.authService.hasRole(EUserRole.ADMIN)) {
 			return name;
@@ -187,9 +181,5 @@ export class TopMenuComponent implements OnInit, OnDestroy {
 		}
 
 		return result;
-	}
-
-	public ngOnDestroy() {
-		this.unsubscribe.next();
 	}
 }

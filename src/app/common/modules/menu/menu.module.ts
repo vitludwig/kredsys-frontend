@@ -13,6 +13,7 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import {IsIncludedPipe} from '../../pipes/is-included/is-included.pipe';
+import {PageNamePipe} from './components/top-menu/pipes/page-name.pipe';
 
 @NgModule({
 	declarations: [
@@ -33,6 +34,7 @@ import {IsIncludedPipe} from '../../pipes/is-included/is-included.pipe';
 		MatProgressSpinnerModule,
 		MatSlideToggleModule,
 		IsIncludedPipe,
+		PageNamePipe,
 	],
 	exports: [
 		TopMenuComponent,

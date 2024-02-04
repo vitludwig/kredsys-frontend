@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import {EUserRole, IUser} from '../../../../common/types/IUser';
 import {IPaginatedResponse} from '../../../../common/types/IPaginatedResponse';
 import {firstValueFrom} from 'rxjs';
@@ -15,13 +15,9 @@ import {ITransaction} from "../../modules/transactions/services/transaction/type
 	providedIn: 'root',
 })
 export class UsersService {
+	private http: HttpClient = inject(HttpClient);
+
 	protected limit = 15;
-
-	constructor(
-		protected http: HttpClient,
-	) {
-
-	}
 
 	@cache(ETime.MINUTE * 2, [ECacheTag.USERS])
 	public async getUsers(search: string = '', page: number = 0, pageSize = this.limit, blocked: boolean = false): Promise<IPaginatedResponse<IUser>> {
@@ -93,11 +89,12 @@ export class UsersService {
 	}
 
 	@cache(ETime.MINUTE * 2, [ECacheTag.TRANSACTION, ECacheTag.TRANSACTIONS])
-	public async getUserTransactions(id: number, page: number = 0, pageSize: number = 15, filter: string = ''): Promise<IPaginatedResponse<ITransaction>> {
+	public async getUserTransactions(id: number, page: number = 0, pageSize: number = 15, filter: string = '', orderBy: string = ''): Promise<IPaginatedResponse<ITransaction>> {
 		const params = {
 			filter,
 			page,
 			pageSize,
+			orderBy,
 		};
 
 		return firstValueFrom(this.http.get<IPaginatedResponse<ITransaction>>(environment.apiUrl + 'users/' + id + '/transactions', {params: params}));

@@ -5,21 +5,24 @@
 	<mat-icon class="close-icon">close</mat-icon>
 </button>
 
-<h1 mat-dialog-title>Stornovat</h1>
+<h2 mat-dialog-title>Stornovat</h2>
 
 <div mat-dialog-content>
 	<h2 class="mb-0">Poslední nákup</h2>
-	<ng-container *ngIf="lastTransaction">
+	@if(lastTransaction) {
 		<mat-list role="list">
-			<mat-divider></mat-divider>
-			<mat-list-item *ngFor="let item of purchased" role="listitem">
-				{{ item.name }} {{ item.amount }}Kč
-			</mat-list-item>
-			<mat-divider></mat-divider>
+			@for(item of purchased; track $index) {
+				<mat-list-item role="listitem">
+					{{item.multiplier}}x {{ item.name }} - {{ item.amount }}Kč
+				</mat-list-item>
+				@if(!$last) {
+					<mat-divider></mat-divider>
+				}
+			}
 		</mat-list>
 
 		<h2 class="mb-0 mt-3">Celkem {{ lastTransaction.amount }}Kč</h2>
-	</ng-container>
+	}
 	<button mat-raised-button
 		color="primary"
 		class="submit-btn"

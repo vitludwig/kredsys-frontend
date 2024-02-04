@@ -1,4 +1,4 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import {Component, inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {UsersService} from "../../../admin/services/users/users.service";
 import {ITransaction} from "../../../admin/modules/transactions/services/transaction/types/ITransaction";
@@ -13,45 +13,48 @@ import {PlaceService} from "../../../admin/services/place/place/place.service";
 	styleUrls: ['./storno-dialog.component.scss']
 })
 export class StornoDialogComponent implements OnInit{
-	public lastTransaction: ITransaction;
-	public purchased: any[] = [];
-    
-	constructor(
-		protected usersService: UsersService,
-		protected transactionService: TransactionService,
-		protected goodsService: GoodsService,
-		protected placeService: PlaceService,
-		protected dialogRef: MatDialogRef<StornoDialogComponent>,
-		@Inject(MAT_DIALOG_DATA) public userId: number,
-	) {
-	}
-    
+	protected lastTransaction: ITransaction | null = null;
+	protected purchased: { name: string, amount: number, multiplier: number }[] = [];
+	private usersService: UsersService = inject(UsersService);
+	private transactionService: TransactionService = inject(TransactionService);
+	private goodsService: GoodsService = inject(GoodsService);
+	private placeService: PlaceService = inject(PlaceService);
+	private dialogRef: MatDialogRef<StornoDialogComponent> = inject(MatDialogRef);
+	private userId: number = inject<number>(MAT_DIALOG_DATA);
+
 	public async ngOnInit(): Promise<void> {
+		this.loadTransactions();
+	}
+
+	public submit(): void {
+		this.dialogRef.close(this.lastTransaction?.id || null);
+	}
+
+	private async loadTransactions(): Promise<void> {
 		const filter = `
 			type=${ETransactionType.PAYMENT},
 			placeId=${this.placeService.selectedPlace!.id},
 			cancellation=false
-		`
-		const result = (await this.usersService.getUserTransactions(this.userId,0, 1, filter)).data;
+		`;
+		const sortBy = 'created desc';
+		const result = (await this.usersService.getUserTransactions(this.userId,0, 1, filter, sortBy)).data;
 
 		if(result.length === 0) {
 			return;
 		}
 
 		this.lastTransaction = result[0];
-		const transaction = await this.transactionService.getTransaction(this.lastTransaction.id);
-        
+		// user-transctions endpoint doesn't return detail of transaction with records
+		const transaction = await this.transactionService.getTransactionDetail(this.lastTransaction.id);
+
 		for(const record of transaction.records) {
 			const goodie = await this.goodsService.getGoodie(record.goodsId);
 			this.purchased.push({
 				name: goodie.name,
-				amount: record.amountSum
+				amount: record.amountSum,
+				multiplier: record.multiplier,
 			})
 		}
-	}
-
-	public submit(): void {
-		this.dialogRef.close(this.lastTransaction.id);
 	}
 
 }

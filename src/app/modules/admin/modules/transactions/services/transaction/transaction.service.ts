@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import {
 	ITransaction,
 	ITransactionRecordDeposit,
@@ -19,14 +19,10 @@ import {IStatisticsFilter, ITransactionStatistics} from "./types/ITransactionSta
 	providedIn: 'root',
 })
 export class TransactionService {
-
-	constructor(
-		protected http: HttpClient,
-	) {
-	}
+	private http: HttpClient = inject(HttpClient);
 
 	@cache(ETime.MINUTE * 2, [ECacheTag.TRANSACTION])
-	public getTransaction(id: number, type?: ETransactionType): Promise<ITransactionResponse> {
+	public getTransactionDetail(id: number, type?: ETransactionType): Promise<ITransactionResponse> {
 		const params: Partial<ITransaction> = {};
 		if(type) {
 			params['type'] = type
