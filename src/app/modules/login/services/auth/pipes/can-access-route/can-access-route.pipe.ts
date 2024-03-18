@@ -4,7 +4,6 @@ import allowedRoutes from '../../types/AllowedRoutes';
 import {ERoute} from '../../../../../../common/types/ERoute';
 import {PlaceService} from "../../../../../admin/services/place/place/place.service";
 import allowedPlaceRoutes from "../../types/AllowedPlaceRoutes";
-import {EPlaceRole} from "../../../../../../common/types/IPlace";
 
 @Pipe({
 	name: 'canAccessRoute'

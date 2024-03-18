@@ -5,6 +5,7 @@ import {environment} from '../../../../../environments/environment';
 import {IAuthenticationResponse} from './types/IAuthenticationResponse';
 import {BehaviorSubject, firstValueFrom, Observable} from 'rxjs';
 import {UsersService} from '../../../admin/services/users/users.service';
+import {EPermission} from './types/EPermission';
 
 @Injectable({
 	providedIn: 'root',
@@ -47,6 +48,10 @@ export class AuthService {
 		}
 	}
 
+	public getPermissions(): EPermission[] {
+		return JSON.parse(localStorage.getItem('permissions') ?? '[]');
+	}
+
 	public async login(email: string, password: string): Promise<IAuthenticationResponse> {
 		const result = await firstValueFrom(this.http.post<IAuthenticationResponse>(environment.apiUrl + 'authentication/user/email', {
 			email: email,
@@ -56,10 +61,16 @@ export class AuthService {
 
 		localStorage.setItem('userId', result.userId + '');
 		localStorage.setItem('apiToken', result.token + '');
+		localStorage.setItem('permissions', JSON.stringify(result.permissions));
+
 		const user = await this.usersService.getUser(result.userId);
 		user.roles = result.roles;
 		this.user = user;
 		return result;
+	}
+
+	private savePermissions(value: EPermission[]): void {
+		localStorage.setItem('permissions', JSON.stringify(value));
 	}
 
 	public async logout(): Promise<void> {

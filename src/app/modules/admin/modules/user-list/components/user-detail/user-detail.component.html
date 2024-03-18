@@ -71,9 +71,10 @@
 							placeholder="Heslo"
 							type="password"
 							#password="matInput"
+							#passwordElement
 						>
 						<mat-error>
-							<app-error-message [control]="password.ngControl"></app-error-message>
+							<app-error-message [control]="password.ngControl" [errorMessages]="{minlength: 'Minimální počet znaků je ' + passwordElement.minLength}"></app-error-message>
 						</mat-error>
 					</mat-form-field>
 
@@ -87,7 +88,7 @@
 							#passwordAgain="matInput"
 						>
 						<mat-error>
-							<app-error-message [control]="passwordAgain.ngControl"></app-error-message>
+							<app-error-message [control]="passwordAgain.ngControl" [errorMessages]="{minlength: 'Minimální počet znaků je ' + passwordElement.minLength}"></app-error-message>
 						</mat-error>
 					</mat-form-field>
 				}

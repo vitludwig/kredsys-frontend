@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import {CurrencyService} from '../../../modules/admin/services/currency/currency.service';
 import {AuthService} from '../../../modules/login/services/auth/auth.service';
 
@@ -7,11 +7,8 @@ import {AuthService} from '../../../modules/login/services/auth/auth.service';
 })
 export class InitService {
 
-	constructor(
-		private currencyService: CurrencyService,
-		private authService: AuthService,
-	) {
-	}
+	private currencyService: CurrencyService = inject(CurrencyService);
+	private authService: AuthService = inject(AuthService);
 
 	public async init(): Promise<void> {
 		if(this.authService.isLogged) {
