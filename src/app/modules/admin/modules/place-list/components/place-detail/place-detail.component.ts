@@ -17,7 +17,6 @@ import {HttpErrorResponse} from '@angular/common/http';
 })
 export class PlaceDetailComponent implements OnInit {
 	public place: IPlace;
-	public placeRole: EPlaceRole = EPlaceRole.BAR;
 	public goods: IGoods[] = [];
 	public isLoading: boolean = false;
 	public isEdit: boolean = false;
@@ -40,7 +39,6 @@ export class PlaceDetailComponent implements OnInit {
 			const placeId = Number(this.route.snapshot.paramMap.get('id'));
 			if(placeId) {
 				this.place = Object.assign({}, await this.placeService.getPlace(placeId));
-				this.placeRole = await this.placeService.getPlaceRole(placeId);
 				this.goods = (await this.placeService.getPlaceGoods(placeId)).map((obj) => obj.goods);
 				this.isEdit = true;
 			} else {
@@ -61,11 +59,9 @@ export class PlaceDetailComponent implements OnInit {
 		try {
 			if(this.isEdit) {
 				await this.placeService.editPlace(this.place!);
-				await this.placeService.editPlaceRole(this.place!.id!, this.placeRole);
 				this.alertService.success('Místo upraveno!');
 			} else {
 				const place = await this.placeService.addPlace(this.place!);
-				// await this.placeService.editPlaceRole(place.id!, this.placeRole);
 
 				for(const item of this.goods) {
 					this.placeService.addGoods(item.id!, place.id!);

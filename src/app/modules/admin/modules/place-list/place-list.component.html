@@ -28,24 +28,23 @@
 				*matCellDef="let row"> {{row.name}} </td>
 		</ng-container>
 
-		<ng-container matColumnDef="role">
-			<th mat-header-cell
-				*matHeaderCellDef
-				>Typ
-			</th>
-			<td mat-cell
-				*matCellDef="let row"> {{row.type}}</td>
-		</ng-container>
-
 		<ng-container matColumnDef="actions">
 			<th mat-header-cell
 				*matHeaderCellDef></th>
 			<td mat-cell
 				[align]="'right'"
-				*matCellDef="let row">
-				<a [routerLink]="[row.id, ERoute.EDIT]"
-					mat-raised-button
-					color="accent">Upravit</a>
+				*matCellDef="let row"
+			>
+				<div class="d-flex gap-3 align-items-center justify-content-end">
+					<a [routerLink]="[row.id, ERoute.EDIT]"
+						color="accent"
+						mat-raised-button>Upravit</a>
+
+					<button (clickConfirm)="deletePlace(row.id)"
+						[confirmPreset]="'remove'"
+						color="warn"
+						mat-raised-button>Smazat</button>
+				</div>
 			</td>
 		</ng-container>
 

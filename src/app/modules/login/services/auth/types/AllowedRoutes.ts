@@ -1,6 +1,5 @@
 import {EnumHashMap} from '../../../../../common/types/EnumHashMap';
 import {ERoute} from '../../../../../common/types/ERoute';
-import {EPermission} from './EPermission';
 import {EUserRole} from '../../../../../common/types/IUser';
 
 const allowedRoutes: EnumHashMap<EUserRole, ERoute[]> = {

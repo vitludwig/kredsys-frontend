@@ -33,18 +33,6 @@
 						>
 					</mat-form-field>
 
-					<mat-form-field
-						class="w-100">
-						<mat-label>Role</mat-label>
-						<mat-select name="role"
-							required
-							[(ngModel)]="place.type">
-							<mat-option [value]="EPlaceRole.BAR">Bar</mat-option>
-							<mat-option [value]="EPlaceRole.INFO_POINT">Info stánek</mat-option>
-							<mat-option [value]="EPlaceRole.REGISTRATION">Registrační místo</mat-option>
-						</mat-select>
-					</mat-form-field>
-
 					<div>
 						<button mat-raised-button
 							class="w-100"

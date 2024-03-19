@@ -128,6 +128,11 @@ export class PlaceService implements OnDestroy {
 	}
 
 	@invalidateCache([ECacheTag.PLACES, ECacheTag.PLACE])
+	public deletePlace(id: number): Promise<void> {
+		return firstValueFrom(this.http.delete<void>(`${environment.apiUrl}places/${id}`));
+	}
+
+	@invalidateCache([ECacheTag.PLACES, ECacheTag.PLACE])
 	public async editPlaceRole(itemId: number, role: EPlaceRole): Promise<{ roles: EPlaceRole[] }> {
 		return firstValueFrom(this.http.put<{ roles: EPlaceRole[] }>(environment.apiUrl + 'places/' + itemId + '/roles', {
 			roles: [role]

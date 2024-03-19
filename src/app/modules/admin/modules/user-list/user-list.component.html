@@ -7,11 +7,13 @@
 				(keyup)="onSearch(search.value)">
 		</mat-form-field>
 
-		<mat-checkbox color="primary"
+		<mat-slide-toggle
+			(ngModelChange)="onShowBlockedUsers($event)"
 			class="ms-3"
 			[(ngModel)]="showBlockedUsers"
-			(change)="onShowBlockedUsers($event.checked)"
-		>Zobrazit blokované uživatele</mat-checkbox>
+			color="primary">
+			Blokovaní uživatelé
+		</mat-slide-toggle>
 	</div>
 
 	<a mat-button
@@ -29,7 +31,6 @@
 		multiTemplateDataRows
 
 	>
-
 		<ng-container matColumnDef="id">
 			<th mat-header-cell
 				*matHeaderCellDef

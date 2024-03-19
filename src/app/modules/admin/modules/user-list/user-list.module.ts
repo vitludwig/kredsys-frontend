@@ -22,6 +22,7 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {ChangePasswordComponent} from './components/change-password/change-password.component';
 import {ReactiveFormsModule} from '@angular/forms';
 import {ErrorMessageComponent} from '../../../../common/components/error-message/error-message.component';
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 
 
 @NgModule({
@@ -51,6 +52,7 @@ import {ErrorMessageComponent} from '../../../../common/components/error-message
 		MatProgressSpinnerModule,
 		ReactiveFormsModule,
 		ErrorMessageComponent,
+		MatSlideToggleModule,
 	],
 	exports: [
 		UserListComponent,

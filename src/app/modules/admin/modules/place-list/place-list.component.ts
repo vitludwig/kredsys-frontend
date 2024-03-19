@@ -1,9 +1,8 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, inject, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {MatTableDataSource} from '@angular/material/table';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
 import {map, merge, startWith, Subject, switchMap, takeUntil} from 'rxjs';
-import {ActivatedRoute} from '@angular/router';
 import {debounce} from '../../../../common/decorators/debounce';
 import {ERoute} from 'src/app/common/types/ERoute';
 import {PlaceService} from '../../services/place/place/place.service';
@@ -15,12 +14,11 @@ import {IPlace} from '../../../../common/types/IPlace';
 	styleUrls: ['./place-list.component.scss'],
 })
 export class PlaceListComponent implements OnInit, OnDestroy {
-	public displayedColumns: string[] = ['name', 'role', 'actions'];
+	public displayedColumns: string[] = ['name', 'actions'];
 	public dataSource: MatTableDataSource<IPlace>;
 	public placesTotal: number = 0;
 	public placesData: IPlace[];
 	public isPlacesLoading: boolean = false;
-	public expandedRow: IPlace | null;
 
 	@ViewChild(MatPaginator)
 	public paginator: MatPaginator;
@@ -32,12 +30,7 @@ export class PlaceListComponent implements OnInit, OnDestroy {
 
 	protected unsubscribe: Subject<void> = new Subject<void>();
 
-	constructor(
-		public route: ActivatedRoute,
-		protected placeService: PlaceService,
-	) {
-
-	}
+	private placeService: PlaceService = inject(PlaceService);
 
 	public async ngOnInit(): Promise<void> {
 		await this.loadPlaces();
@@ -84,13 +77,9 @@ export class PlaceListComponent implements OnInit, OnDestroy {
 		this.placesTotal = users.count;
 	}
 
-	public applyFilter(event: Event): void {
-		const filterValue = (event.target as HTMLInputElement).value;
-		this.dataSource.filter = filterValue.trim().toLowerCase();
-
-		if(this.dataSource.paginator) {
-			this.dataSource.paginator.firstPage();
-		}
+	protected async deletePlace(id: number): Promise<void> {
+		await this.placeService.deletePlace(id);
+		await this.loadPlaces();
 	}
 
 	public ngOnDestroy(): void {

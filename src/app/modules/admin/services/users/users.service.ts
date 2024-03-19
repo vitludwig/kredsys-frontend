@@ -31,6 +31,7 @@ export class UsersService {
 			filter,
 			page,
 			pageSize,
+			includeBlocked: blocked,
 		};
 
 		return firstValueFrom(this.http.get<IPaginatedResponse<IUser>>(environment.apiUrl + 'users', {params: params}));

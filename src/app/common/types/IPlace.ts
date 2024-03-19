@@ -3,7 +3,7 @@ import {IGoods} from './IGoods';
 export interface IPlace {
 	id?: number;
 	name: string;
-	type: EPlaceRole;
+	type?: EPlaceRole;
 	apiToken?: string;
 }
 
