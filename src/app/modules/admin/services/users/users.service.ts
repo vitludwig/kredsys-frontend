@@ -143,6 +143,7 @@ export class UsersService {
 			memberId: null,
 			blocked: false,
 			roles: [],
+			password: '',
 		};
 	}
 }
