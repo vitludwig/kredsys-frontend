@@ -31,7 +31,7 @@ export class CardInfoComponent {
 			this.currencyAccount = (await this.usersService.getUserCurrencyAccounts(this.user.id!))[0] ?? null;
 
 			if(this.user && this.currencyAccount) {
-				this.walletCode = await Utils.createWalletHash(this.user.id + '' + environment.walletApiSecret);
+				this.walletCode = this.user.id + '' + (await Utils.createWalletHash(this.user.id + '' + environment.walletApiSecret));
 			}
 		} catch(e) {
 			console.error('Cannot display user currency data: ', e);
