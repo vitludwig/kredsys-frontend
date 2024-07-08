@@ -10,12 +10,14 @@
 				<h2 class="text-center">{{ user.name }} (Členské id: {{ user.memberId }})</h2>
 				<h1 class="very-big text-center">{{ currencyAccount.currentAmount }} Kč</h1>
 
-				<div *ngIf="walletData"
-					class="wallet-qrcode mt-5">
+				<div *ngIf="walletCode"
+					class="wallet-qrcode mt-5"
+				>
 					<h4>Načtěte tento kód ve vaší mobilní aplikaci pro propojení peněženky</h4>
 					<qrcode [errorCorrectionLevel]="'M'"
-						[qrdata]="walletData"
+						[qrdata]="walletCode"
 						[width]="256"></qrcode>
+					<h3 class="text-center" style="letter-spacing: 16px">{{ walletCode }}</h3>
 				</div>
 			</ng-container>
 

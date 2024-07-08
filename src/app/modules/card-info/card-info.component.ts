@@ -17,7 +17,7 @@ export class CardInfoComponent {
 	protected currencyAccount: ICurrencyAccount | null;
 	protected isLoading: boolean = false;
 	protected cardLoaded: boolean = false;
-	protected walletData: string;
+	protected walletCode: string;
 
 	constructor(
 		protected usersService: UsersService,
@@ -31,7 +31,7 @@ export class CardInfoComponent {
 			this.currencyAccount = (await this.usersService.getUserCurrencyAccounts(this.user.id!))[0] ?? null;
 
 			if(this.user && this.currencyAccount) {
-				this.walletData = await Utils.createWalletHash(this.user.id + '' + environment.walletApiSecret);
+				this.walletCode = await Utils.createWalletHash(this.user.id + '' + environment.walletApiSecret);
 			}
 		} catch(e) {
 			console.error('Cannot display user currency data: ', e);
