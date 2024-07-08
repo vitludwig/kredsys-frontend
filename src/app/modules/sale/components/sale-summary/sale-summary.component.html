@@ -51,10 +51,14 @@
 			<button mat-raised-button
 				class="submit-btn"
 				color="primary"
-				[disabled]="orderService.items.length === 0 || totalLeft < -(customerService.currencyAccount$ | async)?.overdraftLimit"
+				[disabled]="orderService.items.length === 0 || totalLeft < -(customerService.currencyAccount$ | async)?.overdraftLimit || payInProgress"
 				(click)="submitOrder()"
+
 			>
-				Potvrdit
+				<span class="d-flex align-items-center">
+					Potvrdit
+					<app-animated-loader *ngIf="payInProgress" />
+				</span>
 			</button>
 		</div>
 	</ng-container>

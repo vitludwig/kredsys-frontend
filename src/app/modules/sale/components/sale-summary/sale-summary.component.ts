@@ -19,8 +19,9 @@ export class SaleSummaryComponent implements OnInit, OnDestroy {
 	@Input()
 	public place: IPlace | null = null
 
-	public totalLeft: number;
-	public isUserLoaded: boolean = false;
+	protected totalLeft: number;
+	protected isUserLoaded: boolean = false;
+	protected payInProgress: boolean = false;
 
 	protected unsubscribe: Subject<void> = new Subject();
 
@@ -90,6 +91,7 @@ export class SaleSummaryComponent implements OnInit, OnDestroy {
 			return;
 		}
 
+		this.payInProgress = true;
 		const records: ITransactionRecordPayment[] = [];
 		const customerId = this.customerService.customer?.id!;
 		for(const item of this.orderService.items) {
@@ -110,13 +112,15 @@ export class SaleSummaryComponent implements OnInit, OnDestroy {
 			console.error('Cannot make payment: ', e);
 			if(e instanceof HttpErrorResponse) {
 				if(e.error.Code === 404) {
-					this.alertService.error('Nebyl nalezen uživatelům účet, hybaj na infostánek!');
+					this.alertService.error('Nebyl nalezen uživatelův účet, pošli ho na infostánek!');
 				} else {
 					this.alertService.error(e.error.Message ?? 'Vyskytla se neznámá chyba');
 				}
 			} else {
 				this.alertService.error('Vyskytla se neznámá chyba');
 			}
+		} finally {
+			this.payInProgress = false;
 		}
 	}
 }

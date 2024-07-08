@@ -23,6 +23,7 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {IsIncludedPipe} from '../../common/pipes/is-included/is-included.pipe';
 import {FilterSaleItemsPipe} from './components/dashboard/pipes/filter-sale-items.pipe';
 import { FilterPanelComponent } from './components/dashboard/components/filter-panel/filter-panel.component';
+import {AnimatedLoaderComponent} from '../../common/components/animated-loader/animated-loader.component';
 
 
 @NgModule({
@@ -56,6 +57,7 @@ import { FilterPanelComponent } from './components/dashboard/components/filter-p
 		MatProgressSpinnerModule,
 		IsIncludedPipe,
 		FilterSaleItemsPipe,
+		AnimatedLoaderComponent,
 	],
 })
 export class SaleModule {

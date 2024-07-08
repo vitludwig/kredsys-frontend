@@ -8,6 +8,7 @@ import {LoginRoutingModule} from './login-routing.module';
 import {ReactiveFormsModule} from '@angular/forms';
 import {CanAccessRoutePipe} from './services/auth/pipes/can-access-route/can-access-route.pipe';
 import {ErrorMessageComponent} from '../../common/components/error-message/error-message.component';
+import {AnimatedLoaderComponent} from '../../common/components/animated-loader/animated-loader.component';
 
 
 @NgModule({

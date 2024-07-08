@@ -5,6 +5,7 @@ import {UsersService} from '../admin/services/users/users.service';
 import {ETime} from '../../common/types/ETime';
 import {Md5} from 'ts-md5';
 import {environment} from '../../../environments/environment';
+import {Utils} from '../../common/utils/Utils';
 
 @Component({
 	selector: 'app-card-info',
@@ -30,10 +31,7 @@ export class CardInfoComponent {
 			this.currencyAccount = (await this.usersService.getUserCurrencyAccounts(this.user.id!))[0] ?? null;
 
 			if(this.user && this.currencyAccount) {
-				this.walletData = JSON.stringify({
-					userId: this.user.id,
-					token: Md5.hashStr(environment.walletApiSecret + (this.user.id + '')),
-				});
+				this.walletData = await Utils.createWalletHash(this.user.id + '' + environment.walletApiSecret);
 			}
 		} catch(e) {
 			console.error('Cannot display user currency data: ', e);
