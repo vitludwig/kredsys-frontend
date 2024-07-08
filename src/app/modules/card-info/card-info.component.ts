@@ -3,7 +3,6 @@ import {IUser} from '../../common/types/IUser';
 import {ICurrencyAccount} from '../../common/types/ICurrency';
 import {UsersService} from '../admin/services/users/users.service';
 import {ETime} from '../../common/types/ETime';
-import {Md5} from 'ts-md5';
 import {environment} from '../../../environments/environment';
 import {Utils} from '../../common/utils/Utils';
 
