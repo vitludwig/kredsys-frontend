@@ -58,6 +58,15 @@ export class CardLoaderComponent implements OnInit, OnDestroy {
 		'á': 8,
 		'í': 9,
 		'é': 0,
+		'Ě': 2,
+		'Š': 3,
+		'Č': 4,
+		'Ř': 5,
+		'Ž': 6,
+		'Ý': 7,
+		'Á': 8,
+		'Í': 9,
+		'É': 0,
 	};
 	protected focused: boolean = true;
 	private prevEventTime: number = 0;
@@ -135,6 +144,7 @@ export class CardLoaderComponent implements OnInit, OnDestroy {
 					if(Number.isNaN(numberId)) {
 						numberId = this.convertFromCzechToNumbers(userId);
 					}
+          console.log(numberId);
 					this.cardIdChange.emit(numberId);
 				} catch(e) {
 					console.error('Card id loading error: ', e);
