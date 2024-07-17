@@ -1,32 +1,17 @@
-import {Injectable} from '@angular/core';
-import { Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
+import {inject} from '@angular/core';
+import {Router, ActivatedRouteSnapshot, RouterStateSnapshot, CanActivateFn} from '@angular/router';
 import {PlaceService} from '../../modules/admin/services/place/place/place.service';
 import {ERoute} from '../types/ERoute';
 
+export const placeGuard: CanActivateFn = (next: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
+	const placeService = inject(PlaceService);
+	const router = inject(Router);
 
-@Injectable({providedIn: 'root'})
-export class PlaceGuard  {
-	constructor(
-		protected router: Router,
-		protected placeService: PlaceService,
-	) {
+	if(placeService.selectedPlace) {
+		return true;
 	}
 
-	public async canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean> {
-		const selectedPlace = this.placeService.selectedPlace;
-		if(selectedPlace) {
-			return true;
-		} else {
-			const selectedId = localStorage.getItem('selectedPlaceId');
-
-			if(selectedId) {
-				this.placeService.selectedPlace = await this.placeService.getPlace(Number(selectedId));
-				return true;
-			}
-		}
-
-		// not logged in so redirect to login page with the return url
-		this.router.navigate(['/' + ERoute.PLACE_SELECT], {queryParams: {returnUrl: state.url}});
-		return false;
-	}
+	// not logged in so redirect to login page with the return url
+	router.navigate(['/' + ERoute.PLACE_SELECT], {queryParams: {returnUrl: state.url}});
+	return false;
 }

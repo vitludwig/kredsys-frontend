@@ -12,7 +12,6 @@ import {CurrencyDetailComponent} from './modules/currency-list/components/curren
 import {GoodsTypeDetailComponent} from './modules/goods-list/components/goods-type-detail/goods-type-detail.component';
 import {ChargeComponent} from './modules/charge/charge.component';
 import {TransactionsComponent} from './modules/transactions/transactions.component';
-import {PlaceGuard} from '../../common/utils/place.guard';
 import {ChangePasswordComponent} from './modules/user-list/components/change-password/change-password.component';
 import {unsavedChangesGuard} from "../../common/utils/unsaved-changes.guard";
 
@@ -216,7 +215,7 @@ const routes: Routes = [
 	{
 		path: ERoute.ADMIN_CHARGE,
 		component: ChargeComponent,
-		canActivate: [PlaceGuard],
+		canActivate: [placeGuard],
 		data: {
 			name: 'Nabít peňauze',
 		},

@@ -1,8 +1,8 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {ERoute} from './common/types/ERoute';
-import {AuthGuard} from './common/utils/auth.guard';
-import {PlaceGuard} from './common/utils/place.guard';
+import {authGuard} from './common/utils/auth.guard';
+import {placeGuard} from './common/utils/place.guard';
 
 const routes: Routes = [
 	{
@@ -12,11 +12,11 @@ const routes: Routes = [
 	},
 	{
 		path: '',
-		canActivate: [AuthGuard],
+		canActivate: [authGuard],
 		children: [
 			{
 				path: ERoute.SALE,
-				canActivate: [PlaceGuard],
+				canActivate: [placeGuard],
 				loadChildren: () => import('./modules/sale/sale.module').then((m) => m.SaleModule),
 			},
 			{

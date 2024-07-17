@@ -9,7 +9,6 @@ import {CurrencyService} from '../../../admin/services/currency/currency.service
 import {ICurrencyAccount} from '../../../../common/types/ICurrency';
 import {UsersService} from '../../../admin/services/users/users.service';
 import {AuthService} from '../../../login/services/auth/auth.service';
-import {toSignal} from '@angular/core/rxjs-interop';
 
 @Injectable({
 	providedIn: 'root',

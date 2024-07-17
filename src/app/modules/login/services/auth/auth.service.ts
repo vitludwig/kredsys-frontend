@@ -6,6 +6,7 @@ import {IAuthenticationResponse} from './types/IAuthenticationResponse';
 import {BehaviorSubject, firstValueFrom, Observable} from 'rxjs';
 import {UsersService} from '../../../admin/services/users/users.service';
 import {EPermission} from './types/EPermission';
+import jwt_decode, {JwtPayload} from 'jwt-decode';
 import {ConfigService} from "../../../../common/services/config/config.service";
 
 @Injectable({
@@ -20,10 +21,7 @@ export class AuthService {
 		return this.#user;
 	}
 
-	public set user(value: IUser | null) {
-		this.#user = value;
-		this.isLoggedSubject.next(value !== null);
-	}
+	#apiTokenPayload: JwtPayload;
 
 	public get isDebug(): boolean {
 		return localStorage.getItem('isDebug') === 'true' || environment.debug;
@@ -31,6 +29,25 @@ export class AuthService {
 
 	public set isDebug(value: boolean) {
 		localStorage.setItem('isDebug', value + '');
+	}
+
+	public set user(value: IUser | null) {
+		this.#user = value;
+		if(value?.id) {
+			localStorage.setItem('userId', value.id + '');
+		} else  {
+			localStorage.removeItem('userId');
+		}
+		this.isLoggedSubject.next(value !== null);
+	}
+
+	public get apiToken(): string {
+		return localStorage.getItem('apiToken') ?? '';
+	}
+
+	private set apiToken(value: string) {
+		localStorage.setItem('apiToken', value);
+		this.#apiTokenPayload = jwt_decode(value);
 	}
 
 	public get isLogged(): boolean {
@@ -42,13 +59,17 @@ export class AuthService {
 
 	#user: IUser | null = null;
 
-  public async init(): Promise<void> {
-    this.isLogged$ = this.isLoggedSubject.asObservable();
-    const userId = Number(localStorage.getItem('userId')) ?? null;
-    if(userId) {
-      this.user = await this.usersService.getUser(userId)
+    public get apiTokenPayload(): JwtPayload {
+      return this.#apiTokenPayload;
     }
-  }
+
+    public async init(): Promise<void> {
+      this.isLogged$ = this.isLoggedSubject.asObservable();
+      const userId = Number(localStorage.getItem('userId')) ?? null;
+      if(userId) {
+        this.user = await this.usersService.getUser(userId)
+      }
+    }
 
 	public getPermissions(): EPermission[] {
 		return JSON.parse(localStorage.getItem('permissions') ?? '[]');
@@ -61,13 +82,13 @@ export class AuthService {
 			apiToken: localStorage.getItem('placeToken') ?? undefined,
 		}));
 
-		localStorage.setItem('userId', result.userId + '');
-		localStorage.setItem('apiToken', result.token + '');
-		localStorage.setItem('permissions', JSON.stringify(result.permissions));
+		this.apiToken = result.token + '';
+		this.savePermissions(result.permissions);
 
 		const user = await this.usersService.getUser(result.userId);
 		user.roles = result.roles;
 		this.user = user;
+
 		return result;
 	}
 
