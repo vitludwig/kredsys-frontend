@@ -1,0 +1,38 @@
+<button mat-icon-button
+        class="close-btn"
+        mat-dialog-close
+>
+  <mat-icon class="close-icon">close</mat-icon>
+</button>
+{{config | json}}
+<h1 mat-dialog-title>Konfigurace infokartářky</h1>
+<div mat-dialog-content>
+  <form #configForm="ngForm" (ngSubmit)="submit()" id="ngForm">
+    <div
+      class="w-100 p-3">
+      <mat-slide-toggle [(ngModel)]="config.showWalletConnection" name="showWalletConnection">
+        Propojení s peněženkou
+      </mat-slide-toggle>
+    </div>
+
+    <div
+      class="w-100 p-3">
+      <mat-slide-toggle [(ngModel)]="config.showPaymentQR" name="showPaymentQR">
+        Platební QR
+      </mat-slide-toggle>
+    </div>
+
+    @if(config.showPaymentQR) {
+      <mat-form-field
+        class="w-100 p-3">
+        <mat-label>IBAN</mat-label>
+        <input matInput [(ngModel)]="config.paymentAccount" name="paymentAccount" required/>
+        <mat-error>Číslo účtu je povinné</mat-error>
+      </mat-form-field>
+    }
+  </form>
+</div>
+
+<div mat-dialog-actions class="d-flex justify-content-end">
+  <button mat-button type="submit" form="ngForm" appAutofocus>Potvrdit</button>
+</div>

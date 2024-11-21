@@ -15,7 +15,7 @@ export class CanAccessRoutePipe implements PipeTransform {
 	) {
 	}
 
-	public transform(roles: EUserRole[], route: ERoute): boolean {
+	public transform(roles: EUserRole[] | undefined, route: ERoute): boolean {
 		if(!roles) {
 			return false;
 		}

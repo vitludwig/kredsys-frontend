@@ -5,6 +5,14 @@ import {UsersService} from '../admin/services/users/users.service';
 import {ETime} from '../../common/types/ETime';
 import {environment} from '../../../environments/environment';
 import {Utils} from '../../common/utils/Utils';
+import {ERoute} from "../../common/types/ERoute";
+import {MatDialog} from "@angular/material/dialog";
+import {AuthService} from "../login/services/auth/auth.service";
+import {CardInfoConfigDialogComponent} from "./components/card-info-config-dialog/card-info-config-dialog.component";
+import {ICardInfoConfig} from "./types/ICardInfoConfig";
+import {CardInfoConfig} from "./models/CardInfoConfig";
+import {CurrencyService} from "../admin/services/currency/currency.service";
+import {TransactionService} from "../admin/modules/transactions/services/transaction/transaction.service";
 
 @Component({
 	selector: 'app-card-info',
@@ -17,21 +25,37 @@ export class CardInfoComponent {
 	protected isLoading: boolean = false;
 	protected cardLoaded: boolean = false;
 	protected walletCode: string;
+	protected paymentString: string;
+  protected cardInfoConfig: ICardInfoConfig;
+
+  protected readonly ERoute = ERoute;
 
 	constructor(
 		protected usersService: UsersService,
+    private dialog: MatDialog,
+    protected authService: AuthService,
+    private currencyService: CurrencyService,
+    private transactionService: TransactionService,
 	) {
+    const config = JSON.parse(localStorage.getItem("cardInfoConfig") ?? "{}");
+    this.cardInfoConfig = new CardInfoConfig(config);
 	}
 
 	public async setCardId(id: number): Promise<void> {
-		try {
+    try {
 			this.isLoading = true;
 			this.user = (await this.usersService.getUserByCardUid(id)) ?? null;
 			this.currencyAccount = (await this.usersService.getUserCurrencyAccounts(this.user.id!))[0] ?? null;
 
-			if(this.user && this.currencyAccount) {
-				this.walletCode = this.user.id + '' + (await Utils.createWalletHash(this.user.id + '' + environment.walletApiSecret));
-			}
+      if(this.cardInfoConfig.showWalletConnection) {
+        if (this.user && this.currencyAccount) {
+          this.walletCode = await this.getWalletCode();
+        }
+      }
+
+      if(this.cardInfoConfig.showPaymentQR) {
+        this.paymentString = await this.getPaymentString();
+      }
 		} catch(e) {
 			console.error('Cannot display user currency data: ', e);
 		} finally {
@@ -46,4 +70,36 @@ export class CardInfoComponent {
 		}, ETime.SECOND * 10);
 	}
 
+  protected openConfigDialog() {
+    const dialog = this.dialog.open<CardInfoConfigDialogComponent, ICardInfoConfig>(CardInfoConfigDialogComponent, {
+      data: this.cardInfoConfig
+    });
+    dialog.afterClosed().subscribe((result: ICardInfoConfig) =>{
+      Object.assign(this.cardInfoConfig, result);
+      localStorage.setItem("cardInfoConfig", JSON.stringify(this.cardInfoConfig));
+    })
+  }
+
+  private async getWalletCode() {
+    return this.user?.id + '' + (await Utils.createWalletHash(this.user?.id + '' + environment.walletApiSecret))
+  }
+
+  private async getPaymentString() {
+    if(!this.cardInfoConfig.paymentAccount) {
+      return "";
+    }
+
+    const currency = await this.currencyService.getDefaultCurrency();
+    let filterBy: { [key: string]: any } = {
+      usersFilter: [this.user?.id],
+    };
+
+    const statistics = await this.transactionService.getStatistics(currency.id!, filterBy);
+    // const baParts = this.cardInfoConfig.paymentAccount.split("/");
+    // if(baParts[0].length < 10) {
+    //   baParts[0].padStart(10, "0")
+    // }
+    // const ib = iban.fromBBAN("CZ", `${baParts[1]}000000${baParts[0]}`);
+    return `SPD*1.0*ACC:${this.cardInfoConfig.paymentAccount}*AM:${statistics.sumPrice}*CC:CZ*VS:${this.user?.id}*MSG:${this.user?.name}`;
+  }
 }

@@ -1,4 +1,13 @@
 <div class="row justify-content-center p-3">
+
+  <div class="d-flex justify-content-end" *ngIf="authService.user?.roles | canAccessRoute: ERoute.ADMIN">
+    <button mat-icon-button
+            class="config-btn"
+            (click)="openConfigDialog()"
+    >
+      <mat-icon>settings</mat-icon>
+    </button>
+  </div>
 	<div class="col-xs-12 col-md-4">
 		<app-card-loader *ngIf="!user"
 			(cardIdChange)="setCardId($event)"
@@ -8,18 +17,28 @@
 		<ng-container *ngIf="!isLoading; else loading">
 			<ng-container *ngIf="user && currencyAccount">
 				<h2 class="text-center">{{ user.name }} (Členské id: {{ user.memberId }})</h2>
+				<h1 class="text-center">Zůstatek:</h1>
 				<h1 class="very-big text-center">{{ currencyAccount.currentAmount }} Kč</h1>
 
-				<div *ngIf="walletCode"
-					class="wallet-qrcode mt-5"
-				>
-					<h4>Načtěte tento kód ve vaší mobilní aplikaci pro propojení peněženky</h4>
-					<qrcode [errorCorrectionLevel]="'M'"
-						[qrdata]="walletCode"
-						[width]="256"></qrcode>
-					<h1 class="text-center" style="letter-spacing: 12px; font-size: 40px; margin-top: 16px">{{ walletCode }}</h1>
-          <h3>(Na velikosti nezáleží!)</h3>
-				</div>
+        @if(cardInfoConfig.showWalletConnection && walletCode) {
+          <div class="qrcode mt-5">
+            <h4>Načtěte tento kód ve vaší mobilní aplikaci pro propojení peněženky</h4>
+            <qrcode [errorCorrectionLevel]="'M'"
+              [qrdata]="walletCode"
+              [width]="256"></qrcode>
+            <h1 class="text-center" style="letter-spacing: 12px; font-size: 40px; margin-top: 16px">{{ walletCode }}</h1>
+            <h3>(Na velikosti nezáleží!)</h3>
+          </div>
+        }
+
+        @if(cardInfoConfig.showPaymentQR && paymentString) {
+          <div class="qrcode mt-5">
+            <h4>Platba útraty QR</h4>
+            <qrcode [errorCorrectionLevel]="'M'"
+                    [qrdata]="paymentString"
+                    [width]="256"></qrcode>
+          </div>
+        }
 			</ng-container>
 
 			<ng-container *ngIf="cardLoaded">
