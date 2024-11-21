@@ -17,12 +17,12 @@
 		<ng-container *ngIf="!isLoading; else loading">
 			<ng-container *ngIf="user && currencyAccount">
 				<h2 class="text-center">{{ user.name }} (Členské id: {{ user.memberId }})</h2>
-				<h1 class="text-center">Zůstatek:</h1>
+				<h2 class="text-center">Zůstatek:</h2>
 				<h1 class="very-big text-center">{{ currencyAccount.currentAmount }} Kč</h1>
 
         @if(cardInfoConfig.showWalletConnection && walletCode) {
           <div class="qrcode mt-5">
-            <h4>Načtěte tento kód ve vaší mobilní aplikaci pro propojení peněženky</h4>
+            <h2>Načtěte tento kód ve vaší mobilní aplikaci pro propojení peněženky</h2>
             <qrcode [errorCorrectionLevel]="'M'"
               [qrdata]="walletCode"
               [width]="256"></qrcode>
@@ -33,10 +33,12 @@
 
         @if(cardInfoConfig.showPaymentQR && paymentString) {
           <div class="qrcode mt-5">
-            <h4>Platba útraty QR</h4>
+            <h2>Platba útraty QR</h2>
             <qrcode [errorCorrectionLevel]="'M'"
                     [qrdata]="paymentString"
                     [width]="256"></qrcode>
+
+            <h1 class="text-center">Útrata: {{this.paymentAmount}}Kč</h1>
           </div>
         }
 			</ng-container>

@@ -19,7 +19,7 @@
 				<h3 *ngIf="accounts[0]">Zůstatek: {{ accounts[0].currentAmount }} Kč</h3>
 			</div>
 
-			<form (ngSubmit)="onSubmit()"
+			<form id="userForm" (ngSubmit)="onSubmit()"
 				[formGroup]="userFormGroup"
 			>
 				<mat-form-field class="w-100">
@@ -93,43 +93,45 @@
 					</mat-form-field>
 				}
 
-				@if(isEdit) {
-					<mat-form-field
-						class="w-100"
-						*ngFor="let account of accounts"
-					>
-						<mat-label>Limit přečerpání {{ currencies[account.currencyId].code }}</mat-label>
-						<input matInput
-							placeholder="Limit přečerpání"
-							type="number"
-							[name]="'overdraftLimit' + account.currencyId"
-							[(ngModel)]="account.overdraftLimit"
-						>
-						<span matSuffix>{{ currencies[account.currencyId].symbol }}</span>
-					</mat-form-field>
-				}
-
-				<mat-form-field class="w-100">
-					<mat-label>Role</mat-label>
-					<mat-select formControlName="role"
-					>
-						<mat-option *ngFor="let role of roles"
-							[value]="role">{{ role }}
-						</mat-option>
-					</mat-select>
-				</mat-form-field>
-
-				<div>
-					<button mat-raised-button
-						class="w-100"
-						color="primary"
-						type="submit"
-						[disabled]="userFormGroup.invalid"
-					>
-						Potvrdit
-					</button>
-				</div>
+        <mat-form-field class="w-100">
+          <mat-label>Role</mat-label>
+          <mat-select formControlName="role"
+          >
+            <mat-option *ngFor="let role of roles"
+                        [value]="role">{{ role }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
 			</form>
+
+      @if(isEdit) {
+        <mat-form-field
+          class="w-100"
+          *ngFor="let account of accounts"
+        >
+          <mat-label>Limit přečerpání {{ currencies[account.currencyId].code }}</mat-label>
+          <input matInput
+                 placeholder="Limit přečerpání"
+                 type="number"
+                 [name]="'overdraftLimit' + account.currencyId"
+                 [(ngModel)]="account.overdraftLimit"
+          >
+          <span matSuffix>{{ currencies[account.currencyId].symbol }}</span>
+        </mat-form-field>
+      }
+
+      <div>
+        <button mat-raised-button
+                class="w-100"
+                color="primary"
+                type="submit"
+                form="userForm"
+                [disabled]="userFormGroup.invalid"
+        >
+          Potvrdit
+        </button>
+      </div>
+
 		</div>
 
 		<div class="col-xs-12 col-md-6">

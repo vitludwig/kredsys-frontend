@@ -26,6 +26,7 @@ export class CardInfoComponent {
 	protected cardLoaded: boolean = false;
 	protected walletCode: string;
 	protected paymentString: string;
+  protected paymentAmount: number;
   protected cardInfoConfig: ICardInfoConfig;
 
   protected readonly ERoute = ERoute;
@@ -95,11 +96,12 @@ export class CardInfoComponent {
     };
 
     const statistics = await this.transactionService.getStatistics(currency.id!, filterBy);
+    this.paymentAmount = statistics.sumPrice;
     // const baParts = this.cardInfoConfig.paymentAccount.split("/");
     // if(baParts[0].length < 10) {
     //   baParts[0].padStart(10, "0")
     // }
     // const ib = iban.fromBBAN("CZ", `${baParts[1]}000000${baParts[0]}`);
-    return `SPD*1.0*ACC:${this.cardInfoConfig.paymentAccount}*AM:${statistics.sumPrice}*CC:CZ*VS:${this.user?.id}*MSG:${this.user?.name}`;
+    return `SPD*1.0*ACC:${this.cardInfoConfig.paymentAccount}*AM:${this.paymentAmount}*CC:CZ*VS:${this.user?.id}*MSG:${this.user?.name}`;
   }
 }
