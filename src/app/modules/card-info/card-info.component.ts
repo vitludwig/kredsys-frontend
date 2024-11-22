@@ -102,6 +102,6 @@ export class CardInfoComponent {
     //   baParts[0].padStart(10, "0")
     // }
     // const ib = iban.fromBBAN("CZ", `${baParts[1]}000000${baParts[0]}`);
-    return `SPD*1.0*ACC:${this.cardInfoConfig.paymentAccount}*AM:${this.paymentAmount}*CC:CZK*VS:${this.user?.id}*MSG:${this.user?.name}`;
+    return `SPD*1.0*ACC:${this.cardInfoConfig.paymentAccount}*AM:${(this.currencyAccount?.currentAmount ?? 0) * -1}*CC:CZK*VS:${this.user?.id}*MSG:${this.user?.name}`;
   }
 }
