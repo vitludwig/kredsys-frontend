@@ -35,6 +35,13 @@
       }
     }
   }
+
+  .mat-select-search-input {
+    &::placeholder {
+      color: var(--mdc-list-list-item-hover-label-text-color) !important;
+    }
+  }
+
 }
 
 .main-content, .login-container {

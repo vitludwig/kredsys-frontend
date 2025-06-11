@@ -11,7 +11,9 @@ import {MatIconModule} from '@angular/material/icon';
 import {PlaceDetailComponent} from './components/place-detail/place-detail.component';
 import {SharedModule} from '../../../../shared.module';
 import {DragDropModule} from '@angular/cdk/drag-drop';
-import {SortimentDetailComponent} from './components/place-detail/components/sortiment-detail/sortiment-detail.component';
+import {
+  SortimentDetailComponent
+} from './components/place-detail/components/sortiment-detail/sortiment-detail.component';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatChipsModule} from '@angular/material/chips';
 import {MatSelectModule} from '@angular/material/select';
@@ -19,33 +21,37 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {AutofocusDirective} from '../../../../common/directives/autofocus.directive';
 import {ClickConfirmDirective} from '../../../../common/directives/click-confirm/click-confirm.directive';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {ReactiveFormsModule} from "@angular/forms";
+import {NgxMatSelectSearchModule} from "ngx-mat-select-search";
 
 
 @NgModule({
-	declarations: [
-		PlaceListComponent,
-		PlaceDetailComponent,
-		SortimentDetailComponent,
-	],
-	imports: [
-		SharedModule,
-		RouterModule,
-		MatTableModule,
-		MatSortModule,
-		MatPaginatorModule,
-		MatFormFieldModule,
-		MatInputModule,
-		MatChipsModule,
-		MatSelectModule,
-		MatAutocompleteModule,
-		MatButtonModule,
-		MatIconModule,
-		MatDialogModule,
-		DragDropModule,
-		AutofocusDirective,
-		ClickConfirmDirective,
-		MatProgressSpinnerModule,
-	],
+  declarations: [
+    PlaceListComponent,
+    PlaceDetailComponent,
+    SortimentDetailComponent,
+  ],
+  imports: [
+    SharedModule,
+    RouterModule,
+    MatTableModule,
+    MatSortModule,
+    MatPaginatorModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatChipsModule,
+    MatSelectModule,
+    MatAutocompleteModule,
+    MatButtonModule,
+    MatIconModule,
+    MatDialogModule,
+    DragDropModule,
+    AutofocusDirective,
+    ClickConfirmDirective,
+    MatProgressSpinnerModule,
+    ReactiveFormsModule,
+    NgxMatSelectSearchModule,
+  ],
 })
 export class PlaceListModule {
 }

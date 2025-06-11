@@ -96,9 +96,12 @@ export class PlaceDetailComponent implements OnInit {
 
 	public openSortimentDetailDialog(): void {
 		const dialog = this.dialog.open<SortimentDetailComponent>(SortimentDetailComponent, {
-			width: '300px',
-			minWidth: '250px',
+			width: '50%',
+      panelClass: 'responsive-dialog-container',
 			autoFocus: 'dialog',
+      position: {
+        top: '50px'
+      },
 			data: {
 				existingItems: this.goods,
 			}

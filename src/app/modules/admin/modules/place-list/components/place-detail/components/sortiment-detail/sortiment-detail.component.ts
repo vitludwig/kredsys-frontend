@@ -1,32 +1,33 @@
-import {Component, ElementRef, Inject, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, Inject, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {ESaleItemType} from '../../../../../../../sale/types/ESaleItemType';
 import {IGoods} from '../../../../../../../../common/types/IGoods';
 import {GoodsService} from '../../../../../../services/goods/goods.service';
-import {COMMA, ENTER} from '@angular/cdk/keycodes';
-import {MatChipInputEvent} from '@angular/material/chips';
-import {MatAutocompleteSelectedEvent} from '@angular/material/autocomplete';
 import {AlertService} from '../../../../../../../../common/services/alert/alert.service';
+import {FormControl} from "@angular/forms";
+import {ReplaySubject, Subject, takeUntil} from "rxjs";
+import {StringUtils} from "../../../../../../../../common/utils/StringUtils";
 
 @Component({
 	selector: 'app-sortiment-detail',
 	templateUrl: './sortiment-detail.component.html',
 	styleUrls: ['./sortiment-detail.component.scss'],
 })
-export class SortimentDetailComponent implements OnInit {
+export class SortimentDetailComponent implements OnInit, OnDestroy {
 	public allGoods: IGoods[] = [];
-	public allOptions: string[] = [];
-	public selectedOptions: string[] = [];
 
-	public selectedGoods: IGoods[] = [];
-	public isEdit: boolean = false;
 	public isLoading: boolean = true;
-	public separatorKeysCodes: number[] = [ENTER, COMMA];
+
+  public filteredGoods: ReplaySubject<IGoods[]> = new ReplaySubject<IGoods[]>(1);
+  public selectedOptions = new FormControl<IGoods[]>([]);
+  public selectedOptionsFilter: FormControl<string | null> = new FormControl<string | null>('');
 
 	public readonly ESaleItemType = ESaleItemType;
 
 	@ViewChild('itemInput')
 	public itemInput: ElementRef<HTMLInputElement>;
+
+  private onDestroy = new Subject<void>();
 
 	constructor(
 		public goodsService: GoodsService,
@@ -42,50 +43,46 @@ export class SortimentDetailComponent implements OnInit {
 			const existingItemsId = this.data.existingItems.map((obj) => obj.id);
 			this.allGoods = (await this.goodsService.getAllGoods())
 				.filter((obj) => !existingItemsId.includes(obj.id));
-			this.allOptions = this.allGoods.map((obj) => obj.name);
+      this.filteredGoods.next(this.allGoods.slice());
 		} catch(e) {
 			this.alertService.error('Nepodařilo se načíst zboží');
 			console.error('Cannot load goods: ', e);
 		} finally {
 			this.isLoading = false;
 		}
+
+    this.selectedOptionsFilter.valueChanges
+      .pipe(takeUntil(this.onDestroy))
+      .subscribe(() => {
+        this.filterGoods();
+      });
 	}
 
-	public addItem(event: MatChipInputEvent): void {
-		const name = (event.value || '');
-		const item = this.allGoods.find((obj) => obj.name === name);
+  protected filterGoods() {
+    if (!this.allGoods) {
+      return;
+    }
+    // get the search keyword
+    let search = this.selectedOptionsFilter.value;
+    if (!search) {
+      this.filteredGoods.next(this.allGoods.slice());
+      return;
+    } else {
+      search = StringUtils.removeCzechDiacritics(search.toLowerCase());
+    }
 
-		if(name && item) {
-			this.selectedOptions.push(name);
-			this.selectedGoods.push(item);
-		}
-
-		event.chipInput!.clear();
-	}
-
-	public itemSelected(event: MatAutocompleteSelectedEvent): void {
-		const name = event.option.viewValue;
-		const item = this.allGoods.find((obj) => obj.name === name);
-		if(item) {
-			this.selectedOptions.push(name);
-			this.selectedGoods.push(item);
-		}
-
-		this.itemInput.nativeElement.value = '';
-	}
-
-	public removeItem(name: string): void {
-		const index = this.selectedOptions.indexOf(name);
-
-		if(index >= 0) {
-			this.selectedOptions.splice(index, 1);
-			this.selectedGoods = this.selectedGoods.filter((obj) => obj.name !==  name);
-		}
-	}
-
+    this.filteredGoods.next(
+      this.allGoods.filter(item => StringUtils.removeCzechDiacritics(item.name.toLowerCase()).indexOf(search ?? "") > -1)
+    );
+  }
 
 	public async onSubmit(): Promise<void> {
-		this.dialogRef.close(this.selectedGoods);
+    this.dialogRef.close(this.selectedOptions.value);
 	}
+
+  ngOnDestroy() {
+    this.onDestroy.next();
+    this.onDestroy.complete();
+  }
 
 }

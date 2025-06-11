@@ -18,3 +18,10 @@
     margin-top: 2rem;
   }
 }
+
+@media (max-width: 1200px) {
+  .responsive-dialog-container {
+    width: 90vw !important;
+    max-width: 90vw !important;
+  }
+}
