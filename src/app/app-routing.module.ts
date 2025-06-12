@@ -41,7 +41,11 @@ const routes: Routes = [
 		path: ERoute.LOGIN,
 		loadChildren: () => import('./modules/login/login.module').then((m) => m.LoginModule),
 	},
-
+  {
+    path: ERoute.PUBLIC,
+    loadChildren: () => import('./modules/public/public.routes')
+      .then(m => m.routes)
+  },
 ];
 
 @NgModule({

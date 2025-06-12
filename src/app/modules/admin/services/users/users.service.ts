@@ -1,7 +1,7 @@
 import {inject, Injectable} from '@angular/core';
 import {EUserRole, IUser} from '../../../../common/types/IUser';
 import {IPaginatedResponse} from '../../../../common/types/IPaginatedResponse';
-import {firstValueFrom} from 'rxjs';
+import {firstValueFrom, map} from 'rxjs';
 import {environment} from '../../../../../environments/environment';
 import {HttpClient} from '@angular/common/http';
 import {ICard} from '../../../../common/types/ICard';
@@ -10,6 +10,7 @@ import {cache, invalidateCache} from '../../../../common/decorators/cache';
 import {ETime} from '../../../../common/types/ETime';
 import {ECacheTag} from '../../../../common/types/ECacheTag';
 import {ITransaction} from "../../modules/transactions/services/transaction/types/ITransaction";
+import {IPublicUserInfo} from "../../../public/card-info-public/types/IPublicUserInfo";
 
 @Injectable({
 	providedIn: 'root',
@@ -103,6 +104,18 @@ export class UsersService {
 
 	public async getUserByCardUid(uid: number): Promise<IUser> {
 		return firstValueFrom(this.http.get<IUser>(environment.apiUrl + 'cards/' + uid + '/user'));
+	}
+
+  public async getPublicUserIdByCardUid(uid: number): Promise<number | null> {
+		return firstValueFrom(this.http.get<{userId: number | null}>('/kredsys-api/userIdByCard/' + uid).pipe(
+      map((result) => result.userId ?? null)
+    ));
+	}
+
+  public async getPublicUserInfo(userId: number, token: string): Promise<IPublicUserInfo | null> {
+		return firstValueFrom(this.http.get<IPublicUserInfo>(`/kredsys-api/userInfo/${userId}/${token}`).pipe(
+      map((result) => Object.keys(result).length === 0 ? null : result)
+    ));
 	}
 
 	public async getUserCurrencyAccounts(userId: number): Promise<ICurrencyAccount[]> {

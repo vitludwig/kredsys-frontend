@@ -14,6 +14,7 @@ export enum ERoute {
 	ADMIN_TRANSACTIONS = 'transactions',
 	ADMIN_CHANGE_PASSWORD = 'change-password',
 	CARD_INFO = 'card-info',
+	PUBLIC = 'public',
 	EDIT = 'edit',
 	NEW = 'new',
 }
