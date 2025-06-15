@@ -25,7 +25,7 @@ export class UsersService {
 		let filter = `blocked=${blocked}`;
 
 		if(search) {
-			filter += `,name^${search}/i`;
+			filter += `,name#=*${search}/i`;
 		}
 		const params = {
 			filter,

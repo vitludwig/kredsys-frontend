@@ -75,7 +75,7 @@ export class CurrencyListComponent implements OnInit, OnDestroy {
 
 	@debounce()
 	public onSearch(value: string = ''): void {
-		const filter = value ? `name=*${value}/i` : '';
+		const filter = value ? `name#=*${value}/i` : '';
 		this.loadData(filter);
 	}
 

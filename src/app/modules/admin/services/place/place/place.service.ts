@@ -84,7 +84,11 @@ export class PlaceService implements OnDestroy {
 	}
 
 	@cache(ETime.MINUTE * 2, [ECacheTag.PLACE, ECacheTag.PLACES])
-	public async getPlaces(filter: string = '', page: number = 0, pageSize: number = this.limit): Promise<IPaginatedResponse<IPlace>> {
+	public async getPlaces(search: string = '', page: number = 0, pageSize: number = this.limit): Promise<IPaginatedResponse<IPlace>> {
+    let filter = "";
+    if(search) {
+      filter = `name#=*${search}/i`;
+    }
 		const params = {
 			filter,
 			page,
