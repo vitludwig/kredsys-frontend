@@ -17,5 +17,17 @@
                 <app-new-transaction></app-new-transaction>
             </ng-template>
         </mat-tab>
+
+        <mat-tab label="Statistiky" *ngIf="addTransactionAllowed">
+          <ng-template matTabContent>
+            <button mat-raised-button color="primary" (click)="downloadStatistics()">Stáhnout statistiky</button>
+          </ng-template>
+        </mat-tab>
     </mat-tab-group>
 </div>
+
+@if(isLoading) {
+  <div class="d-flex align-items-center justify-content-center w-100">
+    <mat-spinner></mat-spinner>
+  </div>
+}

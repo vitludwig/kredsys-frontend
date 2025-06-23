@@ -51,6 +51,11 @@ export class TransactionService {
 		return firstValueFrom(this.http.get<ITransactionStatistics>(environment.apiUrl + 'statistics/' + currencyId + '/goods', {params: params}));
 	}
 
+  @cache(ETime.MINUTE * 2, [ECacheTag.TRANSACTIONS])
+  public getExcelStatistics(currencyId: number): Promise<Blob> {
+    return firstValueFrom(this.http.get<Blob>(environment.apiUrl + 'statistics/' + currencyId + '/statistics-all-download', {responseType: 'blob' as 'json'}));
+  }
+
 	@invalidateCache([ECacheTag.TRANSACTIONS, ECacheTag.TRANSACTION])
 	public pay(userId: number, placeId: number, records: ITransactionRecordPayment[]): Promise<ITransactionResponse> {
 		return firstValueFrom(this.http.post<ITransactionResponse>(environment.apiUrl + 'transactions/payment', {

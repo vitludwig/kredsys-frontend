@@ -19,6 +19,7 @@ import {ClickConfirmDirective} from '../../../../common/directives/click-confirm
 import {AutofocusDirective} from '../../../../common/directives/autofocus.directive';
 import {MatIconModule} from '@angular/material/icon';
 import {StatisticsTableComponent} from './components/statistics-table/statistics-table.component';
+import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 
 @NgModule({
 	declarations: [
@@ -44,6 +45,7 @@ import {StatisticsTableComponent} from './components/statistics-table/statistics
 		ClickConfirmDirective,
 		AutofocusDirective,
 		MatIconModule,
+    MatProgressSpinnerModule
 	],
 })
 export class TransactionsModule {
