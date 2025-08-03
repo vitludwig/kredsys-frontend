@@ -133,6 +133,7 @@ export class CheckInComponent extends WithSubscriptionsComponent implements OnIn
 
 			this.resetForm();
 		} catch(e) {
+      // TODO: rozdělit chytaání errorů pro addUser a addUserCard, ideálně streamem
 			console.error('Cannot add user', e);
 			this.showValidationErrors = true;
       let msg = 'Vyskytla se neznámá chyba, obnov stránku';
@@ -144,6 +145,10 @@ export class CheckInComponent extends WithSubscriptionsComponent implements OnIn
 				}
         if(e.status === 500) {
           msg = 'Neznámá chyba, změň ID/e-mail/kartu a zkus to znovu';
+
+          if(e.error.includes('IX_UserCards_Uid')) {
+            msg = 'Tahle karta je už k někomu přiřazená';
+          }
         }
 			}
 
@@ -163,9 +168,10 @@ export class CheckInComponent extends WithSubscriptionsComponent implements OnIn
 	}
 
 	public resetForm(): void {
-		this.userForm.patchValue(this.createNewUser());
+    this.userForm.reset(this.createNewUser());
 		this.newCard = null;
 		this.userFromList = false;
+    this.users = [];
 	}
 
 	private createNewUser(): IUser {
