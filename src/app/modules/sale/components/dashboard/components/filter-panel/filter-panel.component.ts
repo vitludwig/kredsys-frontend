@@ -16,12 +16,7 @@ export class FilterPanelComponent {
 	public itemTypes: Record<number, {name: string; id: number}>;
 
 	protected toggleFilter(type: number): void {
-		if(this.filter.includes(type)) {
-			this.filter = this.filter.filter((obj) => obj !== type);
-		} else {
-			this.filter = [...this.filter, type];
-		}
-
+    this.filter = [type];
 		this.filterChange.emit(this.filter);
 	}
 
