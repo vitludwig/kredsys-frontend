@@ -11,21 +11,22 @@ import {appInitializerFactory} from './common/services/app-initializer.factory';
 import {InitService} from './common/services/init/init.service';
 import {MatPaginatorIntl} from '@angular/material/paginator';
 import {CustomPaginatorConfiguration} from './common/providers/CustomPaginatorConfiguration';
-import {NgxPermissionsModule} from 'ngx-permissions';
+import {MatIconModule} from "@angular/material/icon";
 
 @NgModule({
 	declarations: [
 		AppComponent,
 	],
-	imports: [
-		SharedModule,
-		BrowserModule,
-		AppRoutingModule,
-		BrowserAnimationsModule,
-		MatSidenavModule,
-		MenuModule,
-		SaleModule,
-	],
+    imports: [
+        SharedModule,
+        BrowserModule,
+        AppRoutingModule,
+        BrowserAnimationsModule,
+        MatSidenavModule,
+        MenuModule,
+        SaleModule,
+        MatIconModule,
+    ],
 	providers: [
 		{provide: APP_INITIALIZER, useFactory: appInitializerFactory, deps: [InitService], multi: true},
 		{provide: MatPaginatorIntl, useValue: CustomPaginatorConfiguration()}

@@ -31,9 +31,13 @@ export class GoodsService {
 	}
 
 	@cache(ETime.MINUTE * 2, [ECacheTag.GOODS])
-	public async getGoods(filter: string = '', page: number = 0, pageSize = this.limit): Promise<IPaginatedResponse<IGoods>> {
-		[filter, 'deleted=false'].join(',');
-		const params = {
+	public async getGoods(search: string = '', page: number = 0, pageSize = this.limit): Promise<IPaginatedResponse<IGoods>> {
+		let filter = 'deleted=false';
+
+    if(search) {
+      filter += `,name#=*${search}/i`;
+    }
+    const params = {
 			filter,
 			page,
 			pageSize,

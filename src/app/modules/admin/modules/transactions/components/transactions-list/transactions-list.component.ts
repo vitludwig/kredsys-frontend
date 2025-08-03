@@ -63,6 +63,7 @@ export class TransactionsListComponent implements OnInit, AfterViewInit, OnDestr
 		this.#filterByRecord = value; // TODO: new paging, remove after api for statistics is gridify ready
 
 		this.loadData(this.paginator?.pageIndex ?? 0, this.paginator?.pageSize ?? 15, this.#filterBy);
+    this.loadStatisticsData();
 	}
 
 	public async ngAfterViewInit(): Promise<void> {

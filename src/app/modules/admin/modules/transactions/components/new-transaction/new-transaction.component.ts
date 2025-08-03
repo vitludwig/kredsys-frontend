@@ -26,7 +26,7 @@ export class NewTransactionComponent implements OnInit {
 	public user: IUser | null;
 	public placeId: number | null;
 	public records: any[] = [];
-    
+
 	public currency: ICurrency;
 	public isLoading: boolean = true;
 
@@ -90,16 +90,16 @@ export class NewTransactionComponent implements OnInit {
 		this.records = this.records.filter((obj) => obj !== record);
 	}
 
-	public loadUsers = () => {
-		return this.usersService.getUsers();
+	public loadUsers = (search?: string) => {
+		return this.usersService.getUsers(search);
 	}
 
-	public loadPlaces = () => {
-		return this.placeService.getPlaces();
+	public loadPlaces = (search?: string) => {
+		return this.placeService.getPlaces(search);
 	}
 
-	public loadGoods = () => {
-		return this.goodsService.getGoods();
+	public loadGoods = (search?: string) => {
+		return this.goodsService.getGoods(search);
 	}
 
 	public async submit(): Promise<void> {
@@ -144,7 +144,7 @@ export class NewTransactionComponent implements OnInit {
 
 		return this.transactionService.pay(this.user.id, this.placeId!, this.records as ITransactionRecordPayment[]);
 	}
-    
+
 	protected async submitDeposit(): Promise<ITransactionResponse> {
 		if(!this.user?.id) {
 			this.alertService.error('Vyber uživatele');

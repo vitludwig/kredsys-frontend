@@ -8,7 +8,26 @@
 // import our custom theme
 @import 'cyber.theme.scss';
 @import "styles/variables";
-@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+@import 'material-icons/iconfont/material-icons.css';
+//@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+/* jetbrains-mono-regular - latin */
+@font-face {
+  font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 400;
+  src: url('assets/fonts/jetbrains-mono-v23-latin-regular.woff2') format('woff2'); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+}
+
+/* press-start-2p-regular - latin */
+@font-face {
+  font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+  font-family: 'Press Start 2P';
+  font-style: normal;
+  font-weight: 400;
+  src: url('assets/fonts/press-start-2p-v15-latin-regular.woff2') format('woff2'); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+}
 
 // specify theme class eg: <body class="my-theme"> ... </body>
 

@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, inject, OnInit} from '@angular/core';
 import {EUserRole, IUser} from '../../common/types/IUser';
 import {UsersService} from '../admin/services/users/users.service';
 import {debounce} from '../../common/decorators/debounce';
@@ -9,13 +9,23 @@ import {CurrencyService} from '../admin/services/currency/currency.service';
 import {AuthService} from '../login/services/auth/auth.service';
 import {AbstractControl, UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
 import {HttpErrorResponse} from '@angular/common/http';
+import {AlertService} from "../../common/services/alert/alert.service";
+import {takeUntil} from "rxjs";
+import {WithSubscriptionsComponent} from "../../common/components/with-subscriptions.component";
 
 @Component({
 	selector: 'app-check-in',
 	templateUrl: './check-in.component.html',
 	styleUrls: ['./check-in.component.scss']
 })
-export class CheckInComponent implements OnInit {
+export class CheckInComponent extends WithSubscriptionsComponent implements OnInit {
+  protected readonly usersService = inject(UsersService);
+  protected readonly transactionService = inject(TransactionService);
+  protected readonly placeService = inject(PlaceService);
+  protected readonly currencyService = inject(CurrencyService);
+  protected readonly authService = inject(AuthService);
+  protected readonly alertService = inject(AlertService);
+
 	public userForm: UntypedFormGroup = new UntypedFormGroup({
 		id: new UntypedFormControl('', []),
 		memberId: new UntypedFormControl('', [Validators.required]),
@@ -51,15 +61,6 @@ export class CheckInComponent implements OnInit {
 
 	protected defaultCurrency: ICurrency;
 
-	constructor(
-		protected usersService: UsersService,
-		protected transactionService: TransactionService,
-		protected placeService: PlaceService,
-		protected currencyService: CurrencyService,
-		protected authService: AuthService,
-	) {
-	}
-
 	public async ngOnInit(): Promise<void> {
 		this.user = this.createNewUser();
 		this.user.roles = [EUserRole.MEMBER];
@@ -93,9 +94,11 @@ export class CheckInComponent implements OnInit {
 			return;
 		}
 
+    this.errors = [];
+
 		if(this.userForm.get('deposit')!.value > 50000) {
 			this.showValidationErrors = true;
-			this.errors.push("Takhle velkou částku nejde nabít");
+			this.errors.push("Jde nabít maximálně 50000,-");
 			return;
 		}
 
@@ -132,11 +135,26 @@ export class CheckInComponent implements OnInit {
 		} catch(e) {
 			console.error('Cannot add user', e);
 			this.showValidationErrors = true;
+      let msg = 'Vyskytla se neznámá chyba, obnov stránku';
+
 			if(e instanceof HttpErrorResponse) {
 				if(e.status === 409) {
 					this.errors.push('Uživatel se zadaným členským id, e-mailem nebo kartou již existuje');
+          return;
 				}
+        if(e.status === 500) {
+          msg = 'Neznámá chyba, změň ID/e-mail/kartu a zkus to znovu';
+        }
 			}
+
+      this.alertService.error(msg, {duration: 0}, "Obnovit")
+        .onAction()
+        .pipe(
+          takeUntil(this.destroy$)
+        )
+        .subscribe(() => {
+          window.location.reload();
+        });
 		}
 	}
 
