@@ -162,11 +162,8 @@ export class PlaceService implements OnDestroy {
 	}
 
 	@invalidateCache([ECacheTag.PLACES, ECacheTag.PLACE])
-	public async moveGoods(placeId: number, goodsId: number, afterGoodsId: number): Promise<void> {
-		const params = {
-			afterGoodsId,
-		};
-		return firstValueFrom(this.http.patch<void>(environment.apiUrl + 'places/' + placeId + '/goods/' + goodsId, {params: params}));
+	public async moveGoods(placeId: number, goods: IGoods[]): Promise<void> {
+		return firstValueFrom(this.http.patch<void>(environment.apiUrl + 'places/' + placeId + '/goods/move', goods));
 	}
 
 	public createNewPlace(id?: number, name?: string, role?: EPlaceRole): IPlace {

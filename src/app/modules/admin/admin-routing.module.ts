@@ -14,6 +14,7 @@ import {ChargeComponent} from './modules/charge/charge.component';
 import {TransactionsComponent} from './modules/transactions/transactions.component';
 import {PlaceGuard} from '../../common/utils/place.guard';
 import {ChangePasswordComponent} from './modules/user-list/components/change-password/change-password.component';
+import {unsavedChangesGuard} from "../../common/utils/unsaved-changes.guard";
 
 const routes: Routes = [
 	{
@@ -65,6 +66,7 @@ const routes: Routes = [
 				data: {
 					name: 'Upravit místo',
 				},
+        canDeactivate: [unsavedChangesGuard],
 			},
 			{
 				path: ERoute.NEW,
@@ -72,6 +74,7 @@ const routes: Routes = [
 				data: {
 					name: 'Přidat místo',
 				},
+        canDeactivate: [unsavedChangesGuard],
 			},
 		],
 	},
