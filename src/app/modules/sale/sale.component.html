@@ -1,17 +1,13 @@
 <mat-drawer-container class="sale-container">
-	<mat-drawer #drawer
-		class="sale-sidebar"
-		mode="side"
-		position="end"
-		opened
-		data-augmented-ui="tl-2-clip-x bl-2-clip-x both both"
-	>
-		<app-sale-summary [place]="placeService.selectedPlace"></app-sale-summary>
-	</mat-drawer>
-
 	<div class="sale-content">
-		<app-dashboard [place]="placeService.selectedPlace"></app-dashboard>
-		<div class="disabled-overlay" *ngIf="(customerService.customer$ | async) === null"></div>
+    <div class="sale-content__main">
+      <app-dashboard [place]="placeService.selectedPlace"></app-dashboard>
+      <div class="disabled-overlay" *ngIf="(customerService.customer$ | async) === null"></div>
+    </div>
+    <div class="sale-content__sidebar" data-augmented-ui="tl-2-clip-x bl-2-clip-x both both">
+      <app-sale-summary [place]="placeService.selectedPlace"></app-sale-summary>
+    </div>
 	</div>
 
 </mat-drawer-container>
+

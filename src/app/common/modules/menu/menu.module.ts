@@ -14,6 +14,7 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import {IsIncludedPipe} from '../../pipes/is-included/is-included.pipe';
 import {PageNamePipe} from './components/top-menu/pipes/page-name.pipe';
+import {MatMenuModule} from '@angular/material/menu';
 
 @NgModule({
 	declarations: [
@@ -33,6 +34,7 @@ import {PageNamePipe} from './components/top-menu/pipes/page-name.pipe';
 		LoginModule,
 		MatProgressSpinnerModule,
 		MatSlideToggleModule,
+		MatMenuModule,
 		IsIncludedPipe,
 		PageNamePipe,
 	],

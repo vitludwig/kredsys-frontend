@@ -18,7 +18,7 @@
 		@if(customerService.customer$ | async; as customer) {
 			<div [matTooltip]="'ID: ' + customer.memberId">{{ customer.name }}</div>
 
-			<div class="d-flex align-center flex-wrap">
+			<div class="user-other-info">
 				@if(customerService.currencyAccount$ | async; as currencyAccount) {
 					<span class="currency-amount">
 						Zůstatek:
@@ -31,46 +31,83 @@
 				} @else {
 					<small>Uživatel ještě neprovedl první nabití</small>
 				}
+        <div class="user-actions">
+          <!-- Desktop view (> 768px) -->
+          <div class="desktop-buttons">
+            @if(canChargeMoney) {
+              <ng-container *ngTemplateOutlet="chargeButton"></ng-container>
+            }
+            @if(canChargeMoney && (customerService.currencyAccount$ | async) !== undefined) {
+              <ng-container *ngTemplateOutlet="dischargeButton"></ng-container>
+              <ng-container *ngTemplateOutlet="stornoButton"></ng-container>
+            }
+          </div>
 
-				@if(canChargeMoney) {
-					<button mat-button
-						mat-raised-button
-						color="accent"
-						class="ms-3"
-						(click)="openChargeDialog()"
-					>
-						Dobít
-					</button>
-				}
-				@if(canChargeMoney && (customerService.currencyAccount$ | async) !== undefined) {
-					<button mat-button
-						mat-raised-button
-						color="warn"
-						class="ms-3"
-						style="background: #f44336; color: white"
-						(click)="openDischargeDialog()"
-					>
-						Vybít
-					</button>
+          <!-- Mobile view (≤ 768px) -->
+          <div class="mobile-menu">
+            @if(canChargeMoney) {
+              <button mat-icon-button [matMenuTriggerFor]="mobileMenu" aria-label="More options">
+                <mat-icon>more_vert</mat-icon>
+              </button>
+              <mat-menu #mobileMenu="matMenu">
+                <div mat-menu-item>
+                    <ng-container *ngTemplateOutlet="chargeButton"></ng-container>
+                </div>
+                @if((customerService.currencyAccount$ | async) !== undefined) {
+                  <div mat-menu-item>
+                    <ng-container *ngTemplateOutlet="dischargeButton"></ng-container>
+                  </div>
+                  <div mat-menu-item>
+                    <ng-container *ngTemplateOutlet="stornoButton"></ng-container>
+                  </div>
+                }
+              </mat-menu>
+            }
+          </div>
 
-					<button mat-button
-						mat-raised-button
-						color="warn"
-						class="ms-3"
-						(click)="openStornoDialog()"
-					>
-						Storno
-					</button>
-				}
-
-				<button mat-button
-					mat-raised-button
-					class="ms-3"
-					(click)="customerService.logout()"
-				>
-					Odhlásit
-				</button>
+          <button mat-button
+            mat-raised-button
+            class="ms-3"
+            (click)="customerService.logout()"
+          >
+            Odhlásit
+          </button>
+        </div>
 			</div>
 		}
 	</div>
 </mat-toolbar>
+
+<ng-template #chargeButton>
+  <button mat-button
+          mat-raised-button
+          color="accent"
+          class="ms-3"
+          (click)="openChargeDialog()"
+  >
+    Dobít
+  </button>
+</ng-template>
+
+<ng-template #dischargeButton>
+  <button mat-button
+          mat-raised-button
+          color="warn"
+          class="ms-3"
+          style="background: #f44336; color: white"
+          (click)="openDischargeDialog()"
+  >
+    Vybít
+  </button>
+</ng-template>
+
+<ng-template #stornoButton>
+  <button mat-button
+          mat-raised-button
+          color="warn"
+          class="ms-3"
+          (click)="openStornoDialog()"
+  >
+    Storno
+  </button>
+</ng-template>

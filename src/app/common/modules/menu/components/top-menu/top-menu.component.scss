@@ -22,5 +22,41 @@ mat-toolbar {
 			align-items: center;
 			font-size: 20px;
 		}
+
+    .user-other-info {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: space-between;
+
+      .user-actions {
+        display: flex;
+        align-items: center;
+      }
+    }
+
+		.desktop-buttons {
+			display: block;
+		}
+
+		.mobile-menu {
+			display: none;
+		}
+
+    @media (max-width: 900px) {
+      .user-other-info {
+        width: 100%;
+      }
+    }
+
+		@media (max-width: 768px) {
+			.desktop-buttons {
+				display: none;
+			}
+
+			.mobile-menu {
+				display: block;
+			}
+		}
 	}
 }

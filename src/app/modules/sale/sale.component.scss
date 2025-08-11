@@ -4,25 +4,50 @@
 
   .sale-content {
     height: calc(100vh - var(--cy__toolbar--height));
+    display: flex;
 
-    .disabled-overlay {
-      position: absolute;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      opacity: 0.7;
-      background: rgb(var(--cy__color--background));
-      z-index: 1000;
+    &__main {
+      flex-grow: 1;
+      position: relative;
+
+      .disabled-overlay {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0.7;
+        background: rgb(var(--cy__color--background));
+        z-index: 1000;
+      }
+    }
+
+    &__sidebar {
+      width: 350px;
+      margin-top: -2px;
+      margin-right: -2px;
+      margin-bottom: -2px;
+      height: calc(100% - var(--cy__toolbar--height));
+      top: calc(.5*var(--cy__toolbar--height)) !important;
+      z-index: 1001;
     }
   }
+}
 
-  .sale-sidebar {
-    width: 350px;
-    margin-top: -2px;
-    margin-right: -2px;
-    margin-bottom: -2px;
-    height: calc(100% - var(--cy__toolbar--height));
-    top: calc(.5*var(--cy__toolbar--height)) !important;
+@media (max-width: 768px) {
+  .sale-container {
+    .sale-content {
+      flex-direction: column;
+
+      &__sidebar {
+        width: 100%;
+        height: unset;
+        max-height: 35%;
+        top: unset;
+        position: sticky;
+        bottom: 0;
+        background: #0f0f0f;
+      }
+    }
   }
 }
