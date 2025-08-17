@@ -1,13 +1,11 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, inject, Input, OnInit, Output} from '@angular/core';
 import {IUser} from '../../../../../../common/types/IUser';
 import {ICurrency, ICurrencyAccount} from '../../../../../../common/types/ICurrency';
-import {TransactionService} from '../../../transactions/services/transaction/transaction.service';
 import {UsersService} from '../../../../services/users/users.service';
 import {CurrencyService} from '../../../../services/currency/currency.service';
-import {AuthService} from '../../../../../login/services/auth/auth.service';
-import {PlaceService} from '../../../../services/place/place/place.service';
 import {AlertService} from '../../../../../../common/services/alert/alert.service';
 import {IChargeResult} from '../../types/IChargeResult';
+import {ConfigService} from "../../../../../../common/services/config/config.service";
 
 @Component({
 	selector: 'app-charge-form',
@@ -15,10 +13,16 @@ import {IChargeResult} from '../../types/IChargeResult';
 	styleUrls: ['./charge-form.component.scss']
 })
 export class ChargeFormComponent implements OnInit {
-	public amount: number | null;
-	public predefinedAmounts: number[] = [500, 800, 1000, 1500, 2000];
-	public user: IUser | null;
-	public currencyAccount: ICurrencyAccount | null;
+  private usersService = inject(UsersService);
+  private currencyService = inject(CurrencyService);
+  private alertService = inject(AlertService);
+  private configService = inject(ConfigService);
+
+  protected amount: number | null;
+  protected predefinedAmounts: number[] = [500, 800, 1000, 1500, 2000];
+  protected user: IUser | null;
+  protected currencyAccount: ICurrencyAccount | null;
+  protected cruciblePrice = this.configService.config.cruciblePrice;
 
 	@Input()
 	public set cardId(value: number | null) {
@@ -36,15 +40,7 @@ export class ChargeFormComponent implements OnInit {
 	#cardId: number | null;
 	protected defaultCurrency: ICurrency;
 
-	constructor(
-		protected transactionService: TransactionService,
-		protected usersService: UsersService,
-		protected currencyService: CurrencyService,
-		protected authService: AuthService,
-		protected placeService: PlaceService,
-		protected alertService: AlertService,
-	) {
-	}
+
 
 	public async ngOnInit(): Promise<void> {
 		this.defaultCurrency = await this.currencyService.getDefaultCurrency();

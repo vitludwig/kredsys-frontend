@@ -1,8 +1,7 @@
-import {Injectable, OnDestroy} from '@angular/core';
+import {Injectable, OnDestroy, inject} from '@angular/core';
 import {IPaginatedResponse} from '../../../../../common/types/IPaginatedResponse';
 import {EPlaceRole, IPlace, IPlaceGoodsResponse} from '../../../../../common/types/IPlace';
 import {BehaviorSubject, firstValueFrom, Observable, Subject, takeUntil} from 'rxjs';
-import {environment} from '../../../../../../environments/environment';
 import {HttpClient} from '@angular/common/http';
 import {IGoods} from '../../../../../common/types/IGoods';
 import {AuthService} from '../../../../login/services/auth/auth.service';
@@ -10,11 +9,16 @@ import {cache, invalidateCache} from '../../../../../common/decorators/cache';
 import {ETime} from '../../../../../common/types/ETime';
 import {ECacheTag} from '../../../../../common/types/ECacheTag';
 import {ITransaction} from "../../../modules/transactions/services/transaction/types/ITransaction";
+import {ConfigService} from "../../../../../common/services/config/config.service";
 
 @Injectable({
 	providedIn: 'root',
 })
 export class PlaceService implements OnDestroy {
+  private configService: ConfigService = inject(ConfigService);
+  private http: HttpClient = inject(HttpClient);
+  private authService: AuthService = inject(AuthService)
+
 	#selectedPlace: IPlace | null;
 	public placeRole: EPlaceRole;
 	public placeRoleSubject: BehaviorSubject<EPlaceRole | null>;
@@ -43,10 +47,7 @@ export class PlaceService implements OnDestroy {
 	protected limit = 5;
 	protected unsubscribe: Subject<void> = new Subject<void>()
 
-	constructor(
-		protected http: HttpClient,
-		protected authService: AuthService,
-	) {
+	constructor() {
 		this.selectedPlaceSubject = new BehaviorSubject<IPlace | null>(null);
 		this.selectedPlace$ = this.selectedPlaceSubject.asObservable();
 
@@ -80,7 +81,7 @@ export class PlaceService implements OnDestroy {
 			pageSize: 999,
 		};
 
-		return (await firstValueFrom(this.http.get<IPaginatedResponse<IPlace>>(environment.apiUrl + 'places', {params: params}))).data;
+		return (await firstValueFrom(this.http.get<IPaginatedResponse<IPlace>>(this.configService.config.apiUrl + 'places', {params: params}))).data;
 	}
 
 	@cache(ETime.MINUTE * 2, [ECacheTag.PLACE, ECacheTag.PLACES])
@@ -95,16 +96,16 @@ export class PlaceService implements OnDestroy {
 			pageSize
 		};
 
-		return firstValueFrom(this.http.get<IPaginatedResponse<IPlace>>(environment.apiUrl + 'places', {params: params}));
+		return firstValueFrom(this.http.get<IPaginatedResponse<IPlace>>(this.configService.config.apiUrl + 'places', {params: params}));
 	}
 
 	@cache(ETime.MINUTE * 2, [ECacheTag.PLACE])
 	public async getPlace(id: number): Promise<IPlace> {
-		return firstValueFrom(this.http.get<IPlace>(environment.apiUrl + 'places/' + id));
+		return firstValueFrom(this.http.get<IPlace>(this.configService.config.apiUrl + 'places/' + id));
 	}
 
 	public async getPlaceRole(id: number): Promise<EPlaceRole> {
-		const result = await firstValueFrom(this.http.get<{ roles: EPlaceRole[]}>(environment.apiUrl + 'places/' + id + '/roles'));
+		const result = await firstValueFrom(this.http.get<{ roles: EPlaceRole[]}>(this.configService.config.apiUrl + 'places/' + id + '/roles'));
 		return result.roles[0];
 	}
 
@@ -112,7 +113,7 @@ export class PlaceService implements OnDestroy {
 		const params = {
 			pageSize: 999,
 		};
-		return (await firstValueFrom(this.http.get<IPaginatedResponse<IPlaceGoodsResponse>>(environment.apiUrl + 'places/' + id + '/goods', {params: params}))).data;
+		return (await firstValueFrom(this.http.get<IPaginatedResponse<IPlaceGoodsResponse>>(this.configService.config.apiUrl + 'places/' + id + '/goods', {params: params}))).data;
 	}
 
 	@cache(ETime.MINUTE * 2, [ECacheTag.TRANSACTION, ECacheTag.TRANSACTIONS])
@@ -123,34 +124,34 @@ export class PlaceService implements OnDestroy {
 			pageSize
 		};
 
-		return firstValueFrom(this.http.get<IPaginatedResponse<ITransaction>>(environment.apiUrl + 'places/' + id + '/transactions', {params: params}));
+		return firstValueFrom(this.http.get<IPaginatedResponse<ITransaction>>(this.configService.config.apiUrl + 'places/' + id + '/transactions', {params: params}));
 	}
 
 	@invalidateCache([ECacheTag.PLACES, ECacheTag.PLACE])
 	public async editPlace(item: IPlace): Promise<IPlace> {
-		return firstValueFrom(this.http.put<IPlace>(environment.apiUrl + 'places/' + item.id, item));
+		return firstValueFrom(this.http.put<IPlace>(this.configService.config.apiUrl + 'places/' + item.id, item));
 	}
 
 	@invalidateCache([ECacheTag.PLACES, ECacheTag.PLACE])
 	public deletePlace(id: number): Promise<void> {
-		return firstValueFrom(this.http.delete<void>(`${environment.apiUrl}places/${id}`));
+		return firstValueFrom(this.http.delete<void>(`${this.configService.config.apiUrl}places/${id}`));
 	}
 
 	@invalidateCache([ECacheTag.PLACES, ECacheTag.PLACE])
 	public async editPlaceRole(itemId: number, role: EPlaceRole): Promise<{ roles: EPlaceRole[] }> {
-		return firstValueFrom(this.http.put<{ roles: EPlaceRole[] }>(environment.apiUrl + 'places/' + itemId + '/roles', {
+		return firstValueFrom(this.http.put<{ roles: EPlaceRole[] }>(this.configService.config.apiUrl + 'places/' + itemId + '/roles', {
 			roles: [role]
 		}));
 	}
 
 	@invalidateCache([ECacheTag.PLACES, ECacheTag.PLACE])
 	public async addPlace(item: IPlace): Promise<IPlace> {
-		return firstValueFrom(this.http.post<IPlace>(environment.apiUrl + 'places/', item));
+		return firstValueFrom(this.http.post<IPlace>(this.configService.config.apiUrl + 'places/', item));
 	}
 
 	@invalidateCache([ECacheTag.PLACES, ECacheTag.PLACE])
 	public async addGoods(goodsId: number, placeId: number): Promise<void> {
-		return firstValueFrom(this.http.post<void>(environment.apiUrl + 'places/' + placeId + '/goods?placeId=' + placeId + '&goodsId=' + goodsId, {
+		return firstValueFrom(this.http.post<void>(this.configService.config.apiUrl + 'places/' + placeId + '/goods?placeId=' + placeId + '&goodsId=' + goodsId, {
 			placeId,
 			goodsId,
 		}));
@@ -158,12 +159,12 @@ export class PlaceService implements OnDestroy {
 
 	@invalidateCache([ECacheTag.PLACES, ECacheTag.PLACE])
 	public async removeGoods(goodsId: number, placeId: number): Promise<void> {
-		return firstValueFrom(this.http.delete<void>(environment.apiUrl + 'places/' + placeId + '/goods/' + goodsId));
+		return firstValueFrom(this.http.delete<void>(this.configService.config.apiUrl + 'places/' + placeId + '/goods/' + goodsId));
 	}
 
 	@invalidateCache([ECacheTag.PLACES, ECacheTag.PLACE])
 	public async moveGoods(placeId: number, goods: IGoods[]): Promise<void> {
-		return firstValueFrom(this.http.patch<void>(environment.apiUrl + 'places/' + placeId + '/goods/move', goods));
+		return firstValueFrom(this.http.patch<void>(this.configService.config.apiUrl + 'places/' + placeId + '/goods/move', goods));
 	}
 
 	public createNewPlace(id?: number, name?: string, role?: EPlaceRole): IPlace {

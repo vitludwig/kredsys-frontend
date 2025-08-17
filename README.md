@@ -5,7 +5,16 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 ## Instalation
 - Download latest NPM (>=8.5.5)
 - Install Angular CLI globally `npm install -g @angular/cli`
+- npm i
 - You can change proxy to server in /src/proxy.conf.json (due to CORS, only for development)
+
+## Configuration
+- Values in environment files can be overridden in runtime by setting value in /assets/config.json
+- Overridable properties
+  - apiUrl
+  - debug
+  - walletApiSecret
+  - cruciblePrice
 
 ## Development server
 

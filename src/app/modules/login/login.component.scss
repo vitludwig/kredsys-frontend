@@ -37,17 +37,10 @@
 				font-weight: 900;
 				text-transform: uppercase;
 				background: rgba(var(--cy__color--warn-500), .9);
-				padding: 0px 12px;
+				padding: 4px 12px;
 				border: 1px solid var(--cy__color--var-500);
 				border-radius: 20px;
-				position: absolute;
-				left: 50%;
-				bottom: 26px;
-				transform: translateX(-50%);
 				color: rgb(var(--cy__color--warn-contrast-500));
-				// will be back ...
-				//filter: url(#filter);
-				//@include animations.make-retro-vision;
 			}
 		}
 	}

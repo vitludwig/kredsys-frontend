@@ -1,24 +1,22 @@
-import {Injectable} from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {IPaginatedResponse} from '../../../../common/types/IPaginatedResponse';
 import {ICurrency, ICurrencyAccount} from '../../../../common/types/ICurrency';
 import {firstValueFrom} from 'rxjs';
-import {environment} from '../../../../../environments/environment';
 import {cache, invalidateCache} from '../../../../common/decorators/cache';
 import {ECacheTag} from '../../../../common/types/ECacheTag';
 import {ETime} from '../../../../common/types/ETime';
+import {ConfigService} from "../../../../common/services/config/config.service";
 
 @Injectable({
 	providedIn: 'root',
 })
 export class CurrencyService {
+  private configService: ConfigService = inject(ConfigService);
+  private http: HttpClient = inject(HttpClient);
+
 	protected limit = 10;
 	public defaultCurrency: ICurrency; // filled in app init or on first request
-
-	constructor(
-		protected http: HttpClient,
-	) {
-	}
 
 	@cache(ETime.MINUTE * 2, [ECacheTag.CURRENCIES])
 	public getCurrencies(filter: string = '', page: number = 0, pageSize: number = this.limit): Promise<IPaginatedResponse<ICurrency>> {
@@ -28,7 +26,7 @@ export class CurrencyService {
 		    pageSize
 	    };
 
-	    return firstValueFrom(this.http.get<IPaginatedResponse<ICurrency>>(environment.apiUrl + 'currencies', {params: params}));
+	    return firstValueFrom(this.http.get<IPaginatedResponse<ICurrency>>(this.configService.config.apiUrl + 'currencies', {params: params}));
 	}
 
 	/**
@@ -45,25 +43,25 @@ export class CurrencyService {
 
 	@cache(ETime.MINUTE * 2, [ECacheTag.CURRENCY])
 	public async getCurrency(id: number): Promise<ICurrency> {
-		return firstValueFrom(this.http.get<ICurrency>(environment.apiUrl + 'currencies/' + id));
+		return firstValueFrom(this.http.get<ICurrency>(this.configService.config.apiUrl + 'currencies/' + id));
 	}
 
 	@invalidateCache([ECacheTag.CURRENCY, ECacheTag.CURRENCIES])
 	public async editCurrency(item: ICurrency): Promise<ICurrency> {
-		return firstValueFrom(this.http.put<ICurrency>(environment.apiUrl + 'currencies/' + item.id, item));
+		return firstValueFrom(this.http.put<ICurrency>(this.configService.config.apiUrl + 'currencies/' + item.id, item));
 	}
 
 	@invalidateCache([ECacheTag.CURRENCY, ECacheTag.CURRENCIES])
 	public async addCurrency(item: ICurrency): Promise<ICurrency> {
-		return firstValueFrom(this.http.post<ICurrency>(environment.apiUrl + 'currencies', item));
+		return firstValueFrom(this.http.post<ICurrency>(this.configService.config.apiUrl + 'currencies', item));
 	}
 
 	public getCurrencyAccount(id: number): Promise<ICurrencyAccount> {
-		return firstValueFrom(this.http.get<ICurrencyAccount>(environment.apiUrl + 'currencyaccounts/' + id));
+		return firstValueFrom(this.http.get<ICurrencyAccount>(this.configService.config.apiUrl + 'currencyaccounts/' + id));
 	}
 
 	public editCurrencyAccount(id: number, data: ICurrencyAccount): Promise<ICurrencyAccount> {
-		return firstValueFrom(this.http.put<ICurrencyAccount>(environment.apiUrl + 'currencyaccounts/' + id, {
+		return firstValueFrom(this.http.put<ICurrencyAccount>(this.configService.config.apiUrl + 'currencyaccounts/' + id, {
 			overdraftLimit: data.overdraftLimit,
 		}));
 	}

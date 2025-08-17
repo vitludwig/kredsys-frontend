@@ -12,3 +12,9 @@
   --cy__color--warn-500: #{rgb.toValues(map-get($theme-warn,500))};
   --cy__color--warn-contrast-500: #{rgb.toValues(map-get($theme-warn, 'contrast',500))};
 }
+
+@media (max-width: 768px) {
+  :root {
+    --cy__toolbar--height: 96px;
+  }
+}

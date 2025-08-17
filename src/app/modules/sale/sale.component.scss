@@ -23,10 +23,8 @@
     }
 
     &__sidebar {
+      min-width: 350px;
       width: 350px;
-      margin-top: -2px;
-      margin-right: -2px;
-      margin-bottom: -2px;
       height: calc(100% - var(--cy__toolbar--height));
       top: calc(.5*var(--cy__toolbar--height)) !important;
       z-index: 1001;
@@ -39,12 +37,16 @@
     .sale-content {
       flex-direction: column;
 
+      &__main {
+        padding-bottom: 260px; // sidebar height
+      }
+
       &__sidebar {
         width: 100%;
         height: unset;
         max-height: 35%;
-        top: unset;
-        position: sticky;
+        top: unset !important;
+        position: fixed;
         bottom: 0;
         background: #0f0f0f;
       }

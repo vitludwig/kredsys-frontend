@@ -1,5 +1,6 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import {Component, inject} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import {ConfigService} from "../../../../common/services/config/config.service";
 
 @Component({
 	selector: 'app-charge-dialog',
@@ -7,17 +8,15 @@ import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 	styleUrls: ['./charge-dialog.component.scss'],
 })
 export class ChargeDialogComponent {
-	public predefinedAmounts: number[] = [500, 800, 1000, 1500, 2000];
+  protected dialogRef = inject(MatDialogRef<ChargeDialogComponent>);
+  protected amount: number = inject(MAT_DIALOG_DATA)
+  private configService = inject(ConfigService);
 
-	constructor(
-		protected dialogRef: MatDialogRef<ChargeDialogComponent>,
-		@Inject(MAT_DIALOG_DATA) public amount: number,
-	) {
-	}
+	protected predefinedAmounts: number[] = [500, 800, 1000, 1500, 2000];
+  protected cruciblePrice = this.configService.config.cruciblePrice;
 
 	public submit(): void {
 		this.dialogRef.close(this.amount);
-		// this.userService.chargeMoney(this.amount);
 	}
 
 }

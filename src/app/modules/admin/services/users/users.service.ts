@@ -2,7 +2,6 @@ import {inject, Injectable} from '@angular/core';
 import {EUserRole, IUser} from '../../../../common/types/IUser';
 import {IPaginatedResponse} from '../../../../common/types/IPaginatedResponse';
 import {firstValueFrom, map} from 'rxjs';
-import {environment} from '../../../../../environments/environment';
 import {HttpClient} from '@angular/common/http';
 import {ICard} from '../../../../common/types/ICard';
 import {ICurrencyAccount} from '../../../../common/types/ICurrency';
@@ -11,12 +10,14 @@ import {ETime} from '../../../../common/types/ETime';
 import {ECacheTag} from '../../../../common/types/ECacheTag';
 import {ITransaction} from "../../modules/transactions/services/transaction/types/ITransaction";
 import {IPublicUserInfo} from "../../../public/card-info-public/types/IPublicUserInfo";
+import {ConfigService} from "../../../../common/services/config/config.service";
 
 @Injectable({
 	providedIn: 'root',
 })
 export class UsersService {
 	private http: HttpClient = inject(HttpClient);
+  private configService: ConfigService = inject(ConfigService);
 
 	protected limit = 15;
 
@@ -34,21 +35,21 @@ export class UsersService {
 			includeBlocked: blocked,
 		};
 
-		return firstValueFrom(this.http.get<IPaginatedResponse<IUser>>(environment.apiUrl + 'users', {params: params}));
+		return firstValueFrom(this.http.get<IPaginatedResponse<IUser>>(this.configService.config.apiUrl + 'users', {params: params}));
 	}
 
 	@cache(ETime.MINUTE * 2, [ECacheTag.USER])
 	public async getUser(id: number): Promise<IUser> {
-		return firstValueFrom(this.http.get<IUser>(environment.apiUrl + 'users/' + id));
+		return firstValueFrom(this.http.get<IUser>(this.configService.config.apiUrl + 'users/' + id));
 	}
 
 	@invalidateCache([ECacheTag.USERS, ECacheTag.USER])
 	public async editUser(user: IUser): Promise<IUser> {
-		return firstValueFrom(this.http.put<IUser>(environment.apiUrl + 'users/' + user.id, user));
+		return firstValueFrom(this.http.put<IUser>(this.configService.config.apiUrl + 'users/' + user.id, user));
 	}
 
 	public async editRoles(userId: number, roles: EUserRole[]): Promise<void> {
-		return firstValueFrom(this.http.put<void>(environment.apiUrl + 'users/' + userId + '/roles', {roles}));
+		return firstValueFrom(this.http.put<void>(this.configService.config.apiUrl + 'users/' + userId + '/roles', {roles}));
 	}
 
 	/**
@@ -61,7 +62,7 @@ export class UsersService {
 	@invalidateCache([ECacheTag.USERS, ECacheTag.USER])
 	public async setUserBlocked(user: IUser, value: boolean): Promise<IUser> {
 		user.blocked = value;
-		return firstValueFrom(this.http.put<IUser>(environment.apiUrl + 'users/' + user.id, user));
+		return firstValueFrom(this.http.put<IUser>(this.configService.config.apiUrl + 'users/' + user.id, user));
 	}
 
 	/**
@@ -73,12 +74,12 @@ export class UsersService {
 	@invalidateCache([ECacheTag.USERS, ECacheTag.USER])
 	public async unblockUser(user: IUser): Promise<IUser> {
 		user.blocked = false;
-		return firstValueFrom(this.http.put<IUser>(environment.apiUrl + 'users/' + user.id, user));
+		return firstValueFrom(this.http.put<IUser>(this.configService.config.apiUrl + 'users/' + user.id, user));
 	}
 
 	@invalidateCache([ECacheTag.USERS, ECacheTag.USER])
 	public async addUser(user: IUser): Promise<IUser> {
-		return firstValueFrom(this.http.post<IUser>(environment.apiUrl + 'users', user));
+		return firstValueFrom(this.http.post<IUser>(this.configService.config.apiUrl + 'users', user));
 	}
 
 	@cache(ETime.MINUTE * 2, [ECacheTag.USER_CARDS])
@@ -87,7 +88,7 @@ export class UsersService {
 			pageSize: 999,
 		};
 
-		return firstValueFrom(this.http.get<IPaginatedResponse<ICard>>(environment.apiUrl + 'users/' + id + '/cards', {params: params}));
+		return firstValueFrom(this.http.get<IPaginatedResponse<ICard>>(this.configService.config.apiUrl + 'users/' + id + '/cards', {params: params}));
 	}
 
 	@cache(ETime.MINUTE * 2, [ECacheTag.TRANSACTION, ECacheTag.TRANSACTIONS])
@@ -99,11 +100,11 @@ export class UsersService {
 			orderBy,
 		};
 
-		return firstValueFrom(this.http.get<IPaginatedResponse<ITransaction>>(environment.apiUrl + 'users/' + id + '/transactions', {params: params}));
+		return firstValueFrom(this.http.get<IPaginatedResponse<ITransaction>>(this.configService.config.apiUrl + 'users/' + id + '/transactions', {params: params}));
 	}
 
 	public async getUserByCardUid(uid: number): Promise<IUser> {
-		return firstValueFrom(this.http.get<IUser>(environment.apiUrl + 'cards/' + uid + '/user'));
+		return firstValueFrom(this.http.get<IUser>(this.configService.config.apiUrl + 'cards/' + uid + '/user'));
 	}
 
   public async getPublicUserIdByCardUid(uid: number): Promise<number | null> {
@@ -123,12 +124,12 @@ export class UsersService {
 			pageSize: 999,
 		};
 
-		return (await firstValueFrom(this.http.get<IPaginatedResponse<ICurrencyAccount>>(environment.apiUrl + 'users/' + userId + '/accounts', {params: params}))).data;
+		return (await firstValueFrom(this.http.get<IPaginatedResponse<ICurrencyAccount>>(this.configService.config.apiUrl + 'users/' + userId + '/accounts', {params: params}))).data;
 	}
 
 	@invalidateCache([ECacheTag.USER_CARDS])
 	public async addUserCard(userId: number, cardUid: number, description: string = '', type: string = 'Card'): Promise<ICard> {
-		return firstValueFrom(this.http.post<ICard>(environment.apiUrl + 'users/' + userId + '/card', {
+		return firstValueFrom(this.http.post<ICard>(this.configService.config.apiUrl + 'users/' + userId + '/card', {
 			uid: cardUid,
 			type: type,
 			description: description,
@@ -138,11 +139,11 @@ export class UsersService {
 
 	@invalidateCache([ECacheTag.USER_CARDS])
 	public deleteUserCard(id: number): Promise<void> {
-		return firstValueFrom(this.http.delete<void>(environment.apiUrl + 'cards/' + id));
+		return firstValueFrom(this.http.delete<void>(this.configService.config.apiUrl + 'cards/' + id));
 	}
 
 	public changePassword(userId: number, oldPassword: string, newPassword: string): Promise<void> {
-		return firstValueFrom(this.http.put<void>(environment.apiUrl + `users/${userId}/changepassword`, {
+		return firstValueFrom(this.http.put<void>(this.configService.config.apiUrl + `users/${userId}/changepassword`, {
 			oldPassword,
 			newPassword,
 		}));

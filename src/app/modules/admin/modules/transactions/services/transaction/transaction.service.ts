@@ -9,17 +9,18 @@ import {firstValueFrom} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {ETime} from '../../../../../../common/types/ETime';
 import {ECacheTag} from '../../../../../../common/types/ECacheTag';
-import {environment} from '../../../../../../../environments/environment';
 import {IPaginatedResponse} from '../../../../../../common/types/IPaginatedResponse';
 import {cache, invalidateCache} from '../../../../../../common/decorators/cache';
 import {ETransactionType} from "./types/ETransactionType";
 import {IStatisticsFilter, ITransactionStatistics} from "./types/ITransactionStatistics";
+import {ConfigService} from "../../../../../../common/services/config/config.service";
 
 @Injectable({
 	providedIn: 'root',
 })
 export class TransactionService {
 	private http: HttpClient = inject(HttpClient);
+	private configService = inject(ConfigService);
 
 	@cache(ETime.MINUTE * 2, [ECacheTag.TRANSACTION])
 	public getTransactionDetail(id: number, type?: ETransactionType): Promise<ITransactionResponse> {
@@ -28,7 +29,7 @@ export class TransactionService {
 			params['type'] = type
 		}
 
-		return firstValueFrom(this.http.get<ITransactionResponse>(environment.apiUrl + 'transactions/' + id, {params: params}));
+		return firstValueFrom(this.http.get<ITransactionResponse>(this.configService.config.apiUrl + 'transactions/' + id, {params: params}));
 	}
 
 	@cache(ETime.MINUTE * 2, [ECacheTag.TRANSACTIONS])
@@ -39,7 +40,7 @@ export class TransactionService {
 			filter,
 			orderBy,
 		};
-		return firstValueFrom(this.http.get<IPaginatedResponse<ITransaction>>(environment.apiUrl + 'transactions', {params: params}));
+		return firstValueFrom(this.http.get<IPaginatedResponse<ITransaction>>(this.configService.config.apiUrl + 'transactions', {params: params}));
 	}
 
 	@cache(ETime.MINUTE * 2, [ECacheTag.TRANSACTIONS])
@@ -48,17 +49,17 @@ export class TransactionService {
 			ignoreCancellation: true,
 			...filterBy
 		};
-		return firstValueFrom(this.http.get<ITransactionStatistics>(environment.apiUrl + 'statistics/' + currencyId + '/goods', {params: params}));
+		return firstValueFrom(this.http.get<ITransactionStatistics>(this.configService.config.apiUrl + 'statistics/' + currencyId + '/goods', {params: params}));
 	}
 
   @cache(ETime.MINUTE * 2, [ECacheTag.TRANSACTIONS])
   public getExcelStatistics(currencyId: number): Promise<Blob> {
-    return firstValueFrom(this.http.get<Blob>(environment.apiUrl + 'statistics/' + currencyId + '/statistics-all-download', {responseType: 'blob' as 'json'}));
+    return firstValueFrom(this.http.get<Blob>(this.configService.config.apiUrl + 'statistics/' + currencyId + '/statistics-all-download', {responseType: 'blob' as 'json'}));
   }
 
 	@invalidateCache([ECacheTag.TRANSACTIONS, ECacheTag.TRANSACTION])
 	public pay(userId: number, placeId: number, records: ITransactionRecordPayment[]): Promise<ITransactionResponse> {
-		return firstValueFrom(this.http.post<ITransactionResponse>(environment.apiUrl + 'transactions/payment', {
+		return firstValueFrom(this.http.post<ITransactionResponse>(this.configService.config.apiUrl + 'transactions/payment', {
 			info: '',
 			userId: userId,
 			placeId: placeId,
@@ -68,7 +69,7 @@ export class TransactionService {
 
 	@invalidateCache([ECacheTag.TRANSACTIONS, ECacheTag.TRANSACTION])
 	public deposit(userId: number, placeId: number, currencyId: number, records: ITransactionRecordDeposit[]): Promise<ITransactionResponse> {
-		return firstValueFrom(this.http.post<ITransactionResponse>(environment.apiUrl + 'transactions/deposit', {
+		return firstValueFrom(this.http.post<ITransactionResponse>(this.configService.config.apiUrl + 'transactions/deposit', {
 			info: '',
 			userId: userId,
 			placeId: placeId,
@@ -79,7 +80,7 @@ export class TransactionService {
 
 	@invalidateCache([ECacheTag.TRANSACTIONS, ECacheTag.TRANSACTION])
 	public withDraw(userId: number, placeId: number, currencyId: number, records: ITransactionRecordWithdraw[]): Promise<ITransactionResponse> {
-		return firstValueFrom(this.http.post<ITransactionResponse>(environment.apiUrl + 'transactions/withDraw', {
+		return firstValueFrom(this.http.post<ITransactionResponse>(this.configService.config.apiUrl + 'transactions/withDraw', {
 			info: '',
 			userId: userId,
 			placeId: placeId,
@@ -90,6 +91,6 @@ export class TransactionService {
 
 	@invalidateCache([ECacheTag.TRANSACTIONS, ECacheTag.TRANSACTION])
 	public storno(transactionId: number): Promise<ITransactionResponse> {
-		return firstValueFrom(this.http.put<ITransactionResponse>(environment.apiUrl + 'transactions/' + transactionId + '/cancellation', {}));
+		return firstValueFrom(this.http.put<ITransactionResponse>(this.configService.config.apiUrl + 'transactions/' + transactionId + '/cancellation', {}));
 	}
 }

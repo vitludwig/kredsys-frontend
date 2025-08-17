@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import {EUserRole, IUser} from '../../../../common/types/IUser';
 import {HttpClient} from '@angular/common/http';
 import {environment} from '../../../../../environments/environment';
@@ -6,11 +6,16 @@ import {IAuthenticationResponse} from './types/IAuthenticationResponse';
 import {BehaviorSubject, firstValueFrom, Observable} from 'rxjs';
 import {UsersService} from '../../../admin/services/users/users.service';
 import {EPermission} from './types/EPermission';
+import {ConfigService} from "../../../../common/services/config/config.service";
 
 @Injectable({
 	providedIn: 'root',
 })
 export class AuthService {
+  private configService: ConfigService = inject(ConfigService);
+  protected http: HttpClient = inject(HttpClient);
+  protected usersService: UsersService = inject(UsersService);
+
 	public get user(): IUser | null {
 		return this.#user;
 	}
@@ -37,10 +42,7 @@ export class AuthService {
 
 	#user: IUser | null = null;
 
-	constructor(
-		protected http: HttpClient,
-		protected usersService: UsersService,
-	) {
+	constructor() {
 		this.isLogged$ = this.isLoggedSubject.asObservable();
 		const userId = Number(localStorage.getItem('userId')) ?? null;
 		if(userId) {
@@ -53,7 +55,7 @@ export class AuthService {
 	}
 
 	public async login(email: string, password: string): Promise<IAuthenticationResponse> {
-		const result = await firstValueFrom(this.http.post<IAuthenticationResponse>(environment.apiUrl + 'authentication/user/email', {
+		const result = await firstValueFrom(this.http.post<IAuthenticationResponse>(this.configService.config.apiUrl + 'authentication/user/email', {
 			email: email,
 			secret: password,
 			apiToken: localStorage.getItem('placeToken') ?? undefined,
