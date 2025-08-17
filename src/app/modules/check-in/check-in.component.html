@@ -1,6 +1,15 @@
+<div class="mb-2">
+    <button mat-raised-button
+            color="accent"
+            (click)="resetForm()"
+    >
+      Resetovat
+    </button>
+</div>
+
 <div class="row">
 	<div class="col-md-6 col-xs-12">
-		<h2>Uživatel</h2>
+		<h2>Přidat nového uživatele</h2>
 
 		<ng-container *ngIf="showValidationErrors">
 			<div *ngIf="memberId?.invalid"
@@ -79,19 +88,6 @@
 					>
 				</mat-form-field>
 
-
-				<mat-form-field
-					class="w-100"
-				>
-					<mat-label>Karta</mat-label>
-					<input matInput
-						placeholder="Karta"
-						name="card"
-						type="number"
-						disabled
-					>
-				</mat-form-field>
-
 				<mat-form-field
 					class="w-100">
 					<mat-label>Vklad (volitelné)</mat-label>
@@ -113,6 +109,7 @@
 					class="w-100 submit-btn"
 					color="primary"
 					type="submit"
+          [disabled]="userForm.invalid"
 				>
 					Přidat uživatele
 				</button>
@@ -122,43 +119,46 @@
 
 	<div class="col-md-6 col-xs-12">
 		<div class="d-flex align-items-center justify-content-between">
-			<h2 class="mb-0 me-5">Uživatelé</h2>
+			<h2 class="mb-0 me-5">Vyhledat uživatele v systému</h2>
 
 			@if(newCard) {
 				<mat-form-field
-					class="w-100">
+        >
 					<mat-label>Vyhledat podle jména</mat-label>
 					<input matInput
-						#search
-						(keyup)="onUserSearch(search.value)">
+						[(ngModel)]="search"
+						(ngModelChange)="searchStart(search)">
 				</mat-form-field>
 			} @else {
 				<h3 class="mb-0">Pro vyhledávání naskenuj kartu</h3>
 			}
 		</div>
 		<mat-action-list>
-			<button mat-list-item
-				*ngFor="let user of users"
-				(click)="selectUser(user)"
-			>
-				<span>{{ user.name }} (id: {{ user.memberId }}) | {{ user.email }}</span>
-				<button mat-raised-button
-					color="accent"
-					class="ms-auto"
-				>
-					Vybrat
-				</button>
-			</button>
+      @if(search) {
+        @if(searchLoading) {
+          <mat-spinner diameter="50"></mat-spinner>
+        } @else {
+          @if(users.length === 0) {
+            <h4>Žádní uživatele s tímhle jménem.</h4>
+          } @else {
+            <div class="alert alert-secondary">Po vybrání pokračuj v levém panelu</div>
+          }
+        }
+      }
+      <button mat-list-item
+        *ngFor="let user of users"
+        (click)="selectUser(user)"
+      >
+        <div class="d-flex align-items-center justify-content-between w-100">
+          <span>{{ user.name }} (id: {{ user.memberId }}) | {{ user.email }}</span>
+          <button mat-raised-button
+            color="accent"
+            class="ms-auto"
+          >
+            Vybrat
+          </button>
+        </div>
+      </button>
 		</mat-action-list>
 	</div>
-	<!--	<div class="col-md-4 col-xs-12">-->
-	<!--		<h2>Nabít peníze</h2>-->
-	<!--		<ng-container *ngIf="newCard">-->
-	<!--			<app-charge-form [cardId]="newCard"></app-charge-form>-->
-	<!--		</ng-container>-->
-
-	<!--		<ng-container *ngIf="!newCard">-->
-	<!--			<h4>Nejprve přidejte kartu</h4>-->
-	<!--		</ng-container>-->
-	<!--	</div>-->
 </div>

@@ -42,13 +42,13 @@ export class AuthService {
 
 	#user: IUser | null = null;
 
-	constructor() {
-		this.isLogged$ = this.isLoggedSubject.asObservable();
-		const userId = Number(localStorage.getItem('userId')) ?? null;
-		if(userId) {
-			this.usersService.getUser(userId).then((user) => this.user = user);
-		}
-	}
+  public async init(): Promise<void> {
+    this.isLogged$ = this.isLoggedSubject.asObservable();
+    const userId = Number(localStorage.getItem('userId')) ?? null;
+    if(userId) {
+      this.user = await this.usersService.getUser(userId)
+    }
+  }
 
 	public getPermissions(): EPermission[] {
 		return JSON.parse(localStorage.getItem('permissions') ?? '[]');

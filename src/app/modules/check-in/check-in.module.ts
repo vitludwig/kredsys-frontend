@@ -9,23 +9,25 @@ import {MatListModule} from '@angular/material/list';
 import {ChargeModule} from '../admin/modules/charge/charge.module';
 import {ReactiveFormsModule} from '@angular/forms';
 import {CardLoaderComponent} from '../../common/components/card-loader/card-loader.component';
+import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 
 
 @NgModule({
 	declarations: [
 		CheckInComponent,
 	],
-	imports: [
-		SharedModule,
-		CheckInRoutingModule,
-		ReactiveFormsModule,
-		MatButtonModule,
-		MatSelectModule,
-		MatInputModule,
-		MatListModule,
-		ChargeModule,
-		CardLoaderComponent,
-	]
+    imports: [
+        SharedModule,
+        CheckInRoutingModule,
+        ReactiveFormsModule,
+        MatButtonModule,
+        MatSelectModule,
+        MatInputModule,
+        MatListModule,
+        ChargeModule,
+        CardLoaderComponent,
+        MatProgressSpinnerModule,
+    ]
 })
 export class CheckInModule {
 }

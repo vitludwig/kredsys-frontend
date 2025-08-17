@@ -7,6 +7,9 @@ import {environment} from "../../../../environments/environment";
 @Injectable({
   providedIn: 'root'
 })
+/**
+ * Service for loading and getting config.json file, which can override values in loaded environment.ts in runtime
+ */
 export class ConfigService {
   private readonly http = inject(HttpClient);
 
@@ -23,9 +26,6 @@ export class ConfigService {
   }
 
   get config(): IAppConfig {
-    if (!this.appConfig) {
-      throw new Error('Configuration has not been loaded!');
-    }
-    return this.appConfig;
+    return this.appConfig ?? environment;
   }
 }

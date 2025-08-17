@@ -86,8 +86,7 @@ export class GoodsListComponent implements OnInit, OnDestroy {
 
 	@debounce()
 	public onSearch(value: string = ''): void {
-		const filter = value ? `name#=*${value}/i` : '';
-		this.loadGoods(filter);
+		this.loadGoods(value);
 	}
 
 	protected async loadGoods(filter: string = '', page: number = 0, pageSize: number = 15): Promise<void> {

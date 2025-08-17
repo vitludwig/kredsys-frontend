@@ -40,8 +40,8 @@ export class CheckInComponent extends WithSubscriptionsComponent implements OnIn
 	public user: IUser | undefined;
 	public newCard: number | null;
 	public userFromList: boolean = false;
-
-	public selectedRole: EUserRole = EUserRole.MEMBER;
+	protected search: string | null = null;
+	protected searchLoading: boolean = false;
 
 	public get memberId(): AbstractControl | null {
 		return this.userForm.get('memberId');
@@ -66,12 +66,34 @@ export class CheckInComponent extends WithSubscriptionsComponent implements OnIn
 		this.user.roles = [EUserRole.MEMBER];
 		this.userForm.patchValue(this.user);
 		this.defaultCurrency = await this.currencyService.getDefaultCurrency();
+
+    this.memberId?.valueChanges
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((value) => {
+        if(value && !this.userFromList) {
+          this.setEmailInput(value)
+        }
+      });
 	}
+
+  public async searchStart(value: string): Promise<void> {
+    this.searchLoading = true;
+    await this.onUserSearch(value);
+  }
 
 	@debounce()
 	public async onUserSearch(value: string): Promise<void> {
 		if(value) {
-			this.users = (await this.usersService.getUsers(value, 0, 100)).data;
+      try {
+        this.users = (await this.usersService.getUsers(value, 0, 100)).data;
+      } catch(e) {
+        console.error('Cannot find users', e);
+        this.alertService.error("Chyba ve vyhledávání uživatelů");
+        this.users = [];
+      }
+      finally {
+        this.searchLoading = false
+      }
 		} else {
 			this.users = [];
 		}
@@ -131,6 +153,8 @@ export class CheckInComponent extends WithSubscriptionsComponent implements OnIn
 				}
 			}
 
+      this.alertService.success("Uživatel registrován!");
+      this.showValidationErrors = false;
 			this.resetForm();
 		} catch(e) {
       // TODO: rozdělit chytaání errorů pro addUser a addUserCard, ideálně streamem
@@ -168,16 +192,24 @@ export class CheckInComponent extends WithSubscriptionsComponent implements OnIn
 	}
 
 	public resetForm(): void {
-    this.userForm.reset(this.createNewUser());
+    this.userForm.reset();
+    this.userForm.patchValue(this.createNewUser());
 		this.newCard = null;
 		this.userFromList = false;
     this.users = [];
+    this.search = null;
 	}
+
+  protected setEmailInput(memberId: string): void {
+    this.userForm.patchValue({
+      email: memberId + '@kredsys.cz',
+    });
+  }
 
 	private createNewUser(): IUser {
 		const user = this.usersService.createNewUser();
 		user.memberId = this.getMemberIdSequence();
-		user.email = user.memberId + '@cybertown.cz';
+		user.email = user.memberId + '@kredsys.cz';
 
 		return user;
 	}
