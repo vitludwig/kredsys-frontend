@@ -94,11 +94,40 @@
 		</a>
 
 		<div class="mt-auto">
-			<mat-list-item *ngIf="EUserRole.ADMIN | isIncluded : userRoles">
-				<mat-icon matListItemIcon>bug_report</mat-icon>
-				<mat-slide-toggle (ngModelChange)="reloadPage()" [(ngModel)]="authService.isDebug">Debug</mat-slide-toggle>
-			</mat-list-item>
+			@if(EUserRole.ADMIN | isIncluded : userRoles) {
+        @if(printService.isConnected()) {
+          <mat-list-item>
+            <mat-icon matListItemIcon>print_disabled</mat-icon>
+            <button mat-button
+              (click)="printService.disconnect()"
+            >
+              Odpojit tiskárnu
+            </button>
+          </mat-list-item>
+          <mat-list-item>
+            <mat-icon matListItemIcon>print</mat-icon>
+            <button mat-button
+                    (click)="printService.testPrint()"
+            >
+              Test tisk
+            </button>
+          </mat-list-item>
+        } @else {
+          <mat-list-item>
+            <mat-icon matListItemIcon>print_add</mat-icon>
+            <button mat-button
+                    (click)="printService.connect()"
+            >
+              Připojit tiskárku
+            </button>
+          </mat-list-item>
+        }
 
+        <mat-list-item>
+          <mat-icon matListItemIcon>bug_report</mat-icon>
+          <mat-slide-toggle (ngModelChange)="reloadPage()" [(ngModel)]="authService.isDebug">Debug</mat-slide-toggle>
+        </mat-list-item>
+      }
 			<mat-list-item>
 				<mat-icon matListItemIcon>person</mat-icon>
 				<span *ngIf="user"

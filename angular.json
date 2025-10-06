@@ -39,7 +39,9 @@
                 "src/assets"
               ]
             },
-            "scripts": []
+            "scripts": [
+              {"input": "src/assets/vendor/receipt-printer-encoder.umd.js"}
+            ]
           },
           "configurations": {
             "production": {

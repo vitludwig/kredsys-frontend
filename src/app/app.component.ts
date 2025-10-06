@@ -1,6 +1,6 @@
 import {Component, ElementRef, inject, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {fromEvent, map, merge, Subject, takeUntil} from 'rxjs';
-import {ActivatedRoute, ActivationEnd, NavigationEnd, Router} from '@angular/router';
+import {ActivationEnd, NavigationEnd, Router} from '@angular/router';
 import {MatDrawer} from '@angular/material/sidenav';
 import {AuthService} from './modules/login/services/auth/auth.service';
 import {PlaceService} from './modules/admin/services/place/place/place.service';
@@ -67,7 +67,6 @@ export class AppComponent implements OnInit, OnDestroy {
 			this.isOnline = newStatus;
 		});
 	}
-
 
 	public ngOnDestroy(): void {
 		this.unsubscribe.next();

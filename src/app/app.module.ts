@@ -12,6 +12,7 @@ import {InitService} from './common/services/init/init.service';
 import {MatPaginatorIntl} from '@angular/material/paginator';
 import {CustomPaginatorConfiguration} from './common/providers/CustomPaginatorConfiguration';
 import {MatIconModule} from "@angular/material/icon";
+import {WebBluetoothModule} from "@manekinekko/angular-web-bluetooth";
 
 @NgModule({
 	declarations: [
@@ -26,6 +27,9 @@ import {MatIconModule} from "@angular/material/icon";
         MenuModule,
         SaleModule,
         MatIconModule,
+        WebBluetoothModule.forRoot({
+          enableTracing: true // or false, this will enable logs in the browser's console
+        })
     ],
 	providers: [
 		{provide: APP_INITIALIZER, useFactory: appInitializerFactory, deps: [InitService], multi: true},

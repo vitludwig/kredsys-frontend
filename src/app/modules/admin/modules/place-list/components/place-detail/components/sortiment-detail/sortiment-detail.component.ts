@@ -68,11 +68,11 @@ export class SortimentDetailComponent implements OnInit, OnDestroy {
       this.filteredGoods.next(this.allGoods.slice());
       return;
     } else {
-      search = StringUtils.removeCzechDiacritics(search.toLowerCase());
+      search = StringUtils.removeAccents(search.toLowerCase());
     }
 
     this.filteredGoods.next(
-      this.allGoods.filter(item => StringUtils.removeCzechDiacritics(item.name.toLowerCase()).indexOf(search ?? "") > -1)
+      this.allGoods.filter(item => StringUtils.removeAccents(item.name.toLowerCase()).indexOf(search ?? "") > -1)
     );
   }
 

@@ -6,6 +6,7 @@ import {EUserRole, IUser} from '../../../../types/IUser';
 import {Subject, takeUntil} from 'rxjs';
 import {PlaceService} from "../../../../../modules/admin/services/place/place/place.service";
 import {EPlaceRole} from "../../../../types/IPlace";
+import {PrintService} from "../../../../../modules/sale/services/print/print.service";
 
 @Component({
 	selector: 'app-side-menu',
@@ -15,13 +16,16 @@ import {EPlaceRole} from "../../../../types/IPlace";
 export class SideMenuComponent implements OnInit, OnDestroy {
 	protected authService: AuthService = inject(AuthService);
 	protected router: Router = inject(Router);
+  protected printService: PrintService = inject(PrintService);
+  private placeService: PlaceService = inject(PlaceService);
+
 	protected adminMenuOpened: boolean = false;
 	protected userRoles: EUserRole[] = [];
 	protected user: IUser | null = null;
 	protected placeRole: EPlaceRole | null;
 	protected readonly ERoute = ERoute;
 	protected readonly EUserRole = EUserRole;
-	private placeService: PlaceService = inject(PlaceService);
+
 	private unsubscribe: Subject<void> = new Subject();
 
 	public async ngOnInit(): Promise<void> {

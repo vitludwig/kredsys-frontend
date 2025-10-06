@@ -9,6 +9,7 @@ import {HttpErrorResponse} from '@angular/common/http';
 import {TransactionService} from '../../../admin/modules/transactions/services/transaction/transaction.service';
 import {ITransactionRecordPayment} from '../../../admin/modules/transactions/services/transaction/types/ITransaction';
 import {Subject, takeUntil} from 'rxjs';
+import {PrintService} from "../../services/print/print.service";
 
 @Component({
 	selector: 'app-sale-summary',
@@ -31,6 +32,7 @@ export class SaleSummaryComponent implements OnInit, OnDestroy {
 		public customerService: CustomerService,
 		protected transactionService: TransactionService,
 		protected alertService: AlertService,
+		private printService: PrintService,
 	) {
 	}
 
@@ -87,13 +89,13 @@ export class SaleSummaryComponent implements OnInit, OnDestroy {
 	}
 
 	public async submitOrder(): Promise<void> {
-		if(this.orderService.items.length === 0 || !this.place) {
+		if(this.orderService.items.length === 0 || !this.place || !this.customerService.customer) {
 			return;
 		}
 
 		this.payInProgress = true;
 		const records: ITransactionRecordPayment[] = [];
-		const customerId = this.customerService.customer?.id!;
+		const customerId = this.customerService.customer.id!;
 		for(const item of this.orderService.items) {
 			records.push({
 				creatorId: customerId,
@@ -103,7 +105,7 @@ export class SaleSummaryComponent implements OnInit, OnDestroy {
 		}
 		try {
 			await this.transactionService.pay(customerId, this.place.id!, records);
-
+      this.printService.printReceipt(this.orderService.items, this.customerService.customer.name);
 			this.orderService.clearOrder();
 			this.customerService.logout();
 

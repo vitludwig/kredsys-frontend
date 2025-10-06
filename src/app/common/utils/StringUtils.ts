@@ -12,7 +12,7 @@ export class StringUtils {
    * @param input The string possibly containing Czech diacritics.
    * @returns A new string with diacritics removed, or the original string if input is null, undefined, or empty.
    */
-  public static removeCzechDiacritics(input: string | null | undefined): string {
+  public static removeAccents(input: string | null | undefined): string {
     if (!input) { // Checks for null, undefined, or empty string
       return input ?? ''; // Return empty string for null/undefined, or the original empty string
     }
