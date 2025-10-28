@@ -1,26 +1,45 @@
-import {AfterViewInit, inject, Injectable} from '@angular/core';
+import {effect, inject, Injectable, Signal} from '@angular/core';
 import {WebBluetoothReceiptPrinter} from "../../../printer/models/WebBluetoothReceiptPrinter";
 import {SavedPrinterNotFound} from "../../../printer/exceptions/SavedPrinterNotFound";
 import {AlertService} from "../../../../common/services/alert/alert.service";
-import {ISaleItem} from "../../types/ISaleItem";
 import {IOrderItem} from "../../types/IOrderItem";
 import {StringUtils} from "../../../../common/utils/StringUtils";
+import {FeatureFlagService} from "../../../../common/modules/feature-flags/services/feature-flag/feature-flag.service";
+import {EFeatureFlag} from "../../../../common/modules/feature-flags/types/EFeatureFlag";
+
 declare var ReceiptPrinterEncoder: any;
-// declare var WebBluetoothReceiptPrinter: any;
 
 @Injectable({
   providedIn: 'root'
 })
 export class PrintService {
   private readonly alertService = inject(AlertService);
+  private readonly featureFlagService = inject(FeatureFlagService);
 
-  private receiptPrinter: WebBluetoothReceiptPrinter;
-  private encoder: any;
-  private printerLanguage: any;
-  private lastUsedDevice: any;
+  public connectInProgress: Signal<boolean>;
+  public canPrint: boolean = false;
+
+  private receiptPrinter?: WebBluetoothReceiptPrinter;
+  private encoder?: any;
+  private printerLanguage?: any;
+  private lastUsedDevice?: any;
+  private logo?: HTMLImageElement;
 
   constructor() {
+    if(this.featureFlagService.isEnabled(EFeatureFlag.PRINTER)) {
+      this.initPrinter();
+    }
+  }
+
+  private initPrinter(): void {
+    this.loadLogo();
     this.receiptPrinter = new WebBluetoothReceiptPrinter();
+
+    this.connectInProgress = this.receiptPrinter.connectInProgress;
+
+    effect(() => {
+      console.log('Connecting printer', this.connectInProgress());
+    });
 
     this.receiptPrinter.addEventListener('connected', (device: any) => {
       console.log(`Connected to ${device.name} (#${device.id})`);
@@ -32,25 +51,41 @@ export class PrintService {
       localStorage.setItem('lastUsedDevice', JSON.stringify(device));
 
       this.encoder = new ReceiptPrinterEncoder({
-        language:  this.printerLanguage,
+        language: this.printerLanguage,
         codepageMapping: 'mpt'
       });
       this.alertService.success("Tiskárna připojena");
+      this.canPrint = true;
     });
 
     this.tryReconnectLast();
   }
 
   public async connect() {
+    if(!this.receiptPrinter) {
+      console.error('Printer not initialized');
+      return;
+    }
+
     await this.receiptPrinter.connect();
   }
 
   public async disconnect() {
+    if(!this.receiptPrinter) {
+      console.error('Printer not initialized');
+      return;
+    }
+
     await this.receiptPrinter.disconnect();
     localStorage.removeItem('lastUsedDevice');
   }
 
   public printReceipt(receipt: IOrderItem[], customerName: string) {
+    if(!this.receiptPrinter || !this.encoder) {
+      console.error('Printer not initialized');
+      return;
+    }
+
     const now = new Date().toLocaleTimeString('cs-CZ', {
       hour: '2-digit',
       minute: '2-digit'
@@ -58,45 +93,58 @@ export class PrintService {
 
     const data = this.encoder
       .codepage('auto')
-      .newline()
+      .align('center')
+      .image(this.logo, 128, 128)
+      .align('left')
       .line('--------------------------------')
       .line(`Pro: ${StringUtils.removeAccents(customerName)}`)
       .line(now)
       .line('--------------------------------')
       .newline()
 
-    for(const item of receipt) {
+    for (const item of receipt) {
       data.text(`${item.count}x  ${StringUtils.removeAccents(item.item.name)}`);
       data.newline();
     }
 
+    data.newline();
     data.newline();
 
     this.receiptPrinter.print(data.encode());
   }
 
   public async testPrint() {
-    // const image = document.getElementById('testimg');
+    if(!this.receiptPrinter) {
+      console.error('Printer not initialized');
+      return;
+    }
 
     let data = this.encoder
       .codepage('auto')
       .text(StringUtils.removeAccents('Příliš žluťoučký kůň úpěl ďábelské ódy'))
-      // .newline()
-      // .image(image, 320, 320)
+      .newline()
+      .align('center')
+      .image(this.logo, 128, 128)
       .encode();
 
-    this.receiptPrinter.print(data);
+    await this.receiptPrinter.print(data);
   }
 
   private async tryReconnectLast() {
+    if(!this.receiptPrinter) {
+      console.error('Printer not initialized');
+      return;
+    }
+
     const last = localStorage.getItem('lastUsedDevice');
-    if(last) {
+    if (last) {
+      console.log('last found: ', last);
       this.lastUsedDevice = JSON.parse(last);
       if (this.lastUsedDevice) {
         try {
           await this.receiptPrinter.reconnect(this.lastUsedDevice);
-        } catch(e) {
-          if(e instanceof SavedPrinterNotFound) {
+        } catch (e) {
+          if (e instanceof SavedPrinterNotFound) {
             this.alertService.error("Uložená tiskárna nenalezena. Připojte ji znovu");
           }
           this.alertService.error("Neznámá chyba tiskárny. Připojte ji znovu");
@@ -108,7 +156,12 @@ export class PrintService {
   }
 
   public isConnected() {
-    return this.receiptPrinter.isConnected();
+    return this.receiptPrinter?.isConnected() ?? false;
+  }
+
+  private loadLogo(): void {
+    this.logo = new Image();
+    this.logo.src = '/assets/images/print-logo.png'
   }
 }
 

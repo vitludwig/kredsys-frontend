@@ -15,29 +15,35 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import {IsIncludedPipe} from '../../pipes/is-included/is-included.pipe';
 import {PageNamePipe} from './components/top-menu/pipes/page-name.pipe';
 import {MatMenuModule} from '@angular/material/menu';
+import {MatDialogModule} from "@angular/material/dialog";
+import {ClipboardModule} from "@angular/cdk/clipboard";
+import {IsFeatureAllowedPipe} from "../feature-flags/pipes/is-feature-allowed.pipe";
 
 @NgModule({
 	declarations: [
 		TopMenuComponent,
 		SideMenuComponent,
 	],
-	imports: [
-		SharedModule,
-		RouterModule,
-		MatToolbarModule,
-		MatSidenavModule,
-		MatButtonModule,
-		MatIconModule,
-		MatListModule,
-		MatTooltipModule,
-		SharedModule,
-		LoginModule,
-		MatProgressSpinnerModule,
-		MatSlideToggleModule,
-		MatMenuModule,
-		IsIncludedPipe,
-		PageNamePipe,
-	],
+  imports: [
+    SharedModule,
+    RouterModule,
+    MatToolbarModule,
+    MatSidenavModule,
+    MatButtonModule,
+    MatIconModule,
+    MatListModule,
+    MatTooltipModule,
+    SharedModule,
+    LoginModule,
+    MatProgressSpinnerModule,
+    MatSlideToggleModule,
+    MatMenuModule,
+    IsIncludedPipe,
+    PageNamePipe,
+    MatDialogModule,
+    ClipboardModule,
+    IsFeatureAllowedPipe,
+  ],
 	exports: [
 		TopMenuComponent,
 		SideMenuComponent,

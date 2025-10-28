@@ -1,4 +1,4 @@
-import {Component, inject, OnDestroy, OnInit} from '@angular/core';
+import {Component, inject, OnDestroy, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import {ERoute} from '../../../../types/ERoute';
 import {NavigationEnd, Router} from '@angular/router';
 import {AuthService} from '../../../../../modules/login/services/auth/auth.service';
@@ -7,6 +7,8 @@ import {Subject, takeUntil} from 'rxjs';
 import {PlaceService} from "../../../../../modules/admin/services/place/place/place.service";
 import {EPlaceRole} from "../../../../types/IPlace";
 import {PrintService} from "../../../../../modules/sale/services/print/print.service";
+import {MatDialog} from "@angular/material/dialog";
+import {EFeatureFlag} from "../../../feature-flags/types/EFeatureFlag";
 
 @Component({
 	selector: 'app-side-menu',
@@ -18,6 +20,9 @@ export class SideMenuComponent implements OnInit, OnDestroy {
 	protected router: Router = inject(Router);
   protected printService: PrintService = inject(PrintService);
   private placeService: PlaceService = inject(PlaceService);
+  private dialog: MatDialog = inject(MatDialog);
+
+  @ViewChild('printerManualDialog', { static: true }) printerManualDialog: TemplateRef<any>;
 
 	protected adminMenuOpened: boolean = false;
 	protected userRoles: EUserRole[] = [];
@@ -27,6 +32,8 @@ export class SideMenuComponent implements OnInit, OnDestroy {
 	protected readonly EUserRole = EUserRole;
 
 	private unsubscribe: Subject<void> = new Subject();
+
+  protected readonly EFeatureFlag = EFeatureFlag;
 
 	public async ngOnInit(): Promise<void> {
 		this.authService.isLogged$
@@ -58,4 +65,8 @@ export class SideMenuComponent implements OnInit, OnDestroy {
 	protected reloadPage(): void {
 		window.location.reload();
 	}
+
+  protected openPrinterManualDialog() {
+    this.dialog.open(this.printerManualDialog, {});
+  }
 }

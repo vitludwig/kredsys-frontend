@@ -94,7 +94,7 @@
 		</a>
 
 		<div class="mt-auto">
-			@if(EUserRole.ADMIN | isIncluded : userRoles) {
+			@if((EFeatureFlag.PRINTER | isFeatureAllowed) && EUserRole.ADMIN | isIncluded : userRoles) {
         @if(printService.isConnected()) {
           <mat-list-item>
             <mat-icon matListItemIcon>print_disabled</mat-icon>
@@ -118,7 +118,16 @@
             <button mat-button
                     (click)="printService.connect()"
             >
-              Připojit tiskárku
+              Připojit tiskárnu
+            </button>
+          </mat-list-item>
+
+          <mat-list-item>
+            <mat-icon matListItemIcon>help</mat-icon>
+            <button mat-button
+                    (click)="openPrinterManualDialog()"
+            >
+              Nastavení tiskárny
             </button>
           </mat-list-item>
         }
@@ -136,3 +145,32 @@
 		</div>
 	</mat-nav-list>
 </div>
+
+<ng-template #printerManualDialog>
+  <h2 mat-dialog-title>Nastavení tiskárny</h2>
+  <mat-dialog-content>
+    chrome://flags
+    <ul>
+      <li>
+        Povol <code>#enable-experimental-web-platform-features</code>
+        <button mat-icon-button
+                [cdkCopyToClipboard]="'chrome://flags#enable-experimental-web-platform-features'">
+
+          <mat-icon>content_copy</mat-icon>
+        </button>
+      </li>
+      <li>
+        Povol <code>#web-bluetooth-new-permissions-backend</code>
+        <button mat-icon-button
+                [cdkCopyToClipboard]="'chrome://flags#web-bluetooth-new-permissions-backend'">
+
+          <mat-icon>content_copy</mat-icon>
+        </button>
+      </li>
+      <li>Připojit -> z menu vyber <code>MTP-2</code></li>
+    </ul>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Zavřít</button>
+  </mat-dialog-actions>
+</ng-template>

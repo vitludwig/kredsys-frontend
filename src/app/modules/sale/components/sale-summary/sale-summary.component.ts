@@ -10,6 +10,8 @@ import {TransactionService} from '../../../admin/modules/transactions/services/t
 import {ITransactionRecordPayment} from '../../../admin/modules/transactions/services/transaction/types/ITransaction';
 import {Subject, takeUntil} from 'rxjs';
 import {PrintService} from "../../services/print/print.service";
+import {EFeatureFlag} from "../../../../common/modules/feature-flags/types/EFeatureFlag";
+import {FeatureFlagService} from "../../../../common/modules/feature-flags/services/feature-flag/feature-flag.service";
 
 @Component({
 	selector: 'app-sale-summary',
@@ -26,13 +28,16 @@ export class SaleSummaryComponent implements OnInit, OnDestroy {
 
 	protected unsubscribe: Subject<void> = new Subject();
 
+  protected readonly EFeatureFlag = EFeatureFlag;
+
 	constructor(
 		public orderService: OrderService,
 		public usersService: UsersService,
 		public customerService: CustomerService,
 		protected transactionService: TransactionService,
 		protected alertService: AlertService,
-		private printService: PrintService,
+		protected printService: PrintService,
+    private featureFlagService: FeatureFlagService,
 	) {
 	}
 
@@ -105,7 +110,11 @@ export class SaleSummaryComponent implements OnInit, OnDestroy {
 		}
 		try {
 			await this.transactionService.pay(customerId, this.place.id!, records);
-      this.printService.printReceipt(this.orderService.items, this.customerService.customer.name);
+
+      if(this.featureFlagService.isEnabled(EFeatureFlag.PRINTER)) {
+        this.printService.printReceipt(this.orderService.items, this.customerService.customer.name);
+      }
+
 			this.orderService.clearOrder();
 			this.customerService.logout();
 

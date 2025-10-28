@@ -66,4 +66,24 @@
 	<div *ngIf="isUserLoaded && !customerService.currencyAccount" class="d-flex justify-content-center align-items-center h-100 text-center">
 		<h3>Uživatel ještě neprovedl první nabití</h3>
 	</div>
+
+  @if(EFeatureFlag.PRINTER | isFeatureAllowed) {
+    @if(printService.connectInProgress()) {
+      <div class="d-flex justify-content-between">
+        <span>Připojuji tiskárnu</span>
+        <mat-spinner diameter="30"></mat-spinner>
+      </div>
+    }
+
+    @if(!printService.isConnected()) {
+      <div class="print-warning">
+        <mat-icon matListItemIcon>print_disabled</mat-icon>
+        <button mat-raised-button
+                (click)="printService.connect()"
+        >
+          Připojit tiskárnu
+        </button>
+      </div>
+    }
+  }
 </div>

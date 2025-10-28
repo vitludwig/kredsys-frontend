@@ -3,7 +3,6 @@
   margin: -15px;
 
   .sale-content {
-    height: calc(100vh - var(--cy__toolbar--height));
     display: flex;
 
     &__main {
@@ -25,9 +24,10 @@
     &__sidebar {
       min-width: 350px;
       width: 350px;
-      height: calc(100% - var(--cy__toolbar--height));
-      top: calc(.5*var(--cy__toolbar--height)) !important;
+      height: calc(100vh - var(--cy__toolbar--height));
+      top: 0;
       z-index: 1001;
+      position: sticky;
     }
   }
 }

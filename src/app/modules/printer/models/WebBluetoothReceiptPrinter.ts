@@ -2,8 +2,10 @@ import {CallbackQueue} from "./CallbackQueue";
 import {DeviceProfiles} from "./DeviceProfiles";
 import PrinterEventEmitter from "./PrinterEventEmitter";
 import {SavedPrinterNotFound} from "../exceptions/SavedPrinterNotFound";
+import {signal} from "@angular/core";
 
 export class WebBluetoothReceiptPrinter {
+  public connectInProgress = signal(false);
 
   #emitter;
   #queue;
@@ -71,14 +73,17 @@ export class WebBluetoothReceiptPrinter {
         return;
       }
 
-      this.#open(device);
+      await this.#open(device);
     }
   }
 
   async #open(device: BluetoothDevice) {
+    this.connectInProgress.set(true);
+
     this.#device = device;
     if (!this.#device || !this.#device.gatt) {
       console.error("No device selected");
+      this.connectInProgress.set(false);
       return;
     }
 
@@ -115,6 +120,7 @@ export class WebBluetoothReceiptPrinter {
       language: await this.#evaluate(this.#profile.language),
       codepageMapping: await this.#evaluate(this.#profile.codepageMapping)
     });
+    this.connectInProgress.set(false);
   }
 
   async #evaluate(expression: any) {

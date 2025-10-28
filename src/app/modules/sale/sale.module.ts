@@ -24,6 +24,7 @@ import {IsIncludedPipe} from '../../common/pipes/is-included/is-included.pipe';
 import {FilterSaleItemsPipe} from './components/dashboard/pipes/filter-sale-items.pipe';
 import { FilterPanelComponent } from './components/dashboard/components/filter-panel/filter-panel.component';
 import {AnimatedLoaderComponent} from '../../common/components/animated-loader/animated-loader.component';
+import {IsFeatureAllowedPipe} from "../../common/modules/feature-flags/pipes/is-feature-allowed.pipe";
 
 
 @NgModule({
@@ -40,25 +41,26 @@ import {AnimatedLoaderComponent} from '../../common/components/animated-loader/a
 	exports: [
 		SaleComponent,
 	],
-	imports: [
-		SharedModule,
-		SaleRoutingModule,
-		MatSidenavModule,
-		MatButtonModule,
-		MatIconModule,
-		MatCardModule,
-		MatRippleModule,
-		MatDialogModule,
-		MatFormFieldModule,
-		MatInputModule,
-		MatListModule,
-		MatDividerModule,
-		CardLoaderComponent,
-		MatProgressSpinnerModule,
-		IsIncludedPipe,
-		FilterSaleItemsPipe,
-		AnimatedLoaderComponent,
-	],
+  imports: [
+    SharedModule,
+    SaleRoutingModule,
+    MatSidenavModule,
+    MatButtonModule,
+    MatIconModule,
+    MatCardModule,
+    MatRippleModule,
+    MatDialogModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatListModule,
+    MatDividerModule,
+    CardLoaderComponent,
+    MatProgressSpinnerModule,
+    IsIncludedPipe,
+    FilterSaleItemsPipe,
+    AnimatedLoaderComponent,
+    IsFeatureAllowedPipe,
+  ],
 })
 export class SaleModule {
 }
