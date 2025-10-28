@@ -93,7 +93,7 @@
 			Odhlásit
 		</a>
 
-		<div class="mt-auto">
+		<div class="bottom-menu">
 			@if((EFeatureFlag.PRINTER | isFeatureAllowed) && EUserRole.ADMIN | isIncluded : userRoles) {
         @if(printService.isConnected()) {
           <mat-list-item>

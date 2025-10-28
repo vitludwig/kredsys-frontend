@@ -1,71 +1,75 @@
 <div class="summary h-100">
-	<div class="p-5 h-100 d-flex align-items-center justify-content-center" *ngIf="!isUserLoaded">
-		<app-card-loader (cardIdChange)="loadUserId($event)" [showNewCardButton]="false"></app-card-loader>
-	</div>
+  @if(!isUserLoaded) {
+    <div class="p-5 h-100 d-flex align-items-center justify-content-center">
+      <app-card-loader (cardIdChange)="loadUserId($event)" [showNewCardButton]="false"></app-card-loader>
+    </div>
+  }
 
-	<ng-container *ngIf="isUserLoaded && customerService.currencyAccount">
-		<div class="summary-list">
-			<div class="summary-item"
-				*ngFor="let item of orderService.items"
-			>
-				<div class="item-info">
-					<button mat-icon-button
-						color="primary"
-						(click)="setItemAmount(item,-1)"
-					>
-						<mat-icon>remove</mat-icon>
-					</button>
+  @if(isUserLoaded) {
+    @if(customerService.currencyAccount) {
+      <div class="summary-list">
+        <div class="summary-item"
+          *ngFor="let item of orderService.items"
+        >
+          <div class="item-info">
+            <button mat-icon-button
+              color="primary"
+              (click)="setItemAmount(item,-1)"
+            >
+              <mat-icon>remove</mat-icon>
+            </button>
 
-					<small class="item-count">{{ item.count }}&times;</small>
+            <small class="item-count">{{ item.count }}&times;</small>
 
-					<button mat-icon-button
-						color="primary"
-						(click)="setItemAmount(item,1)"
-					>
-						<mat-icon>add</mat-icon>
-					</button>
+            <button mat-icon-button
+              color="primary"
+              (click)="setItemAmount(item,1)"
+            >
+              <mat-icon>add</mat-icon>
+            </button>
 
-					<small class="item-name">{{ item.item.name }}</small>
-				</div>
+            <small class="item-name">{{ item.item.name }}</small>
+          </div>
 
-				<div class="item-actions">
-					<button mat-icon-button
-						color="warn"
-						aria-label="Delete item"
-						(click)="orderService.removeItem(item.item.id)"
-					>
-						<mat-icon>delete</mat-icon>
-					</button>
-				</div>
-			</div>
-		</div>
+          <div class="item-actions">
+            <button mat-icon-button
+              color="warn"
+              aria-label="Delete item"
+              (click)="orderService.removeItem(item.item.id)"
+            >
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </div>
+      </div>
 
-		<div class="summary-actions">
-			<div class="total">
-				{{ orderService.total }} Kč
-			</div>
-			<div [class.text-danger]="totalLeft < -(customerService.currencyAccount$ | async)?.overdraftLimit" class="total-left">
-				Zbyde: {{ totalLeft }}
-			</div>
+      <div class="summary-actions">
+        <div class="total">
+          {{ orderService.total }} Kč
+        </div>
+        <div [class.text-danger]="totalLeft < -(customerService.currencyAccount$ | async)?.overdraftLimit" class="total-left">
+          Zbyde: {{ totalLeft }}
+        </div>
 
-			<button mat-raised-button
-				class="submit-btn"
-				color="primary"
-				[disabled]="orderService.items.length === 0 || totalLeft < -(customerService.currencyAccount$ | async)?.overdraftLimit || payInProgress"
-				(click)="submitOrder()"
+        <button mat-raised-button
+          class="submit-btn"
+          color="primary"
+          [disabled]="orderService.items.length === 0 || totalLeft < -(customerService.currencyAccount$ | async)?.overdraftLimit || payInProgress"
+          (click)="submitOrder()"
 
-			>
-				<span class="d-flex align-items-center">
-					Potvrdit
-					<app-animated-loader *ngIf="payInProgress" />
-				</span>
-			</button>
-		</div>
-	</ng-container>
-
-	<div *ngIf="isUserLoaded && !customerService.currencyAccount" class="d-flex justify-content-center align-items-center h-100 text-center">
-		<h3>Uživatel ještě neprovedl první nabití</h3>
-	</div>
+        >
+          <span class="d-flex align-items-center">
+            Potvrdit
+            <app-animated-loader *ngIf="payInProgress" />
+          </span>
+        </button>
+      </div>
+    } @else {
+      <div class="d-flex justify-content-center align-items-center h-100 text-center">
+        <h3>Uživatel ještě neprovedl první nabití</h3>
+      </div>
+    }
+  }
 
   @if(EFeatureFlag.PRINTER | isFeatureAllowed) {
     @if(printService.connectInProgress()) {
@@ -75,7 +79,8 @@
       </div>
     }
 
-    @if(!printService.isConnected()) {
+    @if(!printService.isConnected() && !printService.connectInProgress()) {
+      <hr>
       <div class="print-warning">
         <mat-icon matListItemIcon>print_disabled</mat-icon>
         <button mat-raised-button

@@ -30,3 +30,12 @@
 .mdc-list-item--with-leading-icon .mdc-list-item__start {
 	margin-right: 5px;
 }
+.bottom-menu {
+  margin-top: auto;
+
+  mat-list-item {
+    mat-icon {
+      margin: 0;
+    }
+  }
+}

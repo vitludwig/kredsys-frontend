@@ -63,6 +63,7 @@ export class WebBluetoothReceiptPrinter {
   }
 
   async #tryOpen(device: BluetoothDevice) {
+    this.connectInProgress.set(true);
     await device.watchAdvertisements();
     // wait until in range
     device.onadvertisementreceived = async (e: BluetoothAdvertisingEvent) => {
@@ -184,7 +185,7 @@ export class WebBluetoothReceiptPrinter {
     this.#emitter.emit('disconnected');
   }
 
-  print(commands: any[]) {
+  print(commands: any[]): Promise<void> {
     return new Promise((resolve: any) => {
       if (ArrayBuffer.isView(commands)) {
         commands = [commands];

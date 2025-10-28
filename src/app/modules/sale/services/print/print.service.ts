@@ -61,7 +61,7 @@ export class PrintService {
     this.tryReconnectLast();
   }
 
-  public async connect() {
+  public async connect(): Promise<void> {
     if(!this.receiptPrinter) {
       console.error('Printer not initialized');
       return;
@@ -70,7 +70,7 @@ export class PrintService {
     await this.receiptPrinter.connect();
   }
 
-  public async disconnect() {
+  public async disconnect(): Promise<void> {
     if(!this.receiptPrinter) {
       console.error('Printer not initialized');
       return;
@@ -80,7 +80,7 @@ export class PrintService {
     localStorage.removeItem('lastUsedDevice');
   }
 
-  public printReceipt(receipt: IOrderItem[], customerName: string) {
+  public printReceipt(receipt: IOrderItem[], customerName: string): void {
     if(!this.receiptPrinter || !this.encoder) {
       console.error('Printer not initialized');
       return;
@@ -113,24 +113,16 @@ export class PrintService {
     this.receiptPrinter.print(data.encode());
   }
 
-  public async testPrint() {
+  public testPrint(): void {
     if(!this.receiptPrinter) {
       console.error('Printer not initialized');
       return;
     }
 
-    let data = this.encoder
-      .codepage('auto')
-      .text(StringUtils.removeAccents('Příliš žluťoučký kůň úpěl ďábelské ódy'))
-      .newline()
-      .align('center')
-      .image(this.logo, 128, 128)
-      .encode();
-
-    await this.receiptPrinter.print(data);
+    this.printReceipt([{item: {id: -1, name: 'Pivíčko', icon: '', type: 1, price: 1}, count: 1}], 'Uživatel 1');
   }
 
-  private async tryReconnectLast() {
+  private async tryReconnectLast(): Promise<void> {
     if(!this.receiptPrinter) {
       console.error('Printer not initialized');
       return;
@@ -138,7 +130,6 @@ export class PrintService {
 
     const last = localStorage.getItem('lastUsedDevice');
     if (last) {
-      console.log('last found: ', last);
       this.lastUsedDevice = JSON.parse(last);
       if (this.lastUsedDevice) {
         try {
@@ -155,7 +146,7 @@ export class PrintService {
     }
   }
 
-  public isConnected() {
+  public isConnected(): boolean {
     return this.receiptPrinter?.isConnected() ?? false;
   }
 
