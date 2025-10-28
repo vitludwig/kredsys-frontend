@@ -16,7 +16,8 @@
       },
       "extends": [
         "plugin:@angular-eslint/recommended",
-        "plugin:@angular-eslint/template/process-inline-templates"
+        "plugin:@angular-eslint/template/process-inline-templates",
+        "@typescript-eslint/explicit-member-accessibility"
       ],
       "rules": {
         "@angular-eslint/directive-selector": [
