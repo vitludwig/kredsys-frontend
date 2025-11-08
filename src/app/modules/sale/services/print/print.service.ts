@@ -102,11 +102,13 @@ export class PrintService {
       .line('--------------------------------')
       .newline()
 
+    data.size(2);
     for (const item of receipt) {
-      data.text(`${item.count}x  ${StringUtils.removeAccents(item.item.name)}`);
-      data.newline();
+      data.line(`${item.count}x ${StringUtils.removeAccents(item.item.name)}`);
     }
+    data.size(1);
 
+    data.newline();
     data.newline();
     data.newline();
 
