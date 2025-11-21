@@ -33,6 +33,32 @@
 				>
 					Uživatelé
 				</a>
+        @if(userRoles | canAccessRoute: ERoute.ADMIN_GROUPS) {
+        <mat-list-item (click)="groupsMenuOpened = !groupsMenuOpened"
+                       class="expandable"
+        >
+          <mat-icon matListItemIcon> {{ groupsMenuOpened ? 'expand_more' : 'chevron_right' }}</mat-icon>
+          <div matListItemTitle>Skupiny</div>
+        </mat-list-item>
+        <div *ngIf="groupsMenuOpened"
+             class="sub-menu"
+             style="margin-left: 15px"
+        >
+          <a [class.active]="router.url === '/' + ERoute.ADMIN + '/' + ERoute.ADMIN_GROUPS"
+             [routerLink]="[ERoute.ADMIN, ERoute.ADMIN_GROUPS]"
+             mat-list-item
+          >
+            Seznam skupin
+          </a>
+
+          <a [class.active]="router.url === '/' + ERoute.ADMIN + '/' + ERoute.ADMIN_GROUPS + '/' + ERoute.ADMIN_STATISTICS"
+             [routerLink]="[ERoute.ADMIN, ERoute.ADMIN_GROUPS, ERoute.ADMIN_STATISTICS]"
+             mat-list-item
+          >
+            Statistiky
+          </a>
+        </div>
+        }
 				<a *ngIf="userRoles | canAccessRoute: ERoute.ADMIN_GOODS"
 					[class.active]="router.url === '/' + ERoute.ADMIN + '/' + ERoute.ADMIN_GOODS"
 					[routerLink]="[ERoute.ADMIN, ERoute.ADMIN_GOODS]"
@@ -131,12 +157,13 @@
             </button>
           </mat-list-item>
         }
-
-        <mat-list-item>
-          <mat-icon matListItemIcon>bug_report</mat-icon>
-          <mat-slide-toggle (ngModelChange)="reloadPage()" [(ngModel)]="authService.isDebug">Debug</mat-slide-toggle>
-        </mat-list-item>
       }
+
+      <mat-list-item>
+        <mat-icon matListItemIcon>bug_report</mat-icon>
+        <mat-slide-toggle (ngModelChange)="reloadPage()" [(ngModel)]="authService.isDebug">Debug</mat-slide-toggle>
+      </mat-list-item>
+
 			<mat-list-item>
 				<mat-icon matListItemIcon>person</mat-icon>
 				<span *ngIf="user"

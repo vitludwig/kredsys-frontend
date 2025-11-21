@@ -19,6 +19,11 @@
 				<h2 class="text-center">{{ user.name }} (Členské id: {{ user.memberId }})</h2>
 				<h2 class="text-center">Zůstatek:</h2>
 				<h1 class="very-big text-center">{{ currencyAccount.currentAmount }} Kč</h1>
+        @if(userGroup$ | async; as group) {
+          @if(group) {
+            <h3 class="text-center d-flex align-items-center justify-content-center">Skupina: {{group.name}} <div style="width: 20px; height: 20px; display: inline-block; margin-left: 10px" [style.background-color]="group.color"></div></h3>
+          }
+        }
 
         @if(cardInfoConfig.showWalletConnection && walletCode) {
           <div class="qrcode mt-5">

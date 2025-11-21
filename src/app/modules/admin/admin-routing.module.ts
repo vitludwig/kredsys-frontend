@@ -149,6 +149,51 @@ const routes: Routes = [
 			},
 		],
 	},
+  {
+    path: ERoute.ADMIN_GROUPS,
+    children: [
+      {
+        path: '',
+        loadComponent: () =>
+          import('../groups/components/groups-list/groups-list.component').then(
+            (m) => m.GroupsListComponent
+          ),
+        data: {
+          name: 'Správa skupin',
+        },
+      },
+      {
+        path: ERoute.NEW,
+        loadComponent: () =>
+          import(
+            '../groups/components/group-detail/group-detail.component'
+          ).then((m) => m.GroupDetailComponent),
+        data: {
+          name: 'Nová skupina',
+        },
+      },
+      {
+        path: ':id/' + ERoute.EDIT,
+        loadComponent: () =>
+          import(
+            '../groups/components/group-detail/group-detail.component'
+          ).then((m) => m.GroupDetailComponent),
+        data: {
+          name: 'Upravit skupinu',
+        },
+      },
+      {
+        path: ERoute.ADMIN_STATISTICS,
+        loadComponent: () =>
+          import(
+            '../groups/components/groups-statistics/groups-statistics.component'
+            ).then((m) => m.GroupsStatisticsComponent),
+        data: {
+          name: 'Statistiky skupin',
+        },
+      },
+    ],
+  },
 	{
 		path: ERoute.ADMIN_TRANSACTIONS,
 		children: [

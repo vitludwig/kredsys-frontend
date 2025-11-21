@@ -102,6 +102,20 @@
             </mat-option>
           </mat-select>
         </mat-form-field>
+
+        @if(groups$ | async; as groups) {
+          @if(groups.length > 0) {
+            <mat-form-field class="w-100">
+              <mat-label>Skupina</mat-label>
+              <mat-select formControlName="groupId">
+                <mat-option [value]="null">Žádná</mat-option>
+                <mat-option *ngFor="let group of groups" [value]="group.id">
+                  {{ group.name }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          }
+        }
 			</form>
 
       @if(isEdit) {
@@ -117,9 +131,9 @@
                  [(ngModel)]="account.overdraftLimit"
           >
           <span matSuffix>{{ currencies[account.currencyId].symbol }}</span>
+          <!--TODO: pridat cudlik na vyrobeni accountu, aby slo nastavit precerpani-->
         </mat-form-field>
       }
-
       <div>
         <button mat-raised-button
                 class="w-100"

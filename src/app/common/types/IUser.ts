@@ -6,6 +6,7 @@ export interface IUser {
 	memberId: number | null;
 	roles: EUserRole[]; // basic, band, org...
 	blocked: boolean;
+	groups?: number[];
 }
 
 export enum EUserRole {

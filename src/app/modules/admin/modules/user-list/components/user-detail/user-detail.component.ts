@@ -14,6 +14,9 @@ import {HashMap} from '../../../../../../common/types/HashMap';
 import {HttpErrorResponse} from '@angular/common/http';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import FormValidator from '../../../../../../common/utils/FormValidator';
+import { GroupsService } from '../../../../../groups/services/groups.service';
+import { IGroup } from '../../../../../groups/types/IGroup';
+import { map } from "rxjs";
 
 @Component({
 	selector: 'app-user-detail',
@@ -28,6 +31,7 @@ export class UserDetailComponent implements OnInit {
 		password: new FormControl<string>(''),
 		passwordAgain: new FormControl<string>(''),
 		role: new FormControl<EUserRole>(EUserRole.MEMBER, [Validators.required]),
+		groupId: new FormControl<number | null>(null),
 	}, {
 		validators: [FormValidator.match('password', 'passwordAgain')],
 	});
@@ -42,6 +46,7 @@ export class UserDetailComponent implements OnInit {
 	public cards: ICard[] = [];
 	public currencies: HashMap<ICurrency>;
 	public roles: string[] = Object.values(EUserRole);
+	public groups: IGroup[] = [];
 	public passwordAgain: string;
 
 	public newCards: ICard[] = [];
@@ -50,9 +55,14 @@ export class UserDetailComponent implements OnInit {
 
 	public readonly EUserRole = EUserRole;
 
+  protected groups$ = this.groupsService.getGroups().pipe(
+    map((result) => result.data)
+  )
+
 	constructor(
 		public usersService: UsersService,
 		protected currencyService: CurrencyService,
+		protected groupsService: GroupsService,
 		protected route: ActivatedRoute,
 		protected router: Router,
 		protected dialog: MatDialog,
@@ -166,6 +176,9 @@ export class UserDetailComponent implements OnInit {
 
 		if(user.id) {
 			await this.usersService.editRoles(user.id, [this.userForm.role]);
+      if(this.userForm.groupId != null) {
+        await this.groupsService.addUserToGroup(user.id, this.userForm.groupId);
+      }
 		}
 
 		return user;
@@ -180,6 +193,8 @@ export class UserDetailComponent implements OnInit {
 
 		await this.usersService.editUser(editUser);
 		await this.usersService.editRoles(this.user.id,[ this.userForm.role]);
+
+    await this.manageUserGroups();
 
 		// TODO: send edit request only for dirty accounts to eliminae requests amount
 		for(const account of this.accounts) {
@@ -221,7 +236,9 @@ export class UserDetailComponent implements OnInit {
 				role: user.roles[0] ?? EUserRole.MEMBER,
 				password: '',
 				passwordAgain: '',
+				groupId: user.groups?.[0] ?? null,
 			});
+      console.log(this.userFormGroup);
 			this.user = user;
 		} catch(e) {
 			this.alertService.error('Nepodařilo se načíst detail uživatele');
@@ -230,4 +247,25 @@ export class UserDetailComponent implements OnInit {
 			this.isLoading = false;
 		}
 	}
+
+  private async manageUserGroups(): Promise<void> {
+    if(!this.user || !this.user.id) {
+      throw new Error('User is not defined');
+    }
+
+    if(this.userForm.groupId === null && this.user.groups?.length) {
+      for(const groupId of this.user.groups) {
+        await this.groupsService.removeUserFromGroup(this.user.id, groupId);
+      }
+    }
+
+    if(this.userForm.groupId != null) {
+      if(this.user.groups?.length) {
+        for(const groupId of this.user.groups) {
+          await this.groupsService.removeUserFromGroup(this.user.id, groupId);
+        }
+      }
+      await this.groupsService.addUserToGroup(this.user.id, this.userForm.groupId);
+    }
+  }
 }

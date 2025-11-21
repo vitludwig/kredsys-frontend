@@ -98,6 +98,20 @@
 					>
 					<div matSuffix>Kč</div>
 				</mat-form-field>
+
+        @if(groups$ | async; as groups) {
+          @if(groups.length > 0) {
+            <mat-form-field class="w-100">
+              <mat-label>Skupina (volitelné)</mat-label>
+              <mat-select formControlName="groupId">
+                <mat-option [value]="null">Žádná</mat-option>
+                <mat-option *ngFor="let group of groups" [value]="group.id">
+                  {{ group.name }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          }
+        }
 			</div>
 
 			<app-card-loader *ngIf="!newCard"

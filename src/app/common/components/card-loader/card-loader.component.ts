@@ -86,7 +86,7 @@ export class CardLoaderComponent implements OnInit, OnDestroy {
 			const cards = (await this.cardsService.getCards(0, 10)).data;
 
 			for(const card of cards) {
-				if(card.userId !== undefined && card.uid) {
+				if(card.userId !== undefined && card.uid && users[card.userId]) {
 					this.userCards[users[card.userId].name] = card.uid;
 				}
 			}

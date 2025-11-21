@@ -15,18 +15,18 @@ import {CardInfoConfigDialogComponent} from "./components/card-info-config-dialo
 	declarations: [
 		CardInfoComponent,
 	],
-  imports: [
-    SharedModule,
-    CardInfoRoutingModule,
-    CardLoaderComponent,
-    MatProgressSpinnerModule,
-    QRCodeModule,
-    MatButtonModule,
-    MatDialogModule,
-    MatIconModule,
-    LoginModule,
-    CardInfoConfigDialogComponent
-  ]
+    imports: [
+        SharedModule,
+        CardInfoRoutingModule,
+        CardLoaderComponent,
+        MatProgressSpinnerModule,
+        QRCodeModule,
+        MatButtonModule,
+        MatDialogModule,
+        MatIconModule,
+        LoginModule,
+        CardInfoConfigDialogComponent,
+    ]
 })
 export class CardInfoModule {
 }

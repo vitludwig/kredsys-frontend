@@ -13,6 +13,8 @@ export enum ERoute {
 	ADMIN_CHARGE = 'charge',
 	ADMIN_TRANSACTIONS = 'transactions',
 	ADMIN_CHANGE_PASSWORD = 'change-password',
+	ADMIN_GROUPS = 'groups',
+	ADMIN_STATISTICS = 'statistics',
 	CARD_INFO = 'card-info',
 	PUBLIC = 'public',
 	EDIT = 'edit',

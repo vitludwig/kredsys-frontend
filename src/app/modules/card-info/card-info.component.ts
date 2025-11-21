@@ -1,3 +1,4 @@
+
 import {Component} from '@angular/core';
 import {IUser} from '../../common/types/IUser';
 import {ICurrencyAccount} from '../../common/types/ICurrency';
@@ -13,6 +14,9 @@ import {ICardInfoConfig} from "./types/ICardInfoConfig";
 import {CardInfoConfig} from "./models/CardInfoConfig";
 import {CurrencyService} from "../admin/services/currency/currency.service";
 import {TransactionService} from "../admin/modules/transactions/services/transaction/transaction.service";
+import {IGroup} from "../groups/types/IGroup";
+import {EMPTY, Observable} from "rxjs";
+import {GroupsService} from "../groups/services/groups.service";
 
 @Component({
 	selector: 'app-card-info',
@@ -28,6 +32,7 @@ export class CardInfoComponent {
 	protected paymentString: string;
   protected paymentAmount: number;
   protected cardInfoConfig: ICardInfoConfig;
+  protected userGroup$: Observable<IGroup> = EMPTY;
 
   protected readonly ERoute = ERoute;
 
@@ -37,6 +42,7 @@ export class CardInfoComponent {
     protected authService: AuthService,
     private currencyService: CurrencyService,
     private transactionService: TransactionService,
+    private groupsService: GroupsService,
 	) {
     const config = JSON.parse(localStorage.getItem("cardInfoConfig") ?? "{}");
     this.cardInfoConfig = new CardInfoConfig(config);
@@ -46,7 +52,14 @@ export class CardInfoComponent {
     try {
 			this.isLoading = true;
 			this.user = (await this.usersService.getUserByCardUid(id)) ?? null;
+      if(!this.user) {
+        return;
+      }
+
 			this.currencyAccount = (await this.usersService.getUserCurrencyAccounts(this.user.id!))[0] ?? null;
+      if(this.user?.groups?.[0]) {
+        this.userGroup$ = this.groupsService.getGroup(this.user.groups[0]);
+      }
 
       if(this.cardInfoConfig.showWalletConnection) {
         if (this.user && this.currencyAccount) {

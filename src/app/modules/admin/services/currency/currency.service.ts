@@ -2,7 +2,7 @@ import {inject, Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {IPaginatedResponse} from '../../../../common/types/IPaginatedResponse';
 import {ICurrency, ICurrencyAccount} from '../../../../common/types/ICurrency';
-import {firstValueFrom} from 'rxjs';
+import {firstValueFrom, from, Observable} from 'rxjs';
 import {cache, invalidateCache} from '../../../../common/decorators/cache';
 import {ECacheTag} from '../../../../common/types/ECacheTag';
 import {ETime} from '../../../../common/types/ETime';
@@ -44,6 +44,10 @@ export class CurrencyService {
     }
 
     return this.defaultCurrency;
+  }
+
+  public getDefaultCurrency$(): Observable<ICurrency> {
+    return from(this.getDefaultCurrency());
   }
 
   @cache(ETime.MINUTE * 2, [ECacheTag.CURRENCY])
