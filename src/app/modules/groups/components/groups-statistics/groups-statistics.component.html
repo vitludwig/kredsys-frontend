@@ -1,10 +1,10 @@
-@if(statistics()) {
-  <div class="chart-container" *ngIf="chartData() as data">
-    <canvas baseChart [data]="data" [options]="chartOptions" [plugins]="chartPlugins" [type]="'bar'">
+@if (chartData.datasets.length) {
+  <div class="chart-container">
+    <canvas baseChart [data]="chartData" [options]="chartOptions" [plugins]="chartPlugins" [type]="'bar'">
     </canvas>
   </div>
-
-  <div *ngIf="!chartData()" class="no-data">
+} @else {
+  <div class="no-data">
     <p>Žádné statistiky</p>
   </div>
 }
