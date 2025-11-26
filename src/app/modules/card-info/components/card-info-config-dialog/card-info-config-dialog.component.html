@@ -4,7 +4,7 @@
 >
   <mat-icon class="close-icon">close</mat-icon>
 </button>
-{{config | json}}
+
 <h1 mat-dialog-title>Konfigurace infokartářky</h1>
 <div mat-dialog-content>
   <form #configForm="ngForm" (ngSubmit)="submit()" id="ngForm">
@@ -19,6 +19,13 @@
       class="w-100 p-3">
       <mat-slide-toggle [(ngModel)]="config.showPaymentQR" name="showPaymentQR">
         Platební QR
+      </mat-slide-toggle>
+    </div>
+
+    <div
+      class="w-100 p-3">
+      <mat-slide-toggle [(ngModel)]="config.groupManagement" name="groupManagement">
+        Nastavení skupiny
       </mat-slide-toggle>
     </div>
 

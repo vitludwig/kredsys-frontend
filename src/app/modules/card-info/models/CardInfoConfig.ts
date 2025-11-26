@@ -8,4 +8,5 @@ export class CardInfoConfig implements ICardInfoConfig {
   public showWalletConnection: boolean = true;
   public showPaymentQR: boolean = false;
   public paymentAccount: string | null = null;
+  public groupManagement: boolean = false;
 }
