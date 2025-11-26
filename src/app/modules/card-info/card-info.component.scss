@@ -1,3 +1,14 @@
+:host {
+  ::ng-deep {
+    .group-buttons {
+      button {
+        .mdc-button__label {
+          color: white;
+        }
+      }
+    }
+  }
+}
 .very-big {
   font-size: 80px;
   line-height: 80px;

@@ -17,7 +17,7 @@ import { IGroup } from "../groups/types/IGroup";
 import { EMPTY, map, Observable } from "rxjs";
 import { GroupsService } from "../groups/services/groups.service";
 import { IPublicUserInfo } from "../public/card-info-public/types/IPublicUserInfo";
-import {AlertService} from "../../common/services/alert/alert.service";
+import { AlertService } from "../../common/services/alert/alert.service";
 
 @Component({
   selector: 'app-card-info',
@@ -37,16 +37,16 @@ export class CardInfoComponent {
   protected paymentString: string;
   protected paymentAmount: number;
   protected cardInfoConfig: ICardInfoConfig;
+  protected selectedGroupId: number | null = null;
   protected userGroup$: Observable<IGroup> = EMPTY;
   protected allGroups$: Observable<IGroup[]> = this.groupsService.getGroups().pipe(
     map(response => response.data)
   );
-  protected selectedGroupId: number | null = null;
 
   protected userInfo: {
     name?: string;
     memberId?: number | null;
-    totalSum: number | null
+    totalSum?: number;
   } | null = null;
 
   protected readonly ERoute = ERoute;
@@ -82,6 +82,7 @@ export class CardInfoComponent {
         this.userGroup$ = this.groupsService.getGroup(this.user.groups[0]);
         this.selectedGroupId = this.user.groups[0];
       } else {
+        this.userGroup$ = EMPTY;
         this.selectedGroupId = null;
       }
 
@@ -112,7 +113,7 @@ export class CardInfoComponent {
     this.userInfo = null;
     this.cardLoaded = false;
 
-    if(this.resetTimeout) {
+    if (this.resetTimeout) {
       clearTimeout(this.resetTimeout);
     }
   }
@@ -128,8 +129,8 @@ export class CardInfoComponent {
       this.userPublic = (await this.usersService.getPublicUserInfo(this.userId, publicToken));
       this.userInfo = {
         name: this.userPublic?.user.Name,
-        memberId: +this.userPublic?.user.MemberId,
-        totalSum: this.userPublic?.user.TotalSum
+        memberId: +this.userPublic?.user.MemberId!,
+        totalSum: this.userPublic?.user.TotalSum!
       }
     } else {
       this.user = (await this.usersService.getUserByCardUid(cardId)) ?? null;
@@ -190,21 +191,21 @@ export class CardInfoComponent {
     return (await Utils.createWalletHash(userId + '' + environment.walletApiSecret));
   }
 
-  protected async confirmGroupChange() {
+  protected async confirmGroupChange(newGroupId: number | null) {
     const userGroupId = this.user?.groups?.[0];
 
-    if (!this.userId || userGroupId === this.selectedGroupId) {
+    if (!this.userId || userGroupId === newGroupId) {
       return;
     }
 
     this.isLoading = true;
     try {
-      if (this.user?.groups?.[0]) {
+      if (userGroupId) {
         await this.groupsService.removeUserFromGroup(this.userId, userGroupId);
       }
 
-      if (this.selectedGroupId) {
-        await this.groupsService.addUserToGroup(this.userId, this.selectedGroupId);
+      if (newGroupId) {
+        await this.groupsService.addUserToGroup(this.userId, newGroupId);
       }
 
       this.reset();

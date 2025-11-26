@@ -23,20 +23,17 @@
           }
         }
 
-        @if (cardInfoConfig.groupManagement) {
-          <div class="d-flex align-items-center justify-content-center mt-3">
-            <mat-form-field >
-              <mat-label>Skupina</mat-label>
-              <mat-select [(value)]="selectedGroupId">
-                <mat-option [value]="null">Žádná</mat-option>
-                @for (group of allGroups$ | async; track group.id) {
-                  <mat-option [value]="group.id">{{ group.name }}</mat-option>
-                }
-              </mat-select>
-            </mat-form-field>
-            <button mat-flat-button matSuffix color="primary" class="ms-2" style="height: 56px; margin-bottom: 22px"
-                    (click)="confirmGroupChange()">Změnit
-            </button>
+        @if (cardInfoConfig.groupManagement && user?.groups[0] === undefined) {
+          <h4 class="text-center">Po zvolení nejde změnit skupina</h4>
+          <div class="d-flex align-items-center justify-content-center mt-3 flex-wrap gap-2 group-buttons">
+            @for (group of allGroups$ | async; track group.id) {
+              @if (group.id === user?.groups[0]) {
+                <button mat-flat-button color="primary" style="height: 56px;">{{ group.name }}</button>
+              } @else {
+                <button mat-stroked-button color="primary" (click)="confirmGroupChange(group.id)" style="height: 56px;">{{ group.name }}
+                </button>
+              }
+            }
           </div>
         }
 
