@@ -19,7 +19,7 @@
       <mat-form-field class="w-100">
         <mat-label>Color</mat-label>
         <input
-          [style.background]="groupForm.get('color').value"
+          [style.background]="groupForm.get('color')?.value"
           type="color"
           matInput
           formControlName="color"
