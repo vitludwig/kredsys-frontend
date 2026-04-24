@@ -15,7 +15,7 @@
 			<div *ngIf="memberId?.invalid"
 				class="alert alert-danger">
 
-				<div *ngIf="memberId.errors?.['required']">
+				<div *ngIf="memberId?.errors?.['required']">
 					Vyplňte členské číslo
 				</div>
 			</div>
@@ -23,7 +23,7 @@
 			<div *ngIf="name?.invalid"
 				class="alert alert-danger">
 
-				<div *ngIf="name.errors?.['required']">
+				<div *ngIf="name?.errors?.['required']">
 					Vyplňte uživatelské jméno
 				</div>
 			</div>
@@ -141,7 +141,7 @@
 					<mat-label>Vyhledat podle jména</mat-label>
 					<input matInput
 						[(ngModel)]="search"
-						(ngModelChange)="searchStart(search)">
+						(ngModelChange)="searchStart(search!)">
 				</mat-form-field>
 			} @else {
 				<h3 class="mb-0">Pro vyhledávání naskenuj kartu</h3>

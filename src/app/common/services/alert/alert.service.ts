@@ -24,7 +24,6 @@ export class AlertService {
 		return this.showMessage(message, {
 			...config,
 			panelClass: 'mdc-snackbar--danger',
-			...config,
 		}, action);
 	}
 

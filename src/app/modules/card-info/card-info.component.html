@@ -23,11 +23,11 @@
           }
         }
 
-        @if (cardInfoConfig.groupManagement && user?.groups[0] === undefined) {
+        @if (cardInfoConfig.groupManagement && user?.groups?.[0] === undefined) {
           <h4 class="text-center">Po zvolení nejde změnit skupina</h4>
           <div class="d-flex align-items-center justify-content-center mt-3 flex-wrap gap-2 group-buttons">
             @for (group of allGroups$ | async; track group.id) {
-              @if (group.id === user?.groups[0]) {
+              @if (group.id === user?.groups?.[0]) {
                 <button mat-flat-button color="primary" style="height: 56px;">{{ group.name }}</button>
               } @else {
                 <button mat-stroked-button color="primary" (click)="confirmGroupChange(group.id)" style="height: 56px;">{{ group.name }}

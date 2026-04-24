@@ -1,16 +1,25 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { ChargeDialogComponent } from './charge-dialog.component';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
+import {HttpClientTestingModule} from '@angular/common/http/testing';
+import {NO_ERRORS_SCHEMA} from '@angular/core';
+import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
+import {ChargeDialogComponent} from './charge-dialog.component';
+import {clearAllCaches} from '../../../../common/decorators/cache';
 
 describe('ChargeDialogComponent', () => {
 	let component: ChargeDialogComponent;
 	let fixture: ComponentFixture<ChargeDialogComponent>;
 
 	beforeEach(async () => {
+		clearAllCaches();
 		await TestBed.configureTestingModule({
-			declarations: [ ChargeDialogComponent ],
-		})
-			.compileComponents();
+			declarations: [ChargeDialogComponent],
+			imports: [HttpClientTestingModule],
+			providers: [
+				{provide: MatDialogRef, useValue: {}},
+				{provide: MAT_DIALOG_DATA, useValue: 0},
+			],
+			schemas: [NO_ERRORS_SCHEMA],
+		}).compileComponents();
 	});
 
 	beforeEach(() => {

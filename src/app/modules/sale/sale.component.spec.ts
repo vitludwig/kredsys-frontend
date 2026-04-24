@@ -1,16 +1,26 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { SaleComponent } from './sale.component';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
+import {HttpClientTestingModule} from '@angular/common/http/testing';
+import {NO_ERRORS_SCHEMA} from '@angular/core';
+import {SaleComponent} from './sale.component';
+import {clearAllCaches} from '../../common/decorators/cache';
+import {AuthService} from '../login/services/auth/auth.service';
+import {BehaviorSubject} from 'rxjs';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
 
 describe('SaleComponent', () => {
 	let component: SaleComponent;
 	let fixture: ComponentFixture<SaleComponent>;
 
 	beforeEach(async () => {
+		clearAllCaches();
 		await TestBed.configureTestingModule({
-			declarations: [ SaleComponent ],
-		})
-			.compileComponents();
+			declarations: [SaleComponent],
+			imports: [HttpClientTestingModule, MatSnackBarModule],
+			providers: [
+				{provide: AuthService, useValue: {isLogged$: new BehaviorSubject(false), isLogged: false, user: null, isDebug: false}},
+			],
+			schemas: [NO_ERRORS_SCHEMA],
+		}).compileComponents();
 	});
 
 	beforeEach(() => {

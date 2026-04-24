@@ -1,19 +1,34 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { PlaceDetailComponent } from './place-detail.component';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
+import {PlaceDetailComponent} from './place-detail.component';
+import {HttpClientTestingModule} from '@angular/common/http/testing';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
+import {MatDialogModule} from '@angular/material/dialog';
+import {AuthService} from '../../../../../login/services/auth/auth.service';
+import {BehaviorSubject} from 'rxjs';
+import {NO_ERRORS_SCHEMA} from '@angular/core';
+import {ActivatedRoute} from '@angular/router';
+import {of} from 'rxjs';
+import {clearAllCaches} from '../../../../../../common/decorators/cache';
 
 describe('PlaceDetailComponent', () => {
 	let component: PlaceDetailComponent;
 	let fixture: ComponentFixture<PlaceDetailComponent>;
 
 	beforeEach(async () => {
-		await TestBed.configureTestingModule({
-			declarations: [ PlaceDetailComponent ],
-		})
-			.compileComponents();
-	});
+		clearAllCaches();
 
-	beforeEach(() => {
+		await TestBed.configureTestingModule({
+			imports: [HttpClientTestingModule, MatSnackBarModule, MatDialogModule],
+			declarations: [PlaceDetailComponent],
+			providers: [{provide: AuthService, useValue: {isLogged$: new BehaviorSubject(false), isLogged: false, user: null, isDebug: false}}, 
+				{
+					provide: ActivatedRoute,
+					useValue: {snapshot: {paramMap: {get: () => '1'}}, params: of({})},
+				},
+			],
+			schemas: [NO_ERRORS_SCHEMA],
+		}).compileComponents();
+
 		fixture = TestBed.createComponent(PlaceDetailComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();

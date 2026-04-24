@@ -14,6 +14,7 @@ import {ChargeComponent} from './modules/charge/charge.component';
 import {TransactionsComponent} from './modules/transactions/transactions.component';
 import {ChangePasswordComponent} from './modules/user-list/components/change-password/change-password.component';
 import {unsavedChangesGuard} from "../../common/utils/unsaved-changes.guard";
+import {placeGuard} from "../../common/utils/place.guard";
 
 const routes: Routes = [
 	{

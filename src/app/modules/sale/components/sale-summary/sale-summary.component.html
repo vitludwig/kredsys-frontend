@@ -47,14 +47,14 @@
         <div class="total">
           {{ orderService.total }} Kč
         </div>
-        <div [class.text-danger]="totalLeft < -(customerService.currencyAccount$ | async)?.overdraftLimit" class="total-left">
+        <div [class.text-danger]="totalLeft < -((customerService.currencyAccount$ | async)?.overdraftLimit ?? 0)" class="total-left">
           Zbyde: {{ totalLeft }}
         </div>
 
         <button mat-raised-button
           class="submit-btn"
           color="primary"
-          [disabled]="orderService.items.length === 0 || totalLeft < -(customerService.currencyAccount$ | async)?.overdraftLimit || payInProgress"
+          [disabled]="orderService.items.length === 0 || totalLeft < -((customerService.currencyAccount$ | async)?.overdraftLimit ?? 0) || payInProgress"
           (click)="submitOrder()"
 
         >

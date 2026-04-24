@@ -11,6 +11,11 @@ import {TAnyFunction} from '../types/TAnyFunction';
 import {HashMap} from '../types/HashMap';
 
 
+/**
+ * Registry of all cacher instances for test cleanup
+ */
+const cacherRegistry: Array<{ reset: () => void }> = [];
+
 export function cache(cacheTimeout: number = 60000, tags: string[] = []): (target: any, keyName: string, descriptor: TypedPropertyDescriptor<any>) => any {
 	return function(target: any, keyName: string, descriptor: TypedPropertyDescriptor<any>): any {
 		return {
@@ -23,31 +28,31 @@ export function invalidateCache(tags: string[]): (target: any, keyName: string, 
 	return function(target: any, keyName: string, descriptor: TypedPropertyDescriptor<any>): any {
 		return {
 			value: function(...args: any[]): any {
-				
+
 				const result = descriptor.value.apply(this, args);
-				
+
 				// Invalidate after Promise is resolved if is returned
 				if(typeof result === 'object' && typeof result.then === 'function') {
-					result.then((response: any) => {
+					return result.then((response: any) => {
 						manualInvalidate(tags);
 						return response;
 					});
 				} else {
 					manualInvalidate(tags);
 				}
-				
+
 				return result;
 			},
 		};
 	};
-};
+}
 
 /**
  * Timestamps with last time of tag invalidation
  */
 export const cacheTags: { [key: string]: number } = {};
 
-type Parameters<T> = T extends (...args: infer T) => any ? T : never;
+type Parameters<T> = T extends (...args: infer P extends any[]) => any ? P : never;
 type UnsafeReturnType<T> = T extends (...args: any[]) => infer R ? R : any;
 
 export type TCachedFunction<TFunction extends TAnyFunction> = (...args: Parameters<TFunction>) => Promise<UnsafeReturnType<TFunction>>;
@@ -69,14 +74,29 @@ export function createCacher<TFunction extends TAnyFunction>(dataGetter: TFuncti
 	const fetching: HashMap<boolean> = {};
 	const resolveArray: HashMap<[resolve: ((result: UnsafeReturnType<TFunction>) => void), reject: (reason?: any) => void][]> = {};
 	const fetchTime: HashMap<number> = {};
-	
+	const timeoutHandles: HashMap<ReturnType<typeof setTimeout>> = {};
+
 	const result: HashMap<any> = {};
-	
+
+	const reset = () => {
+		for (const key in fetched) delete fetched[key];
+		for (const key in fetching) delete fetching[key];
+		for (const key in resolveArray) delete resolveArray[key];
+		for (const key in fetchTime) delete fetchTime[key];
+		for (const key in result) delete result[key];
+		for (const key in timeoutHandles) {
+			clearTimeout(timeoutHandles[key]);
+			delete timeoutHandles[key];
+		}
+	};
+
+	cacherRegistry.push({ reset });
+
 	return function(...args: Parameters<TFunction>): Promise<UnsafeReturnType<TFunction>> {
-		
+
 		// Create signature by arguments so can decide if is already cached
 		const argsSignature = JSON.stringify(args);
-		
+
 		// Fetched and not too old?
 		if(
 			fetched[argsSignature]
@@ -85,62 +105,62 @@ export function createCacher<TFunction extends TAnyFunction>(dataGetter: TFuncti
 		) {
 			return Promise.resolve(result[argsSignature]);
 		}
-		
+
 		// First request - fetch data
 		if(!fetching[argsSignature]) {
 			fetching[argsSignature] = true;
 			resolveArray[argsSignature] = [];
 			fetchTime[argsSignature] = new Date().getTime();
-			
+
 			// Get data
 			// @ts-ignore Suppress `this` type
 			const promise: Promise<UnsafeReturnType<TFunction>> | UnsafeReturnType<TFunction> = dataGetter.apply(this, args);
-			
+
 			// Save data
 			const dataSave = (data: any) => {
 				// Save data and cache timestamp
 				result[argsSignature] = data;
 				fetched[argsSignature] = new Date();
 				fetching[argsSignature] = false;
-				
+
 				// Resolve other request for data
 				for(const key in resolveArray[argsSignature]) {
 					resolveArray[argsSignature][key][0](result[argsSignature]);
 				}
-				
+
 				// Remove cached data after timeout
-				setTimeout(() => {
+				timeoutHandles[argsSignature] = setTimeout(() => {
 					delete result[argsSignature];
 					delete fetched[argsSignature];
 					delete fetching[argsSignature];
 					delete resolveArray[argsSignature];
+					delete timeoutHandles[argsSignature];
 				}, cacheTimeout);
-				
+
 				return data;
 			};
-			
+
 			// Does getter return Promise?
 			if(promise && typeof (<Promise<UnsafeReturnType<TFunction>>> promise).then === 'function') {
-				(<Promise<UnsafeReturnType<TFunction>>> promise)
+				return (<Promise<UnsafeReturnType<TFunction>>> promise)
 					.then(dataSave)
 					.catch((e: any) => {
 						// Fetch fail, so enable new data fetch
 						fetching[argsSignature] = false;
-						
+
 						// Fire reject on other data requests
 						for(const key in resolveArray[argsSignature]) {
 							resolveArray[argsSignature][key][1](result[argsSignature]);
 						}
+						throw e;
 					});
-				
-				return promise;
 			}
-			
+
 			// Getter doesn't return promise, so create new to return
 			return Promise.resolve(dataSave(promise));
-			
+
 		}
-		
+
 		// Data fetching in progress, so register to queue
 		return new Promise((resolve, reject) => {
 			resolveArray[argsSignature].push([resolve, reject]);
@@ -151,5 +171,17 @@ export function createCacher<TFunction extends TAnyFunction>(dataGetter: TFuncti
 export function manualInvalidate(tags: string[]): void {
 	for(const tag of tags) {
 		cacheTags[tag] = new Date().getTime();
+	}
+}
+
+/**
+ * Clear all cache state. Call this in test beforeEach to prevent cache pollution between tests.
+ */
+export function clearAllCaches(): void {
+	for (const cacher of cacherRegistry) {
+		cacher.reset();
+	}
+	for (const key in cacheTags) {
+		delete cacheTags[key];
 	}
 }

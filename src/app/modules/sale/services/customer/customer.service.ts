@@ -1,4 +1,4 @@
-import {Injectable, signal} from '@angular/core';
+import {Injectable} from '@angular/core';
 import {BehaviorSubject, map, Observable} from 'rxjs';
 import {EUserRole, IUser} from '../../../../common/types/IUser';
 import {OrderService} from '../order/order.service';
@@ -18,8 +18,11 @@ export class CustomerService {
 	#customerSubject: BehaviorSubject<IUser | null> = new BehaviorSubject<IUser | null>(null);
 	public customer$: Observable<IUser | null> = this.#customerSubject.asObservable().pipe(
 		map((customer) => {
-			this.transformUserName(customer?.name ?? '');
-			return customer;
+			if (!customer) return customer;
+			return {
+				...customer,
+				name: this.transformUserName(customer.name),
+			};
 		}),
 	);
 
@@ -121,7 +124,7 @@ export class CustomerService {
 		}
 
 		this.currencyAccount = (await this.usersService.getUserCurrencyAccounts(userId))[0];
-		this.orderService.balance = this.currencyAccount?.currentAmount;
+		this.orderService.balance = this.currencyAccount?.currentAmount ?? 0;
 	}
 
 	private transformUserName(name: string): string {

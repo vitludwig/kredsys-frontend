@@ -1,6 +1,8 @@
 // Karma configuration file, see link for more information
 // https://karma-runner.github.io/1.0/config/configuration-file.html
 
+process.env.CHROME_BIN = process.env.CHROME_BIN || '/snap/chromium/current/usr/lib/chromium-browser/chrome';
+
 module.exports = function (config) {
   config.set({
     basePath: '',
@@ -32,12 +34,20 @@ module.exports = function (config) {
         { type: 'text-summary' }
       ]
     },
+    // ChromeHeadlessNoSandbox is used for CI environments (Docker, GitLab CI)
+    // where Chrome cannot use the sandbox. Use with: ng test --browsers=ChromeHeadlessNoSandbox
+    customLaunchers: {
+      ChromeHeadlessNoSandbox: {
+        base: 'ChromeHeadless',
+        flags: ['--no-sandbox']
+      }
+    },
     reporters: ['progress', 'kjhtml'],
     port: 9876,
     colors: true,
     logLevel: config.LOG_INFO,
     autoWatch: true,
-    browsers: ['Chrome'],
+    browsers: ['ChromeHeadlessNoSandbox'],
     singleRun: false,
     restartOnFileChange: true
   });
