@@ -21,8 +21,6 @@
 	}
 
 	&__item {
-		--aug-br: 20px !important;
-
 		flex: 1;
 		flex-basis: var(--cy__sale-card--size);
 		height: var(--cy__sale-card--size);
@@ -50,8 +48,8 @@
 		&-icon {
 			fill: rgb(var(--cy__color--primary-500));
 			stroke: rgb(var(--cy__color--primary-500));
-			stroke-width: .4px;
-			height: 90px;
+			stroke-width: 0px;
+			height: 60px;
 			opacity: .75;
 			margin: 10px;
 		}
@@ -62,22 +60,18 @@
 		}
 
 		&-price {
-			--aug-tl: 10px !important;
-
-			background: rgba(var(--cy__color--warn-500), .85);
-			color: rgb(var(--cy__color--warn-contrast-500));
-			border: 1px solid rgb(var(--cy__color--warn-500));
+			color: rgb(var(--cy__color--primary-500));
 			font-size: 2em;
 			font-weight: 900;
-			padding: 30px 36px 12px 12px;
+			padding: 30px 12px 12px 12px;
 			float: right;
 			position: relative;
 
 			small {
 				font-size: .6em;
-				position: absolute;
-				top: 0;
-				right: 24px;
+				//position: absolute;
+				//top: 0;
+				//right: 24px;
 			}
 		}
 

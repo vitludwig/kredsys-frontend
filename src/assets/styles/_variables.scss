@@ -3,14 +3,15 @@
   --cy__toolbar--height: 64px;
   --cy__sale-card--size: 240px;
 
-  --cy__color--background: #{rgb.toValues(map-get($dark-theme-background,background))};
-  --cy__color--border: #{rgb.toValues(map-get($theme-primary,500))};
-  --cy__color--primary-500: #{rgb.toValues(map-get($theme-primary,500))};
-  --cy__color--primary-contrast-500: #{rgb.toValues(map_get($theme-primary, 'contrast',500))};
-  --cy__color--accent-500: #{rgb.toValues(map-get($theme-accent,500))};
-  --cy__color--accent-contrast-500: #{rgb.toValues(map_get($theme-accent, 'contrast',500))};
-  --cy__color--warn-500: #{rgb.toValues(map-get($theme-warn,500))};
-  --cy__color--warn-contrast-500: #{rgb.toValues(map-get($theme-warn, 'contrast',500))};
+  /* rzb theme: primary #f0c100, background #15130e, warn #ffee58 */
+  --cy__color--background: 21, 19, 14;
+  --cy__color--border: 240, 193, 0;
+  --cy__color--primary-500: 240, 193, 0;
+  --cy__color--primary-contrast-500: 61, 47, 0;
+  --cy__color--accent-500: 240, 193, 0;
+  --cy__color--accent-contrast-500: 61, 47, 0;
+  --cy__color--warn-500: 255, 238, 88;
+  --cy__color--warn-contrast-500: 0, 0, 0;
 }
 
 @media (max-width: 768px) {

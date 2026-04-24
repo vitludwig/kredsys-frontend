@@ -1,7 +1,5 @@
-@use "assets/styles/functions/hex2rgb" as rgb;
-
 // import our custom theme
-@import 'cyber.theme.scss';
+@use 'rzb.theme.scss';
 @import "styles/variables";
 @import 'material-icons/iconfont/material-icons.css';
 //@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
@@ -32,5 +30,6 @@
 
 html, body {
   height: 100%;
+  font-family: 'Oswald', sans-serif;
   background: rgb(var(--cy__color--background));
 }

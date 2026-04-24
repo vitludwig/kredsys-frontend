@@ -81,8 +81,14 @@ export class CardLoaderComponent implements OnInit, OnDestroy {
 			});
 
 		if(this.authService.isDebug) {
-			const users = Utils.toHashMap((await this.usersService.getUsers('', 0, 10)).data, 'id') as Record<number, IUser>;
-			const cards = (await this.cardsService.getCards(0, 10)).data;
+			const cards = (await this.cardsService.getCards(0, 100)).data
+				.filter(c => c.uid !== undefined && c.userId !== undefined);
+
+			const uniqueUserIds = [...new Set(cards.map(c => c.userId!))].slice(0, 3);
+			const users = Utils.toHashMap(
+				await Promise.all(uniqueUserIds.map(id => this.usersService.getUser(id))),
+				'id'
+			) as Record<number, IUser>;
 
 			for(const card of cards) {
 				if(card.userId !== undefined && card.uid && users[card.userId]) {
