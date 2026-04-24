@@ -1,14 +1,16 @@
 <app-input-autocomplete
-	label="Uživatel"
-	placeholder="Vyhledat podle jména"
-	[autoFocus]="true"
-	(valueChange)="selectedUser = $event"
-	[value]="selectedUser"
-	[dataLoader]="getUsers"
-	primaryDisplayProperty="name"
-	secondaryDisplayProperty="memberId"
-/>
+  label="Uživatel"
+  placeholder="Vyhledat podle jména"
+  [autoFocus]="true"
+  (valueChange)="selectedUser = $event"
+  [value]="selectedUser"
+  [dataLoader]="getUsers"
+  primaryDisplayProperty="name"
+  secondaryDisplayProperty="memberId"
+  />
 
-<app-transactions-list *ngIf="selectedUser"
-	[filterBy]="filterBy"
-/>
+@if (selectedUser) {
+  <app-transactions-list
+    [filterBy]="filterBy"
+    />
+}

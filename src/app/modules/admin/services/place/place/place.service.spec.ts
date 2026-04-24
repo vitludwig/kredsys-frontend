@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { PlaceService } from './place.service';
 import { ConfigService } from '../../../../../common/services/config/config.service';
 import { AuthService } from '../../../../login/services/auth/auth.service';
@@ -7,6 +7,7 @@ import { EPlaceRole, IPlace } from '../../../../../common/types/IPlace';
 import { IPaginatedResponse } from '../../../../../common/types/IPaginatedResponse';
 import { BehaviorSubject } from 'rxjs';
 import { clearAllCaches } from '../../../../../common/decorators/cache';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('PlaceService', () => {
   let service: PlaceService;
@@ -24,13 +25,15 @@ describe('PlaceService', () => {
     };
 
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
-      providers: [
+    imports: [],
+    providers: [
         PlaceService,
         { provide: ConfigService, useValue: mockConfig },
         { provide: AuthService, useValue: mockAuthService },
-      ],
-    });
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+    ]
+});
     service = TestBed.inject(PlaceService);
     httpMock = TestBed.inject(HttpTestingController);
   });

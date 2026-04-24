@@ -8,9 +8,10 @@ import {CurrencyService} from '../../../../services/currency/currency.service';
 import {AlertService} from '../../../../../../common/services/alert/alert.service';
 
 @Component({
-	selector: 'app-goods-detail',
-	templateUrl: './goods-detail.component.html',
-	styleUrls: ['./goods-detail.component.scss'],
+    selector: 'app-goods-detail',
+    templateUrl: './goods-detail.component.html',
+    styleUrls: ['./goods-detail.component.scss'],
+    standalone: false
 })
 export class GoodsDetailComponent implements OnInit {
 	public item: IGoods;

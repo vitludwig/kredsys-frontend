@@ -6,7 +6,7 @@ import {
 	ITransactionResponse,
 } from './types/ITransaction';
 import {firstValueFrom} from 'rxjs';
-import {HttpClient} from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import {ETime} from '../../../../../../common/types/ETime';
 import {ECacheTag} from '../../../../../../common/types/ECacheTag';
 import {IPaginatedResponse} from '../../../../../../common/types/IPaginatedResponse';

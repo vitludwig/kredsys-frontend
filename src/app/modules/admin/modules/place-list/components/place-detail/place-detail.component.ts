@@ -8,15 +8,16 @@ import {MatDialog} from '@angular/material/dialog';
 import {SortimentDetailComponent} from './components/sortiment-detail/sortiment-detail.component';
 import {IGoods} from '../../../../../../common/types/IGoods';
 import {AlertService} from '../../../../../../common/services/alert/alert.service';
-import {HttpErrorResponse} from '@angular/common/http';
+import { HttpErrorResponse } from '@angular/common/http';
 import {filter, takeUntil} from "rxjs";
 import {WithSubscriptionsComponent} from "../../../../../../common/components/with-subscriptions.component";
 import {CanComponentDeactivate} from "../../../../../../common/types/CanComponentDeactivate";
 
 @Component({
-  selector: 'app-place-detail',
-  templateUrl: './place-detail.component.html',
-  styleUrls: ['./place-detail.component.scss'],
+    selector: 'app-place-detail',
+    templateUrl: './place-detail.component.html',
+    styleUrls: ['./place-detail.component.scss'],
+    standalone: false
 })
 export class PlaceDetailComponent extends WithSubscriptionsComponent implements OnInit, CanComponentDeactivate {
   public readonly placeService = inject(PlaceService);

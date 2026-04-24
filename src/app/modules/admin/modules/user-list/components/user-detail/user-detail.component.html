@@ -1,186 +1,183 @@
 <div class="container p-5"
-	data-augmented-ui="tl-2-clip-x tr-2-clip-x br-2-clip-x bl-2-clip-x both">
-	<div class="row mb-4">
-		<div class="col-12">
-			<button backButton
-				mat-raised-button>
-				<mat-icon>keyboard_arrow_left</mat-icon>
-				Zpět
-			</button>
-		</div>
-	</div>
+  data-augmented-ui="tl-2-clip-x tr-2-clip-x br-2-clip-x bl-2-clip-x both">
+  <div class="row mb-4">
+    <div class="col-12">
+      <button backButton
+        mat-raised-button>
+        <mat-icon>keyboard_arrow_left</mat-icon>
+        Zpět
+      </button>
+    </div>
+  </div>
 
-	<div *ngIf="!isLoading; else loading"
-		class="row"
-	>
-		<div class="col-xs-12 col-md-6">
-			<div class="d-flex justify-content-between">
-				<h2>{{ user?.name ?? 'Nový uživatel' }}</h2>
-				<h3 *ngIf="accounts[0]">Zůstatek: {{ accounts[0].currentAmount }} Kč</h3>
-			</div>
-
-			<form id="userForm" (ngSubmit)="onSubmit()"
-				[formGroup]="userFormGroup"
-			>
-				<mat-form-field class="w-100">
-					<mat-label>Členské ID</mat-label>
-					<input #memberId="matInput"
-						formControlName="memberId"
-						placeholder="Členské ID"
-						type="number"
-						matInput
-					>
-					<mat-error>
-						<app-error-message [control]="memberId.ngControl"></app-error-message>
-					</mat-error>
-				</mat-form-field>
-
-
-				<mat-form-field class="w-100">
-					<mat-label>Jméno</mat-label>
-					<input matInput
-						placeholder="Jméno"
-						#name="matInput"
-						formControlName="name"
-					>
-					<mat-error>
-						<app-error-message [control]="name.ngControl"></app-error-message>
-					</mat-error>
-				</mat-form-field>
-
-				<mat-form-field
-					class="w-100">
-					<mat-label>E-mail</mat-label>
-					<input #email="matInput"
-						formControlName="email"
-						placeholder="E-mail"
-						type="email"
-						matInput
-					>
-					<mat-error>
-						<app-error-message [control]="email.ngControl"></app-error-message>
-					</mat-error>
-				</mat-form-field>
-
-				@if(!isEdit) {
-					<mat-form-field class="w-100">
-						<mat-label>Heslo</mat-label>
-						<input matInput
-							minlength="5"
-							formControlName="password"
-							placeholder="Heslo"
-							type="password"
-							#password="matInput"
-							#passwordElement
-						>
-						<mat-error>
-							<app-error-message [control]="password.ngControl" [errorMessages]="{minlength: 'Minimální počet znaků je ' + passwordElement.minLength}"></app-error-message>
-						</mat-error>
-					</mat-form-field>
-
-					<mat-form-field class="w-100">
-						<mat-label>Heslo znovu</mat-label>
-						<input matInput
-							minlength="5"
-							formControlName="passwordAgain"
-							placeholder="Heslo znovu"
-							type="password"
-							#passwordAgain="matInput"
-						>
-						<mat-error>
-							<app-error-message [control]="passwordAgain.ngControl" [errorMessages]="{minlength: 'Minimální počet znaků je ' + passwordElement.minLength}"></app-error-message>
-						</mat-error>
-					</mat-form-field>
-				}
-
-        <mat-form-field class="w-100">
-          <mat-label>Role</mat-label>
-          <mat-select formControlName="role"
+  @if (!isLoading) {
+    <div
+      class="row"
+      >
+      <div class="col-xs-12 col-md-6">
+        <div class="d-flex justify-content-between">
+          <h2>{{ user?.name ?? 'Nový uživatel' }}</h2>
+          @if (accounts[0]) {
+            <h3>Zůstatek: {{ accounts[0].currentAmount }} Kč</h3>
+          }
+        </div>
+        <form id="userForm" (ngSubmit)="onSubmit()"
+          [formGroup]="userFormGroup"
           >
-            <mat-option *ngFor="let role of roles"
-                        [value]="role">{{ role }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-
-        @if(groups$ | async; as groups) {
-          @if(groups.length > 0) {
+          <mat-form-field class="w-100">
+            <mat-label>Členské ID</mat-label>
+            <input #memberId="matInput"
+              formControlName="memberId"
+              placeholder="Členské ID"
+              type="number"
+              matInput
+              >
+            <mat-error>
+              <app-error-message [control]="memberId.ngControl"></app-error-message>
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field class="w-100">
+            <mat-label>Jméno</mat-label>
+            <input matInput
+              placeholder="Jméno"
+              #name="matInput"
+              formControlName="name"
+              >
+            <mat-error>
+              <app-error-message [control]="name.ngControl"></app-error-message>
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field
+            class="w-100">
+            <mat-label>E-mail</mat-label>
+            <input #email="matInput"
+              formControlName="email"
+              placeholder="E-mail"
+              type="email"
+              matInput
+              >
+            <mat-error>
+              <app-error-message [control]="email.ngControl"></app-error-message>
+            </mat-error>
+          </mat-form-field>
+          @if(!isEdit) {
             <mat-form-field class="w-100">
-              <mat-label>Skupina</mat-label>
-              <mat-select formControlName="groupId">
-                <mat-option [value]="null">Žádná</mat-option>
-                <mat-option *ngFor="let group of groups" [value]="group.id">
-                  {{ group.name }}
+              <mat-label>Heslo</mat-label>
+              <input matInput
+                minlength="5"
+                formControlName="password"
+                placeholder="Heslo"
+                type="password"
+                #password="matInput"
+                #passwordElement
+                >
+              <mat-error>
+                <app-error-message [control]="password.ngControl" [errorMessages]="{minlength: 'Minimální počet znaků je ' + passwordElement.minLength}"></app-error-message>
+              </mat-error>
+            </mat-form-field>
+            <mat-form-field class="w-100">
+              <mat-label>Heslo znovu</mat-label>
+              <input matInput
+                minlength="5"
+                formControlName="passwordAgain"
+                placeholder="Heslo znovu"
+                type="password"
+                #passwordAgain="matInput"
+                >
+              <mat-error>
+                <app-error-message [control]="passwordAgain.ngControl" [errorMessages]="{minlength: 'Minimální počet znaků je ' + passwordElement.minLength}"></app-error-message>
+              </mat-error>
+            </mat-form-field>
+          }
+          <mat-form-field class="w-100">
+            <mat-label>Role</mat-label>
+            <mat-select formControlName="role"
+              >
+              @for (role of roles; track role) {
+                <mat-option
+                  [value]="role">{{ role }}
                 </mat-option>
-              </mat-select>
+              }
+            </mat-select>
+          </mat-form-field>
+          @if(groups$ | async; as groups) {
+            @if(groups.length > 0) {
+              <mat-form-field class="w-100">
+                <mat-label>Skupina</mat-label>
+                <mat-select formControlName="groupId">
+                  <mat-option [value]="null">Žádná</mat-option>
+                  @for (group of groups; track group) {
+                    <mat-option [value]="group.id">
+                      {{ group.name }}
+                    </mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
+            }
+          }
+        </form>
+        @if(isEdit) {
+          @for (account of accounts; track account) {
+            <mat-form-field
+              class="w-100"
+              >
+              <mat-label>Limit přečerpání {{ currencies[account.currencyId].code }}</mat-label>
+              <input matInput
+                placeholder="Limit přečerpání"
+                type="number"
+                [name]="'overdraftLimit' + account.currencyId"
+                [(ngModel)]="account.overdraftLimit"
+                >
+              <span matSuffix>{{ currencies[account.currencyId].symbol }}</span>
+              <!--TODO: pridat cudlik na vyrobeni accountu, aby slo nastavit precerpani-->
             </mat-form-field>
           }
         }
-			</form>
-
-      @if(isEdit) {
-        <mat-form-field
-          class="w-100"
-          *ngFor="let account of accounts"
-        >
-          <mat-label>Limit přečerpání {{ currencies[account.currencyId].code }}</mat-label>
-          <input matInput
-                 placeholder="Limit přečerpání"
-                 type="number"
-                 [name]="'overdraftLimit' + account.currencyId"
-                 [(ngModel)]="account.overdraftLimit"
-          >
-          <span matSuffix>{{ currencies[account.currencyId].symbol }}</span>
-          <!--TODO: pridat cudlik na vyrobeni accountu, aby slo nastavit precerpani-->
-        </mat-form-field>
-      }
-      <div>
-        <button mat-raised-button
-                class="w-100"
-                color="primary"
-                type="submit"
-                form="userForm"
-                [disabled]="userFormGroup.invalid"
-        >
-          Potvrdit
-        </button>
+        <div>
+          <button mat-raised-button
+            class="w-100"
+            color="primary"
+            type="submit"
+            form="userForm"
+            [disabled]="userFormGroup.invalid"
+            >
+            Potvrdit
+          </button>
+        </div>
       </div>
-
-		</div>
-
-		<div class="col-xs-12 col-md-6">
-			<h2 class="d-flex justify-content-between">
-				<span>Napárované karty</span>
-				<button mat-button
-					color="primary"
-					(click)="openCardDetailDialog()">
-					<mat-icon>add</mat-icon>
-					Přidat kartu
-				</button>
-			</h2>
-
-			<mat-list role="list">
-				<mat-list-item role="listitem"
-					*ngFor="let card of cards"
-				>
-					<div class="card-item">
-						<span>{{ card.type }} (id:{{ card.uid }})</span>
-						<button mat-raised-button
-							(clickConfirm)="deleteCard(card)"
-							confirmPreset="remove"
-							color="warn"
-						>
-							Odstranit
-						</button>
-					</div>
-				</mat-list-item>
-			</mat-list>
-		</div>
-	</div>
+      <div class="col-xs-12 col-md-6">
+        <h2 class="d-flex justify-content-between">
+          <span>Napárované karty</span>
+          <button mat-button
+            color="primary"
+            (click)="openCardDetailDialog()">
+            <mat-icon>add</mat-icon>
+            Přidat kartu
+          </button>
+        </h2>
+        <mat-list role="list">
+          @for (card of cards; track card) {
+            <mat-list-item role="listitem"
+              >
+              <div class="card-item">
+                <span>{{ card.type }} (id:{{ card.uid }})</span>
+                <button mat-raised-button
+                  (clickConfirm)="deleteCard(card)"
+                  confirmPreset="remove"
+                  color="warn"
+                  >
+                  Odstranit
+                </button>
+              </div>
+            </mat-list-item>
+          }
+        </mat-list>
+      </div>
+    </div>
+  } @else {
+    <div class="d-flex align-items-center justify-content-center w-100">
+      <mat-spinner></mat-spinner>
+    </div>
+  }
 </div>
 
-<ng-template #loading>
-	<div class="d-flex align-items-center justify-content-center w-100">
-		<mat-spinner></mat-spinner>
-	</div>
-</ng-template>

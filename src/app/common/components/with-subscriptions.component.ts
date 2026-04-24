@@ -2,7 +2,8 @@ import { Component, OnDestroy } from '@angular/core';
 import { WithSubscriptions } from './with-subscriptions';
 
 @Component({
-  template: ''
+    template: '',
+    standalone: false
 })
 export abstract class WithSubscriptionsComponent extends WithSubscriptions implements OnDestroy {
 

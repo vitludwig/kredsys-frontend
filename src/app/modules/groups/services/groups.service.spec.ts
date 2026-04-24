@@ -1,11 +1,12 @@
 import { TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { GroupsService } from './groups.service';
 import { ConfigService } from '../../../common/services/config/config.service';
 import { IPaginatedResponse } from '../../../common/types/IPaginatedResponse';
 import { IGroup, IGroupCreate } from '../types/IGroup';
 import { IGroupStatistics } from '../types/IGroupStatistics';
 import { clearAllCaches } from '../../../common/decorators/cache';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('GroupsService', () => {
   let service: GroupsService;
@@ -17,11 +18,13 @@ describe('GroupsService', () => {
     clearAllCaches();
     localStorage.clear();
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
-      providers: [
+    imports: [],
+    providers: [
         { provide: ConfigService, useValue: mockConfig },
-      ],
-    });
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+    ]
+});
     service = TestBed.inject(GroupsService);
     httpMock = TestBed.inject(HttpTestingController);
   });

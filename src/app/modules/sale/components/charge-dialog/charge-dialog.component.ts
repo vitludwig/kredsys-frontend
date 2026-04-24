@@ -3,9 +3,10 @@ import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {ConfigService} from "../../../../common/services/config/config.service";
 
 @Component({
-	selector: 'app-charge-dialog',
-	templateUrl: './charge-dialog.component.html',
-	styleUrls: ['./charge-dialog.component.scss'],
+    selector: 'app-charge-dialog',
+    templateUrl: './charge-dialog.component.html',
+    styleUrls: ['./charge-dialog.component.scss'],
+    standalone: false
 })
 export class ChargeDialogComponent {
   protected dialogRef = inject(MatDialogRef<ChargeDialogComponent>);

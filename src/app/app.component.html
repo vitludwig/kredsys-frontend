@@ -1,25 +1,29 @@
-<app-top-menu *ngIf="authService.isLogged" [sideMenu]="sideMenu" [place]="placeService.selectedPlace"></app-top-menu>
+@if (authService.isLogged) {
+  <app-top-menu [sideMenu]="sideMenu" [place]="placeService.selectedPlace"></app-top-menu>
+}
 
 <mat-drawer-container>
-	<mat-drawer #sideMenu
-		class="menu-sidebar"
-		mode="over"
-		position="start"
-		data-augmented-ui="br-2-clip-x both"
-	>
-		<app-side-menu></app-side-menu>
-	</mat-drawer>
+  <mat-drawer #sideMenu
+    class="menu-sidebar"
+    mode="over"
+    position="start"
+    data-augmented-ui="br-2-clip-x both"
+    >
+    <app-side-menu></app-side-menu>
+  </mat-drawer>
 
-	<div #mainContent
-		[class.full-height]="fullPageHeight"
-		class="main-content"
-		tabindex="0"
-	>
+  <div #mainContent
+    [class.full-height]="fullPageHeight"
+    class="main-content"
+    tabindex="0"
+    >
 
-		<router-outlet></router-outlet>
-	</div>
+    <router-outlet></router-outlet>
+  </div>
 </mat-drawer-container>
 
-<div class="network-alert" *ngIf="showNetworkAlert">
-	<span>Nejste připojeni k internetu. Bez internetu nelze aplikaci používat.</span>
-</div>
+@if (showNetworkAlert) {
+  <div class="network-alert">
+    <span>Nejste připojeni k internetu. Bez internetu nelze aplikaci používat.</span>
+  </div>
+}

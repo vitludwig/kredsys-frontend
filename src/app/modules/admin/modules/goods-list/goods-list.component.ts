@@ -11,13 +11,14 @@ import {IGoods, IGoodsTableSource, IGoodsType} from '../../../../common/types/IG
 import {CurrencyService} from '../../services/currency/currency.service';
 import {Utils} from '../../../../common/utils/Utils';
 import {ICurrency} from '../../../../common/types/ICurrency';
-import {HttpErrorResponse} from "@angular/common/http";
+import { HttpErrorResponse } from "@angular/common/http";
 import {AlertService} from "../../../../common/services/alert/alert.service";
 
 @Component({
-	selector: 'app-goods-list',
-	templateUrl: './goods-list.component.html',
-	styleUrls: ['./goods-list.component.scss'],
+    selector: 'app-goods-list',
+    templateUrl: './goods-list.component.html',
+    styleUrls: ['./goods-list.component.scss'],
+    standalone: false
 })
 export class GoodsListComponent implements OnInit, OnDestroy {
 	public goodsDisplayedColumns: string[] = ['name', 'type', 'price', 'currency', 'actions'];

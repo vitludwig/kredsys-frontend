@@ -1,31 +1,35 @@
 <div class="place-select-container">
-	<mat-card appearance="outlined" class="place-card" data-augmented-ui="tl-clip-x tr-2-clip-x br-clip bl-clip both">
-		<mat-card-title class="place-title">Vyber místo</mat-card-title>
-		<mat-card-content>
-			<mat-form-field>
-				<mat-select [(ngModel)]="place"
-					placeholder="Místo">
-					<mat-option *ngFor="let place of places"
-						[value]="place">
-						{{ place.name }}
-					</mat-option>
-				</mat-select>
-			</mat-form-field>
-			<div>
-				<button color="primary"
-					class="w-100"
-					mat-raised-button
-					[disabled]="!place"
-					(click)="selectPlace()"
-				>
-					Vybrat
-				</button>
-			</div>
-		</mat-card-content>
+  <mat-card appearance="outlined" class="place-card" data-augmented-ui="tl-clip-x tr-2-clip-x br-clip bl-clip both">
+    <mat-card-title class="place-title">Vyber místo</mat-card-title>
+    <mat-card-content>
+      <mat-form-field>
+        <mat-select [(ngModel)]="place"
+          placeholder="Místo">
+          @for (place of places; track place) {
+            <mat-option
+              [value]="place">
+              {{ place.name }}
+            </mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+      <div>
+        <button color="primary"
+          class="w-100"
+          mat-raised-button
+          [disabled]="!place"
+          (click)="selectPlace()"
+          >
+          Vybrat
+        </button>
+      </div>
+    </mat-card-content>
 
-		<div *ngIf="errorMsg"
-			class="alert alert-danger">
-			{{ errorMsg }}
-		</div>
-	</mat-card>
+    @if (errorMsg) {
+      <div
+        class="alert alert-danger">
+        {{ errorMsg }}
+      </div>
+    }
+  </mat-card>
 </div>

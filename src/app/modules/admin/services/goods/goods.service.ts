@@ -1,7 +1,7 @@
 import {inject, Injectable} from '@angular/core';
 import {IPaginatedResponse} from '../../../../common/types/IPaginatedResponse';
 import {IGoods, IGoodsType} from '../../../../common/types/IGoods';
-import {HttpClient} from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import {firstValueFrom} from 'rxjs';
 import {cache, invalidateCache} from '../../../../common/decorators/cache';
 import {ETime} from '../../../../common/types/ETime';

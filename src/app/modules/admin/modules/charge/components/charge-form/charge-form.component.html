@@ -1,40 +1,41 @@
-<app-card-loader *ngIf="!cardId"
-	(cardIdChange)="setCardId($event)"
-	[showNewCardButton]="false"
-/>
+@if (!cardId) {
+  <app-card-loader
+    (cardIdChange)="setCardId($event)"
+    [showNewCardButton]="false"
+    />
+}
 
-<ng-container *ngIf="cardId">
-	<h2>Stav: {{ currencyAccount?.currentAmount ?? 0 }} Kč</h2>
-	<mat-form-field
-		class="w-100">
-		<mat-label>Částka</mat-label>
-		<input matInput
-			[(ngModel)]="amount"
-			type="number">
-		<div matSuffix>Kč</div>
-	</mat-form-field>
-
-	<div class="btn-group predefined"
-		role="group"
-	>
-		<button mat-stroked-button
-			class="me-2"
-			*ngFor="let value of predefinedAmounts"
-			(click)="amount = value"
-		>{{ value }} Kč
-		</button>
+@if (cardId) {
+  <h2>Stav: {{ currencyAccount?.currentAmount ?? 0 }} Kč</h2>
+  <mat-form-field
+    class="w-100">
+    <mat-label>Částka</mat-label>
+    <input matInput
+      [(ngModel)]="amount"
+      type="number">
+    <div matSuffix>Kč</div>
+  </mat-form-field>
+  <div class="btn-group predefined"
+    role="group"
+    >
+    @for (value of predefinedAmounts; track value) {
+      <button mat-stroked-button
+        class="me-2"
+        (click)="amount = value"
+        >{{ value }} Kč
+      </button>
+    }
     <button mat-stroked-button
-            class="me-2"
-            (click)="amount = cruciblePrice"
-    >Kelímek
+      class="me-2"
+      (click)="amount = cruciblePrice"
+      >Kelímek
     </button>
-	</div>
-
-	<button mat-raised-button
-		color="primary"
-		class="submit-btn"
-		(click)="submit()"
-	>
-		Dobít
-	</button>
-</ng-container>
+  </div>
+  <button mat-raised-button
+    color="primary"
+    class="submit-btn"
+    (click)="submit()"
+    >
+    Dobít
+  </button>
+}

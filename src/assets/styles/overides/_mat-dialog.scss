@@ -1,6 +1,6 @@
 .mat-mdc-dialog-container {
   .mdc-dialog__surface {
-    background-color: var(--mdc-theme-surface) !important;
+    background-color: var(--mat-theme-surface) !important;
   }
 
   .close-btn {
@@ -8,7 +8,7 @@
     top: 8px;
     right: 8px;
     z-index: 1;
-    color: var(--mdc-dialog-subhead-color, black);
+    color: var(--mat-dialog-subhead-color, black);
   }
 
   .submit-btn {

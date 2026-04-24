@@ -5,9 +5,10 @@ import {ICurrencyAccount} from "../../../../common/types/ICurrency";
 import {Observable} from 'rxjs';
 
 @Component({
-	selector: 'app-discharge-dialog',
-	templateUrl: './discharge-dialog.component.html',
-	styleUrls: ['./discharge-dialog.component.scss']
+    selector: 'app-discharge-dialog',
+    templateUrl: './discharge-dialog.component.html',
+    styleUrls: ['./discharge-dialog.component.scss'],
+    standalone: false
 })
 export class DischargeDialogComponent {
 	protected data: { user: Observable<IUser | null>; currencyAccount: ICurrencyAccount } = inject(MAT_DIALOG_DATA);

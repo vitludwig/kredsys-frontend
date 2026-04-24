@@ -7,9 +7,10 @@ import {IPaginatedResponse} from "../../../../../../common/types/IPaginatedRespo
 import {IUser} from "../../../../../../common/types/IUser";
 
 @Component({
-	selector: 'app-user-transactions-list',
-	templateUrl: './user-transactions-list.component.html',
-	styleUrls: ['./user-transactions-list.component.scss']
+    selector: 'app-user-transactions-list',
+    templateUrl: './user-transactions-list.component.html',
+    styleUrls: ['./user-transactions-list.component.scss'],
+    standalone: false
 })
 export class UserTransactionsListComponent {
 	protected filterBy: Partial<ITransaction> = {};

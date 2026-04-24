@@ -1,13 +1,15 @@
 <mat-drawer-container class="sale-container">
-	<div class="sale-content">
+  <div class="sale-content">
     <div class="sale-content__main">
       <app-dashboard [place]="placeService.selectedPlace"></app-dashboard>
-      <div class="disabled-overlay" *ngIf="(customerService.customer$ | async) === null"></div>
+      @if ((customerService.customer$ | async) === null) {
+        <div class="disabled-overlay"></div>
+      }
     </div>
     <div class="sale-content__sidebar" data-augmented-ui="tl-2-clip-x bl-2-clip-x both both">
       <app-sale-summary [place]="placeService.selectedPlace"></app-sale-summary>
     </div>
-	</div>
+  </div>
 
 </mat-drawer-container>
 

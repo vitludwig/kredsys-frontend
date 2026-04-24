@@ -13,14 +13,15 @@ import {
 import {UsersService} from "../../../../services/users/users.service";
 import {GoodsService} from "../../../../services/goods/goods.service";
 import {PlaceService} from "../../../../services/place/place/place.service";
-import {HttpErrorResponse} from "@angular/common/http";
+import { HttpErrorResponse } from "@angular/common/http";
 import {AlertService} from "../../../../../../common/services/alert/alert.service";
 import {IUser} from '../../../../../../common/types/IUser';
 
 @Component({
-	selector: 'app-new-transaction',
-	templateUrl: './new-transaction.component.html',
-	styleUrls: ['./new-transaction.component.scss']
+    selector: 'app-new-transaction',
+    templateUrl: './new-transaction.component.html',
+    styleUrls: ['./new-transaction.component.scss'],
+    standalone: false
 })
 export class NewTransactionComponent implements OnInit {
 	public user: IUser | null;

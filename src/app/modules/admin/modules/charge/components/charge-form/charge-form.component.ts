@@ -8,9 +8,10 @@ import {IChargeResult} from '../../types/IChargeResult';
 import {ConfigService} from "../../../../../../common/services/config/config.service";
 
 @Component({
-	selector: 'app-charge-form',
-	templateUrl: './charge-form.component.html',
-	styleUrls: ['./charge-form.component.scss']
+    selector: 'app-charge-form',
+    templateUrl: './charge-form.component.html',
+    styleUrls: ['./charge-form.component.scss'],
+    standalone: false
 })
 export class ChargeFormComponent implements OnInit {
   private usersService = inject(UsersService);

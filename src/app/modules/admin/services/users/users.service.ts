@@ -2,7 +2,7 @@ import {inject, Injectable} from '@angular/core';
 import {EUserRole, IUser} from '../../../../common/types/IUser';
 import {IPaginatedResponse} from '../../../../common/types/IPaginatedResponse';
 import {firstValueFrom, map} from 'rxjs';
-import {HttpClient} from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import {ICard} from '../../../../common/types/ICard';
 import {ICurrencyAccount} from '../../../../common/types/ICurrency';
 import {cache, invalidateCache} from '../../../../common/decorators/cache';

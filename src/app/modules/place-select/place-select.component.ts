@@ -3,13 +3,14 @@ import {PlaceService} from '../admin/services/place/place/place.service';
 import {IPlace} from '../../common/types/IPlace';
 import {Router} from '@angular/router';
 import {ERoute} from '../../common/types/ERoute';
-import {HttpErrorResponse} from '@angular/common/http';
+import { HttpErrorResponse } from '@angular/common/http';
 import {AlertService} from '../../common/services/alert/alert.service';
 
 @Component({
-	selector: 'app-place-select',
-	templateUrl: './place-select.component.html',
-	styleUrls: ['./place-select.component.scss'],
+    selector: 'app-place-select',
+    templateUrl: './place-select.component.html',
+    styleUrls: ['./place-select.component.scss'],
+    standalone: false
 })
 export class PlaceSelectComponent implements OnInit{
 	public place: IPlace;

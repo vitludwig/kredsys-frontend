@@ -3,23 +3,22 @@ import {LoginModule} from "../../login/login.module";
 import {MatButtonModule} from "@angular/material/button";
 import {MatIconModule} from "@angular/material/icon";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
-import {QRCodeModule} from "angularx-qrcode";
+import {QRCodeComponent} from "angularx-qrcode";
 
 import {CardInfoModule} from "../../card-info/card-info.module";
 
 @Component({
-  selector: 'app-card-info-public',
-  standalone: true,
-  imports: [
-    LoginModule,
-    MatButtonModule,
-    MatIconModule,
-    MatProgressSpinnerModule,
-    QRCodeModule,
-    CardInfoModule
-  ],
-  templateUrl: './card-info-public.component.html',
-  styleUrl: './card-info-public.component.scss'
+    selector: 'app-card-info-public',
+    imports: [
+        LoginModule,
+        MatButtonModule,
+        MatIconModule,
+        MatProgressSpinnerModule,
+        QRCodeComponent,
+        CardInfoModule
+    ],
+    templateUrl: './card-info-public.component.html',
+    styleUrl: './card-info-public.component.scss'
 })
 export class CardInfoPublicComponent {
   // protected usersService: UsersService = inject(UsersService);

@@ -1,10 +1,11 @@
 import { TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { CardsService } from './cards.service';
 import { ConfigService } from '../../../../common/services/config/config.service';
 import { IPaginatedResponse } from '../../../../common/types/IPaginatedResponse';
 import { ICard } from '../../../../common/types/ICard';
 import { clearAllCaches } from '../../../../common/decorators/cache';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('CardsService', () => {
   let service: CardsService;
@@ -16,11 +17,13 @@ describe('CardsService', () => {
     clearAllCaches();
     localStorage.clear();
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
-      providers: [
+    imports: [],
+    providers: [
         { provide: ConfigService, useValue: mockConfig },
-      ],
-    });
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+    ]
+});
     service = TestBed.inject(CardsService);
     httpMock = TestBed.inject(HttpTestingController);
   });

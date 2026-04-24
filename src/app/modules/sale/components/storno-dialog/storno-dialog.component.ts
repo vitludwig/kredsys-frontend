@@ -10,9 +10,10 @@ import {firstValueFrom, Observable} from 'rxjs';
 import {IUser} from '../../../../common/types/IUser';
 
 @Component({
-	selector: 'app-storno-dialog',
-	templateUrl: './storno-dialog.component.html',
-	styleUrls: ['./storno-dialog.component.scss']
+    selector: 'app-storno-dialog',
+    templateUrl: './storno-dialog.component.html',
+    styleUrls: ['./storno-dialog.component.scss'],
+    standalone: false
 })
 export class StornoDialogComponent implements OnInit{
 	protected lastTransaction: ITransaction | null = null;

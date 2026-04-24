@@ -1,10 +1,11 @@
 import { TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { AuthService } from './auth.service';
 import { ConfigService } from '../../../../common/services/config/config.service';
 import { UsersService } from '../../../admin/services/users/users.service';
 import { EUserRole, IUser } from '../../../../common/types/IUser';
 import { clearAllCaches } from '../../../../common/decorators/cache';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 function createMockJwt(exp: number = Math.round(Date.now() / 1000) + 3600): string {
 	const header = btoa(JSON.stringify({ alg: 'HS256', typ: 'JWT' }));
@@ -31,12 +32,14 @@ describe('AuthService', () => {
 		usersServiceSpy.getUser.and.returnValue(Promise.resolve(mockUser));
 
 		TestBed.configureTestingModule({
-			imports: [HttpClientTestingModule],
-			providers: [
-				{ provide: ConfigService, useValue: mockConfig },
-				{ provide: UsersService, useValue: usersServiceSpy },
-			],
-		});
+    imports: [],
+    providers: [
+        { provide: ConfigService, useValue: mockConfig },
+        { provide: UsersService, useValue: usersServiceSpy },
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+    ]
+});
 		service = TestBed.inject(AuthService);
 		httpMock = TestBed.inject(HttpTestingController);
 	});

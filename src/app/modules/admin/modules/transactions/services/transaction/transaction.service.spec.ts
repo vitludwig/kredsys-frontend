@@ -1,11 +1,12 @@
 import { TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TransactionService } from './transaction.service';
 import { ConfigService } from '../../../../../../common/services/config/config.service';
 import { ETransactionType } from './types/ETransactionType';
 import { ITransactionResponse, ITransactionRecordPayment, ITransactionRecordDeposit, ITransactionRecordWithdraw } from './types/ITransaction';
 import { IPaginatedResponse } from '../../../../../../common/types/IPaginatedResponse';
 import { clearAllCaches } from '../../../../../../common/decorators/cache';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('TransactionService', () => {
   let service: TransactionService;
@@ -17,11 +18,13 @@ describe('TransactionService', () => {
     clearAllCaches();
     localStorage.clear();
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
-      providers: [
+    imports: [],
+    providers: [
         { provide: ConfigService, useValue: mockConfig },
-      ],
-    });
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+    ]
+});
     service = TestBed.inject(TransactionService);
     httpMock = TestBed.inject(HttpTestingController);
   });

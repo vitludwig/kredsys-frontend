@@ -1,6 +1,6 @@
 import {inject, Injectable} from '@angular/core';
 import {EUserRole, IUser} from '../../../../common/types/IUser';
-import {HttpClient} from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import {environment} from '../../../../../environments/environment';
 import {IAuthenticationResponse} from './types/IAuthenticationResponse';
 import {BehaviorSubject, firstValueFrom, Observable} from 'rxjs';

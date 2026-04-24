@@ -7,7 +7,7 @@ import {MatSelectModule} from '@angular/material/select';
 import {MatInputModule} from '@angular/material/input';
 import {MatSortModule} from '@angular/material/sort';
 import {MatPaginatorModule} from '@angular/material/paginator';
-import {NgChartsModule} from 'ng2-charts';
+import {BaseChartDirective, provideCharts, withDefaultRegisterables} from 'ng2-charts';
 import {MatTabsModule} from '@angular/material/tabs';
 import {PlaceTransactionsListComponent} from './components/place-transactions-list/place-transactions-list.component';
 import {UserTransactionsListComponent} from './components/user-transactions-list/user-transactions-list.component';
@@ -37,7 +37,7 @@ import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 		MatInputModule,
 		MatSortModule,
 		MatPaginatorModule,
-		NgChartsModule,
+		BaseChartDirective,
 		MatTabsModule,
 		MatAutocompleteModule,
 		ReactiveFormsModule,
@@ -46,6 +46,9 @@ import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 		AutofocusDirective,
 		MatIconModule,
     MatProgressSpinnerModule
+	],
+	providers: [
+		provideCharts(withDefaultRegisterables())
 	],
 })
 export class TransactionsModule {

@@ -3,9 +3,9 @@ import {GroupsService} from "../../services/groups.service";
 import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 import {catchError, of, switchMap, timer} from "rxjs";
 import {ChartData, ChartOptions} from "chart.js";
-import {BaseChartDirective, NgChartsModule} from "ng2-charts";
+import {BaseChartDirective} from "ng2-charts";
 import DataLabelsPlugin from 'chartjs-plugin-datalabels';
-import {CommonModule} from "@angular/common";
+
 import {IGroupStatistics, IGroupStatisticsItem} from "../../types/IGroupStatistics";
 import {CurrencyService} from "../../../admin/services/currency/currency.service";
 import {AlertService} from "../../../../common/services/alert/alert.service";
@@ -13,14 +13,12 @@ import {Utils} from "../../../../common/utils/Utils";
 
 
 @Component({
-  selector: 'app-groups-statistics',
-  standalone: true,
-  imports: [
-    CommonModule,
-    NgChartsModule
-  ],
-  templateUrl: './groups-statistics.component.html',
-  styleUrl: './groups-statistics.component.scss'
+    selector: 'app-groups-statistics',
+    imports: [
+    BaseChartDirective
+],
+    templateUrl: './groups-statistics.component.html',
+    styleUrl: './groups-statistics.component.scss'
 })
 export class GroupsStatisticsComponent {
   private groupsService = inject(GroupsService);

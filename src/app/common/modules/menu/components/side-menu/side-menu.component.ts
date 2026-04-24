@@ -11,9 +11,10 @@ import {MatDialog} from "@angular/material/dialog";
 import {EFeatureFlag} from "../../../feature-flags/types/EFeatureFlag";
 
 @Component({
-	selector: 'app-side-menu',
-	templateUrl: './side-menu.component.html',
-	styleUrls: ['./side-menu.component.scss'],
+    selector: 'app-side-menu',
+    templateUrl: './side-menu.component.html',
+    styleUrls: ['./side-menu.component.scss'],
+    standalone: false
 })
 export class SideMenuComponent implements OnInit, OnDestroy {
 	protected authService: AuthService = inject(AuthService);

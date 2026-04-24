@@ -8,16 +8,14 @@ import {MatAutocompleteModule} from "@angular/material/autocomplete";
 import {MatChipsModule} from "@angular/material/chips";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatOptionModule} from "@angular/material/core";
-import {JsonPipe, NgForOf} from "@angular/common";
 import {MatButtonToggleModule} from "@angular/material/button-toggle";
 import {FormsModule, NgForm} from "@angular/forms";
 import {MatSlideToggleModule} from "@angular/material/slide-toggle";
 import {MatInputModule} from "@angular/material/input";
 
 @Component({
-  selector: 'app-card-info-config-dialog',
-  standalone: true,
-  imports: [
+    selector: 'app-card-info-config-dialog',
+    imports: [
     AutofocusDirective,
     MatButtonModule,
     MatDialogModule,
@@ -26,15 +24,13 @@ import {MatInputModule} from "@angular/material/input";
     MatChipsModule,
     MatFormFieldModule,
     MatOptionModule,
-    NgForOf,
     MatButtonToggleModule,
     FormsModule,
     MatSlideToggleModule,
     MatInputModule,
-    JsonPipe
-  ],
-  templateUrl: './card-info-config-dialog.component.html',
-  styleUrl: './card-info-config-dialog.component.scss'
+],
+    templateUrl: './card-info-config-dialog.component.html',
+    styleUrl: './card-info-config-dialog.component.scss'
 })
 export class CardInfoConfigDialogComponent {
   protected dialogRef = inject(MatDialogRef<CardInfoConfigDialogComponent>)

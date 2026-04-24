@@ -14,9 +14,10 @@ import {IPaginatedResponse} from "../../types/IPaginatedResponse";
 import {MatAutocompleteTrigger} from '@angular/material/autocomplete';
 
 @Component({
-	selector: 'app-input-autocomplete',
-	templateUrl: './input-autocomplete.component.html',
-	styleUrls: ['./input-autocomplete.component.scss'],
+    selector: 'app-input-autocomplete',
+    templateUrl: './input-autocomplete.component.html',
+    styleUrls: ['./input-autocomplete.component.scss'],
+    standalone: false
 })
 export class InputAutocompleteComponent<T> implements OnInit, AfterViewInit {
 

@@ -1,29 +1,33 @@
 <div class="w-100">
-    <mat-tab-group>
-        <mat-tab label="Místa" class="mt-5">
-            <ng-template matTabContent>
-                <app-place-transactions-list></app-place-transactions-list>
-            </ng-template>
-        </mat-tab>
+  <mat-tab-group>
+    <mat-tab label="Místa" class="mt-5">
+      <ng-template matTabContent>
+        <app-place-transactions-list></app-place-transactions-list>
+      </ng-template>
+    </mat-tab>
 
-        <mat-tab label="Uživatelé">
-            <ng-template matTabContent>
-                <app-user-transactions-list></app-user-transactions-list>
-            </ng-template>
-        </mat-tab>
+    <mat-tab label="Uživatelé">
+      <ng-template matTabContent>
+        <app-user-transactions-list></app-user-transactions-list>
+      </ng-template>
+    </mat-tab>
 
-        <mat-tab label="Nová transakce" *ngIf="addTransactionAllowed">
-            <ng-template matTabContent>
-                <app-new-transaction></app-new-transaction>
-            </ng-template>
-        </mat-tab>
+    @if (addTransactionAllowed) {
+      <mat-tab label="Nová transakce">
+        <ng-template matTabContent>
+          <app-new-transaction></app-new-transaction>
+        </ng-template>
+      </mat-tab>
+    }
 
-        <mat-tab label="Statistiky" *ngIf="addTransactionAllowed">
-          <ng-template matTabContent>
-            <button mat-raised-button color="primary" (click)="downloadStatistics()">Stáhnout statistiky</button>
-          </ng-template>
-        </mat-tab>
-    </mat-tab-group>
+    @if (addTransactionAllowed) {
+      <mat-tab label="Statistiky">
+        <ng-template matTabContent>
+          <button mat-raised-button color="primary" (click)="downloadStatistics()">Stáhnout statistiky</button>
+        </ng-template>
+      </mat-tab>
+    }
+  </mat-tab-group>
 </div>
 
 @if(isLoading) {

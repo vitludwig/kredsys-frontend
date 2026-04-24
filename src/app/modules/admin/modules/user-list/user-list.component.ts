@@ -14,12 +14,13 @@ import {Animations} from '../../../../common/utils/animations';
 import {AlertService} from '../../../../common/services/alert/alert.service';
 
 @Component({
-	selector: 'app-user-list',
-	templateUrl: './user-list.component.html',
-	styleUrls: ['./user-list.component.scss'],
-	animations: [
-		Animations.expandableTable,
-	],
+    selector: 'app-user-list',
+    templateUrl: './user-list.component.html',
+    styleUrls: ['./user-list.component.scss'],
+    animations: [
+        Animations.expandableTable,
+    ],
+    standalone: false
 })
 export class UserListComponent implements OnInit, OnDestroy {
 	public displayedColumns: string[] = ['id', 'name', 'role', 'actions'];

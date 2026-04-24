@@ -6,7 +6,8 @@ import {PlaceService} from "../../../../../admin/services/place/place/place.serv
 import allowedPlaceRoutes from "../../types/AllowedPlaceRoutes";
 
 @Pipe({
-	name: 'canAccessRoute'
+    name: 'canAccessRoute',
+    standalone: false
 })
 export class CanAccessRoutePipe implements PipeTransform {
 

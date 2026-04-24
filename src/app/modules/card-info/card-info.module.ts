@@ -4,7 +4,7 @@ import { SharedModule } from '../../shared.module';
 import { CardInfoRoutingModule } from './card-info-routing.module';
 import { CardLoaderComponent } from '../../common/components/card-loader/card-loader.component';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { QRCodeModule } from 'angularx-qrcode';
+import { QRCodeComponent } from 'angularx-qrcode';
 import { MatButtonModule } from "@angular/material/button";
 import { MatDialogModule } from "@angular/material/dialog";
 import { MatIconModule } from "@angular/material/icon";
@@ -25,7 +25,7 @@ import { MatFormFieldModule } from "@angular/material/form-field";
         CardInfoRoutingModule,
         CardLoaderComponent,
         MatProgressSpinnerModule,
-        QRCodeModule,
+        QRCodeComponent,
         MatButtonModule,
         MatDialogModule,
         MatIconModule,

@@ -1,10 +1,11 @@
 import { TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { CurrencyService } from './currency.service';
 import { ConfigService } from '../../../../common/services/config/config.service';
 import { ICurrency, ICurrencyAccount } from '../../../../common/types/ICurrency';
 import { IPaginatedResponse } from '../../../../common/types/IPaginatedResponse';
 import { clearAllCaches } from '../../../../common/decorators/cache';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('CurrencyService', () => {
   let service: CurrencyService;
@@ -16,11 +17,13 @@ describe('CurrencyService', () => {
     clearAllCaches();
     localStorage.clear();
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
-      providers: [
+    imports: [],
+    providers: [
         { provide: ConfigService, useValue: mockConfig },
-      ],
-    });
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+    ]
+});
     service = TestBed.inject(CurrencyService);
     httpMock = TestBed.inject(HttpTestingController);
   });

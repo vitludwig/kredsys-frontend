@@ -15,12 +15,13 @@ import {MatSort, Sort} from '@angular/material/sort';
 import {MatTableDataSource} from '@angular/material/table';
 
 @Component({
-	selector: 'app-transactions-list',
-	templateUrl: './transactions-list.component.html',
-	styleUrls: ['./transactions-list.component.scss'],
-	animations: [
-		Animations.expandableTable,
-	],
+    selector: 'app-transactions-list',
+    templateUrl: './transactions-list.component.html',
+    styleUrls: ['./transactions-list.component.scss'],
+    animations: [
+        Animations.expandableTable,
+    ],
+    standalone: false
 })
 export class TransactionsListComponent implements OnInit, AfterViewInit, OnDestroy {
 	@ViewChild(MatPaginator)

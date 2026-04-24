@@ -1,5 +1,5 @@
 import {Component, inject, signal, WritableSignal} from '@angular/core';
-import {CommonModule} from '@angular/common';
+
 import {MatTableModule} from '@angular/material/table';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
@@ -10,7 +10,7 @@ import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatInputModule} from "@angular/material/input";
 import {IGroup} from "../../types/IGroup";
 import {ClickConfirmDirective} from "../../../../common/directives/click-confirm/click-confirm.directive";
-import {HttpErrorResponse} from "@angular/common/http";
+import { HttpErrorResponse } from "@angular/common/http";
 import {AlertService} from "../../../../common/services/alert/alert.service";
 import {FormControl, ReactiveFormsModule} from "@angular/forms";
 import {
@@ -30,12 +30,10 @@ import {
 import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 
 @Component({
-  selector: 'app-groups-list',
-  templateUrl: './groups-list.component.html',
-  styleUrls: ['./groups-list.component.scss'],
-  standalone: true,
-  imports: [
-    CommonModule,
+    selector: 'app-groups-list',
+    templateUrl: './groups-list.component.html',
+    styleUrls: ['./groups-list.component.scss'],
+    imports: [
     MatTableModule,
     MatButtonModule,
     MatIconModule,
@@ -43,8 +41,8 @@ import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
     MatInputModule,
     RouterLink,
     ClickConfirmDirective,
-    ReactiveFormsModule,
-  ],
+    ReactiveFormsModule
+]
 })
 export class GroupsListComponent {
   private groupsService = inject(GroupsService);

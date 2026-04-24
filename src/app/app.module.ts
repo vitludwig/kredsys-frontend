@@ -11,10 +11,7 @@ import {appInitializerFactory} from './common/services/app-initializer.factory';
 import {InitService} from './common/services/init/init.service';
 import {MatPaginatorIntl} from '@angular/material/paginator';
 import {CustomPaginatorConfiguration} from './common/providers/CustomPaginatorConfiguration';
-import {
-	provideHttpClient,
-	withInterceptors,
-} from '@angular/common/http';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import {authInterceptor} from './common/interceptors/auth/auth.interceptor';
 import {MatIconModule} from "@angular/material/icon";
 import {WebBluetoothModule} from "@manekinekko/angular-web-bluetooth";

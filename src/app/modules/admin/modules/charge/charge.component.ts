@@ -9,9 +9,10 @@ import {ITransactionRecordDeposit} from '../transactions/services/transaction/ty
 import {IChargeResult} from './types/IChargeResult';
 
 @Component({
-	selector: 'app-charge',
-	templateUrl: './charge.component.html',
-	styleUrls: ['./charge.component.scss'],
+    selector: 'app-charge',
+    templateUrl: './charge.component.html',
+    styleUrls: ['./charge.component.scss'],
+    standalone: false
 })
 export class ChargeComponent {
 

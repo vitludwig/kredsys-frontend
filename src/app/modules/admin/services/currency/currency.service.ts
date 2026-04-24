@@ -1,5 +1,5 @@
 import {inject, Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import {IPaginatedResponse} from '../../../../common/types/IPaginatedResponse';
 import {ICurrency, ICurrencyAccount} from '../../../../common/types/ICurrency';
 import {firstValueFrom, from, Observable} from 'rxjs';

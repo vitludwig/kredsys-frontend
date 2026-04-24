@@ -8,39 +8,36 @@
   @if(isUserLoaded) {
     @if(customerService.currencyAccount) {
       <div class="summary-list">
-        <div class="summary-item"
-          *ngFor="let item of orderService.items"
-        >
-          <div class="item-info">
-            <button mat-icon-button
-              color="primary"
-              (click)="setItemAmount(item,-1)"
+        @for (item of orderService.items; track item) {
+          <div class="summary-item"
             >
-              <mat-icon>remove</mat-icon>
-            </button>
-
-            <small class="item-count">{{ item.count }}&times;</small>
-
-            <button mat-icon-button
-              color="primary"
-              (click)="setItemAmount(item,1)"
-            >
-              <mat-icon>add</mat-icon>
-            </button>
-
-            <small class="item-name">{{ item.item.name }}</small>
+            <div class="item-info">
+              <button mat-icon-button
+                color="primary"
+                (click)="setItemAmount(item,-1)"
+                >
+                <mat-icon>remove</mat-icon>
+              </button>
+              <small class="item-count">{{ item.count }}&times;</small>
+              <button mat-icon-button
+                color="primary"
+                (click)="setItemAmount(item,1)"
+                >
+                <mat-icon>add</mat-icon>
+              </button>
+              <small class="item-name">{{ item.item.name }}</small>
+            </div>
+            <div class="item-actions">
+              <button mat-icon-button
+                color="warn"
+                aria-label="Delete item"
+                (click)="orderService.removeItem(item.item.id)"
+                >
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
           </div>
-
-          <div class="item-actions">
-            <button mat-icon-button
-              color="warn"
-              aria-label="Delete item"
-              (click)="orderService.removeItem(item.item.id)"
-            >
-              <mat-icon>delete</mat-icon>
-            </button>
-          </div>
-        </div>
+        }
       </div>
 
       <div class="summary-actions">
@@ -57,10 +54,12 @@
           [disabled]="orderService.items.length === 0 || totalLeft < -((customerService.currencyAccount$ | async)?.overdraftLimit ?? 0) || payInProgress"
           (click)="submitOrder()"
 
-        >
+          >
           <span class="d-flex align-items-center">
             Potvrdit
-            <app-animated-loader *ngIf="payInProgress" />
+            @if (payInProgress) {
+              <app-animated-loader />
+            }
           </span>
         </button>
       </div>
@@ -81,14 +80,14 @@
 
     @if(!printService.isConnected() && !printService.connectInProgress()) {
       <hr>
-      <div class="print-warning">
-        <mat-icon matListItemIcon>print_disabled</mat-icon>
-        <button mat-raised-button
-                (click)="printService.connect()"
-        >
-          Připojit tiskárnu
-        </button>
-      </div>
+        <div class="print-warning">
+          <mat-icon matListItemIcon>print_disabled</mat-icon>
+          <button mat-raised-button
+            (click)="printService.connect()"
+            >
+            Připojit tiskárnu
+          </button>
+        </div>
+      }
     }
-  }
-</div>
+  </div>

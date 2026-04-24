@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { UsersService } from './users.service';
 import { ConfigService } from '../../../../common/services/config/config.service';
 import { EUserRole, IUser } from '../../../../common/types/IUser';
@@ -8,6 +8,7 @@ import { ICard } from '../../../../common/types/ICard';
 import { ICurrencyAccount } from '../../../../common/types/ICurrency';
 import { ITransaction } from '../../modules/transactions/services/transaction/types/ITransaction';
 import { clearAllCaches } from '../../../../common/decorators/cache';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('UsersService', () => {
   let service: UsersService;
@@ -19,11 +20,13 @@ describe('UsersService', () => {
     clearAllCaches();
     localStorage.clear();
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
-      providers: [
+    imports: [],
+    providers: [
         { provide: ConfigService, useValue: mockConfig },
-      ],
-    });
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+    ]
+});
     service = TestBed.inject(UsersService);
     httpMock = TestBed.inject(HttpTestingController);
   });

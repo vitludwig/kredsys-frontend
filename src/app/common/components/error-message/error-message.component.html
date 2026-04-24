@@ -1,20 +1,30 @@
-<span *ngIf="control().errors?.['required']">
-	{{ errorMessages().required }}
-</span>
+@if (control().errors?.['required']) {
+  <span>
+    {{ errorMessages().required }}
+  </span>
+}
 
-<span *ngIf="control().errors?.['matching']">
-	{{ errorMessages().matching }}
-</span>
+@if (control().errors?.['matching']) {
+  <span>
+    {{ errorMessages().matching }}
+  </span>
+}
 
-<span *ngIf="control().errors?.['email']">
-	{{ errorMessages().email }}
-</span>
+@if (control().errors?.['email']) {
+  <span>
+    {{ errorMessages().email }}
+  </span>
+}
 
-<span *ngIf="control().errors?.['minlength']">
-	{{ errorMessages().minlength }}
-</span>
+@if (control().errors?.['minlength']) {
+  <span>
+    {{ errorMessages().minlength }}
+  </span>
+}
 
-<span *ngIf="control().errors?.['conflict']">
-	{{ errorMessages().conflict }}
-</span>
+@if (control().errors?.['conflict']) {
+  <span>
+    {{ errorMessages().conflict }}
+  </span>
+}
 

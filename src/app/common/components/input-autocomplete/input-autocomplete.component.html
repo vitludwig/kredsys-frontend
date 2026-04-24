@@ -1,21 +1,23 @@
 <mat-form-field [class]="class">
-	<mat-label>{{ label }}</mat-label>
-	<input type="text"
-		matInput
-		#inputElement
-		[placeholder]="placeholder"
-		[formControl]="selectedValue"
-		[matAutocomplete]="auto"
-		[value]="selectedValue.value.name || ''"
-	>
-	<mat-autocomplete #auto="matAutocomplete" (optionSelected)="propagateValue($event.option.value)">
-		<mat-option *ngFor="let option of filteredOptions | async"
-			[value]="option"
-		>
-			{{option[primaryDisplayProperty]}}
-			<ng-container *ngIf="secondaryDisplayProperty && option[secondaryDisplayProperty]">
-				({{ option[secondaryDisplayProperty] }})
-			</ng-container>
-		</mat-option>
-	</mat-autocomplete>
+  <mat-label>{{ label }}</mat-label>
+  <input type="text"
+    matInput
+    #inputElement
+    [placeholder]="placeholder"
+    [formControl]="selectedValue"
+    [matAutocomplete]="auto"
+    [value]="selectedValue.value.name || ''"
+    >
+  <mat-autocomplete #auto="matAutocomplete" (optionSelected)="propagateValue($event.option.value)">
+    @for (option of filteredOptions | async; track option) {
+      <mat-option
+        [value]="option"
+        >
+        {{option[primaryDisplayProperty]}}
+        @if (secondaryDisplayProperty && option[secondaryDisplayProperty]) {
+          ({{ option[secondaryDisplayProperty] }})
+        }
+      </mat-option>
+    }
+  </mat-autocomplete>
 </mat-form-field>

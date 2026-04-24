@@ -1,6 +1,6 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {CardDetailComponent} from './card-detail.component';
-import {HttpClientTestingModule} from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {MatDialogModule} from '@angular/material/dialog';
 import {AuthService} from '../../../../../../../login/services/auth/auth.service';
@@ -9,6 +9,7 @@ import {NO_ERRORS_SCHEMA} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import {clearAllCaches} from '../../../../../../../../common/decorators/cache';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('CardDetailComponent', () => {
 	let component: CardDetailComponent;
@@ -18,14 +19,13 @@ describe('CardDetailComponent', () => {
 		clearAllCaches();
 
 		await TestBed.configureTestingModule({
-			imports: [HttpClientTestingModule, MatSnackBarModule, MatDialogModule, FormsModule],
-			declarations: [CardDetailComponent],
-			providers: [{provide: AuthService, useValue: {isLogged$: new BehaviorSubject(false), isLogged: false, user: null, isDebug: false}}, 
-				{provide: MatDialogRef, useValue: {}},
-				{provide: MAT_DIALOG_DATA, useValue: {uid: 0, description: '', type: 'Card'}},
-			],
-			schemas: [NO_ERRORS_SCHEMA],
-		}).compileComponents();
+    declarations: [CardDetailComponent],
+    schemas: [NO_ERRORS_SCHEMA],
+    imports: [MatSnackBarModule, MatDialogModule, FormsModule],
+    providers: [{ provide: AuthService, useValue: { isLogged$: new BehaviorSubject(false), isLogged: false, user: null, isDebug: false } },
+        { provide: MatDialogRef, useValue: {} },
+        { provide: MAT_DIALOG_DATA, useValue: { uid: 0, description: '', type: 'Card' } }, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting(),]
+}).compileComponents();
 
 		fixture = TestBed.createComponent(CardDetailComponent);
 		component = fixture.componentInstance;

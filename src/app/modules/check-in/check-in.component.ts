@@ -8,16 +8,17 @@ import {ICurrency} from '../../common/types/ICurrency';
 import {CurrencyService} from '../admin/services/currency/currency.service';
 import {AuthService} from '../login/services/auth/auth.service';
 import {AbstractControl, FormControl, UntypedFormControl, UntypedFormGroup, Validators} from '@angular/forms';
-import {HttpErrorResponse} from '@angular/common/http';
+import { HttpErrorResponse } from '@angular/common/http';
 import {AlertService} from "../../common/services/alert/alert.service";
 import {map, takeUntil} from "rxjs";
 import {WithSubscriptionsComponent} from "../../common/components/with-subscriptions.component";
 import {GroupsService} from "../groups/services/groups.service";
 
 @Component({
-  selector: 'app-check-in',
-  templateUrl: './check-in.component.html',
-  styleUrls: ['./check-in.component.scss']
+    selector: 'app-check-in',
+    templateUrl: './check-in.component.html',
+    styleUrls: ['./check-in.component.scss'],
+    standalone: false
 })
 export class CheckInComponent extends WithSubscriptionsComponent implements OnInit {
   protected readonly usersService = inject(UsersService);

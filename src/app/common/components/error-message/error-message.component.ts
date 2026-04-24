@@ -1,18 +1,13 @@
-import {Component, computed, input, Input, OnInit} from '@angular/core';
-import {JsonPipe, NgIf} from '@angular/common';
+import {Component, input} from '@angular/core';
 import {NgControl} from '@angular/forms';
 import {TErrorMessages} from './types/TErrorMessages';
-import {MatInput} from '@angular/material/input';
 
 @Component({
-  selector: 'app-error-message',
-  standalone: true,
-	imports: [
-		NgIf,
-		JsonPipe
-	],
-  templateUrl: './error-message.component.html',
-  styleUrl: './error-message.component.scss'
+    selector: 'app-error-message',
+    imports: [
+],
+    templateUrl: './error-message.component.html',
+    styleUrl: './error-message.component.scss'
 })
 export class ErrorMessageComponent {
 	public control = input.required<NgControl>();

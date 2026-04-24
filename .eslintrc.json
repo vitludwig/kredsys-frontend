@@ -17,7 +17,7 @@
       "extends": [
         "plugin:@angular-eslint/recommended",
         "plugin:@angular-eslint/template/process-inline-templates",
-        "@typescript-eslint/explicit-member-accessibility"
+        "plugin:@typescript-eslint/recommended"
       ],
       "rules": {
         "@angular-eslint/directive-selector": [
@@ -43,7 +43,7 @@
             }
           }
         ],
-        "@typescript-eslint/indent": [
+        "indent": [
           "error",
           "tab",
           {

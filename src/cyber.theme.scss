@@ -1,7 +1,12 @@
 @use '@angular/material' as mat;
-@import '@angular/material/theming';
 @import 'assets/styles/animations';
 @import 'assets/styles/auguments';
+
+// Legacy theming variables (previously from @angular/material/theming)
+$white-12-opacity: rgba(white, 0.12);
+$white-6-opacity: rgba(white, 0.06);
+$mat-grey: mat.$m2-grey-palette;
+$mat-yellow: mat.$m2-yellow-palette;
 
 mat.$theme-ignore-duplication-warnings: true;
 
@@ -74,9 +79,9 @@ $accent: (
 
 // define 3 theme color
 // mat-palette accepts $palette-name, main, lighter and darker variants
-$theme-primary: mat.define-palette($primary);
-$theme-accent: mat.define-palette($accent);
-$theme-warn: mat.define-palette($mat-yellow, 500);
+$theme-primary: mat.m2-define-palette($primary);
+$theme-accent: mat.m2-define-palette($accent);
+$theme-warn: mat.m2-define-palette($mat-yellow, 500);
 
 // custom background and foreground palettes
 $dark-theme-background: (
@@ -122,27 +127,28 @@ $theme: (
     foreground: $dark-theme-foreground,
     background: $dark-theme-background,
   ),
-  typography: mat.define-typography-config(
+  typography: mat.m2-define-typography-config(
     $font-family: "'JetBrains Mono', monospace",
-    $headline-1: mat.define-typography-level(112px, 112px, 300, $letter-spacing: -0.05em),
-    $headline-2: mat.define-typography-level(56px, 56px, 400, $letter-spacing: -0.02em),
-    $headline-3: mat.define-typography-level(45px, 48px, 400, $letter-spacing: -0.005em),
-    $headline-4: mat.define-typography-level(34px, 40px, 400),
-    $headline-5: mat.define-typography-level(24px, 32px, 400),
-    $headline-6: mat.define-typography-level(20px, 32px, 500),
-    $subtitle-1: mat.define-typography-level(16px, 28px, 400),
-    $subtitle-2: mat.define-typography-level(15px, 24px, 400),
-    $body-2: mat.define-typography-level(14px, 24px, 500),
-    $body-1: mat.define-typography-level(14px, 20px, 400, $letter-spacing: 0.05em),
-    $caption: mat.define-typography-level(12px, 20px, 400),
-    $button: mat.define-typography-level(14px, 14px, 500),
+    $headline-1: mat.m2-define-typography-level(112px, 112px, 300, $letter-spacing: -0.05em),
+    $headline-2: mat.m2-define-typography-level(56px, 56px, 400, $letter-spacing: -0.02em),
+    $headline-3: mat.m2-define-typography-level(45px, 48px, 400, $letter-spacing: -0.005em),
+    $headline-4: mat.m2-define-typography-level(34px, 40px, 400),
+    $headline-5: mat.m2-define-typography-level(24px, 32px, 400),
+    $headline-6: mat.m2-define-typography-level(20px, 32px, 500),
+    $subtitle-1: mat.m2-define-typography-level(16px, 28px, 400),
+    $subtitle-2: mat.m2-define-typography-level(15px, 24px, 400),
+    $body-2: mat.m2-define-typography-level(14px, 24px, 500),
+    $body-1: mat.m2-define-typography-level(14px, 20px, 400, $letter-spacing: 0.05em),
+    $caption: mat.m2-define-typography-level(12px, 20px, 400),
+    $button: mat.m2-define-typography-level(14px, 14px, 500),
       // Line-height must be unit-less fraction of the font-size.
     //$input: mat.define-typography-level(inherit, 1.125, 400)
   )
 );
 
 // Material Components
-@include mat.core-theme($theme);
+@include mat.elevation-classes();
+@include mat.app-background();
 @include mat.all-component-themes($theme);
 @include mat.all-component-typographies($theme);
 

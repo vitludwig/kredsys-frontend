@@ -1,15 +1,19 @@
 <div class="row justify-content-center p-3">
 
-  <div class="d-flex justify-content-end" *ngIf="authService.user?.roles | canAccessRoute: ERoute.ADMIN">
-    <button mat-icon-button class="config-btn" (click)="openConfigDialog()">
-      <mat-icon>settings</mat-icon>
-    </button>
-  </div>
+  @if (authService.user?.roles | canAccessRoute: ERoute.ADMIN) {
+    <div class="d-flex justify-content-end">
+      <button mat-icon-button class="config-btn" (click)="openConfigDialog()">
+        <mat-icon>settings</mat-icon>
+      </button>
+    </div>
+  }
   <div class="col-xs-12 col-md-4">
-    <app-card-loader *ngIf="!cardLoaded" (cardIdChange)="setCardId($event)" [showNewCardButton]="false"/>
+    @if (!cardLoaded) {
+      <app-card-loader (cardIdChange)="setCardId($event)" [showNewCardButton]="false"/>
+    }
 
-    <ng-container *ngIf="!isLoading; else loading">
-      <ng-container *ngIf="userInfo">
+    @if (!isLoading) {
+      @if (userInfo) {
         <h2 class="text-center">{{ userInfo.name }} (Členské id: {{ userInfo.memberId }})</h2>
         <h2 class="text-center">Zůstatek:</h2>
         <h1 class="very-big text-center">{{ userInfo.totalSum }} Kč</h1>
@@ -18,11 +22,10 @@
             <h3 class="text-center d-flex align-items-center justify-content-center">Skupina: {{ group.name }}
               <div
                 style="width: 20px; height: 20px; display: inline-block; margin-left: 10px"
-                [style.background-color]="group.color"></div>
+              [style.background-color]="group.color"></div>
             </h3>
           }
         }
-
         @if (cardInfoConfig.groupManagement && user?.groups?.[0] === undefined) {
           <h4 class="text-center">Po zvolení nejde změnit skupina</h4>
           <div class="d-flex align-items-center justify-content-center mt-3 flex-wrap gap-2 group-buttons">
@@ -36,42 +39,36 @@
             }
           </div>
         }
-
-
         @if (cardInfoConfig.showWalletConnection && walletCode) {
           <div class="qrcode mt-5">
             <h2>Načtěte tento kód ve vaší mobilní aplikaci pro propojení peněženky</h2>
             <qrcode [errorCorrectionLevel]="'M'" [qrdata]="walletCode" [width]="256"></qrcode>
             <h1 class="text-center"
-                style="letter-spacing: 12px; font-size: 40px; margin-top: 16px">{{ walletCode }}</h1>
+            style="letter-spacing: 12px; font-size: 40px; margin-top: 16px">{{ walletCode }}</h1>
             <h3>(Na velikosti nezáleží!)</h3>
           </div>
         }
-
         @if (cardInfoConfig.showPaymentQR && paymentString) {
           <div class="qrcode mt-5">
             <h2>Platba útraty QR</h2>
             <qrcode [errorCorrectionLevel]="'M'" [qrdata]="paymentString" [width]="256"></qrcode>
           </div>
         }
-      </ng-container>
-
-      <ng-container *ngIf="cardLoaded">
-        <ng-container *ngIf="!currencyAccount">
+      }
+      @if (cardLoaded) {
+        @if (!currencyAccount) {
           <h2 class="text-center">Ještě sis nenabil žádné peníze. Bež na infostánek, nabij si a pak to zkus
-            znovu.</h2>
-        </ng-container>
-
-        <ng-container *ngIf="!user">
+          znovu.</h2>
+        }
+        @if (!user) {
           <h2 class="text-center">Tenhle čip není registrovaný k žádnému uživateli. Bež na infostánek.</h2>
-        </ng-container>
-      </ng-container>
-    </ng-container>
+        }
+      }
+    } @else {
+      <div class="d-flex align-items-center justify-content-center w-100">
+        <mat-spinner></mat-spinner>
+      </div>
+    }
   </div>
 </div>
 
-<ng-template #loading>
-  <div class="d-flex align-items-center justify-content-center w-100">
-    <mat-spinner></mat-spinner>
-  </div>
-</ng-template>

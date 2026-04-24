@@ -1,5 +1,5 @@
 import {inject, Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import {ICard} from '../../../../common/types/ICard';
 import {firstValueFrom} from 'rxjs';
 import {IPaginatedResponse} from '../../../../common/types/IPaginatedResponse';

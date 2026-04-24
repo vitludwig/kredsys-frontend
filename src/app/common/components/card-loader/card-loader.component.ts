@@ -23,11 +23,10 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 import {AuthService} from '../../../modules/login/services/auth/auth.service';
 
 @Component({
-	selector: 'app-card-loader',
-	templateUrl: './card-loader.component.html',
-	styleUrls: ['./card-loader.component.scss'],
-	standalone: true,
-	imports: [CommonModule, MatButtonModule, MatIconModule, MatTooltipModule],
+    selector: 'app-card-loader',
+    templateUrl: './card-loader.component.html',
+    styleUrls: ['./card-loader.component.scss'],
+    imports: [CommonModule, MatButtonModule, MatIconModule, MatTooltipModule]
 })
 export class CardLoaderComponent implements OnInit, OnDestroy {
 	@Input()

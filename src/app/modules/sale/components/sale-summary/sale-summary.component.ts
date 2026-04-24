@@ -5,7 +5,7 @@ import {IPlace} from '../../../../common/types/IPlace';
 import {UsersService} from '../../../admin/services/users/users.service';
 import {CustomerService} from '../../services/customer/customer.service';
 import {AlertService} from '../../../../common/services/alert/alert.service';
-import {HttpErrorResponse} from '@angular/common/http';
+import { HttpErrorResponse } from '@angular/common/http';
 import {TransactionService} from '../../../admin/modules/transactions/services/transaction/transaction.service';
 import {ITransactionRecordPayment} from '../../../admin/modules/transactions/services/transaction/types/ITransaction';
 import {Subject, takeUntil} from 'rxjs';
@@ -14,9 +14,10 @@ import {EFeatureFlag} from "../../../../common/modules/feature-flags/types/EFeat
 import {FeatureFlagService} from "../../../../common/modules/feature-flags/services/feature-flag/feature-flag.service";
 
 @Component({
-	selector: 'app-sale-summary',
-	templateUrl: './sale-summary.component.html',
-	styleUrls: ['./sale-summary.component.scss'],
+    selector: 'app-sale-summary',
+    templateUrl: './sale-summary.component.html',
+    styleUrls: ['./sale-summary.component.scss'],
+    standalone: false
 })
 export class SaleSummaryComponent implements OnInit, OnDestroy {
 	@Input()

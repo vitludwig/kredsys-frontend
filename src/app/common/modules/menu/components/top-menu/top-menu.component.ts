@@ -16,9 +16,10 @@ import {
 } from "../../../../../modules/sale/components/discharge-dialog/discharge-dialog.component";
 
 @Component({
-	selector: 'app-top-menu',
-	templateUrl: './top-menu.component.html',
-	styleUrls: ['./top-menu.component.scss'],
+    selector: 'app-top-menu',
+    templateUrl: './top-menu.component.html',
+    styleUrls: ['./top-menu.component.scss'],
+    standalone: false
 })
 export class TopMenuComponent implements OnInit, OnDestroy {
 	protected router: Router = inject(Router);

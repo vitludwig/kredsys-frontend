@@ -11,14 +11,15 @@ import {AuthService} from './services/auth/auth.service';
 import {Router} from '@angular/router';
 import {ERoute} from '../../common/types/ERoute';
 import {AlertService} from '../../common/services/alert/alert.service';
-import {HttpErrorResponse} from '@angular/common/http';
+import { HttpErrorResponse } from '@angular/common/http';
 import {PlaceService} from '../admin/services/place/place/place.service';
 import {Subject, takeUntil} from 'rxjs';
 
 @Component({
-	selector: 'app-login',
-	templateUrl: './login.component.html',
-	styleUrls: ['./login.component.scss'],
+    selector: 'app-login',
+    templateUrl: './login.component.html',
+    styleUrls: ['./login.component.scss'],
+    standalone: false
 })
 export class LoginComponent implements OnDestroy {
 	protected authService: AuthService = inject(AuthService);

@@ -4,9 +4,10 @@ import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {ICard} from '../../../../../../../../common/types/ICard';
 
 @Component({
-	selector: 'app-card-detail',
-	templateUrl: './card-detail.component.html',
-	styleUrls: ['./card-detail.component.scss'],
+    selector: 'app-card-detail',
+    templateUrl: './card-detail.component.html',
+    styleUrls: ['./card-detail.component.scss'],
+    standalone: false
 })
 export class CardDetailComponent {
 

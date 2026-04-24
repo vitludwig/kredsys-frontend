@@ -1,43 +1,44 @@
 <button mat-icon-button
-	class="close-btn"
-	mat-dialog-close
->
-	<mat-icon class="close-icon">close</mat-icon>
+  class="close-btn"
+  mat-dialog-close
+  >
+  <mat-icon class="close-icon">close</mat-icon>
 </button>
 
 <h2 mat-dialog-title>Nabít kredit</h2>
 
 <div mat-dialog-content>
-	<mat-form-field
-		class="w-100">
-		<mat-label>Částka</mat-label>
-		<input matInput
-			[(ngModel)]="amount"
-			type="number">
-		<div matSuffix>Kč</div>
-	</mat-form-field>
+  <mat-form-field
+    class="w-100">
+    <mat-label>Částka</mat-label>
+    <input matInput
+      [(ngModel)]="amount"
+      type="number">
+    <div matSuffix>Kč</div>
+  </mat-form-field>
 
-	<div class="btn-group predefined"
-		role="group"
-		aria-label="Basic example">
-		<button mat-stroked-button
-			*ngFor="let value of predefinedAmounts"
-			(click)="amount = value"
-		>{{ value }} Kč
-		</button>
+  <div class="btn-group predefined"
+    role="group"
+    aria-label="Basic example">
+    @for (value of predefinedAmounts; track value) {
+      <button mat-stroked-button
+        (click)="amount = value"
+        >{{ value }} Kč
+      </button>
+    }
 
     <button mat-stroked-button
-            (click)="amount = cruciblePrice"
-    >Kelímek
+      (click)="amount = cruciblePrice"
+      >Kelímek
     </button>
-	</div>
+  </div>
 
-	<button mat-raised-button
-		color="primary"
-		class="submit-btn"
-		mat-dialog-close
-		(click)="submit()"
-	>
-		Dobít
-	</button>
+  <button mat-raised-button
+    color="primary"
+    class="submit-btn"
+    mat-dialog-close
+    (click)="submit()"
+    >
+    Dobít
+  </button>
 </div>

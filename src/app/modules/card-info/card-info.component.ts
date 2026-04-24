@@ -20,9 +20,10 @@ import { IPublicUserInfo } from "../public/card-info-public/types/IPublicUserInf
 import { AlertService } from "../../common/services/alert/alert.service";
 
 @Component({
-  selector: 'app-card-info',
-  templateUrl: './card-info.component.html',
-  styleUrls: ['./card-info.component.scss']
+    selector: 'app-card-info',
+    templateUrl: './card-info.component.html',
+    styleUrls: ['./card-info.component.scss'],
+    standalone: false
 })
 export class CardInfoComponent {
   @Input()

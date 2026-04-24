@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { CommonModule } from '@angular/common';
+
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
@@ -12,12 +12,10 @@ import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {SharedModule} from "../../../../shared.module";
 
 @Component({
-  selector: 'app-group-detail',
-  templateUrl: './group-detail.component.html',
-  styleUrls: ['./group-detail.component.scss'],
-  standalone: true,
-  imports: [
-    CommonModule,
+    selector: 'app-group-detail',
+    templateUrl: './group-detail.component.html',
+    styleUrls: ['./group-detail.component.scss'],
+    imports: [
     FormsModule,
     ReactiveFormsModule,
     MatFormFieldModule,
@@ -25,8 +23,8 @@ import {SharedModule} from "../../../../shared.module";
     MatButtonModule,
     MatIconModule,
     MatProgressSpinnerModule,
-    SharedModule,
-  ],
+    SharedModule
+]
 })
 export class GroupDetailComponent implements OnInit {
   groupForm: FormGroup;

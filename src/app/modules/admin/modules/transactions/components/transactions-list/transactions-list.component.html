@@ -1,168 +1,178 @@
 <h2>Transakce</h2>
 <div class="mat-elevation-z4 transaction-table data-table"
-	data-augmented-ui="tr-2-clip-x br-clip bl-clip-x both"
->
-	<table mat-table
-		(matSortChange)="sortData($event)"
-		[dataSource]="dataSource"
-		[multiTemplateDataRows]="true"
-		matSort
-	>
-		<ng-container matColumnDef="amount">
-			<th mat-header-cell
-				mat-sort-header
-				*matHeaderCellDef> Částka
-			</th>
-			<td mat-cell
-				*matCellDef="let row"> {{ row.amount }} Kč
-			</td>
+  data-augmented-ui="tr-2-clip-x br-clip bl-clip-x both"
+  >
+  <table mat-table
+    (matSortChange)="sortData($event)"
+    [dataSource]="dataSource"
+    [multiTemplateDataRows]="true"
+    matSort
+    >
+    <ng-container matColumnDef="amount">
+      <th mat-header-cell
+        mat-sort-header
+        *matHeaderCellDef> Částka
+      </th>
+      <td mat-cell
+        *matCellDef="let row"> {{ row.amount }} Kč
+      </td>
 
-		</ng-container>
+    </ng-container>
 
-		<ng-container matColumnDef="type">
-			<th mat-header-cell
-				mat-sort-header
-				*matHeaderCellDef> Typ
-			</th>
-			<td mat-cell
-				*matCellDef="let row"
-			>
-				<ng-container *ngIf="row.type === ETransactionType.PAYMENT">Platba</ng-container>
-				<ng-container *ngIf="row.type === ETransactionType.DEPOSIT">Vklad</ng-container>
-				<ng-container *ngIf="row.type === ETransactionType.WITHDRAW">Výběr</ng-container>
-			</td>
+    <ng-container matColumnDef="type">
+      <th mat-header-cell
+        mat-sort-header
+        *matHeaderCellDef> Typ
+      </th>
+      <td mat-cell
+        *matCellDef="let row"
+        >
+        @if (row.type === ETransactionType.PAYMENT) {
+          Platba
+        }
+        @if (row.type === ETransactionType.DEPOSIT) {
+          Vklad
+        }
+        @if (row.type === ETransactionType.WITHDRAW) {
+          Výběr
+        }
+      </td>
 
-		</ng-container>
+    </ng-container>
 
-		<ng-container matColumnDef="place">
-			<th mat-header-cell
-				*matHeaderCellDef> Místo
-			</th>
-			<td mat-cell
-				*matCellDef="let row"> {{ placesById[row.placeId] }}
-			</td>
-		</ng-container>
+    <ng-container matColumnDef="place">
+      <th mat-header-cell
+        *matHeaderCellDef> Místo
+      </th>
+      <td mat-cell
+        *matCellDef="let row"> {{ placesById[row.placeId] }}
+      </td>
+    </ng-container>
 
-		<ng-container matColumnDef="userName">
-			<th mat-header-cell
-				*matHeaderCellDef> Uživatel
-			</th>
-			<td mat-cell
-				*matCellDef="let row"> {{ row.userName }}
-			</td>
-		</ng-container>
+    <ng-container matColumnDef="userName">
+      <th mat-header-cell
+        *matHeaderCellDef> Uživatel
+      </th>
+      <td mat-cell
+        *matCellDef="let row"> {{ row.userName }}
+      </td>
+    </ng-container>
 
-		<ng-container matColumnDef="created">
-			<th *matHeaderCellDef
-				mat-sort-header
-				mat-header-cell> Vytvořeno
-			</th>
-			<td *matCellDef="let row"
-				mat-cell> {{ row.created | date: 'dd/MM/yyyy HH:mm' }}
-			</td>
-		</ng-container>
+    <ng-container matColumnDef="created">
+      <th *matHeaderCellDef
+        mat-sort-header
+        mat-header-cell> Vytvořeno
+      </th>
+      <td *matCellDef="let row"
+        mat-cell> {{ row.created | date: 'dd/MM/yyyy HH:mm' }}
+      </td>
+    </ng-container>
 
-		<ng-container matColumnDef="actions">
-			<th mat-header-cell
-				*matHeaderCellDef></th>
-			<td mat-cell
-				[align]="'right'"
-				*matCellDef="let row"
-			>
-				<button
-					(clickConfirm)="stornoTransaction(row.id)"
-					confirmTitle="Storno"
-					confirmText="Opravdu chceš stornovat tuto transakci?"
-					mat-raised-button
-					color="warn"
-				>Stornovat
-				</button>
-			</td>
-		</ng-container>
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell
+      *matHeaderCellDef></th>
+      <td mat-cell
+        [align]="'right'"
+        *matCellDef="let row"
+        >
+        <button
+          (clickConfirm)="stornoTransaction(row.id)"
+          confirmTitle="Storno"
+          confirmText="Opravdu chceš stornovat tuto transakci?"
+          mat-raised-button
+          color="warn"
+          >Stornovat
+        </button>
+      </td>
+    </ng-container>
 
-		<ng-container matColumnDef="expandedDetail">
-			<td *matCellDef="let row"
-				[attr.colspan]="displayedColumns.length"
-				mat-cell>
-				<div [@detailExpand]="row === expandedRow ? 'expanded' : 'collapsed'"
-					class="element-detail"
-				>
-					<div class="detail-content">
-						<ng-container *ngIf="!detailLoading">
-							<h3 class="mb-1">Položky</h3>
-							<div class="records">
-								<div *ngFor="let item of transactionDetails"
-									class="record">
-									<span class="me-3">Název: {{ item.goodsName }} ({{ item.amount }}ks)</span>
-									<span class="text-right">Celkem: {{ item.price }} Kč</span>
-								</div>
-							</div>
-						</ng-container>
-					</div>
-				</div>
-			</td>
-		</ng-container>
+    <ng-container matColumnDef="expandedDetail">
+      <td *matCellDef="let row"
+        [attr.colspan]="displayedColumns.length"
+        mat-cell>
+        <div [@detailExpand]="row === expandedRow ? 'expanded' : 'collapsed'"
+          class="element-detail"
+          >
+          <div class="detail-content">
+            @if (!detailLoading) {
+              <h3 class="mb-1">Položky</h3>
+              <div class="records">
+                @for (item of transactionDetails; track item) {
+                  <div
+                    class="record">
+                    <span class="me-3">Název: {{ item.goodsName }} ({{ item.amount }}ks)</span>
+                    <span class="text-right">Celkem: {{ item.price }} Kč</span>
+                  </div>
+                }
+              </div>
+            }
+          </div>
+        </div>
+      </td>
+    </ng-container>
 
-		<tr *matHeaderRowDef="displayedColumns"
-			mat-header-row></tr>
+    <tr *matHeaderRowDef="displayedColumns"
+    mat-header-row></tr>
 
-		<tr mat-row
-			*matRowDef="let row; columns: displayedColumns;"
-			class="table-row"
-			(click)="showDetail(row)"
-			[class.expanded-row]="expandedRow === row"
-		></tr>
+    <tr mat-row
+      *matRowDef="let row; columns: displayedColumns;"
+      class="table-row"
+      (click)="showDetail(row)"
+      [class.expanded-row]="expandedRow === row"
+    ></tr>
 
-		<tr *matRowDef="let row; columns: ['expandedDetail']"
-			class="detail-row"
-			mat-row>
-		</tr>
-	</table>
+    <tr *matRowDef="let row; columns: ['expandedDetail']"
+      class="detail-row"
+      mat-row>
+    </tr>
+  </table>
 
-	<mat-paginator
-		[pageSizeOptions]="[5, 10, 15, 25, 100]"
-		[pageSize]="5"
-		[length]="transactionsTotal"
-		[showFirstLastButtons]="true"
-		aria-label="Select page">
-	</mat-paginator>
+  <mat-paginator
+    [pageSizeOptions]="[5, 10, 15, 25, 100]"
+    [pageSize]="5"
+    [length]="transactionsTotal"
+    [showFirstLastButtons]="true"
+    aria-label="Select page">
+  </mat-paginator>
 </div>
 
 <br>
 
-<h2>Statistiky</h2>
+  <h2>Statistiky</h2>
 
-<div class="d-flex justify-content-center align-items-center">
-	<mat-form-field>
-		<mat-label>Od</mat-label>
-		<input [(ngModel)]="statsDataFrom"
-			matInput
-			type="datetime-local">
-	</mat-form-field>
+  <div class="d-flex justify-content-center align-items-center">
+    <mat-form-field>
+      <mat-label>Od</mat-label>
+      <input [(ngModel)]="statsDataFrom"
+        matInput
+        type="datetime-local">
+    </mat-form-field>
 
-	<mat-form-field
-		class="ms-3 me-3"
-	>
-		<mat-label>Do</mat-label>
-		<input [(ngModel)]="statsDataTo"
-			matInput
-			type="datetime-local">
-	</mat-form-field>
+    <mat-form-field
+      class="ms-3 me-3"
+      >
+      <mat-label>Do</mat-label>
+      <input [(ngModel)]="statsDataTo"
+        matInput
+        type="datetime-local">
+    </mat-form-field>
 
-	<button mat-raised-button
-		color="primary"
-		(click)="filterStatsData()"
-	>Filtrovat
-	</button>
+    <button mat-raised-button
+      color="primary"
+      (click)="filterStatsData()"
+      >Filtrovat
+    </button>
 
-	<button mat-raised-button
-		class="ms-3"
-		color="primary"
-		(click)="filterStatsData(true)"
-	>Resetovat
-	</button>
-</div>
+    <button mat-raised-button
+      class="ms-3"
+      color="primary"
+      (click)="filterStatsData(true)"
+      >Resetovat
+    </button>
+  </div>
 
-<app-statistics-table *ngIf="statistics"
-	[data]="statistics"
-/>
+  @if (statistics) {
+    <app-statistics-table
+      [data]="statistics"
+      />
+  }

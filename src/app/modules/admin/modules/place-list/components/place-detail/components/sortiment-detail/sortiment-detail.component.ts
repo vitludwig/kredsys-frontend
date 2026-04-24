@@ -9,9 +9,10 @@ import {ReplaySubject, Subject, takeUntil} from "rxjs";
 import {StringUtils} from "../../../../../../../../common/utils/StringUtils";
 
 @Component({
-	selector: 'app-sortiment-detail',
-	templateUrl: './sortiment-detail.component.html',
-	styleUrls: ['./sortiment-detail.component.scss'],
+    selector: 'app-sortiment-detail',
+    templateUrl: './sortiment-detail.component.html',
+    styleUrls: ['./sortiment-detail.component.scss'],
+    standalone: false
 })
 export class SortimentDetailComponent implements OnInit, OnDestroy {
 	public allGoods: IGoods[] = [];

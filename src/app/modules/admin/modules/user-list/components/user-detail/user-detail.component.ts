@@ -11,7 +11,7 @@ import {ICurrency, ICurrencyAccount} from '../../../../../../common/types/ICurre
 import {Utils} from '../../../../../../common/utils/Utils';
 import {CurrencyService} from '../../../../services/currency/currency.service';
 import {HashMap} from '../../../../../../common/types/HashMap';
-import {HttpErrorResponse} from '@angular/common/http';
+import { HttpErrorResponse } from '@angular/common/http';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import FormValidator from '../../../../../../common/utils/FormValidator';
 import { GroupsService } from '../../../../../groups/services/groups.service';
@@ -19,9 +19,10 @@ import { IGroup } from '../../../../../groups/types/IGroup';
 import { map } from "rxjs";
 
 @Component({
-	selector: 'app-user-detail',
-	templateUrl: './user-detail.component.html',
-	styleUrls: ['./user-detail.component.scss'],
+    selector: 'app-user-detail',
+    templateUrl: './user-detail.component.html',
+    styleUrls: ['./user-detail.component.scss'],
+    standalone: false
 })
 export class UserDetailComponent implements OnInit {
 	protected userFormGroup: FormGroup = new FormGroup({

@@ -2,7 +2,7 @@ import {Injectable, OnDestroy, inject} from '@angular/core';
 import {IPaginatedResponse} from '../../../../../common/types/IPaginatedResponse';
 import {EPlaceRole, IPlace, IPlaceGoodsResponse} from '../../../../../common/types/IPlace';
 import {BehaviorSubject, firstValueFrom, Observable, Subject, takeUntil} from 'rxjs';
-import {HttpClient} from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import {IGoods} from '../../../../../common/types/IGoods';
 import {AuthService} from '../../../../login/services/auth/auth.service';
 import {cache, invalidateCache} from '../../../../../common/decorators/cache';

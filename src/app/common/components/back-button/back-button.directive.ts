@@ -2,7 +2,8 @@ import {Directive, HostListener} from '@angular/core';
 import {Location} from '@angular/common';
 
 @Directive({
-	selector: '[backButton]',
+    selector: '[backButton]',
+    standalone: false
 })
 export class BackButtonDirective {
 

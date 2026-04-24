@@ -1,4 +1,4 @@
-import {HttpInterceptorFn} from '@angular/common/http';
+import { HttpInterceptorFn } from '@angular/common/http';
 import jwt_decode, {JwtPayload} from 'jwt-decode';
 
 export const authInterceptor: HttpInterceptorFn = (request, next) => {

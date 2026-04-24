@@ -13,20 +13,20 @@
   --input-text-color-label: rgba(238, 238, 238, 0.67); // #eeeeee
   --input-text-color-label-disabled: rgba(238, 238, 238, 0.37); // #eeeeee
   --input-text-color-filled: rgba(238, 238, 238); // #eeeeee
-  --mdc-theme-surface: #1e1e1e;
+  --mat-theme-surface: #1e1e1e;
 
-  --mdc-filled-text-field-input-text-color: var(--input-text-color-filled);
-  --mdc-filled-text-field-label-text-color: var(--input-text-color-label);
-  --mdc-filled-text-field-disabled-input-text-color: var(--input-text-color-label-disabled);
-  --mdc-filled-text-field-active-indicator-color: #d2348a; // color primary, TODO: fix loading css variables
+  --mat-form-field-filled-input-text-color: var(--input-text-color-filled);
+  --mat-form-field-filled-label-text-color: var(--input-text-color-label);
+  --mat-form-field-filled-disabled-input-text-color: var(--input-text-color-label-disabled);
+  --mat-form-field-filled-active-indicator-color: #d2348a; // color primary, TODO: fix loading css variables
 
   --mat-select-enabled-trigger-text-color: var(--input-text-color-filled);
   --mat-select-placeholder-text-color: var(--input-text-color-label);
-  --mat-select-enabled-arrow-color: var(--mdc-filled-text-field-label-text-color);
+  --mat-select-enabled-arrow-color: var(--mat-form-field-filled-label-text-color);
 
   .mat-mdc-dialog-container {
-    --mdc-dialog-subhead-color: var(--input-text-color-filled) !important;
-    --mdc-dialog-supporting-text-color: var(--input-text-color-filled) !important;;
+    --mat-dialog-subhead-color: var(--input-text-color-filled) !important;
+    --mat-dialog-supporting-text-color: var(--input-text-color-filled) !important;;
   }
 
   .mat-mdc-tab {
@@ -39,7 +39,7 @@
 
   .mat-select-search-input {
     &::placeholder {
-      color: var(--mdc-list-list-item-hover-label-text-color) !important;
+      color: var(--mat-list-list-item-hover-label-text-color) !important;
     }
   }
 
@@ -56,7 +56,7 @@
 }
 
 .mdc-menu-surface {
-  background-color: var(--mdc-theme-surface, #1e1e1e)
+  background-color: var(--mat-theme-surface, #1e1e1e)
 }
 
 .align-center {
