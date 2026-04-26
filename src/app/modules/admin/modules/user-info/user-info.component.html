@@ -1,0 +1,63 @@
+<div class="user-info">
+  <div class="user-info__search">
+    <mat-form-field class="user-info__search-field">
+      <mat-label>Hledat uživatele</mat-label>
+      <input
+        matInput
+        [formControl]="searchControl"
+        [matAutocomplete]="auto"
+        placeholder="Jméno nebo e-mail...">
+      @if (isSearching) {
+        <mat-progress-spinner matSuffix diameter="18" mode="indeterminate"></mat-progress-spinner>
+      }
+      <mat-autocomplete
+        #auto="matAutocomplete"
+        [displayWith]="displayFn"
+        (optionSelected)="onUserSelected($event.option.value)">
+        @for (user of userOptions; track user.id) {
+          <mat-option [value]="user">
+            {{ user.name }}
+            <small class="user-info__search-email">{{ user.email }}</small>
+          </mat-option>
+        }
+      </mat-autocomplete>
+    </mat-form-field>
+
+    <mat-form-field class="user-info__card-field">
+      <mat-label>UID karty</mat-label>
+      <input
+        matInput
+        type="number"
+        [(ngModel)]="cardUidInput"
+        (keydown.enter)="onCardScan()"
+        placeholder="Přiložit kartu nebo zadat číslo">
+      <mat-icon matSuffix>contactless</mat-icon>
+    </mat-form-field>
+
+    <button mat-raised-button (click)="onCardScan()">
+      Načíst kartu
+    </button>
+
+    @if (selectedUser) {
+      <button mat-raised-button color="warn" data-testid="close-btn" (click)="onClose()">
+        <mat-icon>close</mat-icon>
+        Zavřít
+      </button>
+    }
+  </div>
+
+  @if (selectedUser) {
+    <app-user-info-detail
+      [user]="selectedUser"
+      [currencyAccount]="currencyAccount"
+      [accountLoaded]="accountLoaded"
+      [transactions]="transactions"
+      [transactionsTotal]="transactionsTotal"
+      [cards]="cards"
+      [placeId]="placeId"
+      [defaultCurrencyId]="currencyService.defaultCurrency?.id ?? null"
+      (refresh)="onRefresh()"
+      (loadMoreTransactions)="onLoadMoreTransactions()">
+    </app-user-info-detail>
+  }
+</div>

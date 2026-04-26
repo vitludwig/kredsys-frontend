@@ -1,0 +1,26 @@
+.user-info {
+  padding: 1.5rem;
+
+  &__search {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+  }
+
+  &__search-field {
+    flex: 1;
+    min-width: 240px;
+  }
+
+  &__card-field {
+    width: 220px;
+  }
+
+  &__search-email {
+    color: var(--mat-sys-on-surface-variant);
+    margin-left: 0.5rem;
+    font-size: 0.8em;
+  }
+}
