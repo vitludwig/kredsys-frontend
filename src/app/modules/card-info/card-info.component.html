@@ -16,7 +16,7 @@
       @if (userInfo) {
         <h2 class="text-center">{{ userInfo.name }} (Členské id: {{ userInfo.memberId }})</h2>
         <h2 class="text-center">Zůstatek:</h2>
-        <h1 class="very-big text-center">{{ userInfo.totalSum }} Kč</h1>
+        <h1 class="very-big text-center" data-testid="card-info-balance">{{ userInfo.totalSum }} Kč</h1>
         @if (userGroup$ | async; as group) {
           @if (group) {
             <h3 class="text-center d-flex align-items-center justify-content-center">Skupina: {{ group.name }}
@@ -31,16 +31,16 @@
           <div class="d-flex align-items-center justify-content-center mt-3 flex-wrap gap-2 group-buttons">
             @for (group of allGroups$ | async; track group.id) {
               @if (group.id === user?.groups?.[0]) {
-                <button mat-flat-button color="primary" style="height: 56px;">{{ group.name }}</button>
+                <button mat-flat-button color="primary" style="height: 56px;" [attr.data-testid]="'card-info-group-' + group.id">{{ group.name }}</button>
               } @else {
-                <button mat-stroked-button color="primary" (click)="confirmGroupChange(group.id)" style="height: 56px;">{{ group.name }}
+                <button mat-stroked-button color="primary" (click)="confirmGroupChange(group.id)" style="height: 56px;" [attr.data-testid]="'card-info-group-' + group.id">{{ group.name }}
                 </button>
               }
             }
           </div>
         }
         @if (cardInfoConfig.showWalletConnection && walletCode) {
-          <div class="qrcode mt-5">
+          <div class="qrcode mt-5" data-testid="card-info-qr">
             <h2>Načtěte tento kód ve vaší mobilní aplikaci pro propojení peněženky</h2>
             <qrcode [errorCorrectionLevel]="'M'" [qrdata]="walletCode" [width]="256"></qrcode>
             <h1 class="text-center"

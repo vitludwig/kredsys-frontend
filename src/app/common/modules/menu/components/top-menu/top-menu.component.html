@@ -9,7 +9,7 @@
 			@if((router.events | pageName ) | async; as pageName) {
 				{{ pageName }}
 				@if(place && pageName === 'Prodej') {
-					<span class="place-name">
+					<span class="place-name" data-testid="top-menu-place">
 						({{ place.name }})
 					</span>
 				}
@@ -20,7 +20,7 @@
 
 			<div class="user-other-info">
 				@if(customerService.currencyAccount$ | async; as currencyAccount) {
-					<span class="currency-amount">
+					<span class="currency-amount" data-testid="top-menu-balance">
 						Zůstatek:
 						@if(amountLoading) {
 							<mat-spinner diameter="20"></mat-spinner>

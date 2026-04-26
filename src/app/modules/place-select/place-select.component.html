@@ -7,7 +7,8 @@
           placeholder="Místo">
           @for (place of places; track place) {
             <mat-option
-              [value]="place">
+              [value]="place"
+              [attr.data-testid]="'place-option-' + place.id">
               {{ place.name }}
             </mat-option>
           }

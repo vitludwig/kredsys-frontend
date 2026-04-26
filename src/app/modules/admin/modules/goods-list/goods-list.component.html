@@ -67,7 +67,8 @@
 			>
 				<a [routerLink]="[row.id, ERoute.EDIT]"
 					mat-stroked-button
-					color="accent">Upravit</a>
+					color="accent"
+					data-testid="row-action-edit">Upravit</a>
 
 				<button
 					mat-stroked-button
@@ -75,6 +76,7 @@
 					[confirmPreset]="'remove'"
 					color="warn"
 					class="ms-3"
+					data-testid="row-action-delete"
 				>Odstranit</button>
 			</td>
 		</ng-container>
@@ -83,7 +85,8 @@
 			*matHeaderRowDef="goodsDisplayedColumns"></tr>
 		<tr mat-row
 			*matRowDef="let row; columns: goodsDisplayedColumns;"
-			class="table-row"></tr>
+			class="table-row"
+			[attr.data-testid]="'row-goods-' + row.id"></tr>
 
 		<!-- Row shown when there is no matching data. -->
 		<tr class="mat-row"
@@ -138,6 +141,7 @@
 						mat-stroked-button
 						color="accent"
 						class="me-3"
+						data-testid="row-action-edit"
 					>Upravit</a>
 
 					<button
@@ -145,6 +149,7 @@
 						(clickConfirm)="removeGoodsType(row.id)"
 						[confirmPreset]="'remove'"
 						color="warn"
+						data-testid="row-action-delete"
 					>Odstranit</button>
 				</td>
 			</ng-container>
@@ -153,7 +158,8 @@
 				*matHeaderRowDef="goodsTypesDisplayedColumns"></tr>
 			<tr mat-row
 				*matRowDef="let row; columns: goodsTypesDisplayedColumns;"
-				class="table-row"></tr>
+				class="table-row"
+				[attr.data-testid]="'row-goods-type-' + row.id"></tr>
 
 			<!-- Row shown when there is no matching data. -->
 			<tr class="mat-row"

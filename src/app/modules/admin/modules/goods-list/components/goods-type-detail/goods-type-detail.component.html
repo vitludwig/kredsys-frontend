@@ -25,6 +25,7 @@
               name="goodsName"
               required
               [(ngModel)]="item.name"
+              data-testid="form-name"
               >
           </mat-form-field>
           <mat-form-field
@@ -33,6 +34,7 @@
             <mat-label>Ikona</mat-label>
             <mat-select name="Ikona"
               [(ngModel)]="item.icon"
+              data-testid="form-icon"
               >
               <mat-option [value]="'sports_bar'" class="icon-option">
                 <mat-icon>sports_bar</mat-icon>
@@ -57,6 +59,7 @@
               class="w-100"
               color="primary"
               type="submit"
+              data-testid="form-submit"
               >
               Potvrdit
             </button>

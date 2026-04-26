@@ -10,6 +10,7 @@
       <div class="summary-list">
         @for (item of orderService.items; track item) {
           <div class="summary-item"
+            [attr.data-testid]="'basket-item-' + item.item.id"
             >
             <div class="item-info">
               <button mat-icon-button
@@ -32,6 +33,7 @@
                 color="warn"
                 aria-label="Delete item"
                 (click)="orderService.removeItem(item.item.id)"
+                data-testid="basket-item-remove"
                 >
                 <mat-icon>delete</mat-icon>
               </button>
@@ -41,19 +43,23 @@
       </div>
 
       <div class="summary-actions">
-        <div class="total">
+        <div class="total" data-testid="sale-summary-total">
           {{ orderService.total }} Kč
         </div>
-        <div [class.text-danger]="totalLeft < -((customerService.currencyAccount$ | async)?.overdraftLimit ?? 0)" class="total-left">
+        <div [class.text-danger]="totalLeft < -((customerService.currencyAccount$ | async)?.overdraftLimit ?? 0)" class="total-left" data-testid="sale-summary-total-left">
           Zbyde: {{ totalLeft }}
         </div>
+
+        @if (totalLeft < -((customerService.currencyAccount$ | async)?.overdraftLimit ?? 0)) {
+          <div data-testid="sale-overdraft-warning" class="text-danger">Překročen limit přečerpání</div>
+        }
 
         <button mat-raised-button
           class="submit-btn"
           color="primary"
           [disabled]="orderService.items.length === 0 || totalLeft < -((customerService.currencyAccount$ | async)?.overdraftLimit ?? 0) || payInProgress"
           (click)="submitOrder()"
-
+          data-testid="sale-submit"
           >
           <span class="d-flex align-items-center">
             Potvrdit

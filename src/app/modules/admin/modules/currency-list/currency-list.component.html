@@ -45,7 +45,8 @@
 				*matCellDef="let row">
 				<a [routerLink]="[row.id, ERoute.EDIT]"
 					mat-stroked-button
-					color="accent">Upravit</a>
+					color="accent"
+					data-testid="row-action-edit">Upravit</a>
 			</td>
 		</ng-container>
 
@@ -54,6 +55,7 @@
 		<tr mat-row
 			*matRowDef="let row; columns: displayedColumns;"
 			class="table-row"
+			[attr.data-testid]="'row-currency-' + row.id"
 		></tr>
 
 		<!-- Row shown when there is no matching data. -->

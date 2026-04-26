@@ -25,6 +25,7 @@
               name="goodsName"
               required
               [(ngModel)]="item.name"
+              data-testid="form-name"
               >
           </mat-form-field>
           <mat-form-field
@@ -36,6 +37,7 @@
               type="number"
               required
               [(ngModel)]="item.price"
+              data-testid="form-price"
               >
           </mat-form-field>
           <mat-form-field
@@ -63,6 +65,7 @@
               class="w-100"
               color="primary"
               type="submit"
+              data-testid="form-submit"
               >
               Potvrdit
             </button>

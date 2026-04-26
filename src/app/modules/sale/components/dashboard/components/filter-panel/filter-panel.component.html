@@ -5,6 +5,6 @@
   >
   <mat-button-toggle [value]="null">Vše</mat-button-toggle>
   @for (type of itemTypes | keyvalue; track type) {
-    <mat-button-toggle [value]="type.value.id">{{ type.value.name }}</mat-button-toggle>
+    <mat-button-toggle [value]="type.value.id" [attr.data-testid]="'filter-panel-' + type.value.id">{{ type.value.name }}</mat-button-toggle>
   }
 </mat-button-toggle-group>

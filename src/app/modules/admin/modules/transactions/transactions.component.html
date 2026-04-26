@@ -1,12 +1,12 @@
 <div class="w-100">
   <mat-tab-group>
-    <mat-tab label="Místa" class="mt-5">
+    <mat-tab label="Místa" class="mt-5" data-testid="tx-tab-place">
       <ng-template matTabContent>
         <app-place-transactions-list></app-place-transactions-list>
       </ng-template>
     </mat-tab>
 
-    <mat-tab label="Uživatelé">
+    <mat-tab label="Uživatelé" data-testid="tx-tab-user">
       <ng-template matTabContent>
         <app-user-transactions-list></app-user-transactions-list>
       </ng-template>

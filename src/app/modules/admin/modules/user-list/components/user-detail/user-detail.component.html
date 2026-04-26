@@ -30,6 +30,7 @@
               placeholder="Členské ID"
               type="number"
               matInput
+              data-testid="form-memberId"
               >
             <mat-error>
               <app-error-message [control]="memberId.ngControl"></app-error-message>
@@ -41,6 +42,7 @@
               placeholder="Jméno"
               #name="matInput"
               formControlName="name"
+              data-testid="form-name"
               >
             <mat-error>
               <app-error-message [control]="name.ngControl"></app-error-message>
@@ -54,6 +56,7 @@
               placeholder="E-mail"
               type="email"
               matInput
+              data-testid="form-email"
               >
             <mat-error>
               <app-error-message [control]="email.ngControl"></app-error-message>
@@ -139,6 +142,7 @@
             type="submit"
             form="userForm"
             [disabled]="userFormGroup.invalid"
+            data-testid="form-submit"
             >
             Potvrdit
           </button>

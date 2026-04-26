@@ -16,8 +16,9 @@
 						matInput
 						formControlName="username"
 						#userName="matInput"
+						data-testid="login-email"
 					>
-					<mat-error>
+					<mat-error data-testid="login-error">
 						<app-error-message [control]="userName.ngControl" [errorMessages]="{email: 'Špatný formát e-mailu'}" />
 					</mat-error>
 				</mat-form-field>
@@ -29,6 +30,7 @@
 						matInput
 						formControlName="password"
 						#password="matInput"
+						data-testid="login-password"
 					>
 					<mat-error>
 						<app-error-message [control]="password.ngControl" />
@@ -40,6 +42,7 @@
 						color="primary"
 						class="w-100"
 						mat-raised-button
+						data-testid="login-submit"
 					>Přihlásit
 					</button>
 				</div>

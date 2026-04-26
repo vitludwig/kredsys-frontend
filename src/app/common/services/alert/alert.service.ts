@@ -16,14 +16,21 @@ export class AlertService {
 	public success(message: string, config?: MatSnackBarConfig, action: string = ''): MatSnackBarRef<TextOnlySnackBar> {
 		return this.showMessage(message, {
 			...config,
-			panelClass: 'mdc-snackbar--success',
+			panelClass: ['mdc-snackbar--success', 'alert-success'],
 		}, action);
 	}
 
 	public error(message: string, config?: MatSnackBarConfig, action: string = ''): MatSnackBarRef<TextOnlySnackBar> {
 		return this.showMessage(message, {
 			...config,
-			panelClass: 'mdc-snackbar--danger',
+			panelClass: ['mdc-snackbar--danger', 'alert-error'],
+		}, action);
+	}
+
+	public info(message: string, config?: MatSnackBarConfig, action: string = ''): MatSnackBarRef<TextOnlySnackBar> {
+		return this.showMessage(message, {
+			...config,
+			panelClass: ['alert-info'],
 		}, action);
 	}
 

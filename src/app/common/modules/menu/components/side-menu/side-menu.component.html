@@ -5,7 +5,8 @@
       <a
         [class.active]="router.url === '/' + ERoute.SALE"
         [routerLink]="ERoute.SALE"
-        mat-list-item>
+        mat-list-item
+        data-testid="nav-sale">
         Prodej
       </a>
     }
@@ -26,6 +27,7 @@
               [class.active]="router.url === '/' + ERoute.ADMIN + '/' + ERoute.ADMIN_PLACES"
               [routerLink]="[ERoute.ADMIN, ERoute.ADMIN_PLACES]"
               mat-list-item
+              data-testid="nav-admin-places"
               >
               Místa
             </a>
@@ -35,6 +37,7 @@
               [class.active]="router.url === '/' + ERoute.ADMIN + '/' + ERoute.ADMIN_USERS"
               [routerLink]="[ERoute.ADMIN, ERoute.ADMIN_USERS]"
               mat-list-item
+              data-testid="nav-admin-users"
               >
               Uživatelé
             </a>
@@ -62,6 +65,7 @@
                 <a [class.active]="router.url === '/' + ERoute.ADMIN + '/' + ERoute.ADMIN_GROUPS"
                   [routerLink]="[ERoute.ADMIN, ERoute.ADMIN_GROUPS]"
                   mat-list-item
+                  data-testid="nav-admin-groups"
                   >
                   Seznam skupin
                 </a>
@@ -79,6 +83,7 @@
               [class.active]="router.url === '/' + ERoute.ADMIN + '/' + ERoute.ADMIN_GOODS"
               [routerLink]="[ERoute.ADMIN, ERoute.ADMIN_GOODS]"
               mat-list-item
+              data-testid="nav-admin-goods"
               >
               Zboží
             </a>
@@ -88,6 +93,7 @@
               [class.active]="router.url === '/' + ERoute.ADMIN + '/' + ERoute.ADMIN_TRANSACTIONS"
               [routerLink]="[ERoute.ADMIN, ERoute.ADMIN_TRANSACTIONS]"
               mat-list-item
+              data-testid="nav-admin-transactions"
               >
               Transakce
             </a>
@@ -97,6 +103,7 @@
               [class.active]="router.url === '/' + ERoute.ADMIN + '/' + ERoute.ADMIN_CURRENCIES"
               [routerLink]="[ERoute.ADMIN, ERoute.ADMIN_CURRENCIES]"
               mat-list-item
+              data-testid="nav-admin-currencies"
               >
               Měny
             </a>
@@ -106,6 +113,7 @@
               [class.active]="router.url === '/' + ERoute.ADMIN + '/' + ERoute.ADMIN_CHARGE"
               [routerLink]="[ERoute.ADMIN, ERoute.ADMIN_CHARGE]"
               mat-list-item
+              data-testid="nav-admin-charge"
               >
               Nabíjedlo
             </a>
@@ -127,7 +135,8 @@
       <a
         [class.active]="router.url === '/' + ERoute.CHECK_IN"
         [routerLink]="ERoute.CHECK_IN"
-        mat-list-item>
+        mat-list-item
+        data-testid="nav-check-in">
         Rychloregistrace
       </a>
     }
@@ -136,7 +145,8 @@
       <a
         [class.active]="router.url === '/' + ERoute.CARD_INFO"
         [routerLink]="ERoute.CARD_INFO"
-        mat-list-item>
+        mat-list-item
+        data-testid="nav-card-info">
         Infokartářka
       </a>
     }
@@ -145,6 +155,7 @@
       <a (click)="authService.logout()"
         href="#"
         mat-list-item
+        data-testid="nav-logout"
         >
         Odhlásit
       </a>
@@ -192,7 +203,7 @@
 
       <mat-list-item>
         <mat-icon matListItemIcon>bug_report</mat-icon>
-        <mat-slide-toggle (ngModelChange)="reloadPage()" [(ngModel)]="authService.isDebug">Debug</mat-slide-toggle>
+        <mat-slide-toggle (ngModelChange)="reloadPage()" [(ngModel)]="authService.isDebug" data-testid="nav-debug-toggle">Debug</mat-slide-toggle>
       </mat-list-item>
 
       <mat-list-item>

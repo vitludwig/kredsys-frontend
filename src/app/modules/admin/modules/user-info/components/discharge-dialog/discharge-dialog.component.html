@@ -10,7 +10,7 @@
   <p style="text-align:center;font-size:1.1rem">{{ data.user.name }}</p>
   <p style="text-align:center;font-size:2rem;font-weight:bold">{{ data.account.currentAmount }} Kč</p>
 
-  <button mat-raised-button color="warn" style="width:100%" (click)="confirm()">
+  <button mat-raised-button color="warn" style="width:100%" (click)="confirm()" data-testid="discharge-submit">
     Vybít
   </button>
 </div>

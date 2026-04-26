@@ -80,6 +80,7 @@
           confirmText="Opravdu chceš stornovat tuto transakci?"
           mat-stroked-button
           color="warn"
+          data-testid="tx-row-storno-btn"
           >Stornovat
         </button>
       </td>
@@ -118,6 +119,7 @@
       class="table-row expandable-row"
       (click)="showDetail(row)"
       [class.expanded-row]="expandedRow === row"
+      [attr.data-testid]="'tx-row-' + row.id"
     ></tr>
 
     <tr *matRowDef="let row; columns: ['expandedDetail']"
@@ -144,7 +146,8 @@
       <mat-label>Od</mat-label>
       <input [(ngModel)]="statsDataFrom"
         matInput
-        type="datetime-local">
+        type="datetime-local"
+        data-testid="tx-filter-from">
     </mat-form-field>
 
     <mat-form-field
@@ -153,7 +156,8 @@
       <mat-label>Do</mat-label>
       <input [(ngModel)]="statsDataTo"
         matInput
-        type="datetime-local">
+        type="datetime-local"
+        data-testid="tx-filter-to">
     </mat-form-field>
 
     <button mat-raised-button

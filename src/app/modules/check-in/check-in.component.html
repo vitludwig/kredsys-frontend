@@ -74,6 +74,7 @@
             type="number"
             min="0"
             formControlName="memberId"
+            data-testid="checkin-member-id"
             >
         </mat-form-field>
 
@@ -84,6 +85,7 @@
             placeholder="Jméno"
             name="name"
             formControlName="name"
+            data-testid="checkin-name"
             >
         </mat-form-field>
 
@@ -94,6 +96,7 @@
             placeholder="E-mail"
             name="email"
             formControlName="email"
+            data-testid="checkin-email"
             >
         </mat-form-field>
 
@@ -112,7 +115,7 @@
           @if(groups.length > 0) {
             <mat-form-field class="w-100">
               <mat-label>Skupina (volitelné)</mat-label>
-              <mat-select formControlName="groupId">
+              <mat-select formControlName="groupId" data-testid="checkin-group">
                 <mat-option [value]="null">Žádná</mat-option>
                 @for (group of groups; track group) {
                   <mat-option [value]="group.id">
@@ -137,6 +140,7 @@
           color="primary"
           type="submit"
           [disabled]="userForm.invalid"
+          data-testid="checkin-submit"
           >
           Přidat uživatele
         </button>

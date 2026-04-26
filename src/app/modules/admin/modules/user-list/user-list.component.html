@@ -81,6 +81,7 @@
         <a [routerLink]="[row.id, ERoute.EDIT]"
           mat-stroked-button
           color="accent"
+          data-testid="row-action-edit"
         >Upravit</a>
       </td>
     </ng-container>
@@ -98,6 +99,7 @@
                 class="ms-3"
                 color="primary"
                 mat-stroked-button
+                data-testid="row-action-change-password"
                 >
                 Změnit heslo
               </button>
@@ -135,6 +137,7 @@
       class="table-row expandable-row"
       [class.expanded-row]="expandedRow === row"
       (click)="expandedRow = expandedRow === row ? null : row"
+      [attr.data-testid]="'row-user-' + row.id"
     ></tr>
     <tr mat-row
       *matRowDef="let row; columns: ['expandedDetail']"

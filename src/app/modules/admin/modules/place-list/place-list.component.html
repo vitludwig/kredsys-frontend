@@ -38,12 +38,14 @@
 				<div class="d-flex gap-3 align-items-center justify-content-end">
 					<a [routerLink]="[row.id, ERoute.EDIT]"
 						color="accent"
-						mat-stroked-button>Upravit</a>
+						mat-stroked-button
+						data-testid="row-action-edit">Upravit</a>
 
 					<button (clickConfirm)="deletePlace(row.id)"
 						[confirmPreset]="'remove'"
 						color="warn"
-						mat-stroked-button>Smazat</button>
+						mat-stroked-button
+						data-testid="row-action-delete">Smazat</button>
 				</div>
 			</td>
 		</ng-container>
@@ -53,6 +55,7 @@
 		<tr mat-row
 			*matRowDef="let row; columns: displayedColumns;"
 			class="table-row"
+			[attr.data-testid]="'row-place-' + row.id"
 		></tr>
 
 		<!-- Row shown when there is no matching data. -->

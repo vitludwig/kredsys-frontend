@@ -12,7 +12,8 @@
   } @else {
     <app-card-loader
       [showNewCardButton]="false"
-      (cardIdChange)="onCardLoaded($event)">
+      (cardIdChange)="onCardLoaded($event)"
+      data-testid="assign-card-submit">
     </app-card-loader>
   }
 </div>

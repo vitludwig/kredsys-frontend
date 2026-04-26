@@ -13,7 +13,8 @@
     <mat-label>Částka</mat-label>
     <input matInput
       [(ngModel)]="amount"
-      type="number">
+      type="number"
+      data-testid="charge-amount">
     <div matSuffix>Kč</div>
   </mat-form-field>
 
@@ -38,6 +39,7 @@
     class="submit-btn"
     mat-dialog-close
     (click)="submit()"
+    data-testid="charge-submit"
     >
     Dobít
   </button>
