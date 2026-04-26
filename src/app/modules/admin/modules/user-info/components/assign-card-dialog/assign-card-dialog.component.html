@@ -1,0 +1,23 @@
+<button mat-icon-button style="position:absolute;top:8px;right:8px" mat-dialog-close>
+  <mat-icon>close</mat-icon>
+</button>
+
+<h2 mat-dialog-title>Přiřadit kartu</h2>
+
+<div mat-dialog-content>
+  <mat-form-field style="width:100%">
+    <mat-label>UID karty</mat-label>
+    <input matInput type="number" [(ngModel)]="cardUid" (keydown.enter)="submit()"
+           placeholder="Přiložit kartu nebo zadat číslo" autofocus>
+    <mat-icon matSuffix>contactless</mat-icon>
+  </mat-form-field>
+
+  <button mat-raised-button color="primary" style="width:100%"
+          [disabled]="!cardUid || inProgress"
+          (click)="submit()">
+    @if (inProgress) {
+      <mat-progress-spinner diameter="18" mode="indeterminate"></mat-progress-spinner>
+    }
+    Přiřadit kartu
+  </button>
+</div>
