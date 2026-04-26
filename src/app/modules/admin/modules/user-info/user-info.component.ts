@@ -17,6 +17,7 @@ import { ICurrencyAccount } from '../../../../common/types/ICurrency';
 import { ICard } from '../../../../common/types/ICard';
 import { ITransaction } from '../transactions/services/transaction/types/ITransaction';
 import { ITransactionFilter, UserInfoDetailComponent } from './components/user-info-detail/user-info-detail.component';
+import { CardLoaderComponent } from '../../../../common/components/card-loader/card-loader.component';
 
 @Component({
   selector: 'app-user-info',
@@ -32,6 +33,7 @@ import { ITransactionFilter, UserInfoDetailComponent } from './components/user-i
     MatIconModule,
     MatProgressSpinnerModule,
     UserInfoDetailComponent,
+    CardLoaderComponent,
   ],
 })
 export class UserInfoComponent extends WithSubscriptions implements OnInit {
@@ -53,8 +55,6 @@ export class UserInfoComponent extends WithSubscriptions implements OnInit {
   protected transactionsPage = 0;
   protected cards: ICard[] = [];
   protected placeId: number | null = null;
-
-  protected cardUidInput = '';
 
   private static readonly TRANSACTIONS_PAGE_SIZE = 20;
   private static readonly DEFAULT_SORT = 'created desc, id desc';
@@ -108,16 +108,9 @@ export class UserInfoComponent extends WithSubscriptions implements OnInit {
     this.cards = [];
     this.userOptions = [];
     this.searchControl.setValue('');
-    this.cardUidInput = '';
   }
 
-  protected async onCardScan(): Promise<void> {
-    if (!this.cardUidInput.trim()) return;
-    const uid = parseInt(this.cardUidInput, 10);
-    if (isNaN(uid)) {
-      this.alertService.error('Zadej platné UID karty');
-      return;
-    }
+  protected async onCardLoaded(uid: number): Promise<void> {
     try {
       const user = await this.usersService.getUserByCardUid(uid);
       this.searchControl.setValue(user);
@@ -125,7 +118,6 @@ export class UserInfoComponent extends WithSubscriptions implements OnInit {
     } catch {
       this.alertService.error('Karta nenalezena');
     }
-    this.cardUidInput = '';
   }
 
   private async loadUserData(user: IUser): Promise<void> {

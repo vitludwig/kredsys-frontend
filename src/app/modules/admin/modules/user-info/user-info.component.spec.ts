@@ -1,11 +1,24 @@
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { UserInfoComponent } from './user-info.component';
 import { UsersService } from '../../services/users/users.service';
 import { PlaceService } from '../../services/place/place/place.service';
 import { AlertService } from '../../../../common/services/alert/alert.service';
 import { CurrencyService } from '../../services/currency/currency.service';
+import { CardLoaderComponent } from '../../../../common/components/card-loader/card-loader.component';
 import { BehaviorSubject } from 'rxjs';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+
+@Component({
+  selector: 'app-card-loader',
+  standalone: true,
+  template: '',
+})
+class CardLoaderStubComponent {
+  @Input() showNewCardButton = true;
+  @Input() hidden = false;
+  @Output() cardIdChange = new EventEmitter<number>();
+}
 
 describe('UserInfoComponent', () => {
   let component: UserInfoComponent;
@@ -33,7 +46,12 @@ describe('UserInfoComponent', () => {
         { provide: AlertService, useValue: { success: () => {}, error: () => {} } },
         { provide: CurrencyService, useValue: { defaultCurrency: null } },
       ],
-    }).compileComponents();
+    })
+      .overrideComponent(UserInfoComponent, {
+        remove: { imports: [CardLoaderComponent] },
+        add: { imports: [CardLoaderStubComponent] },
+      })
+      .compileComponents();
 
     fixture = TestBed.createComponent(UserInfoComponent);
     component = fixture.componentInstance;
@@ -51,8 +69,12 @@ describe('UserInfoComponent', () => {
 
   it('should show ✕ Zavřít button only when user is selected', () => {
     expect(fixture.nativeElement.querySelector('[data-testid="close-btn"]')).toBeNull();
-    (component as any).selectedUser = { id: 1, name: 'Test', email: 'test@test.cz', memberId: 1, blocked: false, roles: [] };
-    fixture.detectChanges();
-    expect(fixture.nativeElement.querySelector('[data-testid="close-btn"]')).toBeTruthy();
+  });
+
+  it('should render close button when user is selected', () => {
+    const fresh = TestBed.createComponent(UserInfoComponent);
+    (fresh.componentInstance as any).selectedUser = { id: 1, name: 'Test', email: 'test@test.cz', memberId: 1, blocked: false, roles: [] };
+    fresh.detectChanges();
+    expect(fresh.nativeElement.querySelector('[data-testid="close-btn"]')).toBeTruthy();
   });
 });

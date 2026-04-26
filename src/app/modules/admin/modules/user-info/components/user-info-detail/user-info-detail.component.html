@@ -155,7 +155,7 @@
                 <mat-spinner diameter="20"></mat-spinner>
               </div>
             } @else if (transactionRecords.length > 0) {
-              <h4 class="uid__tx-detail-title">Položky</h4>
+              <h6 class="uid__tx-detail-title">Položky</h6>
               @for (record of transactionRecords; track $index) {
                 <div class="uid__tx-record">
                   <span class="uid__tx-record-name">{{ record.multiplier }}× {{ record.goodsName }}</span>
