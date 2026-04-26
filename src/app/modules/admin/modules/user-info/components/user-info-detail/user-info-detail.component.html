@@ -66,29 +66,118 @@
 
   <!-- Transaction List -->
   <div class="uid__section">
-    <h3>Transakce</h3>
+    <div class="uid__section-header">
+      <h3>Transakce</h3>
+      <button mat-raised-button
+              [disabled]="financialDisabled"
+              [matTooltip]="financialTooltip"
+              (click)="onAddTransaction()">
+        <mat-icon>add</mat-icon>
+        Nová transakce
+      </button>
+    </div>
 
     <!-- Filter bar -->
     <div class="uid__tx-filters">
       <mat-form-field class="uid__tx-filter--text" appearance="outline" subscriptSizing="dynamic">
         <mat-label>Hledat (info, místo)</mat-label>
         <input matInput [(ngModel)]="filterText" (ngModelChange)="onFilterChange()">
+        @if (filterText) {
+          <button matSuffix mat-icon-button aria-label="Vymazat"
+                  (click)="filterText = ''; onFilterChange()">
+            <mat-icon>close</mat-icon>
+          </button>
+        }
       </mat-form-field>
-      <mat-form-field class="uid__tx-filter--date" appearance="outline" subscriptSizing="dynamic">
+      <mat-form-field class="uid__tx-filter--datetime" subscriptSizing="dynamic">
         <mat-label>Od</mat-label>
-        <input matInput type="date" [(ngModel)]="filterDateFrom" (ngModelChange)="onFilterChange()">
+        <input matInput readonly
+               [value]="formatDateTimeLabel(filterDateFrom)"
+               (click)="pickerFrom.open()">
+        <input [matDatepicker]="pickerFrom" hidden [(ngModel)]="draftDateFrom">
+        <span matSuffix class="uid__tx-filter-suffixes">
+          @if (filterDateFrom) {
+            <button mat-icon-button aria-label="Vymazat"
+                    (click)="$event.stopPropagation(); onPopupClear('from')">
+              <mat-icon>close</mat-icon>
+            </button>
+          }
+          <mat-datepicker-toggle [for]="pickerFrom"></mat-datepicker-toggle>
+        </span>
+        <mat-datepicker #pickerFrom (opened)="onPopupOpened('from')">
+          <mat-datepicker-actions>
+            <mat-form-field class="uid__tx-time-field" subscriptSizing="dynamic">
+              <mat-label>Čas</mat-label>
+              <input matInput [matTimepicker]="timeFrom" [(ngModel)]="draftTimeFrom">
+              <mat-timepicker-toggle matIconSuffix [for]="timeFrom"></mat-timepicker-toggle>
+              <mat-timepicker #timeFrom interval="15min"></mat-timepicker>
+            </mat-form-field>
+            <button mat-button (click)="onPopupClear('from')" matDatepickerCancel>Vymazat</button>
+            <button mat-raised-button color="primary" (click)="onPopupApply('from')" matDatepickerApply>Použít</button>
+          </mat-datepicker-actions>
+        </mat-datepicker>
       </mat-form-field>
-      <mat-form-field class="uid__tx-filter--date" appearance="outline" subscriptSizing="dynamic">
+      <mat-form-field class="uid__tx-filter--datetime" subscriptSizing="dynamic">
         <mat-label>Do</mat-label>
-        <input matInput type="date" [(ngModel)]="filterDateTo" (ngModelChange)="onFilterChange()">
+        <input matInput readonly
+               [value]="formatDateTimeLabel(filterDateTo)"
+               (click)="pickerTo.open()">
+        <input [matDatepicker]="pickerTo" hidden [(ngModel)]="draftDateTo">
+        <span matSuffix class="uid__tx-filter-suffixes">
+          @if (filterDateTo) {
+            <button mat-icon-button aria-label="Vymazat"
+                    (click)="$event.stopPropagation(); onPopupClear('to')">
+              <mat-icon>close</mat-icon>
+            </button>
+          }
+          <mat-datepicker-toggle [for]="pickerTo"></mat-datepicker-toggle>
+        </span>
+        <mat-datepicker #pickerTo (opened)="onPopupOpened('to')">
+          <mat-datepicker-actions>
+            <mat-form-field class="uid__tx-time-field" subscriptSizing="dynamic">
+              <mat-label>Čas</mat-label>
+              <input matInput [matTimepicker]="timeTo" [(ngModel)]="draftTimeTo">
+              <mat-timepicker-toggle matIconSuffix [for]="timeTo"></mat-timepicker-toggle>
+              <mat-timepicker #timeTo interval="15min"></mat-timepicker>
+            </mat-form-field>
+            <button mat-button (click)="onPopupClear('to')" matDatepickerCancel>Vymazat</button>
+            <button mat-raised-button color="primary" (click)="onPopupApply('to')" matDatepickerApply>Použít</button>
+          </mat-datepicker-actions>
+        </mat-datepicker>
+      </mat-form-field>
+      <mat-form-field class="uid__tx-filter--types" appearance="outline" subscriptSizing="dynamic">
+        <mat-label>Typ</mat-label>
+        <mat-select [(ngModel)]="filterType" (ngModelChange)="onFilterChange()">
+          <mat-option [value]="ETransactionType.PAYMENT">Platba</mat-option>
+          <mat-option [value]="ETransactionType.DEPOSIT">Dobití</mat-option>
+          <mat-option [value]="ETransactionType.WITHDRAW">Výběr</mat-option>
+        </mat-select>
+        @if (filterType) {
+          <button matSuffix mat-icon-button aria-label="Vymazat"
+                  (click)="$event.stopPropagation(); filterType = null; onFilterChange()">
+            <mat-icon>close</mat-icon>
+          </button>
+        }
       </mat-form-field>
       <mat-form-field class="uid__tx-filter--amount" appearance="outline" subscriptSizing="dynamic">
         <mat-label>Min Kč</mat-label>
         <input matInput type="number" [(ngModel)]="filterAmountMin" (ngModelChange)="onFilterChange()">
+        @if (filterAmountMin !== null && filterAmountMin !== undefined) {
+          <button matSuffix mat-icon-button aria-label="Vymazat"
+                  (click)="filterAmountMin = null; onFilterChange()">
+            <mat-icon>close</mat-icon>
+          </button>
+        }
       </mat-form-field>
       <mat-form-field class="uid__tx-filter--amount" appearance="outline" subscriptSizing="dynamic">
         <mat-label>Max Kč</mat-label>
         <input matInput type="number" [(ngModel)]="filterAmountMax" (ngModelChange)="onFilterChange()">
+        @if (filterAmountMax !== null && filterAmountMax !== undefined) {
+          <button matSuffix mat-icon-button aria-label="Vymazat"
+                  (click)="filterAmountMax = null; onFilterChange()">
+            <mat-icon>close</mat-icon>
+          </button>
+        }
       </mat-form-field>
       <mat-form-field class="uid__tx-filter--sort" appearance="outline" subscriptSizing="dynamic">
         <mat-label>Řadit podle</mat-label>
@@ -121,9 +210,10 @@
           [class.uid__tx-row--expandable]="tx.type === ETransactionType.PAYMENT"
           (click)="toggleTransactionDetail(tx)">
           <span class="uid__tx-info">
-            @if (tx.type === ETransactionType.PAYMENT) {
-              <mat-icon class="uid__tx-expand-icon">{{ expandedTransactionId === tx.id ? 'expand_more' : 'chevron_right' }}</mat-icon>
-            }
+            <mat-icon class="uid__tx-expand-icon"
+                      [class.uid__tx-expand-icon--hidden]="tx.type !== ETransactionType.PAYMENT">
+              {{ expandedTransactionId === tx.id ? 'expand_more' : 'chevron_right' }}
+            </mat-icon>
             <strong>{{ typeLabel(tx.type) }}</strong>
             @if (tx.placeName) { <span class="uid__tx-place">— {{ tx.placeName }}</span> }
             @if (tx.info) { <span class="uid__tx-text">— {{ tx.info }}</span> }
@@ -131,9 +221,9 @@
           <span class="uid__tx-date">{{ tx.created | date:'dd.MM. HH:mm' }}</span>
           <span
             class="uid__tx-amount"
-            [class.uid__tx-amount--positive]="tx.amount > 0"
-            [class.uid__tx-amount--negative]="tx.amount < 0">
-            {{ tx.amount > 0 ? '+' : '' }}{{ tx.amount }} Kč
+            [class.uid__tx-amount--positive]="tx.type === ETransactionType.DEPOSIT"
+            [class.uid__tx-amount--negative]="tx.type === ETransactionType.PAYMENT || tx.type === ETransactionType.WITHDRAW">
+            {{ tx.type === ETransactionType.DEPOSIT ? '+' : '-' }}{{ tx.amount }} Kč
           </span>
           <span class="uid__tx-storno" (click)="$event.stopPropagation()">
             @if (canStorno(tx)) {
@@ -175,41 +265,67 @@
 
   <hr>
 
-  <!-- Cards Section -->
-  <div class="uid__section uid__section--cards">
-    <div class="uid__section-header">
-      <h3>Karty</h3>
-      <button mat-raised-button (click)="onAssignCard()">
-        <mat-icon>add</mat-icon>
-        Přiřadit kartu
-      </button>
+  <div class="row">
+    <!-- Cards Section -->
+    <div class="col-xs-12 col-md-6">
+      <div class="uid__section">
+        <div class="uid__section-header">
+          <h3>Karty</h3>
+          <button mat-raised-button (click)="onAssignCard()">
+            <mat-icon>add</mat-icon>
+            Přiřadit kartu
+          </button>
+        </div>
+
+        @if (cards.length === 0) {
+          <p class="uid__empty">Žádné karty</p>
+        }
+
+        @for (card of cards; track card.id) {
+          <div class="uid__card-row">
+            <span class="uid__card-uid">
+              @if (card.uid !== null && card.uid !== undefined) {
+                ...{{ String(card.uid).slice(-4) }}
+              } @else {
+                &mdash;
+              }
+            </span>
+            <span class="uid__card-status">
+              @if (card.blocked) {
+                <span class="uid__badge--blocked">Zablokována</span>
+              } @else {
+                <span class="uid__badge--active">Aktivní</span>
+              }
+            </span>
+            <button mat-icon-button (click)="onToggleCardBlocked(card)" aria-label="Odebrat kartu">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        }
+      </div>
     </div>
 
-    @if (cards.length === 0) {
-      <p class="uid__empty">Žádné karty</p>
-    }
+    <!-- Statistics Section -->
+    <div class="col-xs-12 col-md-6">
+      <div class="uid__section">
+        <div class="uid__section-header uid__section-header--clickable" (click)="onToggleStats()">
+          <h3>
+            <mat-icon class="uid__stats-arrow">{{ statsExpanded ? 'expand_more' : 'chevron_right' }}</mat-icon>
+            Statistiky
+          </h3>
+        </div>
 
-    @for (card of cards; track card.id) {
-      <div class="uid__card-row">
-        <span class="uid__card-uid">
-          @if (card.uid !== null && card.uid !== undefined) {
-            ...{{ String(card.uid).slice(-4) }}
+        @if (statsExpanded) {
+          @if (loadingStats) {
+            <div class="uid__stats-loading"><mat-spinner diameter="24"></mat-spinner></div>
+          } @else if (statistics && statistics.goods.length > 0) {
+            <app-statistics-table [data]="statistics"></app-statistics-table>
           } @else {
-            &mdash;
+            <p class="uid__empty">Žádná statistická data</p>
           }
-        </span>
-        <span class="uid__card-status">
-          @if (card.blocked) {
-            <span class="uid__badge--blocked">Zablokována</span>
-          } @else {
-            <span class="uid__badge--active">Aktivní</span>
-          }
-        </span>
-        <button mat-icon-button (click)="onToggleCardBlocked(card)" aria-label="Odebrat kartu">
-          <mat-icon>delete</mat-icon>
-        </button>
+        }
       </div>
-    }
+    </div>
   </div>
 
   <!-- Footer: Account Management -->

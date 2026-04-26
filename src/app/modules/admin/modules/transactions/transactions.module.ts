@@ -50,6 +50,10 @@ import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 	providers: [
 		provideCharts(withDefaultRegisterables())
 	],
+	exports: [
+		NewTransactionComponent,
+		StatisticsTableComponent,
+	],
 })
 export class TransactionsModule {
 }

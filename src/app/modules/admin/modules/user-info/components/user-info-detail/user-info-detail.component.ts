@@ -11,6 +11,9 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatTimepickerModule } from '@angular/material/timepicker';
+import { provideNativeDateAdapter } from '@angular/material/core';
 import { firstValueFrom, Subject } from 'rxjs';
 import { debounceTime, takeUntil } from 'rxjs/operators';
 
@@ -29,6 +32,10 @@ import { ERoute } from '../../../../../../common/types/ERoute';
 import { ChargeDialogComponent } from '../charge-dialog/charge-dialog.component';
 import { DischargeDialogComponent } from '../discharge-dialog/discharge-dialog.component';
 import { AssignCardDialogComponent } from '../assign-card-dialog/assign-card-dialog.component';
+import { NewTransactionDialogComponent } from '../new-transaction-dialog/new-transaction-dialog.component';
+import { TransactionsModule } from '../../../transactions/transactions.module';
+import { ITransactionStatistics } from '../../../transactions/services/transaction/types/ITransactionStatistics';
+import { CurrencyService } from '../../../../services/currency/currency.service';
 
 export interface ITransactionFilter {
   text: string;
@@ -36,6 +43,7 @@ export interface ITransactionFilter {
   dateTo: string;
   amountMin: number | null;
   amountMax: number | null;
+  type: ETransactionType | null;
   sort: string;
 }
 
@@ -61,6 +69,12 @@ interface ITransactionRecordRow {
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
+    MatDatepickerModule,
+    MatTimepickerModule,
+    TransactionsModule,
+  ],
+  providers: [
+    provideNativeDateAdapter(),
   ],
 })
 export class UserInfoDetailComponent extends WithSubscriptions implements OnInit {
@@ -81,16 +95,26 @@ export class UserInfoDetailComponent extends WithSubscriptions implements OnInit
   protected readonly ETransactionType = ETransactionType;
 
   protected filterText = '';
-  protected filterDateFrom = '';
-  protected filterDateTo = '';
+  protected filterDateFrom: Date | null = null;
+  protected filterDateTo: Date | null = null;
+  // Draft state used inside the datepicker popup (separate from committed value)
+  protected draftDateFrom: Date | null = null;
+  protected draftTimeFrom: Date | null = null;
+  protected draftDateTo: Date | null = null;
+  protected draftTimeTo: Date | null = null;
   protected filterAmountMin: number | null = null;
   protected filterAmountMax: number | null = null;
+  protected filterType: ETransactionType | null = null;
   protected sortField: 'created' | 'amount' = 'created';
   protected sortDir: 'asc' | 'desc' = 'desc';
 
   protected expandedTransactionId: number | null = null;
   protected transactionRecords: ITransactionRecordRow[] = [];
   protected loadingRecords = false;
+
+  protected statsExpanded = false;
+  protected loadingStats = false;
+  protected statistics: ITransactionStatistics | null = null;
 
   private filterChange$ = new Subject<void>();
 
@@ -99,6 +123,7 @@ export class UserInfoDetailComponent extends WithSubscriptions implements OnInit
   private transactionService = inject(TransactionService);
   private usersService = inject(UsersService);
   private goodsService = inject(GoodsService);
+  private currencyService = inject(CurrencyService);
   private alertService = inject(AlertService);
 
   public ngOnInit(): void {
@@ -151,27 +176,86 @@ export class UserInfoDetailComponent extends WithSubscriptions implements OnInit
 
   protected onResetFilter(): void {
     this.filterText = '';
-    this.filterDateFrom = '';
-    this.filterDateTo = '';
+    this.filterDateFrom = null;
+    this.filterDateTo = null;
+    this.draftDateFrom = null;
+    this.draftTimeFrom = null;
+    this.draftDateTo = null;
+    this.draftTimeTo = null;
     this.filterAmountMin = null;
     this.filterAmountMax = null;
+    this.filterType = null;
     this.sortField = 'created';
     this.sortDir = 'desc';
     this.emitFilter();
   }
 
+  protected onPopupOpened(side: 'from' | 'to'): void {
+    const current = side === 'from' ? this.filterDateFrom : this.filterDateTo;
+    const fallback = current ?? new Date();
+    if (side === 'from') {
+      this.draftDateFrom = new Date(fallback);
+      this.draftTimeFrom = new Date(fallback);
+    } else {
+      this.draftDateTo = new Date(fallback);
+      this.draftTimeTo = new Date(fallback);
+    }
+  }
+
+  protected onPopupApply(side: 'from' | 'to'): void {
+    const draftDate = side === 'from' ? this.draftDateFrom : this.draftDateTo;
+    const draftTime = side === 'from' ? this.draftTimeFrom : this.draftTimeTo;
+    // If only time was set without a date, fall back to today
+    const baseDate = draftDate ?? new Date();
+    const time = draftTime ?? new Date();
+    const merged = new Date(baseDate);
+    merged.setHours(time.getHours(), time.getMinutes(), 0, 0);
+    if (side === 'from') this.filterDateFrom = merged;
+    else this.filterDateTo = merged;
+    this.filterChange$.next();
+  }
+
+  protected onPopupClear(side: 'from' | 'to'): void {
+    if (side === 'from') {
+      this.filterDateFrom = null;
+      this.draftDateFrom = null;
+      this.draftTimeFrom = null;
+    } else {
+      this.filterDateTo = null;
+      this.draftDateTo = null;
+      this.draftTimeTo = null;
+    }
+    this.filterChange$.next();
+  }
+
+  protected formatDateTimeLabel(d: Date | null): string {
+    if (!d) return '';
+    const dd = String(d.getDate()).padStart(2, '0');
+    const mm = String(d.getMonth() + 1).padStart(2, '0');
+    const yyyy = d.getFullYear();
+    return `${dd}.${mm}.${yyyy} ${this.formatTimeHHMM(d)}`;
+  }
+
+  private formatTimeHHMM(d: Date): string {
+    return `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`;
+  }
+
   private emitFilter(): void {
     this.filterChange.emit({
       text: this.filterText.trim(),
-      dateFrom: this.filterDateFrom,
-      dateTo: this.filterDateTo,
+      dateFrom: this.filterDateFrom ? this.filterDateFrom.toISOString() : '',
+      dateTo: this.filterDateTo ? this.filterDateTo.toISOString() : '',
       amountMin: this.filterAmountMin,
       amountMax: this.filterAmountMax,
+      type: this.filterType,
       sort: `${this.sortField} ${this.sortDir}`,
     });
   }
 
   protected async toggleTransactionDetail(tx: ITransaction): Promise<void> {
+    // Only PAYMENT transactions are expandable
+    if (tx.type !== ETransactionType.PAYMENT) return;
+
     if (this.expandedTransactionId === tx.id) {
       this.expandedTransactionId = null;
       this.transactionRecords = [];
@@ -180,8 +264,6 @@ export class UserInfoDetailComponent extends WithSubscriptions implements OnInit
 
     this.expandedTransactionId = tx.id;
     this.transactionRecords = [];
-
-    if (tx.type !== ETransactionType.PAYMENT) return;
 
     this.loadingRecords = true;
     try {
@@ -266,6 +348,34 @@ export class UserInfoDetailComponent extends WithSubscriptions implements OnInit
     } catch {
       this.alertService.error('Chyba při stornování transakce');
     }
+  }
+
+  protected async onToggleStats(): Promise<void> {
+    this.statsExpanded = !this.statsExpanded;
+    if (!this.statsExpanded || this.statistics) return;
+    if (this.user.id == null) return;
+    this.loadingStats = true;
+    try {
+      const currency = this.currencyService.defaultCurrency
+        ?? await this.currencyService.getDefaultCurrency();
+      this.statistics = await this.transactionService.getStatistics(currency.id!, {
+        usersFilter: [this.user.id],
+      });
+    } catch {
+      this.alertService.error('Chyba při načítání statistik');
+    } finally {
+      this.loadingStats = false;
+    }
+  }
+
+  protected async onAddTransaction(): Promise<void> {
+    const ref = this.dialog.open(NewTransactionDialogComponent, {
+      width: '720px',
+      maxWidth: '95vw',
+      data: { user: this.user, placeId: this.placeId },
+    });
+    const result = await firstValueFrom(ref.afterClosed());
+    if (result) this.refresh.emit();
   }
 
   protected async onAssignCard(): Promise<void> {

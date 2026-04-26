@@ -207,6 +207,9 @@ export class UserInfoComponent extends WithSubscriptions implements OnInit {
     if (filter.amountMax !== null && filter.amountMax !== undefined) {
       parts.push(`amount<=${filter.amountMax}`);
     }
+    if (filter.type) {
+      parts.push(`type=${filter.type}`);
+    }
     return parts.join(', ');
   }
 }

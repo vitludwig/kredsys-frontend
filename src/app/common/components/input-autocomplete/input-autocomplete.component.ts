@@ -4,8 +4,10 @@ import {
 	ElementRef,
 	EventEmitter,
 	Input,
+	OnChanges,
 	OnInit,
 	Output,
+	SimpleChanges,
 	ViewChild
 } from '@angular/core';
 import {UntypedFormControl} from "@angular/forms";
@@ -19,7 +21,7 @@ import {MatAutocompleteTrigger} from '@angular/material/autocomplete';
     styleUrls: ['./input-autocomplete.component.scss'],
     standalone: false
 })
-export class InputAutocompleteComponent<T> implements OnInit, AfterViewInit {
+export class InputAutocompleteComponent<T> implements OnInit, AfterViewInit, OnChanges {
 
 	public selectedValue: UntypedFormControl = new UntypedFormControl('');
 	public filteredOptions: Observable<T[]>;
@@ -78,6 +80,19 @@ export class InputAutocompleteComponent<T> implements OnInit, AfterViewInit {
 				this.inputElement.nativeElement.focus();
 				this.autocompleteTrigger.closePanel();
 			}, 100)
+		}
+	}
+
+	public ngOnChanges(changes: SimpleChanges): void {
+		if(changes['value']) {
+			const v: any = this.value;
+			if(v == null) {
+				this.selectedValue.setValue('', { emitEvent: false });
+			} else if(typeof v === 'object' && this.primaryDisplayProperty) {
+				this.selectedValue.setValue(v[this.primaryDisplayProperty] ?? '', { emitEvent: false });
+			} else {
+				this.selectedValue.setValue(v, { emitEvent: false });
+			}
 		}
 	}
 

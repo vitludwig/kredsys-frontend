@@ -1,4 +1,4 @@
-import {APP_INITIALIZER, NgModule} from '@angular/core';
+import {APP_INITIALIZER, LOCALE_ID, NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {AppComponent} from './app.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
@@ -15,6 +15,11 @@ import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import {authInterceptor} from './common/interceptors/auth/auth.interceptor';
 import {MatIconModule} from "@angular/material/icon";
 import {WebBluetoothModule} from "@manekinekko/angular-web-bluetooth";
+import {MAT_DATE_LOCALE} from '@angular/material/core';
+import {registerLocaleData} from '@angular/common';
+import localeCs from '@angular/common/locales/cs';
+
+registerLocaleData(localeCs);
 
 @NgModule({
 	declarations: [
@@ -36,6 +41,8 @@ import {WebBluetoothModule} from "@manekinekko/angular-web-bluetooth";
 	providers: [
 		{provide: APP_INITIALIZER, useFactory: appInitializerFactory, deps: [InitService], multi: true},
 		{provide: MatPaginatorIntl, useValue: CustomPaginatorConfiguration()},
+		{provide: LOCALE_ID, useValue: 'cs-CZ'},
+		{provide: MAT_DATE_LOCALE, useValue: 'cs-CZ'},
 		provideHttpClient(withInterceptors([authInterceptor])),
 	],
 	bootstrap: [AppComponent],
