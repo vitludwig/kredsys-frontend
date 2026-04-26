@@ -8,7 +8,13 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "test:ci": "ng test --watch=false --browsers=ChromeHeadlessNoSandbox",
-    "lint": "ng lint"
+    "lint": "ng lint",
+    "e2e": "playwright test --config=e2e/playwright.config.ts",
+    "e2e:headed": "playwright test --config=e2e/playwright.config.ts --headed",
+    "e2e:ui": "playwright test --config=e2e/playwright.config.ts --ui",
+    "e2e:real": "E2E_MODE=real playwright test --config=e2e/playwright.config.real.ts",
+    "e2e:gen-sql": "tsx e2e/fixtures/sql-generator.ts",
+    "e2e:report": "playwright show-report e2e/playwright-report"
   },
   "private": true,
   "dependencies": {
@@ -49,6 +55,7 @@
     "@angular-eslint/eslint-plugin-template": "21.3.1",
     "@angular-eslint/schematics": "21.3.1",
     "@angular-eslint/template-parser": "21.3.1",
+    "@playwright/test": "^1.59.1",
     "@types/jasmine": "~3.10.0",
     "@types/node": "^12.11.1",
     "@types/qrcode": "^1.5.5",
@@ -61,6 +68,7 @@
     "karma-chrome-launcher": "~3.1.0",
     "karma-coverage": "~2.1.0",
     "karma-jasmine": "~4.0.0",
-    "karma-jasmine-html-reporter": "~1.7.0"
+    "karma-jasmine-html-reporter": "~1.7.0",
+    "tsx": "^4.21.0"
   }
 }

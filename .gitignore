@@ -43,3 +43,8 @@ Thumbs.db
 
 # Superpowers brainstorming artifacts
 .superpowers/
+
+# Playwright
+e2e/test-results/
+e2e/playwright-report/
+e2e/playwright/.cache/
