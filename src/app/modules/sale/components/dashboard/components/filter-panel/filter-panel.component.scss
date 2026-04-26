@@ -1,15 +1,4 @@
 .filter-panel {
-	display: flex;
-	align-items: center;
-	flex-wrap: wrap;
-	gap: 3px;
-
-	.filter-btn {
-		padding: 25px 15px;
-
-		&.active {
-			background: #ffeb3b;
-			color: black;
-		}
-	}
+  --mat-standard-button-toggle-shape: var(--mat-card-outlined-container-shape);
+  margin-bottom: 1rem;
 }

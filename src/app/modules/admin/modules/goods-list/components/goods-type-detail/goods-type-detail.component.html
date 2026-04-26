@@ -34,25 +34,21 @@
             <mat-select name="Ikona"
               [(ngModel)]="item.icon"
               >
-              <mat-option [value]="'beer'" class="icon-option">Pivo
-                <svg viewBox="0 0 24 24" class="goods-type__icon">
-                  <use xlink:href="assets/images/icons.svg#icon--beer"></use>
-                </svg>
+              <mat-option [value]="'sports_bar'" class="icon-option">
+                <mat-icon>sports_bar</mat-icon>
+                Pivo
               </mat-option>
-              <mat-option [value]="'food'" class="icon-option">Jídlo
-                <svg viewBox="0 0 24 24" class="goods-type__icon">
-                  <use xlink:href="assets/images/icons.svg#icon--food"></use>
-                </svg>
+              <mat-option [value]="'restaurant'" class="icon-option">
+                <mat-icon>restaurant</mat-icon>
+                Jídlo
               </mat-option>
-              <mat-option [value]="'shot'" class="icon-option">Panák
-                <svg viewBox="0 0 24 24" class="goods-type__icon">
-                  <use xlink:href="assets/images/icons.svg#icon--shot"></use>
-                </svg>
+              <mat-option [value]="'wine_bar'" class="icon-option">
+                <mat-icon>wine_bar</mat-icon>
+                Panák
               </mat-option>
-              <mat-option [value]="'other'" class="icon-option">Ostatní
-                <svg viewBox="0 0 24 24" class="goods-type__icon">
-                  <use xlink:href="assets/images/icons.svg#icon--other"></use>
-                </svg>
+              <mat-option [value]="'category'" class="icon-option">
+                <mat-icon>category</mat-icon>
+                Ostatní
               </mat-option>
             </mat-select>
           </mat-form-field>
@@ -74,4 +70,3 @@
     </div>
   }
 </div>
-

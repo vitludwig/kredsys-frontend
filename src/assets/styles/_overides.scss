@@ -18,7 +18,7 @@
   --mat-form-field-filled-input-text-color: var(--input-text-color-filled);
   --mat-form-field-filled-label-text-color: var(--input-text-color-label);
   --mat-form-field-filled-disabled-input-text-color: var(--input-text-color-label-disabled);
-  --mat-form-field-filled-active-indicator-color: #f0c100;
+  --mat-form-field-filled-active-indicator-color: var(--mat-sys-primary);
 
   --mat-select-enabled-trigger-text-color: var(--input-text-color-filled);
   --mat-select-placeholder-text-color: var(--input-text-color-label);

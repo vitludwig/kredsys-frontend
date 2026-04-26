@@ -1,15 +1,7 @@
 .icon-option {
-  ::ng-deep {
-
-    .mdc-list-item__primary-text {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-  }
-
-  img {
-    width: auto;
-    height: 50px;
+  ::ng-deep .mdc-list-item__primary-text {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
   }
 }

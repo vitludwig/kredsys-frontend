@@ -1,6 +1,6 @@
 .mat-mdc-list-item {
   &:not(:last-child) {
-    border-bottom: 1px solid var(--cy__color--border);
+    border-bottom: 1px solid var(--mat-sys-primary);
   }
 
   .card-item {

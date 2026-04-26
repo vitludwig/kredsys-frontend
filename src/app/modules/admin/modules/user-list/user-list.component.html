@@ -79,7 +79,7 @@
         *matCellDef="let row"
         >
         <a [routerLink]="[row.id, ERoute.EDIT]"
-          mat-raised-button
+          mat-stroked-button
           color="accent"
         >Upravit</a>
       </td>
@@ -97,13 +97,13 @@
               <button [routerLink]="[row.id, ERoute.ADMIN_CHANGE_PASSWORD]"
                 class="ms-3"
                 color="primary"
-                mat-raised-button
+                mat-stroked-button
                 >
                 Změnit heslo
               </button>
 
               @if (!row.blocked) {
-                <button mat-raised-button
+                <button mat-stroked-button
                   color="warn"
                   class="ms-3"
                   (click)="setUserBlocked(row, true)"
@@ -113,7 +113,7 @@
               }
 
               @if (row.blocked) {
-                <button mat-raised-button
+                <button mat-stroked-button
                   color="primary"
                   class="ms-3"
                   (click)="setUserBlocked(row, false)"
@@ -132,7 +132,7 @@
     *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row
       *matRowDef="let row; columns: displayedColumns;"
-      class="table-row"
+      class="table-row expandable-row"
       [class.expanded-row]="expandedRow === row"
       (click)="expandedRow = expandedRow === row ? null : row"
     ></tr>

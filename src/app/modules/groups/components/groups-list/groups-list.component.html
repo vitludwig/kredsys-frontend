@@ -27,11 +27,11 @@
       <th mat-header-cell *matHeaderCellDef></th>
       <td mat-cell *matCellDef="let group">
         <a [routerLink]="[group.id, ERoute.EDIT]"
-           mat-raised-button
+           mat-stroked-button
            color="accent">Upravit</a>
 
         <button
-          mat-raised-button
+          mat-stroked-button
           (clickConfirm)="removeGroup(group.id)"
           [confirmPreset]="'remove'"
           color="warn"

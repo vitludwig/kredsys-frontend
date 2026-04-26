@@ -66,11 +66,11 @@
 				*matCellDef="let row"
 			>
 				<a [routerLink]="[row.id, ERoute.EDIT]"
-					mat-raised-button
+					mat-stroked-button
 					color="accent">Upravit</a>
 
 				<button
-					mat-raised-button
+					mat-stroked-button
 					(clickConfirm)="removeGoods(row.id)"
 					[confirmPreset]="'remove'"
 					color="warn"
@@ -135,13 +135,13 @@
 					*matCellDef="let row"
 				>
 					<a [routerLink]="[ERoute.ADMIN_GOODS_TYPES, row.id, ERoute.EDIT]"
-						mat-raised-button
+						mat-stroked-button
 						color="accent"
 						class="me-3"
 					>Upravit</a>
 
 					<button
-						mat-raised-button
+						mat-stroked-button
 						(clickConfirm)="removeGoodsType(row.id)"
 						[confirmPreset]="'remove'"
 						color="warn"

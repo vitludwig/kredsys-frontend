@@ -36,11 +36,11 @@
 				font-size: .75rem;
 				font-weight: 900;
 				text-transform: uppercase;
-				background: rgba(var(--cy__color--warn-500), .9);
+				background: color-mix(in srgb, var(--mat-sys-error) 90%, transparent);
 				padding: 4px 12px;
-				border: 1px solid var(--cy__color--var-500);
+				border: 1px solid var(--mat-sys-error);
 				border-radius: 20px;
-				color: rgb(var(--cy__color--warn-contrast-500));
+				color: var(--mat-sys-on-error);
 			}
 		}
 	}
@@ -58,7 +58,7 @@
 	top: 0;
 	right: 0;
 	padding: 3px;
-	background-color: rgba(var(--cy__color--warn-500), .9);
+	background-color: color-mix(in srgb, var(--mat-sys-error) 90%, transparent);
 	cursor: pointer;
 	color: black;
 	opacity: 0;

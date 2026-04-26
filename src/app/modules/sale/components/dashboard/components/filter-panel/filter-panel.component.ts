@@ -8,21 +8,19 @@ import {Component, EventEmitter, Input, Output} from '@angular/core';
 })
 export class FilterPanelComponent {
 	@Input()
-	public filter: number[] = [];
+	public set filter(value: number[]) {
+		this.selectedType = value.length > 0 ? value[0] : null;
+	}
 
 	@Output()
-	public filterChange: EventEmitter<number[]> = new EventEmitter<number[]>();
+	public filterChange = new EventEmitter<number[]>();
 
 	@Input()
 	public itemTypes: Record<number, {name: string; id: number}>;
 
-	protected toggleFilter(type: number): void {
-    this.filter = [type];
-		this.filterChange.emit(this.filter);
-	}
+	protected selectedType: number | null = null;
 
-	protected clearFilter(): void {
-		this.filter = [];
-		this.filterChange.emit(this.filter);
+	protected onTypeChange(value: number | null): void {
+		this.filterChange.emit(value !== null ? [value] : []);
 	}
 }

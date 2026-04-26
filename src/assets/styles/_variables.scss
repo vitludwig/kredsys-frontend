@@ -3,15 +3,19 @@
   --cy__toolbar--height: 64px;
   --cy__sale-card--size: 240px;
 
-  /* rzb theme: primary #f0c100, background #15130e, warn #ffee58 */
-  --cy__color--background: 21, 19, 14;
-  --cy__color--border: 240, 193, 0;
-  --cy__color--primary-500: 240, 193, 0;
-  --cy__color--primary-contrast-500: 61, 47, 0;
-  --cy__color--accent-500: 240, 193, 0;
-  --cy__color--accent-contrast-500: 61, 47, 0;
-  --cy__color--warn-500: 255, 238, 88;
-  --cy__color--warn-contrast-500: 0, 0, 0;
+  // Primary palette tones via M3 semantic tokens
+  --palette-primary-10: var(--mat-sys-on-primary-fixed);
+  --palette-primary-20: var(--mat-sys-on-primary);
+  --palette-primary-30: var(--mat-sys-primary-container);
+  --palette-primary-40: var(--mat-sys-inverse-primary);
+  --palette-primary-80: var(--mat-sys-primary);
+  --palette-primary-90: var(--mat-sys-primary-fixed);
+
+  // Error palette tones via M3 semantic tokens
+  --palette-error-20: var(--mat-sys-on-error);
+  --palette-error-30: var(--mat-sys-error-container);
+  --palette-error-80: var(--mat-sys-error);
+  --palette-error-90: var(--mat-sys-on-error-container);
 }
 
 @media (max-width: 768px) {

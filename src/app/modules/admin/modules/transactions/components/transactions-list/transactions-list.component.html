@@ -78,7 +78,7 @@
           (clickConfirm)="stornoTransaction(row.id)"
           confirmTitle="Storno"
           confirmText="Opravdu chceš stornovat tuto transakci?"
-          mat-raised-button
+          mat-stroked-button
           color="warn"
           >Stornovat
         </button>
@@ -115,7 +115,7 @@
 
     <tr mat-row
       *matRowDef="let row; columns: displayedColumns;"
-      class="table-row"
+      class="table-row expandable-row"
       (click)="showDetail(row)"
       [class.expanded-row]="expandedRow === row"
     ></tr>

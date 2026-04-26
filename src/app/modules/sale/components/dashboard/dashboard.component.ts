@@ -56,7 +56,7 @@ export class DashboardComponent {
 					id: item.id!,
 					name: item.name,
 					price: item.price!,
-					icon: goodsTypes[item.goodsTypeId!]?.icon ?? 'other',
+					icon: goodsTypes[item.goodsTypeId!]?.icon ?? 'category',
 					type: item.goodsTypeId,
 				});
 

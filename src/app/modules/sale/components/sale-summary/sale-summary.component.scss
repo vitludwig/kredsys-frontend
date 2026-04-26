@@ -3,12 +3,13 @@
 	height: 100%;
 	display: flex;
 	flex-direction: column;
+	overflow: hidden;
 	position: relative;
 
 	.summary-list {
-		height: 70%;
-		overflow-y: auto;
-		position: relative;
+		flex: 1;
+		min-height: 0;
+		//overflow-y: auto;
 
 		.summary-item {
 			display: flex;
@@ -22,7 +23,7 @@
 			}
 
 			&:not(:last-child) {
-				border-bottom: 1px solid var(--cy__color--border);
+				border-bottom: 1px solid var(--mat-sys-primary);
 			}
 
 			.item-info {
@@ -64,7 +65,7 @@
 	}
 
 	.summary-actions {
-		margin-top: auto;
+		flex-shrink: 0;
 
 		.total {
 			font-size: 2.5em;
@@ -99,8 +100,9 @@
   .summary {
     font-size: 10px;
     .summary-list {
-      height: 35%;
-      overflow: auto;
+      flex: 1;
+      min-height: 0;
+      overflow-y: auto;
     }
     .summary-actions {
       margin-top: unset;

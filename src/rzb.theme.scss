@@ -155,6 +155,8 @@ $dark-theme: mat.define-theme((
 ));
 
 :root {
+  @include mat.system-level-colors($dark-theme);
+
   @include mat.core-theme($dark-theme);
   @include mat.button-theme($dark-theme);
   @include mat.all-component-themes($dark-theme);
@@ -162,4 +164,70 @@ $dark-theme: mat.define-theme((
   @include mat.color-variants-backwards-compatibility($dark-theme);
   @include mat.typography-hierarchy($dark-theme);
   @include mat.app-background();
+
+  --mat-button-filled-container-shape: 12px;
+  --mat-button-outlined-container-shape: 12px;
+  --mat-button-protected-container-shape: 12px;
+  --mat-button-text-container-shape: 12px;
+  --mat-button-tonal-container-shape: 12px;
+  --mat-button-toggle-shape: 12px;
+  --mat-standard-button-toggle-shape: 12px;
+}
+
+// Raised / filled buttons — enforce contrast against dark background
+// Colors are sourced from $_palettes, not hardcoded
+.mat-mdc-raised-button,
+.mat-mdc-unelevated-button,
+.mat-mdc-fab,
+.mat-mdc-mini-fab {
+  &.mat-primary,
+  &.mat-accent {
+    background-color: map.get($_palettes, primary, 80) !important;
+    color: map.get($_palettes, primary, 20) !important;
+  }
+
+  &.mat-warn {
+    background-color: map.get($_palettes, error, 40) !important;
+    color: map.get($_palettes, error, 100) !important;
+  }
+
+  &:not([color]), &.mat-unthemed {
+    background-color: map.get($_palettes, neutral, 70) !important;
+    color: map.get($_palettes, neutral, 10) !important;
+  }
+}
+
+// Stroked buttons
+.mat-mdc-outlined-button {
+  &.mat-primary,
+  &.mat-accent {
+    border-color: map.get($_palettes, primary, 80) !important;
+    color: map.get($_palettes, primary, 80) !important;
+  }
+
+  &.mat-warn {
+    border-color: map.get($_palettes, error, 70) !important;
+    color: map.get($_palettes, error, 70) !important;
+  }
+
+  &:not([color]) {
+    border-color: map.get($_palettes, neutral, 60) !important;
+    color: map.get($_palettes, neutral, 80) !important;
+  }
+}
+
+// Text buttons (mat-button)
+.mat-mdc-button {
+  &.mat-primary,
+  &.mat-accent {
+    color: map.get($_palettes, primary, 80) !important;
+  }
+
+  &.mat-warn {
+    color: map.get($_palettes, error, 70) !important;
+  }
+
+  &:not([color]) {
+    color: map.get($_palettes, neutral, 80) !important;
+  }
 }

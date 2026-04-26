@@ -2,23 +2,39 @@
   width: 100%;
   display: table;
 
+
   .table-row {
     &:not(.expanded-row) {
       &:hover {
-        background: rgba(var(--cy__color--primary-500), .10);
+        background: color-mix(in srgb, var(--mat-sys-primary) 10%, transparent);
       }
 
       &:active {
-        background: rgba(var(--cy__color--warn-500), .10);
+        background: color-mix(in srgb, var(--mat-sys-error) 10%, transparent);
       }
     }
 
     &.expanded-row {
-      background: rgba(var(--cy__color--accent-500), .10);;
+      background: color-mix(in srgb, var(--mat-sys-secondary) 10%, transparent);
+    }
+  }
+
+  .expandable-row {
+    cursor: pointer;
+
+    td.mat-mdc-cell:first-child::before {
+      content: '\e5cf';
+      font-family: 'Material Icons';
+      font-size: 1.25rem;
+      vertical-align: middle;
+      margin-right: 0.5rem;
+      display: inline-block;
+      transition: transform 300ms ease;
+      color: var(--mat-sys-on-surface-variant);
     }
 
-    td {
-      border-bottom-width: 0;
+    &.expanded-row td.mat-mdc-cell:first-child::before {
+      transform: rotate(180deg);
     }
   }
 
@@ -35,3 +51,8 @@
     }
   }
 }
+//::ng-deep {
+.mat-mdc-cell {
+  border-bottom-color: color-mix(in srgb, var(--mat-table-row-item-outline-color) 30%, transparent) !important;
+}
+//}
