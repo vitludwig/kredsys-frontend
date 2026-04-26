@@ -16,7 +16,7 @@ import { IUser } from '../../../../common/types/IUser';
 import { ICurrencyAccount } from '../../../../common/types/ICurrency';
 import { ICard } from '../../../../common/types/ICard';
 import { ITransaction } from '../transactions/services/transaction/types/ITransaction';
-import { UserInfoDetailComponent } from './components/user-info-detail/user-info-detail.component';
+import { ITransactionFilter, UserInfoDetailComponent } from './components/user-info-detail/user-info-detail.component';
 
 @Component({
   selector: 'app-user-info',
@@ -55,6 +55,9 @@ export class UserInfoComponent extends WithSubscriptions implements OnInit {
   protected placeId: number | null = null;
 
   protected cardUidInput = '';
+
+  private transactionFilter = '';
+  private transactionSort = 'created desc';
 
   public ngOnInit(): void {
     this.defaultCurrencyId = this.currencyService.defaultCurrency?.id ?? null;
@@ -139,7 +142,7 @@ export class UserInfoComponent extends WithSubscriptions implements OnInit {
     try {
       const [accounts, txResult, cardsResult] = await Promise.all([
         this.usersService.getUserCurrencyAccounts(user.id),
-        this.usersService.getUserTransactions(user.id, 0, 20, '', 'created desc'),
+        this.usersService.getUserTransactions(user.id, 0, 20, this.transactionFilter, this.transactionSort),
         this.usersService.getUserCards(user.id),
       ]);
       this.currencyAccount = accounts[0] ?? null;
@@ -168,11 +171,43 @@ export class UserInfoComponent extends WithSubscriptions implements OnInit {
     this.transactionsPage++;
     try {
       const result = await this.usersService.getUserTransactions(
-        this.selectedUser.id!, this.transactionsPage, 20, '', 'created desc',
+        this.selectedUser.id!, this.transactionsPage, 20, this.transactionFilter, this.transactionSort,
       );
       this.transactions = [...this.transactions, ...result.data];
     } catch {
       this.alertService.error('Chyba při načítání transakcí');
     }
+  }
+
+  protected async onTransactionFilterChange(filter: ITransactionFilter): Promise<void> {
+    this.transactionFilter = this.buildFilterString(filter);
+    this.transactionSort = filter.sort;
+    this.transactionsPage = 0;
+    if (!this.selectedUser?.id) return;
+    try {
+      const result = await this.usersService.getUserTransactions(
+        this.selectedUser.id, 0, 20, this.transactionFilter, this.transactionSort,
+      );
+      this.transactions = result.data;
+      this.transactionsTotal = result.count;
+    } catch {
+      this.alertService.error('Chyba při načítání transakcí');
+    }
+  }
+
+  private buildFilterString(filter: ITransactionFilter): string {
+    const parts: string[] = [];
+    if (filter.text) {
+      parts.push(`info#=*${filter.text}/i | placeName#=*${filter.text}/i`);
+    }
+    if (filter.dateFrom) parts.push(`created>=${filter.dateFrom}`);
+    if (filter.dateTo) parts.push(`created<=${filter.dateTo}`);
+    if (filter.amountMin !== null && filter.amountMin !== undefined) {
+      parts.push(`amount>=${filter.amountMin}`);
+    }
+    if (filter.amountMax !== null && filter.amountMax !== undefined) {
+      parts.push(`amount<=${filter.amountMax}`);
+    }
+    return parts.join(', ');
   }
 }

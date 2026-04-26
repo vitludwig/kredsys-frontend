@@ -1,5 +1,6 @@
-import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
 import { DatePipe } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
@@ -7,8 +8,13 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { firstValueFrom } from 'rxjs';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { firstValueFrom, Subject } from 'rxjs';
+import { debounceTime, takeUntil } from 'rxjs/operators';
 
+import { WithSubscriptions } from '../../../../../../common/components/with-subscriptions';
 import { IUser } from '../../../../../../common/types/IUser';
 import { ICurrencyAccount } from '../../../../../../common/types/ICurrency';
 import { ICard } from '../../../../../../common/types/ICard';
@@ -16,12 +22,28 @@ import { ITransaction } from '../../../transactions/services/transaction/types/I
 import { ETransactionType } from '../../../transactions/services/transaction/types/ETransactionType';
 import { TransactionService } from '../../../transactions/services/transaction/transaction.service';
 import { UsersService } from '../../../../services/users/users.service';
+import { GoodsService } from '../../../../services/goods/goods.service';
 import { AlertService } from '../../../../../../common/services/alert/alert.service';
 import { ConfirmDialogComponent } from '../../../../../../common/components/confirm-dialog/confirm-dialog.component';
 import { ERoute } from '../../../../../../common/types/ERoute';
 import { ChargeDialogComponent } from '../charge-dialog/charge-dialog.component';
 import { DischargeDialogComponent } from '../discharge-dialog/discharge-dialog.component';
 import { AssignCardDialogComponent } from '../assign-card-dialog/assign-card-dialog.component';
+
+export interface ITransactionFilter {
+  text: string;
+  dateFrom: string;
+  dateTo: string;
+  amountMin: number | null;
+  amountMax: number | null;
+  sort: string;
+}
+
+interface ITransactionRecordRow {
+  goodsName: string;
+  multiplier: number;
+  amount: number;
+}
 
 @Component({
   selector: 'app-user-info-detail',
@@ -30,14 +52,18 @@ import { AssignCardDialogComponent } from '../assign-card-dialog/assign-card-dia
   standalone: true,
   imports: [
     DatePipe,
+    FormsModule,
     MatButtonModule,
     MatCardModule,
     MatIconModule,
     MatProgressSpinnerModule,
     MatTooltipModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
   ],
 })
-export class UserInfoDetailComponent {
+export class UserInfoDetailComponent extends WithSubscriptions implements OnInit {
   @Input() user!: IUser;
   @Input() currencyAccount: ICurrencyAccount | null = null;
   @Input() accountLoaded = false;
@@ -49,14 +75,37 @@ export class UserInfoDetailComponent {
 
   @Output() refresh = new EventEmitter<void>();
   @Output() loadMoreTransactions = new EventEmitter<void>();
+  @Output() filterChange = new EventEmitter<ITransactionFilter>();
 
   protected readonly String = String;
+  protected readonly ETransactionType = ETransactionType;
+
+  protected filterText = '';
+  protected filterDateFrom = '';
+  protected filterDateTo = '';
+  protected filterAmountMin: number | null = null;
+  protected filterAmountMax: number | null = null;
+  protected sortField: 'created' | 'amount' = 'created';
+  protected sortDir: 'asc' | 'desc' = 'desc';
+
+  protected expandedTransactionId: number | null = null;
+  protected transactionRecords: ITransactionRecordRow[] = [];
+  protected loadingRecords = false;
+
+  private filterChange$ = new Subject<void>();
 
   private dialog = inject(MatDialog);
   private router = inject(Router);
   private transactionService = inject(TransactionService);
   private usersService = inject(UsersService);
+  private goodsService = inject(GoodsService);
   private alertService = inject(AlertService);
+
+  public ngOnInit(): void {
+    this.filterChange$
+      .pipe(debounceTime(400), takeUntil(this.destroy$))
+      .subscribe(() => this.emitFilter());
+  }
 
   protected get avatarInitial(): string {
     return this.user?.name?.[0]?.toUpperCase() ?? '?';
@@ -80,6 +129,78 @@ export class UserInfoDetailComponent {
 
   protected canStorno(tx: ITransaction): boolean {
     return tx.type === ETransactionType.PAYMENT && !tx.cancellation;
+  }
+
+  protected typeLabel(type: ETransactionType): string {
+    switch (type) {
+      case ETransactionType.PAYMENT: return 'Platba';
+      case ETransactionType.DEPOSIT: return 'Dobití';
+      case ETransactionType.WITHDRAW: return 'Výběr';
+      default: return type;
+    }
+  }
+
+  protected onFilterChange(): void {
+    this.filterChange$.next();
+  }
+
+  protected onSortChange(): void {
+    // Sort changes apply immediately (no debounce needed)
+    this.emitFilter();
+  }
+
+  protected onResetFilter(): void {
+    this.filterText = '';
+    this.filterDateFrom = '';
+    this.filterDateTo = '';
+    this.filterAmountMin = null;
+    this.filterAmountMax = null;
+    this.sortField = 'created';
+    this.sortDir = 'desc';
+    this.emitFilter();
+  }
+
+  private emitFilter(): void {
+    this.filterChange.emit({
+      text: this.filterText.trim(),
+      dateFrom: this.filterDateFrom,
+      dateTo: this.filterDateTo,
+      amountMin: this.filterAmountMin,
+      amountMax: this.filterAmountMax,
+      sort: `${this.sortField} ${this.sortDir}`,
+    });
+  }
+
+  protected async toggleTransactionDetail(tx: ITransaction): Promise<void> {
+    if (this.expandedTransactionId === tx.id) {
+      this.expandedTransactionId = null;
+      this.transactionRecords = [];
+      return;
+    }
+
+    this.expandedTransactionId = tx.id;
+    this.transactionRecords = [];
+
+    if (tx.type !== ETransactionType.PAYMENT) return;
+
+    this.loadingRecords = true;
+    try {
+      const detail = await this.transactionService.getTransactionDetail(tx.id);
+      const rows: ITransactionRecordRow[] = [];
+      for (const record of detail.records) {
+        const goodie = await this.goodsService.getGoodie(record.goodsId);
+        rows.push({
+          goodsName: goodie.name,
+          multiplier: record.multiplier,
+          amount: record.amountSum,
+        });
+      }
+      this.transactionRecords = rows;
+    } catch {
+      this.alertService.error('Chyba při načítání položek transakce');
+    } finally {
+      this.loadingRecords = false;
+    }
   }
 
   protected async onCharge(): Promise<void> {

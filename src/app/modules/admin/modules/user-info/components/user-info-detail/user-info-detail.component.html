@@ -6,13 +6,12 @@
     <!-- Profile Card -->
     <mat-card class="uid__card--profile">
       <div class="uid__card-header">
-        <div class="uid__avatar">{{ avatarInitial }}</div>
         <div class="uid__profile-info">
           <h2 class="uid__name">{{ user.name }}</h2>
           <p class="uid__email">{{ user.email }}</p>
           <p class="uid__member-id" data-testid="member-id">
             @if (user.memberId !== null) {
-              MBR-{{ user.memberId }}
+              Členské číslo {{ user.memberId }}
             } @else {
               &mdash;
             }
@@ -73,14 +72,66 @@
   <div class="uid__section">
     <h3>Transakce</h3>
 
+    <!-- Filter bar -->
+    <div class="uid__tx-filters">
+      <mat-form-field class="uid__tx-filter--text" appearance="outline" subscriptSizing="dynamic">
+        <mat-label>Hledat (info, místo)</mat-label>
+        <input matInput [(ngModel)]="filterText" (ngModelChange)="onFilterChange()">
+      </mat-form-field>
+      <mat-form-field class="uid__tx-filter--date" appearance="outline" subscriptSizing="dynamic">
+        <mat-label>Od</mat-label>
+        <input matInput type="date" [(ngModel)]="filterDateFrom" (ngModelChange)="onFilterChange()">
+      </mat-form-field>
+      <mat-form-field class="uid__tx-filter--date" appearance="outline" subscriptSizing="dynamic">
+        <mat-label>Do</mat-label>
+        <input matInput type="date" [(ngModel)]="filterDateTo" (ngModelChange)="onFilterChange()">
+      </mat-form-field>
+      <mat-form-field class="uid__tx-filter--amount" appearance="outline" subscriptSizing="dynamic">
+        <mat-label>Min Kč</mat-label>
+        <input matInput type="number" [(ngModel)]="filterAmountMin" (ngModelChange)="onFilterChange()">
+      </mat-form-field>
+      <mat-form-field class="uid__tx-filter--amount" appearance="outline" subscriptSizing="dynamic">
+        <mat-label>Max Kč</mat-label>
+        <input matInput type="number" [(ngModel)]="filterAmountMax" (ngModelChange)="onFilterChange()">
+      </mat-form-field>
+      <mat-form-field class="uid__tx-filter--sort" appearance="outline" subscriptSizing="dynamic">
+        <mat-label>Řadit podle</mat-label>
+        <mat-select [(ngModel)]="sortField" (ngModelChange)="onSortChange()">
+          <mat-option value="created">Datum</mat-option>
+          <mat-option value="amount">Částka</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field class="uid__tx-filter--sort" appearance="outline" subscriptSizing="dynamic">
+        <mat-label>Směr</mat-label>
+        <mat-select [(ngModel)]="sortDir" (ngModelChange)="onSortChange()">
+          <mat-option value="desc">Sestupně</mat-option>
+          <mat-option value="asc">Vzestupně</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <button mat-stroked-button (click)="onResetFilter()">
+        <mat-icon>clear</mat-icon> Reset
+      </button>
+    </div>
+
     @if (transactions.length === 0 && accountLoaded) {
       <p class="uid__empty">Žádné transakce</p>
     }
 
     <div class="uid__tx-list">
       @for (tx of transactions; track tx.id) {
-        <div class="uid__tx-row">
-          <span class="uid__tx-info">{{ tx.info || tx.placeName }}</span>
+        <div
+          class="uid__tx-row"
+          [class.uid__tx-row--expanded]="expandedTransactionId === tx.id"
+          [class.uid__tx-row--expandable]="tx.type === ETransactionType.PAYMENT"
+          (click)="toggleTransactionDetail(tx)">
+          <span class="uid__tx-info">
+            @if (tx.type === ETransactionType.PAYMENT) {
+              <mat-icon class="uid__tx-expand-icon">{{ expandedTransactionId === tx.id ? 'expand_more' : 'chevron_right' }}</mat-icon>
+            }
+            <strong>{{ typeLabel(tx.type) }}</strong>
+            @if (tx.placeName) { <span class="uid__tx-place">— {{ tx.placeName }}</span> }
+            @if (tx.info) { <span class="uid__tx-text">— {{ tx.info }}</span> }
+          </span>
           <span class="uid__tx-date">{{ tx.created | date:'dd.MM. HH:mm' }}</span>
           <span
             class="uid__tx-amount"
@@ -88,7 +139,7 @@
             [class.uid__tx-amount--negative]="tx.amount < 0">
             {{ tx.amount > 0 ? '+' : '' }}{{ tx.amount }} Kč
           </span>
-          <span class="uid__tx-storno">
+          <span class="uid__tx-storno" (click)="$event.stopPropagation()">
             @if (canStorno(tx)) {
               <button mat-icon-button (click)="onStorno(tx)" aria-label="Stornovat">
                 <mat-icon>undo</mat-icon>
@@ -96,6 +147,26 @@
             }
           </span>
         </div>
+
+        @if (expandedTransactionId === tx.id) {
+          <div class="uid__tx-detail">
+            @if (loadingRecords) {
+              <div class="uid__tx-detail-loading">
+                <mat-spinner diameter="20"></mat-spinner>
+              </div>
+            } @else if (transactionRecords.length > 0) {
+              <h4 class="uid__tx-detail-title">Položky</h4>
+              @for (record of transactionRecords; track $index) {
+                <div class="uid__tx-record">
+                  <span class="uid__tx-record-name">{{ record.multiplier }}× {{ record.goodsName }}</span>
+                  <span class="uid__tx-record-amount">{{ record.amount }} Kč</span>
+                </div>
+              }
+            } @else {
+              <span class="uid__empty">Žádné položky</span>
+            }
+          </div>
+        }
       }
     </div>
 

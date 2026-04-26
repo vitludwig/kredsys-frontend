@@ -57,7 +57,8 @@
       [placeId]="placeId"
       [defaultCurrencyId]="defaultCurrencyId"
       (refresh)="onRefresh()"
-      (loadMoreTransactions)="onLoadMoreTransactions()">
+      (loadMoreTransactions)="onLoadMoreTransactions()"
+      (filterChange)="onTransactionFilterChange($event)">
     </app-user-info-detail>
   }
 </div>
