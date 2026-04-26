@@ -56,8 +56,10 @@ export class UserInfoComponent extends WithSubscriptions implements OnInit {
 
   protected cardUidInput = '';
 
+  private static readonly TRANSACTIONS_PAGE_SIZE = 20;
+  private static readonly DEFAULT_SORT = 'created desc, id desc';
   private transactionFilter = '';
-  private transactionSort = 'created desc';
+  private transactionSort = UserInfoComponent.DEFAULT_SORT;
 
   public ngOnInit(): void {
     this.defaultCurrencyId = this.currencyService.defaultCurrency?.id ?? null;
@@ -133,7 +135,7 @@ export class UserInfoComponent extends WithSubscriptions implements OnInit {
     }
 
     this.accountLoaded = false;
-    this.transactionsPage = 0;
+    this.transactionsPage = 1;
     this.currencyAccount = null;
     this.transactions = [];
     this.transactionsTotal = 0;
@@ -142,7 +144,10 @@ export class UserInfoComponent extends WithSubscriptions implements OnInit {
     try {
       const [accounts, txResult, cardsResult] = await Promise.all([
         this.usersService.getUserCurrencyAccounts(user.id),
-        this.usersService.getUserTransactions(user.id, 0, 20, this.transactionFilter, this.transactionSort),
+        this.usersService.getUserTransactions(
+          user.id, 1, UserInfoComponent.TRANSACTIONS_PAGE_SIZE,
+          this.transactionFilter, this.transactionSort,
+        ),
         this.usersService.getUserCards(user.id),
       ]);
       this.currencyAccount = accounts[0] ?? null;
@@ -171,7 +176,8 @@ export class UserInfoComponent extends WithSubscriptions implements OnInit {
     this.transactionsPage++;
     try {
       const result = await this.usersService.getUserTransactions(
-        this.selectedUser.id!, this.transactionsPage, 20, this.transactionFilter, this.transactionSort,
+        this.selectedUser.id!, this.transactionsPage, UserInfoComponent.TRANSACTIONS_PAGE_SIZE,
+        this.transactionFilter, this.transactionSort,
       );
       this.transactions = [...this.transactions, ...result.data];
     } catch {
@@ -181,12 +187,13 @@ export class UserInfoComponent extends WithSubscriptions implements OnInit {
 
   protected async onTransactionFilterChange(filter: ITransactionFilter): Promise<void> {
     this.transactionFilter = this.buildFilterString(filter);
-    this.transactionSort = filter.sort;
-    this.transactionsPage = 0;
+    this.transactionSort = `${filter.sort}, id desc`;
+    this.transactionsPage = 1;
     if (!this.selectedUser?.id) return;
     try {
       const result = await this.usersService.getUserTransactions(
-        this.selectedUser.id, 0, 20, this.transactionFilter, this.transactionSort,
+        this.selectedUser.id, 1, UserInfoComponent.TRANSACTIONS_PAGE_SIZE,
+        this.transactionFilter, this.transactionSort,
       );
       this.transactions = result.data;
       this.transactionsTotal = result.count;
