@@ -1,5 +1,4 @@
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -24,7 +23,6 @@ import { UserInfoDetailComponent } from './components/user-info-detail/user-info
   templateUrl: './user-info.component.html',
   styleUrls: ['./user-info.component.scss'],
   imports: [
-    CommonModule,
     FormsModule,
     ReactiveFormsModule,
     MatFormFieldModule,
@@ -36,15 +34,16 @@ import { UserInfoDetailComponent } from './components/user-info-detail/user-info
     UserInfoDetailComponent,
   ],
 })
-export class UserInfoComponent extends WithSubscriptions implements OnInit, OnDestroy {
+export class UserInfoComponent extends WithSubscriptions implements OnInit {
   private usersService = inject(UsersService);
   private placeService = inject(PlaceService);
   private alertService = inject(AlertService);
-  protected currencyService = inject(CurrencyService);
+  private currencyService = inject(CurrencyService);
 
   protected searchControl = new FormControl<string | IUser>('');
   protected userOptions: IUser[] = [];
   protected isSearching = false;
+  protected defaultCurrencyId: number | null = null;
 
   protected selectedUser: IUser | null = null;
   protected currencyAccount: ICurrencyAccount | null = null;
@@ -58,14 +57,14 @@ export class UserInfoComponent extends WithSubscriptions implements OnInit, OnDe
   protected cardUidInput = '';
 
   public ngOnInit(): void {
+    this.defaultCurrencyId = this.currencyService.defaultCurrency?.id ?? null;
+
     this.searchControl.valueChanges.pipe(
       debounceTime(300),
       distinctUntilChanged(),
       filter(v => typeof v === 'string' && (v as string).length >= 2),
       takeUntil(this.destroy$),
-    ).subscribe(async (search) => {
-      await this.doSearch(search as string);
-    });
+    ).subscribe(search => void this.doSearch(search as string));
 
     this.placeService.selectedPlace$.pipe(takeUntil(this.destroy$)).subscribe(place => {
       this.placeId = place?.id ?? null;
@@ -102,6 +101,7 @@ export class UserInfoComponent extends WithSubscriptions implements OnInit, OnDe
     this.transactionsTotal = 0;
     this.transactionsPage = 0;
     this.cards = [];
+    this.userOptions = [];
     this.searchControl.setValue('');
     this.cardUidInput = '';
   }
@@ -123,6 +123,11 @@ export class UserInfoComponent extends WithSubscriptions implements OnInit, OnDe
   }
 
   private async loadUserData(user: IUser): Promise<void> {
+    if (user.id == null) {
+      this.alertService.error('Uživatel nemá přiřazené ID');
+      return;
+    }
+
     this.accountLoaded = false;
     this.transactionsPage = 0;
     this.currencyAccount = null;
@@ -132,9 +137,9 @@ export class UserInfoComponent extends WithSubscriptions implements OnInit, OnDe
 
     try {
       const [accounts, txResult, cardsResult] = await Promise.all([
-        this.usersService.getUserCurrencyAccounts(user.id!),
-        this.usersService.getUserTransactions(user.id!, 0, 20, '', 'created desc'),
-        this.usersService.getUserCards(user.id!),
+        this.usersService.getUserCurrencyAccounts(user.id),
+        this.usersService.getUserTransactions(user.id, 0, 20, '', 'created desc'),
+        this.usersService.getUserCards(user.id),
       ]);
       this.currencyAccount = accounts[0] ?? null;
       this.transactions = txResult.data;

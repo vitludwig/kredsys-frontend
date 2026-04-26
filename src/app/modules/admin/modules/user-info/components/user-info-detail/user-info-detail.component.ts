@@ -7,6 +7,7 @@ import { ITransaction } from '../../../transactions/services/transaction/types/I
 @Component({
   selector: 'app-user-info-detail',
   template: '',
+  standalone: true,
   imports: [],
 })
 export class UserInfoDetailComponent {

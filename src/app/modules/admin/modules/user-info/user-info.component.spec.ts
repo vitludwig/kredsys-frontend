@@ -12,11 +12,11 @@ describe('UserInfoComponent', () => {
   let fixture: ComponentFixture<UserInfoComponent>;
 
   const mockUsersService = {
-    getUsers: jasmine.createSpy('getUsers').and.returnValue(Promise.resolve({ data: [], total: 0, page: 0, pageSize: 10 })),
+    getUsers: jasmine.createSpy('getUsers').and.returnValue(Promise.resolve({ data: [], count: 0 })),
     getUserByCardUid: jasmine.createSpy('getUserByCardUid'),
     getUserCurrencyAccounts: jasmine.createSpy('getUserCurrencyAccounts').and.returnValue(Promise.resolve([])),
-    getUserTransactions: jasmine.createSpy('getUserTransactions').and.returnValue(Promise.resolve({ data: [], total: 0, page: 0, pageSize: 20 })),
-    getUserCards: jasmine.createSpy('getUserCards').and.returnValue(Promise.resolve({ data: [], total: 0, page: 0, pageSize: 999 })),
+    getUserTransactions: jasmine.createSpy('getUserTransactions').and.returnValue(Promise.resolve({ data: [], count: 0 })),
+    getUserCards: jasmine.createSpy('getUserCards').and.returnValue(Promise.resolve({ data: [], count: 0 })),
     getUser: jasmine.createSpy('getUser').and.returnValue(Promise.resolve({ id: 1, name: 'Test', email: 'test@test.cz', memberId: 1, blocked: false, roles: [] })),
   };
 
