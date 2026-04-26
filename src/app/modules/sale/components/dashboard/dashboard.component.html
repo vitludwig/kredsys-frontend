@@ -10,6 +10,7 @@
         class="dashboard__item mat-elevation-z4"
         mat-ripple
         (click)="addItem(item)"
+        [attr.data-testid]="'goods-tile-' + item.id"
         >
         <mat-card-content class="dashboard__content">
           <div class="dashboard__item-body">
