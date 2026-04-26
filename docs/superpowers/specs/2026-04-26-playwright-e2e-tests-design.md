@@ -32,7 +32,7 @@ Build a Playwright E2E test suite covering the critical user flows of the Kredsy
 |---|---|---|
 | Mocking strategy | Full HTTP mock via `page.route()`, with mode switch to real backend | Frontend tests test the frontend; deterministic; offline-capable |
 | Coverage depth | (B) Critical user flows + role-based access + form validation + edge cases (~80 tests) | Sweet spot between regression safety and maintenance cost |
-| Hardware (NFC) | Use existing `CardLoaderComponent` debug mode (gated by `localStorage.isDebug='true'`) | Zero production code change, realistic flow |
+| Hardware (NFC) | Use existing `CardLoaderComponent` debug mode (gated by `localStorage.isDebug='true'`); extend it with an "all users" dropdown for E2E selection | Realistic flow; debug-gated extension keeps production UX intact |
 | Hardware (printer) | Skip entirely | Not safety-critical; out of scope |
 | Selectors | Proactively add `data-testid` on key elements before writing tests | Stable, self-documenting; one sweep commit |
 | Test names language | English | Standard code convention |
@@ -174,9 +174,11 @@ Because real-mode cannot mutate state per test, edge cases must be **pre-seeded 
 
 In mock mode, these are all just data. In real mode, they're loaded from `seed.sql` once.
 
-### Card Loader Constraint
+### Card Loader
 
-`CardLoaderComponent` shows the first 3 user IDs that have cards (per `slice(0, 3)`). Fixtures must order `cards.ts` so that **Marie**, **Jana**, and one PowerSales customer are in the first three — that's what tests will scan.
+`CardLoaderComponent` will be extended (debug mode only) with a `<mat-select>` dropdown listing **all** users that have a card, so tests can select any user by name without depending on the first-3-users limit. Selecting a user emits the same `cardIdChange` event as the existing buttons.
+
+The existing buttons (first 3 users + "Simulovat novou kartu") stay — the dropdown is additive. Both are gated by the existing `@if (authService.isLogged && authService.isDebug)` block, so production UX is unaffected.
 
 ## Mock Layer
 
@@ -387,15 +389,17 @@ The login form is exercised only in `tests/auth/login.spec.ts` (positive + negat
 
 ## Hardware Bypass (NFC)
 
-The component already handles all hardware concerns when `localStorage.isDebug === 'true'`:
+The component handles all hardware concerns when `localStorage.isDebug === 'true'`. We extend the existing debug UI with one additive control — a "select user" dropdown listing **all** users that have a card — so tests can pick any user by name. Production UX is unchanged (both controls live inside the existing `@if (authService.isDebug)` block).
 
-1. **Existing card scan** — `CardLoaderComponent` renders buttons named after the first 3 users with cards. Click by name:
+1. **Existing card scan** — pick from the new debug dropdown:
    ```typescript
    export async function scanCard(page: Page, userName: string) {
-     await page.getByRole('button', { name: userName }).click();
+     await page.getByTestId('card-loader-debug-user-select').click();
+     await page.getByRole('option', { name: userName }).click();
      await expect(page.getByText('Načtěte kartu')).toBeHidden();
    }
    ```
+   The original first-3-users buttons remain available for manual debug use but tests will not depend on them.
 
 2. **New card scan** (check-in flow) — override `Math.random()` for deterministic UID:
    ```typescript
@@ -427,6 +431,7 @@ Single commit before writing tests. Adds ~50 attributes. Convention: `<modul>-<e
 | POS | `sale-summary-total`, `sale-summary-total-left`, `sale-submit`, `sale-clear`, `sale-overdraft-warning`, `filter-panel-${typeId}`, `goods-tile-${goodsId}`, `basket-item-${goodsId}`, `basket-item-remove` |
 | Dialogs | `confirm-yes`, `confirm-no`, `charge-amount`, `charge-submit`, `discharge-amount`, `discharge-submit`, `storno-confirm`, `assign-card-submit` |
 | Card-info | `card-info-balance`, `card-info-qr`, `card-info-group-${id}` |
+| Card loader (debug) | `card-loader-debug-user-select`, `card-loader-debug-new-card` |
 | Check-in | `checkin-member-id`, `checkin-name`, `checkin-email`, `checkin-group`, `checkin-submit` |
 | Place select | `place-option-${id}` |
 | Transactions | `tx-tab-all`, `tx-tab-place`, `tx-tab-user`, `tx-row-${id}`, `tx-row-storno-btn`, `tx-filter-from`, `tx-filter-to` |
@@ -608,7 +613,7 @@ Out of scope for this design but anticipated:
 1. **`selectedPlace` persistence location** — assumed localStorage; verify against `PlaceService` during implementation. If it's purely in-memory, `MockAuthAdapter.selectPlace` must navigate via UI instead of injecting.
 2. **Exact API endpoint paths** — `services.md` is the design reference; final paths verified against actual service code during mock implementation. Mock layer must log unmatched routes (built in).
 3. **Password hashing in seed.sql** — generator emits placeholders; backend integration requires either a migration script or a one-time bcrypt step. Acceptable since seed.sql is intended for dev/test environments only.
-4. **Card-loader's first-3-users limit** — fixtures must order `cards.ts` so that scan-target users (Marie, Jana, one PowerSales) are in the first three. Enforce via test in `e2e:gen-sql` or unit assertion at module load.
+4. ~~Card-loader's first-3-users limit~~ — **resolved**: a debug-only dropdown listing all users will be added to `CardLoaderComponent`. Fixture ordering becomes irrelevant.
 5. **`Math.random()` override for new card UID** — if fragile across browsers, fall back to keyboard-burst simulation.
 6. **Dual-mode test count** — ~5-10 tests will be skipped in real mode (HTTP error simulations). Acceptable.
 
