@@ -14,6 +14,12 @@
     min-width: 240px;
   }
 
+  &__card-loader {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+  }
+
   &__search-email {
     color: var(--mat-sys-on-surface-variant);
     margin-left: 0.5rem;

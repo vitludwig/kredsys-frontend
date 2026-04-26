@@ -23,18 +23,22 @@
       </mat-autocomplete>
     </mat-form-field>
 
-    @if (!selectedUser) {
-      <app-card-loader
-        [showNewCardButton]="false"
-        (cardIdChange)="onCardLoaded($event)">
-      </app-card-loader>
-    } @else {
+    @if (selectedUser) {
       <button mat-raised-button color="warn" data-testid="close-btn" (click)="onClose()">
         <mat-icon>close</mat-icon>
         Zavřít
       </button>
     }
   </div>
+
+  @if (!selectedUser) {
+    <div class="user-info__card-loader">
+      <app-card-loader
+        [showNewCardButton]="false"
+        (cardIdChange)="onCardLoaded($event)">
+      </app-card-loader>
+    </div>
+  }
 
   @if (selectedUser) {
     <app-user-info-detail
