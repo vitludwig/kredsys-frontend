@@ -8,12 +8,13 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { UsersService } from '../../../../services/users/users.service';
 import { AlertService } from '../../../../../../common/services/alert/alert.service';
+import { AutofocusDirective } from '../../../../../../common/directives/autofocus.directive';
 
 @Component({
   selector: 'app-user-info-assign-card-dialog',
   templateUrl: './assign-card-dialog.component.html',
   standalone: true,
-  imports: [FormsModule, MatDialogModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatIconModule, MatProgressSpinnerModule],
+  imports: [FormsModule, MatDialogModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatIconModule, MatProgressSpinnerModule, AutofocusDirective],
 })
 export class AssignCardDialogComponent {
   private dialogRef = inject(MatDialogRef<AssignCardDialogComponent>);

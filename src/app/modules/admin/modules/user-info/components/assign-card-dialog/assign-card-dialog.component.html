@@ -8,7 +8,7 @@
   <mat-form-field style="width:100%">
     <mat-label>UID karty</mat-label>
     <input matInput type="number" [(ngModel)]="cardUid" (keydown.enter)="submit()"
-           placeholder="Přiložit kartu nebo zadat číslo" autofocus>
+           placeholder="Přiložit kartu nebo zadat číslo" [appAutofocus]="true">
     <mat-icon matSuffix>contactless</mat-icon>
   </mat-form-field>
 
