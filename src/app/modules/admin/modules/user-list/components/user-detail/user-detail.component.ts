@@ -94,7 +94,12 @@ export class UserDetailComponent implements OnInit {
 				await this.addCards(user.id);
 			}
 
-			this.router.navigate([ERoute.ADMIN, ERoute.ADMIN_USERS]);
+			const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl');
+			if(returnUrl) {
+				this.router.navigateByUrl(returnUrl);
+			} else {
+				this.router.navigate([ERoute.ADMIN, ERoute.ADMIN_USERS]);
+			}
 		} catch(e) {
 			console.error('Cannot add user', e);
 

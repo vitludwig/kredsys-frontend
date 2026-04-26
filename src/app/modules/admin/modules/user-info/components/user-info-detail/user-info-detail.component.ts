@@ -299,7 +299,10 @@ export class UserInfoDetailComponent extends WithSubscriptions implements OnInit
   }
 
   protected onEditProfile(): void {
-    void this.router.navigate([ERoute.ADMIN, ERoute.ADMIN_USERS, this.user.id, ERoute.EDIT]);
+    void this.router.navigate(
+      [ERoute.ADMIN, ERoute.ADMIN_USERS, this.user.id, ERoute.EDIT],
+      { queryParams: { returnUrl: `/${ERoute.ADMIN}/${ERoute.ADMIN_USER_INFO}` } },
+    );
   }
 
   protected onChangePassword(): void {
