@@ -1,0 +1,156 @@
+<div class="uid">
+
+  <!-- Row 1: Profile + Balance -->
+  <div class="uid__row--info">
+
+    <!-- Profile Card -->
+    <mat-card class="uid__card--profile">
+      <div class="uid__card-header">
+        <div class="uid__avatar">{{ avatarInitial }}</div>
+        <div class="uid__profile-info">
+          <h2 class="uid__name">{{ user.name }}</h2>
+          <p class="uid__email">{{ user.email }}</p>
+          @if (user.groups && user.groups.length > 0) {
+            <p class="uid__groups">Skupiny: {{ user.groups.join(', ') }}</p>
+          }
+          <p class="uid__member-id" data-testid="member-id">
+            @if (user.memberId !== null) {
+              MBR-{{ user.memberId }}
+            } @else {
+              &mdash;
+            }
+          </p>
+          @if (user.blocked) {
+            <span class="uid__badge--blocked">Zablokován</span>
+          }
+        </div>
+        <button mat-icon-button class="uid__edit-btn" (click)="onEditProfile()" aria-label="Upravit profil">
+          <mat-icon>edit</mat-icon>
+        </button>
+      </div>
+    </mat-card>
+
+    <!-- Balance Card -->
+    <mat-card class="uid__card--balance">
+      <h3>Zůstatek</h3>
+      @if (!accountLoaded) {
+        <mat-spinner diameter="32"></mat-spinner>
+      } @else if (currencyAccount) {
+        <p class="uid__balance" data-testid="balance">{{ currencyAccount.currentAmount }} Kč</p>
+      } @else {
+        <p class="uid__no-account" data-testid="no-account">Žádný účet nenalezen</p>
+      }
+    </mat-card>
+
+  </div>
+
+  <!-- Row 2: Action Buttons -->
+  <div class="uid__row--actions">
+    <button
+      mat-raised-button
+      color="primary"
+      [disabled]="financialDisabled"
+      [matTooltip]="financialTooltip"
+      (click)="onCharge()">
+      + Dobít kredit
+    </button>
+
+    <button
+      mat-raised-button
+      [disabled]="financialDisabled || !currencyAccount"
+      [matTooltip]="financialDisabled ? financialTooltip : (!currencyAccount ? 'Uživatel nemá účet' : '')"
+      (click)="onDischarge()">
+      &minus; Vybrat kredit
+    </button>
+
+    <button mat-raised-button (click)="onAssignCard()">
+      Přiřadit kartu
+    </button>
+  </div>
+
+  <!-- Transaction List -->
+  <div class="uid__section">
+    <h3>Transakce</h3>
+
+    @if (transactions.length === 0 && accountLoaded) {
+      <p class="uid__empty">Žádné transakce</p>
+    }
+
+    <div class="uid__tx-list">
+      @for (tx of transactions; track tx.id) {
+        <div class="uid__tx-row">
+          <span class="uid__tx-info">{{ tx.info || tx.placeName }}</span>
+          <span class="uid__tx-date">{{ tx.created | date:'dd.MM. HH:mm' }}</span>
+          <span
+            class="uid__tx-amount"
+            [class.uid__tx-amount--positive]="tx.amount > 0"
+            [class.uid__tx-amount--negative]="tx.amount < 0">
+            {{ tx.amount }} Kč
+          </span>
+          <span class="uid__tx-storno">
+            @if (canStorno(tx)) {
+              <button mat-icon-button (click)="onStorno(tx)" aria-label="Stornovat">
+                <mat-icon>undo</mat-icon>
+              </button>
+            }
+          </span>
+        </div>
+      }
+    </div>
+
+    @if (hasMoreTransactions) {
+      <button mat-stroked-button (click)="loadMoreTransactions.emit()">
+        Načíst více
+      </button>
+    }
+  </div>
+
+  <!-- Cards Section -->
+  <div class="uid__section">
+    <h3>Karty</h3>
+
+    @if (cards.length === 0) {
+      <p class="uid__empty">Žádné karty</p>
+    }
+
+    @for (card of cards; track card.id) {
+      <div class="uid__card-row">
+        <span class="uid__card-uid">
+          @if (card.uid !== null && card.uid !== undefined) {
+            ...{{ String(card.uid).slice(-4) }}
+          } @else {
+            &mdash;
+          }
+        </span>
+        <span class="uid__card-status">
+          @if (card.blocked) {
+            <span class="uid__badge--blocked">Zablokována</span>
+          } @else {
+            <span class="uid__badge--active">Aktivní</span>
+          }
+        </span>
+        <button mat-icon-button (click)="onToggleCardBlocked(card)" aria-label="Odebrat kartu">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+    }
+  </div>
+
+  <!-- Footer: Account Management -->
+  <div class="uid__footer">
+    <button mat-stroked-button (click)="onChangePassword()">
+      Změnit heslo
+    </button>
+
+    @if (user.blocked) {
+      <button mat-stroked-button (click)="onToggleBlock()">
+        Odblokovat
+      </button>
+    } @else {
+      <button mat-stroked-button color="warn" (click)="onToggleBlock()">
+        Zablokovat
+      </button>
+    }
+  </div>
+
+</div>
