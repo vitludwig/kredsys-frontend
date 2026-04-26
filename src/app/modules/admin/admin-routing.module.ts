@@ -225,6 +225,7 @@ const routes: Routes = [
 		path: ERoute.ADMIN_USER_INFO,
 		loadComponent: () =>
 			import('./modules/user-info/user-info.component').then(m => m.UserInfoComponent),
+		canActivate: [placeGuard],
 		data: { name: 'Uživatelský dashboard' },
 	},
 
