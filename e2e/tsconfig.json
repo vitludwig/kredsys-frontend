@@ -10,7 +10,8 @@
     "noEmit": true,
     "isolatedModules": true,
     "resolveJsonModule": true,
-    "strict": true
+    "strict": true,
+    "rootDir": ".."
   },
   "include": ["**/*.ts"]
 }

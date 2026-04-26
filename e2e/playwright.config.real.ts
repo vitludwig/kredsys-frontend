@@ -7,7 +7,7 @@ export default defineConfig({
   // Override BASE_URL via env if needed.
   use: {
     ...baseConfig.use,
-    baseURL: process.env.E2E_BASE_URL || 'http://localhost:4200',
+    baseURL: process.env['E2E_BASE_URL'] || 'http://localhost:4200',
   },
   webServer: undefined,
 });
