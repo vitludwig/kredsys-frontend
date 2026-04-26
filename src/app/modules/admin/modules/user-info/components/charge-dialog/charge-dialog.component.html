@@ -1,0 +1,23 @@
+<button mat-icon-button style="position:absolute;top:8px;right:8px" mat-dialog-close>
+  <mat-icon>close</mat-icon>
+</button>
+
+<h2 mat-dialog-title>Dobít kredit</h2>
+
+<div mat-dialog-content>
+  <mat-form-field style="width:100%">
+    <mat-label>Částka</mat-label>
+    <input matInput type="number" [(ngModel)]="amount" min="1">
+    <span matSuffix>Kč</span>
+  </mat-form-field>
+
+  <div style="display:flex;flex-wrap:wrap;gap:0.5rem;margin-bottom:1rem">
+    @for (val of predefinedAmounts; track val) {
+      <button mat-stroked-button (click)="amount = val">{{ val }} Kč</button>
+    }
+  </div>
+
+  <button mat-raised-button color="primary" style="width:100%" [disabled]="amount <= 0" (click)="submit()" mat-dialog-close>
+    Dobít
+  </button>
+</div>
