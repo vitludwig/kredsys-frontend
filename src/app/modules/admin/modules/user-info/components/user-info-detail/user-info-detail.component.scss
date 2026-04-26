@@ -129,6 +129,20 @@
   h3 {
     margin: 0;
   }
+
+  &--cards {
+    @media (min-width: 900px) {
+      max-width: 50%;
+    }
+  }
+}
+
+.uid__section-header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
 }
 
 .uid__empty {

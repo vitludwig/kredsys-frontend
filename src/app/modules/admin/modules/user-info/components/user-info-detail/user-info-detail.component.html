@@ -62,10 +62,6 @@
       (click)="onDischarge()">
       &minus; Vybrat kredit
     </button>
-
-    <button mat-raised-button (click)="onAssignCard()">
-      Přiřadit kartu
-    </button>
   </div>
 
   <!-- Transaction List -->
@@ -177,9 +173,17 @@
     }
   </div>
 
+  <hr>
+
   <!-- Cards Section -->
-  <div class="uid__section">
-    <h3>Karty</h3>
+  <div class="uid__section uid__section--cards">
+    <div class="uid__section-header">
+      <h3>Karty</h3>
+      <button mat-raised-button (click)="onAssignCard()">
+        <mat-icon>add</mat-icon>
+        Přiřadit kartu
+      </button>
+    </div>
 
     @if (cards.length === 0) {
       <p class="uid__empty">Žádné karty</p>
