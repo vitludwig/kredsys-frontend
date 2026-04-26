@@ -10,9 +10,6 @@
         <div class="uid__profile-info">
           <h2 class="uid__name">{{ user.name }}</h2>
           <p class="uid__email">{{ user.email }}</p>
-          @if (user.groups && user.groups.length > 0) {
-            <p class="uid__groups">Skupiny: {{ user.groups.join(', ') }}</p>
-          }
           <p class="uid__member-id" data-testid="member-id">
             @if (user.memberId !== null) {
               MBR-{{ user.memberId }}
@@ -57,7 +54,7 @@
 
     <button
       mat-raised-button
-      [disabled]="financialDisabled || !currencyAccount"
+      [disabled]="financialDisabled || !currencyAccount || (currencyAccount?.currentAmount ?? 0) <= 0"
       [matTooltip]="financialDisabled ? financialTooltip : (!currencyAccount ? 'Uživatel nemá účet' : '')"
       (click)="onDischarge()">
       &minus; Vybrat kredit

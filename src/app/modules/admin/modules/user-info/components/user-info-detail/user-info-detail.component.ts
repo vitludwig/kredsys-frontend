@@ -1,5 +1,5 @@
 import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { DatePipe } from '@angular/common';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
@@ -29,7 +29,7 @@ import { AssignCardDialogComponent } from '../assign-card-dialog/assign-card-dia
   styleUrls: ['./user-info-detail.component.scss'],
   standalone: true,
   imports: [
-    CommonModule,
+    DatePipe,
     MatButtonModule,
     MatCardModule,
     MatIconModule,
@@ -105,7 +105,7 @@ export class UserInfoDetailComponent {
   }
 
   protected async onDischarge(): Promise<void> {
-    if (!this.currencyAccount) return;
+    if (!this.currencyAccount || this.currencyAccount.currentAmount <= 0 || this.placeId === null) return;
 
     const ref = this.dialog.open(DischargeDialogComponent, {
       width: '420px',
@@ -191,16 +191,20 @@ export class UserInfoDetailComponent {
   }
 
   protected async onToggleBlock(): Promise<void> {
-    const action = this.user.blocked ? 'Odblokovat uživatele' : 'Zablokovat uživatele';
+    const isCurrentlyBlocked = this.user.blocked;
+    const action = isCurrentlyBlocked ? 'odblokovat' : 'zablokovat';
     const ref = this.dialog.open(ConfirmDialogComponent, {
-      data: { title: action },
+      width: '300px',
+      data: {
+        title: `${action.charAt(0).toUpperCase() + action.slice(1)} uživatele`,
+        text: `Opravdu chceš ${action} účet ${this.user.name}?`,
+      },
     });
-    const confirmed = await firstValueFrom(ref.afterClosed());
+    const confirmed: boolean | undefined = await firstValueFrom(ref.afterClosed());
     if (!confirmed) return;
-
     try {
-      await this.usersService.setUserBlocked(this.user, !this.user.blocked);
-      this.alertService.success(this.user.blocked ? 'Uživatel odblokován' : 'Uživatel zablokován');
+      await this.usersService.setUserBlocked(this.user, !isCurrentlyBlocked);
+      this.alertService.success(isCurrentlyBlocked ? 'Uživatel odblokován' : 'Uživatel zablokován');
       this.refresh.emit();
     } catch {
       this.alertService.error('Chyba při změně stavu uživatele');
