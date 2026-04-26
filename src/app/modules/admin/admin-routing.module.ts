@@ -221,6 +221,12 @@ const routes: Routes = [
 			name: 'Nabít peňauze',
 		},
 	},
+	{
+		path: ERoute.ADMIN_USER_INFO,
+		loadComponent: () =>
+			import('../user-info/user-info.component').then(m => m.UserInfoComponent),
+		data: { name: 'Uživatelský dashboard' },
+	},
 
 ];
 

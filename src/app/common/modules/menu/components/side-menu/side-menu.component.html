@@ -39,6 +39,14 @@
               Uživatelé
             </a>
           }
+          @if (userRoles | canAccessRoute: ERoute.ADMIN_USER_INFO) {
+            <a
+              [class.active]="router.url.startsWith('/' + ERoute.ADMIN + '/' + ERoute.ADMIN_USER_INFO)"
+              [routerLink]="[ERoute.ADMIN, ERoute.ADMIN_USER_INFO]"
+              mat-list-item>
+              Infostánek
+            </a>
+          }
           @if(userRoles | canAccessRoute: ERoute.ADMIN_GROUPS) {
             <mat-list-item (click)="groupsMenuOpened = !groupsMenuOpened"
               class="expandable"
