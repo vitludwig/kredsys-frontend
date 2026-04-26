@@ -1,6 +1,6 @@
 import {inject, Injectable} from '@angular/core';
 import {EUserRole, IUser} from '../../../../common/types/IUser';
-import { HttpClient } from '@angular/common/http';
+import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {environment} from '../../../../../environments/environment';
 import {IAuthenticationResponse} from './types/IAuthenticationResponse';
 import {BehaviorSubject, firstValueFrom, Observable} from 'rxjs';
@@ -66,8 +66,14 @@ export class AuthService {
     public async init(): Promise<void> {
       this.isLogged$ = this.isLoggedSubject.asObservable();
       const userId = Number(localStorage.getItem('userId')) ?? null;
-      if(userId) {
-        this.user = await this.usersService.getUser(userId)
+      if (userId) {
+        try {
+          this.user = await this.usersService.getUser(userId);
+        } catch (e) {
+          if (e instanceof HttpErrorResponse && e.status === 404) {
+            this.logout();
+          }
+        }
       }
     }
 

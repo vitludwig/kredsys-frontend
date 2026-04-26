@@ -1,0 +1,170 @@
+<h2>Wireframe v4 — členské ID, edit profilu, prázdný účet</h2>
+<p class="subtitle">Dva stavy: uživatel s účtem · uživatel bez účtu</p>
+
+<div class="split">
+
+  <!-- State A: User with account -->
+  <div class="mockup">
+    <div class="mockup-header">Stav: uživatel má kreditní účet</div>
+    <div class="mockup-body" style="padding:0;overflow:hidden;">
+      <div style="display:flex;flex-direction:column;height:520px;background:#1a1a1a;font-size:10px;">
+
+        <!-- Search bar -->
+        <div style="background:#2a2a2a;padding:8px 14px;display:flex;gap:8px;align-items:center;border-bottom:1px solid #3a3a3a;">
+          <div style="background:#333;border-radius:5px;padding:5px 10px;flex:1;color:#aaa;">🔍 Hledat...</div>
+          <div style="background:#f0c100;border-radius:5px;padding:5px 10px;color:#222;font-weight:bold;white-space:nowrap;font-size:9px;">📡 Přiložit kartu</div>
+        </div>
+
+        <!-- Context bar -->
+        <div style="background:#1e1e1e;padding:6px 14px;border-bottom:1px solid #2a2a2a;display:flex;align-items:center;gap:8px;">
+          <span style="color:#f0c100;font-weight:bold;">Jan Novák</span>
+          <span style="color:#666;">jan@email.cz</span>
+          <span style="background:#1b3a1b;color:#4caf50;border-radius:3px;padding:1px 6px;font-size:9px;">● Aktivní</span>
+          <span style="color:#555;margin-left:auto;font-size:9px;">↩ jiný</span>
+        </div>
+
+        <!-- Row 1: Profile + Balance -->
+        <div style="display:flex;gap:6px;padding:10px 14px;border-bottom:1px solid #2a2a2a;">
+          <!-- Profile card with edit -->
+          <div style="flex:3;background:#252525;border-radius:6px;padding:10px;display:flex;gap:10px;align-items:center;position:relative;">
+            <div style="width:48px;height:48px;border-radius:50%;background:#3a3a3a;border:2px solid #f0c100;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;">🧑</div>
+            <div style="flex:1;">
+              <div style="color:#e0e0e0;font-size:12px;font-weight:bold;">Jan Novák</div>
+              <div style="color:#888;font-size:9px;margin-top:1px;">jan.novak@email.cz</div>
+              <div style="color:#888;font-size:9px;margin-top:1px;">Skupina: <span style="color:#f0c100;">VIP</span></div>
+              <div style="color:#aaa;font-size:9px;margin-top:2px;">ID: <span style="color:#ccc;font-family:monospace;">MBR-004821</span></div>
+            </div>
+            <!-- Edit button top-right -->
+            <div style="position:absolute;top:8px;right:8px;background:#333;border-radius:4px;padding:3px 6px;color:#888;font-size:9px;cursor:pointer;display:flex;align-items:center;gap:3px;">✏️ upravit</div>
+          </div>
+          <!-- Balance -->
+          <div style="flex:1;background:#252525;border-radius:6px;padding:10px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;">
+            <div style="color:#888;font-size:8px;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Zůstatek</div>
+            <div style="color:#4caf50;font-size:28px;font-weight:bold;line-height:1;">450</div>
+            <div style="color:#888;font-size:10px;margin-top:2px;">Kč</div>
+            <div style="color:#555;font-size:8px;margin-top:4px;">přečerpání: 0 Kč</div>
+          </div>
+        </div>
+
+        <!-- Row 2: Primary actions -->
+        <div style="display:flex;gap:6px;padding:0 14px 10px;border-bottom:1px solid #2a2a2a;">
+          <div style="flex:1;background:#f0c100;border-radius:5px;padding:8px;text-align:center;color:#222;font-weight:bold;">＋ Dobít</div>
+          <div style="flex:1;background:#2e2e2e;border-radius:5px;padding:8px;text-align:center;color:#ccc;">− Vybrat</div>
+          <div style="flex:1;background:#2e2e2e;border-radius:5px;padding:8px;text-align:center;color:#ccc;">↩ Storno</div>
+          <div style="flex:1;background:#2e2e2e;border-radius:5px;padding:8px;text-align:center;color:#ccc;">🪪 Přiřadit kartu</div>
+        </div>
+
+        <!-- Row 3: Transactions -->
+        <div style="flex:1;padding:10px 14px 6px;overflow:hidden;display:flex;flex-direction:column;border-bottom:1px solid #2a2a2a;">
+          <div style="color:#888;font-size:8px;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">Historie transakcí</div>
+          <div style="flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:2px;">
+            <div style="display:grid;grid-template-columns:1fr 100px 70px 60px;gap:6px;padding:4px 7px;background:#252525;border-radius:3px;color:#ccc;">
+              <span>Platba — Pivo</span><span style="color:#888;">13:04</span><span style="color:#e57373;text-align:right;">−80 Kč</span><span style="color:#666;text-align:right;font-size:9px;">storno</span>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 100px 70px 60px;gap:6px;padding:4px 7px;background:#252525;border-radius:3px;color:#ccc;">
+              <span>Dobití</span><span style="color:#888;">12:30</span><span style="color:#4caf50;text-align:right;">+500 Kč</span><span style="color:#555;text-align:right;">—</span>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 100px 70px 60px;gap:6px;padding:4px 7px;background:#252525;border-radius:3px;color:#ccc;">
+              <span>Platba — Jídlo</span><span style="color:#888;">11:15</span><span style="color:#e57373;text-align:right;">−120 Kč</span><span style="color:#666;text-align:right;font-size:9px;">storno</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Row 4: Cards -->
+        <div style="padding:6px 14px;display:flex;align-items:center;gap:10px;border-bottom:1px solid #2a2a2a;">
+          <div style="color:#666;font-size:8px;text-transform:uppercase;letter-spacing:1px;white-space:nowrap;">Karty</div>
+          <div style="display:flex;gap:5px;flex:1;">
+            <div style="background:#252525;border-radius:3px;padding:3px 8px;color:#ccc;display:flex;align-items:center;gap:5px;font-size:9px;">💳 ****1234 <span style="color:#4caf50;">●</span> <span style="color:#555;">blokovat</span></div>
+            <div style="background:#252525;border-radius:3px;padding:3px 8px;color:#ccc;display:flex;align-items:center;gap:5px;font-size:9px;">💳 ****5678 <span style="color:#4caf50;">●</span> <span style="color:#555;">blokovat</span></div>
+          </div>
+        </div>
+
+        <!-- Row 5: Account mgmt -->
+        <div style="padding:6px 14px;display:flex;align-items:center;gap:6px;">
+          <div style="color:#555;font-size:8px;text-transform:uppercase;letter-spacing:1px;margin-right:2px;">Správa účtu</div>
+          <div style="background:#2a2a2a;border:1px solid #3a3a3a;border-radius:3px;padding:3px 10px;color:#888;font-size:9px;">🔑 Změnit heslo</div>
+          <div style="background:#2a2a2a;border:1px solid #6b2020;border-radius:3px;padding:3px 10px;color:#e57373;font-size:9px;">⊘ Zablokovat</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- State B: User without currency account -->
+  <div class="mockup">
+    <div class="mockup-header">Stav: uživatel NEMÁ kreditní účet</div>
+    <div class="mockup-body" style="padding:0;overflow:hidden;">
+      <div style="display:flex;flex-direction:column;height:520px;background:#1a1a1a;font-size:10px;">
+
+        <!-- Search bar -->
+        <div style="background:#2a2a2a;padding:8px 14px;display:flex;gap:8px;align-items:center;border-bottom:1px solid #3a3a3a;">
+          <div style="background:#333;border-radius:5px;padding:5px 10px;flex:1;color:#aaa;">🔍 Hledat...</div>
+          <div style="background:#f0c100;border-radius:5px;padding:5px 10px;color:#222;font-weight:bold;white-space:nowrap;font-size:9px;">📡 Přiložit kartu</div>
+        </div>
+
+        <!-- Context bar -->
+        <div style="background:#1e1e1e;padding:6px 14px;border-bottom:1px solid #2a2a2a;display:flex;align-items:center;gap:8px;">
+          <span style="color:#f0c100;font-weight:bold;">Petra Malá</span>
+          <span style="color:#666;">petra@email.cz</span>
+          <span style="background:#1b3a1b;color:#4caf50;border-radius:3px;padding:1px 6px;font-size:9px;">● Aktivní</span>
+          <span style="color:#555;margin-left:auto;font-size:9px;">↩ jiný</span>
+        </div>
+
+        <!-- Row 1: Profile + No account notice -->
+        <div style="display:flex;gap:6px;padding:10px 14px;border-bottom:1px solid #2a2a2a;">
+          <!-- Profile card with edit -->
+          <div style="flex:3;background:#252525;border-radius:6px;padding:10px;display:flex;gap:10px;align-items:center;position:relative;">
+            <div style="width:48px;height:48px;border-radius:50%;background:#3a3a3a;border:2px solid #f0c100;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;">👩</div>
+            <div style="flex:1;">
+              <div style="color:#e0e0e0;font-size:12px;font-weight:bold;">Petra Malá</div>
+              <div style="color:#888;font-size:9px;margin-top:1px;">petra@email.cz</div>
+              <div style="color:#888;font-size:9px;margin-top:1px;">Skupina: <span style="color:#ccc;">Základní</span></div>
+              <div style="color:#aaa;font-size:9px;margin-top:2px;">ID: <span style="color:#ccc;font-family:monospace;">MBR-007113</span></div>
+            </div>
+            <div style="position:absolute;top:8px;right:8px;background:#333;border-radius:4px;padding:3px 6px;color:#888;font-size:9px;cursor:pointer;">✏️ upravit</div>
+          </div>
+          <!-- No account -->
+          <div style="flex:1;background:#252525;border-radius:6px;padding:10px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;">
+            <div style="color:#888;font-size:9px;">Kreditní účet</div>
+            <div style="color:#f0c100;font-size:18px;">⚠</div>
+            <div style="color:#aaa;font-size:9px;line-height:1.4;text-align:center;">Účet ještě nebyl<br>aktivován</div>
+            <div style="color:#666;font-size:8px;">(první dobití ho vytvoří)</div>
+          </div>
+        </div>
+
+        <!-- Row 2: Actions — Dobít is still available to create account -->
+        <div style="display:flex;gap:6px;padding:0 14px 10px;border-bottom:1px solid #2a2a2a;">
+          <div style="flex:1;background:#f0c100;border-radius:5px;padding:8px;text-align:center;color:#222;font-weight:bold;">＋ Dobít (aktivuje účet)</div>
+          <div style="flex:1;background:#1e1e1e;border-radius:5px;padding:8px;text-align:center;color:#444;cursor:not-allowed;">− Vybrat</div>
+          <div style="flex:1;background:#1e1e1e;border-radius:5px;padding:8px;text-align:center;color:#444;cursor:not-allowed;">↩ Storno</div>
+          <div style="flex:1;background:#2e2e2e;border-radius:5px;padding:8px;text-align:center;color:#ccc;">🪪 Přiřadit kartu</div>
+        </div>
+
+        <!-- Row 3: Empty transactions -->
+        <div style="flex:1;padding:10px 14px;display:flex;flex-direction:column;align-items:center;justify-content:center;border-bottom:1px solid #2a2a2a;gap:4px;">
+          <div style="color:#555;font-size:11px;">Žádné transakce</div>
+          <div style="color:#444;font-size:9px;">Uživatel zatím neprovedl žádnou platbu</div>
+        </div>
+
+        <!-- Row 4: Cards -->
+        <div style="padding:6px 14px;display:flex;align-items:center;gap:10px;border-bottom:1px solid #2a2a2a;">
+          <div style="color:#666;font-size:8px;text-transform:uppercase;letter-spacing:1px;white-space:nowrap;">Karty</div>
+          <div style="display:flex;gap:5px;flex:1;">
+            <div style="background:#252525;border-radius:3px;padding:3px 8px;color:#ccc;display:flex;align-items:center;gap:5px;font-size:9px;">💳 ****9901 <span style="color:#4caf50;">●</span> <span style="color:#555;">blokovat</span></div>
+          </div>
+        </div>
+
+        <!-- Row 5: Account mgmt -->
+        <div style="padding:6px 14px;display:flex;align-items:center;gap:6px;">
+          <div style="color:#555;font-size:8px;text-transform:uppercase;letter-spacing:1px;margin-right:2px;">Správa účtu</div>
+          <div style="background:#2a2a2a;border:1px solid #3a3a3a;border-radius:3px;padding:3px 10px;color:#888;font-size:9px;">🔑 Změnit heslo</div>
+          <div style="background:#2a2a2a;border:1px solid #6b2020;border-radius:3px;padding:3px 10px;color:#e57373;font-size:9px;">⊘ Zablokovat</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<p class="subtitle" style="margin-top:1rem;">Vypadá to dobře? Schvaluješ design — mohu sepsat specifikaci?</p>

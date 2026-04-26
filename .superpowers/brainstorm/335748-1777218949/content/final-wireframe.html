@@ -1,0 +1,110 @@
+<h2>Finální wireframe — Uživatelský dashboard (infostánek)</h2>
+<p class="subtitle">Stav: vyhledaný uživatel · Desktop layout</p>
+
+<div class="mockup">
+  <div class="mockup-header">Admin › Uživatelský dashboard</div>
+  <div class="mockup-body" style="padding:0;overflow:hidden;">
+
+    <div style="display:flex;flex-direction:column;height:480px;background:#1a1a1a;font-size:11px;">
+
+      <!-- Top search bar -->
+      <div style="background:#2a2a2a;padding:10px 16px;display:flex;gap:10px;align-items:center;border-bottom:1px solid #3a3a3a;">
+        <div style="background:#333;border-radius:6px;padding:6px 12px;flex:1;color:#aaa;display:flex;align-items:center;gap:6px;">
+          <span style="color:#888;">🔍</span>
+          <span>Hledat podle jména, e-mailu nebo čísla karty...</span>
+        </div>
+        <div style="background:#f0c100;border-radius:6px;padding:6px 14px;color:#222;font-weight:bold;white-space:nowrap;">📡 Přiložit kartu</div>
+        <div style="background:#444;border-radius:6px;padding:6px 14px;color:#aaa;white-space:nowrap;">✕ Zrušit</div>
+      </div>
+
+      <!-- User found state -->
+      <div style="background:#1e1e1e;padding:12px 16px;border-bottom:1px solid #2a2a2a;display:flex;align-items:center;gap:10px;">
+        <span style="color:#f0c100;font-size:13px;font-weight:bold;">Jan Novák</span>
+        <span style="color:#666;">jan.novak@email.cz</span>
+        <span style="background:#1b3a1b;color:#4caf50;border-radius:4px;padding:1px 7px;font-size:10px;">● Aktivní</span>
+        <span style="color:#555;margin-left:auto;font-size:10px;cursor:pointer;">↩ jiný uživatel</span>
+      </div>
+
+      <!-- Row 1: Info cards -->
+      <div style="display:flex;gap:8px;padding:12px 16px;border-bottom:1px solid #2a2a2a;">
+
+        <!-- Profile -->
+        <div style="flex:2;background:#252525;border-radius:6px;padding:10px;">
+          <div style="color:#888;font-size:9px;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">Profil</div>
+          <div style="display:flex;gap:8px;">
+            <div style="width:32px;height:32px;background:#3a3a3a;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#aaa;font-size:14px;">👤</div>
+            <div>
+              <div style="color:#e0e0e0;font-weight:bold;">Jan Novák</div>
+              <div style="color:#888;font-size:10px;">jan.novak@email.cz</div>
+              <div style="color:#888;font-size:10px;">Skupina: <span style="color:#f0c100;">VIP</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Cards -->
+        <div style="flex:2;background:#252525;border-radius:6px;padding:10px;">
+          <div style="color:#888;font-size:9px;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">Karty (2)</div>
+          <div style="display:flex;flex-direction:column;gap:4px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;background:#2e2e2e;border-radius:4px;padding:4px 8px;">
+              <span style="color:#ccc;">💳 ****&nbsp;1234</span>
+              <span style="color:#4caf50;font-size:10px;">● aktivní</span>
+              <span style="color:#666;font-size:10px;cursor:pointer;">blokovat</span>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;background:#2e2e2e;border-radius:4px;padding:4px 8px;">
+              <span style="color:#ccc;">💳 ****&nbsp;5678</span>
+              <span style="color:#4caf50;font-size:10px;">● aktivní</span>
+              <span style="color:#666;font-size:10px;cursor:pointer;">blokovat</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Balance -->
+        <div style="flex:1;background:#252525;border-radius:6px;padding:10px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;">
+          <div style="color:#888;font-size:9px;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Zůstatek</div>
+          <div style="color:#4caf50;font-size:26px;font-weight:bold;line-height:1;">450</div>
+          <div style="color:#888;font-size:11px;">Kč</div>
+          <div style="color:#666;font-size:9px;margin-top:4px;">limit přečerpání: 0 Kč</div>
+        </div>
+
+      </div>
+
+      <!-- Row 2: Action buttons -->
+      <div style="display:flex;gap:8px;padding:0 16px 12px;border-bottom:1px solid #2a2a2a;">
+        <div style="flex:1;background:#f0c100;border-radius:6px;padding:10px;text-align:center;color:#222;font-weight:bold;cursor:pointer;">
+          ＋ Dobít kredit
+        </div>
+        <div style="flex:1;background:#2e2e2e;border-radius:6px;padding:10px;text-align:center;color:#ccc;cursor:pointer;">
+          − Vybrat kredit
+        </div>
+        <div style="flex:1;background:#2e2e2e;border-radius:6px;padding:10px;text-align:center;color:#ccc;cursor:pointer;">
+          ↩ Storno transakce
+        </div>
+        <div style="flex:1;background:#2e2e2e;border-radius:6px;padding:10px;text-align:center;color:#ccc;cursor:pointer;">
+          🪪 Přiřadit kartu
+        </div>
+      </div>
+
+      <!-- Row 3: Transaction history -->
+      <div style="flex:1;padding:12px 16px;overflow:hidden;display:flex;flex-direction:column;">
+        <div style="color:#888;font-size:9px;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">Historie transakcí</div>
+        <div style="flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:2px;">
+          <div style="display:grid;grid-template-columns:1fr 120px 80px 80px;gap:8px;padding:5px 8px;background:#252525;border-radius:4px;color:#ccc;">
+            <span>Platba — Pivo Kozel</span><span style="color:#888;">dnes 13:04</span><span style="color:#e57373;text-align:right;">−80 Kč</span><span style="color:#666;text-align:right;font-size:10px;cursor:pointer;">storno</span>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 120px 80px 80px;gap:8px;padding:5px 8px;background:#252525;border-radius:4px;color:#ccc;">
+            <span>Dobití kreditu</span><span style="color:#888;">dnes 12:30</span><span style="color:#4caf50;text-align:right;">+500 Kč</span><span style="color:#555;text-align:right;font-size:10px;">—</span>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 120px 80px 80px;gap:8px;padding:5px 8px;background:#252525;border-radius:4px;color:#ccc;">
+            <span>Platba — Guláš</span><span style="color:#888;">dnes 11:15</span><span style="color:#e57373;text-align:right;">−120 Kč</span><span style="color:#666;text-align:right;font-size:10px;cursor:pointer;">storno</span>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 120px 80px 80px;gap:8px;padding:5px 8px;background:#252525;border-radius:4px;color:#777;">
+            <span>Platba — Panák</span><span style="color:#666;">dnes 10:52</span><span style="color:#e57373;text-align:right;">−60 Kč</span><span style="color:#666;text-align:right;font-size:10px;cursor:pointer;">storno</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<p class="subtitle" style="margin-top:1rem;">Vypadá to dobře? Nebo chceš něco přemístit / přidat / odebrat?</p>

@@ -1,0 +1,129 @@
+<h2>Jak budou sekce uspořádány v detailu uživatele?</h2>
+<p class="subtitle">Layout B — po vyhledání uživatele</p>
+
+<div class="cards">
+
+  <div class="card" data-choice="a" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div style="display:flex;flex-direction:column;gap:3px;height:200px;font-size:9px;padding:4px;">
+
+        <!-- Search bar -->
+        <div style="background:#333;border-radius:3px;padding:4px 8px;display:flex;gap:6px;align-items:center;">
+          <span style="color:#f0c100;">◀</span>
+          <span style="color:#aaa;flex:1;">🔍 Jan Novák &nbsp;|&nbsp; jan@email.cz</span>
+          <span style="color:#888;cursor:pointer;">✕ Jiný uživatel</span>
+        </div>
+
+        <!-- Row 1: Profile + Cards + Balance -->
+        <div style="display:flex;gap:3px;height:55px;">
+          <div style="flex:2;background:#2a2a2a;border-radius:3px;padding:5px;">
+            <div style="color:#f0c100;font-weight:bold;margin-bottom:2px;">👤 Jan Novák</div>
+            <div style="color:#aaa;">jan@email.cz &nbsp;·&nbsp; skupina: VIP</div>
+            <div style="color:#4caf50;font-size:8px;">✓ Aktivní</div>
+          </div>
+          <div style="flex:1;background:#2a2a2a;border-radius:3px;padding:5px;">
+            <div style="color:#aaa;font-size:8px;margin-bottom:2px;">💳 KARTY</div>
+            <div style="color:#ccc;">****1234 <span style="color:#4caf50;">●</span></div>
+            <div style="color:#ccc;">****5678 <span style="color:#4caf50;">●</span></div>
+          </div>
+          <div style="flex:1;background:#2a2a2a;border-radius:3px;padding:5px;text-align:center;">
+            <div style="color:#aaa;font-size:8px;margin-bottom:3px;">💰 ZŮSTATEK</div>
+            <div style="color:#4caf50;font-size:18px;font-weight:bold;">450</div>
+            <div style="color:#aaa;font-size:8px;">Kč</div>
+          </div>
+        </div>
+
+        <!-- Row 2: Action buttons -->
+        <div style="display:flex;gap:3px;height:26px;">
+          <div style="flex:1;background:#f0c100;border-radius:3px;display:flex;align-items:center;justify-content:center;color:#222;font-weight:bold;">+ Dobít kredit</div>
+          <div style="flex:1;background:#333;border-radius:3px;display:flex;align-items:center;justify-content:center;color:#ccc;">− Vybrat kredit</div>
+          <div style="flex:1;background:#333;border-radius:3px;display:flex;align-items:center;justify-content:center;color:#ccc;">↩ Storno transakce</div>
+        </div>
+
+        <!-- Row 3: Transaction history -->
+        <div style="flex:1;background:#2a2a2a;border-radius:3px;padding:5px;overflow:hidden;">
+          <div style="color:#aaa;font-size:8px;margin-bottom:3px;">📋 HISTORIE TRANSAKCÍ</div>
+          <div style="display:flex;justify-content:space-between;padding:2px 0;border-bottom:1px solid #333;color:#ccc;">
+            <span>Platba — Pivo</span><span>13:04</span><span style="color:#e57373;">−80 Kč</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding:2px 0;border-bottom:1px solid #333;color:#ccc;">
+            <span>Dobití</span><span>12:30</span><span style="color:#4caf50;">+500 Kč</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding:2px 0;color:#777;">
+            <span>Platba — Jídlo</span><span>11:15</span><span style="color:#e57373;">−120 Kč</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>A — Jeden sloupec, sekce pod sebou</h3>
+      <p>Profil + karty + zůstatek v řadě nahoře, pak akce, pak celá šířka pro historii. Přehledné, vertikální flow.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="b" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div style="display:flex;flex-direction:column;gap:3px;height:200px;font-size:9px;padding:4px;">
+
+        <!-- Search bar -->
+        <div style="background:#333;border-radius:3px;padding:4px 8px;display:flex;gap:6px;align-items:center;">
+          <span style="color:#f0c100;">◀</span>
+          <span style="color:#aaa;flex:1;">🔍 Jan Novák &nbsp;|&nbsp; jan@email.cz</span>
+          <span style="color:#888;">✕ Jiný uživatel</span>
+        </div>
+
+        <!-- Two-column layout -->
+        <div style="flex:1;display:flex;gap:3px;overflow:hidden;">
+
+          <!-- Left column: Profile + Cards + Actions -->
+          <div style="width:45%;display:flex;flex-direction:column;gap:3px;">
+            <div style="background:#2a2a2a;border-radius:3px;padding:5px;">
+              <div style="color:#f0c100;font-weight:bold;">👤 Jan Novák</div>
+              <div style="color:#aaa;font-size:8px;">jan@email.cz · VIP</div>
+              <div style="color:#4caf50;font-size:8px;">✓ Aktivní</div>
+            </div>
+            <div style="background:#2a2a2a;border-radius:3px;padding:5px;">
+              <div style="color:#aaa;font-size:8px;margin-bottom:2px;">💳 KARTY</div>
+              <div style="color:#ccc;">****1234 <span style="color:#4caf50;">●</span></div>
+              <div style="color:#ccc;">****5678 <span style="color:#4caf50;">●</span></div>
+            </div>
+            <div style="background:#2a2a2a;border-radius:3px;padding:5px;text-align:center;">
+              <div style="color:#aaa;font-size:8px;">💰 ZŮSTATEK</div>
+              <div style="color:#4caf50;font-size:16px;font-weight:bold;">450 Kč</div>
+            </div>
+            <div style="background:#f0c100;border-radius:3px;padding:5px;text-align:center;color:#222;font-weight:bold;">+ Dobít kredit</div>
+            <div style="background:#333;border-radius:3px;padding:4px;text-align:center;color:#ccc;">− Vybrat</div>
+            <div style="background:#333;border-radius:3px;padding:4px;text-align:center;color:#ccc;">↩ Storno</div>
+          </div>
+
+          <!-- Right column: Transaction history -->
+          <div style="flex:1;background:#2a2a2a;border-radius:3px;padding:5px;overflow:hidden;">
+            <div style="color:#aaa;font-size:8px;margin-bottom:3px;">📋 HISTORIE TRANSAKCÍ</div>
+            <div style="display:flex;justify-content:space-between;padding:2px 0;border-bottom:1px solid #333;color:#ccc;">
+              <span>Platba — Pivo</span><span style="color:#e57373;">−80 Kč</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;padding:2px 0;border-bottom:1px solid #333;color:#ccc;">
+              <span>Dobití</span><span style="color:#4caf50;">+500 Kč</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;padding:2px 0;border-bottom:1px solid #333;color:#777;">
+              <span>Platba — Jídlo</span><span style="color:#e57373;">−120 Kč</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;padding:2px 0;color:#777;">
+              <span>Platba — Panák</span><span style="color:#e57373;">−60 Kč</span>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>B — Dva sloupce</h3>
+      <p>Vlevo: profil, karty, zůstatek, akce. Vpravo: celá výška pro historii. Akce a kontext vždy viditelné vedle sebe.</p>
+    </div>
+  </div>
+
+</div>
+
+<p class="subtitle" style="margin-top:1rem;">Moje doporučení: <strong>A</strong> — lépe využívá šířku monitoru, akce jsou prominentní a přehledné.</p>

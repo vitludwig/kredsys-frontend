@@ -47,7 +47,9 @@
       "Bash(grep -n 'grey\\\\|yellow\\\\|$white' /home/vitek/Projects/RZB-IT/kredsys/kredsys-frontend/node_modules/@angular/material/core/m2/_palette.scss)",
       "Bash(grep m2-grey\\\\|m2-yellow\\\\|m2-\\\\$grey *)",
       "Bash(grep *)",
-      "Bash(node *)"
+      "Bash(node *)",
+      "Bash(npm run *)",
+      "Bash(ng build *)"
     ]
   }
 }
