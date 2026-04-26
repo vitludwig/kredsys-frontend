@@ -36,6 +36,18 @@
 				</button>
 			}
 		</div>
+
+		<h5 class="mt-4 mb-2">Vyber uživatele (E2E)</h5>
+		<mat-form-field appearance="outline" class="w-100">
+			<mat-label>Uživatel</mat-label>
+			<mat-select
+				data-testid="card-loader-debug-user-select"
+				(selectionChange)="selectDebugUser($event.value)">
+				@for (entry of allUserCards; track entry.uid) {
+					<mat-option [value]="entry.uid">{{ entry.name }}</mat-option>
+				}
+			</mat-select>
+		</mat-form-field>
 	}
 
 </div>

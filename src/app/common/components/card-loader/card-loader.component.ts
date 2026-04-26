@@ -20,13 +20,17 @@ import {CardsService} from '../../../modules/admin/services/cards/cards.service'
 import {Utils} from '../../utils/Utils';
 import {MatIconModule} from '@angular/material/icon';
 import {MatTooltipModule} from '@angular/material/tooltip';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatSelectModule} from '@angular/material/select';
+import {FormsModule} from '@angular/forms';
 import {AuthService} from '../../../modules/login/services/auth/auth.service';
 
 @Component({
     selector: 'app-card-loader',
     templateUrl: './card-loader.component.html',
     styleUrls: ['./card-loader.component.scss'],
-    imports: [CommonModule, MatButtonModule, MatIconModule, MatTooltipModule]
+    imports: [CommonModule, MatButtonModule, MatIconModule, MatTooltipModule,
+              MatFormFieldModule, MatSelectModule, FormsModule]
 })
 export class CardLoaderComponent implements OnInit, OnDestroy {
 	@Input()
@@ -34,6 +38,7 @@ export class CardLoaderComponent implements OnInit, OnDestroy {
 	protected customerService: CustomerService = inject(CustomerService);
 	protected authService: AuthService = inject(AuthService);
 	protected userCards: Record<string, number> = {};
+	protected allUserCards: { name: string; uid: number }[] = [];
 	private renderer: Renderer2 = inject(Renderer2);
 	private alertService: AlertService = inject(AlertService);
 
@@ -84,17 +89,29 @@ export class CardLoaderComponent implements OnInit, OnDestroy {
 			const cards = (await this.cardsService.getCards(0, 100)).data
 				.filter(c => c.uid !== undefined && c.userId !== undefined);
 
-			const uniqueUserIds = [...new Set(cards.map(c => c.userId!))].slice(0, 3);
+			const allUniqueUserIds = [...new Set(cards.map(c => c.userId!))];
 			const users = Utils.toHashMap(
-				await Promise.all(uniqueUserIds.map(id => this.usersService.getUser(id))),
+				await Promise.all(allUniqueUserIds.map(id => this.usersService.getUser(id))),
 				'id'
 			) as Record<number, IUser>;
 
+			const firstThreeIds = allUniqueUserIds.slice(0, 3);
 			for(const card of cards) {
-				if(card.userId !== undefined && card.uid && users[card.userId]) {
+				if(card.userId !== undefined && card.uid && users[card.userId] && firstThreeIds.includes(card.userId)) {
 					this.userCards[users[card.userId].name] = card.uid;
 				}
 			}
+
+			this.allUserCards = cards
+				.filter(c => users[c.userId!])
+				.map(c => ({ name: users[c.userId!].name, uid: c.uid! }))
+				.sort((a, b) => a.name.localeCompare(b.name));
+		}
+	}
+
+	public selectDebugUser(uid: number): void {
+		if (uid != null) {
+			this.cardIdChange.emit(uid);
 		}
 	}
 
