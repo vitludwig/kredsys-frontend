@@ -35,7 +35,11 @@
       } @else if (currencyAccount) {
         <p class="uid__balance" data-testid="balance">{{ currencyAccount.currentAmount }} Kč</p>
       } @else {
-        <p class="uid__no-account" data-testid="no-account">Žádný účet nenalezen</p>
+        <div class="uid__no-account" data-testid="no-account">
+          <mat-icon class="uid__no-account-icon">warning</mat-icon>
+          <div>Účet ještě nebyl aktivován</div>
+          <small>(první dobití ho vytvoří)</small>
+        </div>
       }
     </mat-card>
 
@@ -82,7 +86,7 @@
             class="uid__tx-amount"
             [class.uid__tx-amount--positive]="tx.amount > 0"
             [class.uid__tx-amount--negative]="tx.amount < 0">
-            {{ tx.amount }} Kč
+            {{ tx.amount > 0 ? '+' : '' }}{{ tx.amount }} Kč
           </span>
           <span class="uid__tx-storno">
             @if (canStorno(tx)) {

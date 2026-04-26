@@ -9,6 +9,7 @@ const allowedRoutes: EnumHashMap<EUserRole, ERoute[]> = {
 		ERoute.ADMIN,
 		ERoute.ADMIN_PLACES,
 		ERoute.ADMIN_USERS,
+		ERoute.ADMIN_USER_INFO,
 		ERoute.ADMIN_CHARGE,
 		ERoute.ADMIN_TRANSACTIONS,
 		ERoute.PLACE_SELECT,

@@ -107,6 +107,7 @@ export class UserInfoComponent extends WithSubscriptions implements OnInit {
   }
 
   protected async onCardScan(): Promise<void> {
+    if (!this.cardUidInput.trim()) return;
     const uid = parseInt(this.cardUidInput, 10);
     if (isNaN(uid)) {
       this.alertService.error('Zadej platné UID karty');
