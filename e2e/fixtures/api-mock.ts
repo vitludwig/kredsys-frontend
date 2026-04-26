@@ -118,3 +118,7 @@ export async function installApiMock(page: Page, state = createMockState()): Pro
 }
 
 export { paginated };
+
+// Side-effect import — registers route handlers via on(...)
+// eslint-disable-next-line import/order
+import './api-mock-handlers';
