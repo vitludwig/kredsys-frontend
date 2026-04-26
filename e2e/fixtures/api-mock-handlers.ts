@@ -3,21 +3,32 @@ import { createMockJwt } from './jwt';
 
 function pageParams(url: URL): { page: number; pageSize: number } {
 	return {
-		page: Number(url.searchParams.get('page') ?? 0),
+		page: Number(url.searchParams.get('page') ?? 1),
 		pageSize: Number(url.searchParams.get('pageSize') ?? 50),
 	};
 }
 
 // AUTH
 on('POST', /^authentication\/user\/email$/, ({ body, state }) => {
-	const u = state.users.find(x => x.email === body?.email && x.password === body?.password);
+	// AuthService.login sends { email, secret, apiToken? }; tests using
+	// FixtureUser.password may also send `password`. Accept both.
+	const candidatePw = body?.secret ?? body?.password;
+	const u = state.users.find(x => x.email === body?.email && x.password === candidatePw);
 	if (!u) return { status: 401, body: { error: 'invalid credentials' } };
 	if (u.blocked) return { status: 403, body: { error: 'blocked' } };
 	const token = createMockJwt({
 		sub: String(u.id), name: u.name, email: u.email, roles: u.roles,
 		exp: Math.floor(Date.now() / 1000) + 3600,
 	});
-	return { body: { token } };
+	return {
+		body: {
+			token,
+			userId: u.id,
+			placeId: 0,
+			roles: u.roles,
+			permissions: [],
+		},
+	};
 });
 
 // USERS

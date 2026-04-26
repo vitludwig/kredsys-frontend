@@ -77,17 +77,32 @@ function matchRoute(method: string, path: string): { handler: Handler; match: Re
 	return null;
 }
 
-function paginated<T>(items: T[], page = 0, pageSize = 50) {
-	const start = page * pageSize;
+function paginated<T>(items: T[], page = 1, pageSize = 50) {
+	// Backend uses 1-based pagination; Angular Material paginator sends pageIndex+1.
+	const safePage = page < 1 ? 1 : page;
+	const start = (safePage - 1) * pageSize;
 	return {
 		data: items.slice(start, start + pageSize),
-		total: items.length,
-		page,
-		pageSize,
+		count: items.length,
 	};
 }
 
 export async function installApiMock(page: Page, state = createMockState()): Promise<MockState> {
+	// Headless Chromium has no Web Bluetooth. PrintService instantiates
+	// WebBluetoothReceiptPrinter at startup and crashes the app without this stub.
+	await page.addInitScript(() => {
+		if (!('bluetooth' in navigator)) {
+			Object.defineProperty(navigator, 'bluetooth', {
+				configurable: true,
+				value: {
+					addEventListener: () => {},
+					removeEventListener: () => {},
+					requestDevice: async () => { throw new Error('bluetooth disabled in E2E'); },
+				},
+			});
+		}
+	});
+
 	await page.route('**/api/v1.1/**', async (route: Route) => {
 		const req = route.request();
 		const url = new URL(req.url());
@@ -118,7 +133,3 @@ export async function installApiMock(page: Page, state = createMockState()): Pro
 }
 
 export { paginated };
-
-// Side-effect import — registers route handlers via on(...)
-// eslint-disable-next-line import/order
-import './api-mock-handlers';

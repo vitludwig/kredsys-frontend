@@ -1,6 +1,10 @@
 import { test as base, Page } from '@playwright/test';
 import { authAdapter, MODE } from '../fixtures/auth-adapter';
 import { installApiMock, MockState } from '../fixtures/api-mock';
+// Side-effect import — registers route handlers via on(...) on api-mock's routes array.
+// Imported here (not in api-mock.ts) to avoid a circular initialization between the
+// router module and the handlers module.
+import '../fixtures/api-mock-handlers';
 import { adminUser, workerUser, powerUser, memberUser } from '../fixtures/data/users';
 import { place1 } from '../fixtures/data/places';
 import { cleanupE2eEntities } from './cleanup';

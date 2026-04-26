@@ -5,9 +5,34 @@ import { places } from './data/places';
 
 export const MODE: 'mock' | 'real' = process.env['E2E_MODE'] === 'real' ? 'real' : 'mock';
 
+// Grants every backend permission to the impersonated user. Mock mode doesn't
+// enforce permissions so this is harmless; the value mirrors what an admin
+// session would carry. Kept inline to avoid importing the EPermission enum
+// into fixture code.
+const ALL_PERMISSIONS = [
+	'APIAccess', 'CanUserLoginToPlace',
+	'CurrencyRead', 'CurrencyCreate', 'CurrencyEdit', 'CurrencyDelete',
+	'CurrenciesAccountsRead', 'CurrenciesAccountsEdit',
+	'CardRead', 'CardAssign', 'CardEdit', 'CardBlock', 'CardUnBlock', 'CardDelete', 'CardReadUser',
+	'GoodsTypeRead', 'GoodsTypeCreate', 'GoodsTypeEdit', 'GoodsTypeDelete',
+	'GoodsRead', 'GoodsReadOwn', 'GoodsCreate', 'GoodsCreateOwn', 'GoodsEdit', 'GoodsEditOwn', 'GoodsDelete',
+	'UserRead', 'UserReadOwn', 'UserCreate', 'UserEdit', 'UserDelete',
+	'PlaceRead', 'PlaceReadDetail', 'PlaceReadOwn', 'PlaceCreate', 'PlaceEdit', 'PlaceEditOwnGoods', 'PlaceDelete',
+	'TransactionRead', 'TransactionManage', 'TransactionCreatePayment',
+	'TransactionCreateDeposit', 'TransactionCreateWithdraw', 'TransactionCancellation',
+	'StatisticsRead', 'LogsRead',
+];
+
 export interface AuthAdapter {
 	loginAs(page: Page, user: FixtureUser, opts?: { debug?: boolean }): Promise<void>;
 	selectPlace(page: Page, placeId: number): Promise<void>;
+}
+
+interface MockAuthInjection {
+	userId: string;
+	apiToken: string;
+	permissions: string;
+	debug: boolean;
 }
 
 class MockAuthAdapter implements AuthAdapter {
@@ -19,18 +44,26 @@ class MockAuthAdapter implements AuthAdapter {
 			roles: user.roles,
 			exp: Math.floor(Date.now() / 1000) + 3600,
 		});
-		const debug = opts.debug ?? true;
-		await page.addInitScript(([t, d]: [string, boolean]) => {
-			localStorage.setItem('token', t);
-			if (d) localStorage.setItem('isDebug', 'true');
-		}, [token, debug] as [string, boolean]);
+		const inj: MockAuthInjection = {
+			userId: String(user.id),
+			apiToken: token,
+			permissions: JSON.stringify(ALL_PERMISSIONS),
+			debug: opts.debug ?? true,
+		};
+		await page.addInitScript((data: MockAuthInjection) => {
+			localStorage.setItem('userId', data.userId);
+			localStorage.setItem('apiToken', data.apiToken);
+			localStorage.setItem('permissions', data.permissions);
+			if (data.debug) localStorage.setItem('isDebug', 'true');
+		}, inj);
 	}
 
 	async selectPlace(page: Page, placeId: number): Promise<void> {
 		const place = places.find(p => p.id === placeId);
 		if (!place) throw new Error(`unknown place ${placeId}`);
 		await page.addInitScript((p) => {
-			localStorage.setItem('selectedPlace', JSON.stringify(p));
+			localStorage.setItem('selectedPlaceId', String(p.id));
+			if (p.apiToken) localStorage.setItem('placeToken', p.apiToken);
 		}, place);
 	}
 }
@@ -44,11 +77,20 @@ class RealAuthAdapter implements AuthAdapter {
 		const json = await res.json();
 		const token = json.token ?? json.accessToken ?? json.jwt;
 		if (!token) throw new Error(`real login response missing token: ${JSON.stringify(json)}`);
-		const debug = opts.debug ?? true;
-		await page.addInitScript(([t, d]: [string, boolean]) => {
-			localStorage.setItem('token', t);
-			if (d) localStorage.setItem('isDebug', 'true');
-		}, [token, debug] as [string, boolean]);
+		const userId = json.userId ?? json.user?.id;
+		const permissions = json.permissions ?? [];
+		const inj: MockAuthInjection = {
+			userId: String(userId),
+			apiToken: token,
+			permissions: JSON.stringify(permissions),
+			debug: opts.debug ?? true,
+		};
+		await page.addInitScript((data: MockAuthInjection) => {
+			localStorage.setItem('userId', data.userId);
+			localStorage.setItem('apiToken', data.apiToken);
+			localStorage.setItem('permissions', data.permissions);
+			if (data.debug) localStorage.setItem('isDebug', 'true');
+		}, inj);
 	}
 
 	async selectPlace(page: Page, placeId: number): Promise<void> {
