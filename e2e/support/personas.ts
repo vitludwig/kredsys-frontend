@@ -59,14 +59,14 @@ export const test = base.extend<Personas>({
 	// per-test override hook). mockState is a convenience accessor that just
 	// surfaces .state — kept for the common case where a test only wants to
 	// peek/mutate state without intercepting requests.
-	mockApi: async ({ page }, use) => {
+	mockApi: [async ({ page }, use) => {
 		if (MODE === 'mock') {
 			const api = await installApiMock(page);
 			await use(api);
 		} else {
 			await use(null);
 		}
-	},
+	}, { auto: true }],
 
 	mockState: async ({ mockApi }, use) => {
 		await use(mockApi?.state ?? null);

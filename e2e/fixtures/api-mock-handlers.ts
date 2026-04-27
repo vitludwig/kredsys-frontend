@@ -52,13 +52,20 @@ function buildPaymentRecords(state: MockState, records: PaymentRecord[]): {
 }
 
 // AUTH
+// Real backend returns 401 with the raw string body
+// "Username or password is incorrect or user is blocked." for BOTH invalid
+// credentials AND blocked users (no enumeration). LoginComponent does an
+// exact-match `e.error === '...'` check, so the mock must return that
+// literal string (not a JSON-wrapped error).
+const LOGIN_FAIL_BODY = 'Username or password is incorrect or user is blocked.';
+
 on('POST', /^authentication\/user\/email$/, ({ body, state }) => {
 	// AuthService.login sends { email, secret, apiToken? }; tests using
 	// FixtureUser.password may also send `password`. Accept both.
 	const candidatePw = body?.secret ?? body?.password;
 	const u = state.users.find(x => x.email === body?.email && x.password === candidatePw);
-	if (!u) return { status: 401, body: { error: 'invalid credentials' } };
-	if (u.blocked) return { status: 403, body: { error: 'blocked' } };
+	if (!u) return { status: 401, body: LOGIN_FAIL_BODY };
+	if (u.blocked) return { status: 401, body: LOGIN_FAIL_BODY };
 	const token = createMockJwt({
 		sub: String(u.id), name: u.name, email: u.email, roles: u.roles,
 		exp: Math.floor(Date.now() / 1000) + 24 * 3600,

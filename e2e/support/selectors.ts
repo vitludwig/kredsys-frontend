@@ -7,6 +7,7 @@ export const SEL = {
 	},
 	nav: {
 		sale: 'nav-sale',
+		adminToggle: 'nav-admin-toggle',
 		adminUsers: 'nav-admin-users',
 		adminPlaces: 'nav-admin-places',
 		adminGoods: 'nav-admin-goods',
@@ -22,6 +23,7 @@ export const SEL = {
 	topMenu: {
 		balance: 'top-menu-balance',
 		place: 'top-menu-place',
+		toggle: 'top-menu-toggle',
 	},
 	cardLoader: {
 		userSelect: 'card-loader-debug-user-select',
