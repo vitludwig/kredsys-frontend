@@ -63,13 +63,18 @@ interface RouteEntry {
 	handler: Handler;
 }
 
-const routes: RouteEntry[] = [];
+// Default handler registry, populated at module load by api-mock-handlers.ts.
+// Per-installation overrides (registered via MockApi.override) take precedence
+// and live for the lifetime of the page; the default registry is read-only
+// from a test's perspective.
+const defaultRoutes: RouteEntry[] = [];
 
 export function on(method: string, pattern: RegExp, handler: Handler): void {
-	routes.push({ method, pattern, handler });
+	defaultRoutes.push({ method, pattern, handler });
 }
 
-function matchRoute(method: string, path: string): { handler: Handler; match: RegExpMatchArray } | null {
+function matchAgainst(routes: RouteEntry[], method: string, path: string):
+	{ handler: Handler; match: RegExpMatchArray } | null {
 	for (const r of routes) {
 		if (r.method !== method) continue;
 		const m = path.match(r.pattern);
@@ -91,16 +96,45 @@ function paginated<T>(items: T[], page = 1, pageSize = 50) {
 // Matches /api/v1.1/<path> and /kredsys-api/<path> (the public flow).
 const API_PREFIX_RE = /^.*\/(api\/v1\.1|kredsys-api)\//;
 
-export async function installApiMock(page: Page, state = createMockState()): Promise<MockState> {
+export interface MockApi {
+	state: MockState;
+	/**
+	 * Register a per-installation route override. Overrides are checked BEFORE
+	 * the default handler set, so a test can simulate a 5xx / network error
+	 * for one endpoint without touching the global registry.
+	 *
+	 * Usage:
+	 *   test('500 on save', async ({ mockApi }) => {
+	 *     mockApi.override('POST', /^users$/, () => ({ status: 500, body: {} }));
+	 *     ...
+	 *   });
+	 */
+	override(method: string, pattern: RegExp, handler: Handler): void;
+}
+
+export async function installApiMock(page: Page, state = createMockState()): Promise<MockApi> {
+	const overrides: RouteEntry[] = [];
+
 	await page.route(/\/(api\/v1\.1|kredsys-api)\//, async (route: Route) => {
 		const req = route.request();
 		const url = new URL(req.url());
 		const path = url.pathname.replace(API_PREFIX_RE, '');
 
-		const matched = matchRoute(req.method(), path);
+		const matched =
+			matchAgainst(overrides, req.method(), path)
+			?? matchAgainst(defaultRoutes, req.method(), path);
+
 		if (!matched) {
-			console.warn(`[mock] unhandled ${req.method()} ${path}`);
-			return route.fulfill({ status: 404, contentType: 'application/json', body: '{}' });
+			// console.error so the consoleGuard fails the test on contract drift
+			// (silent 404 + empty body was masking new endpoints / typos).
+			// Return 599 (non-standard) so consumers cannot mistake it for a
+			// legitimate 404 from the backend.
+			console.error(`[mock] UNHANDLED ${req.method()} ${path}`);
+			return route.fulfill({
+				status: 599,
+				contentType: 'application/json',
+				body: JSON.stringify({ error: `mock: unhandled ${req.method()} ${path}` }),
+			});
 		}
 
 		let body: any = undefined;
@@ -118,7 +152,13 @@ export async function installApiMock(page: Page, state = createMockState()): Pro
 			return route.fulfill({ status: 500, contentType: 'application/json', body: '{}' });
 		}
 	});
-	return state;
+
+	return {
+		state,
+		override(method, pattern, handler) {
+			overrides.unshift({ method, pattern, handler });
+		},
+	};
 }
 
 export { paginated };

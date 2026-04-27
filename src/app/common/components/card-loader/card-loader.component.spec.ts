@@ -103,6 +103,7 @@ describe('CardLoaderComponent — debug mode with user-select dropdown', () => {
 	it('should render the debug user-select dropdown', () => {
 		const dropdown = fixture.debugElement.query(By.css('[data-testid="card-loader-debug-user-select"]'));
 		expect(dropdown).toBeTruthy();
+		expect(dropdown.nativeElement.getAttribute('aria-disabled')).not.toBe('true');
 	});
 
 	it('should emit cardIdChange when selectDebugUser is called with a valid uid', () => {
@@ -112,8 +113,34 @@ describe('CardLoaderComponent — debug mode with user-select dropdown', () => {
 		expect(emittedUid).toBe(1001);
 	});
 
-	it('should populate allUserCards with an entry for each card (all users, not just first 3)', () => {
+	it('should NOT emit cardIdChange when selectDebugUser is called with null/undefined', () => {
+		let emitted = false;
+		component.cardIdChange.subscribe(() => emitted = true);
+		(component as any).selectDebugUser(null);
+		(component as any).selectDebugUser(undefined);
+		expect(emitted).toBeFalse();
+	});
+
+	it('populates allUserCards with one entry per card (all users — not the first-3 limit)', () => {
 		const allUserCards = (component as any).allUserCards as { name: string; uid: number }[];
-		expect(allUserCards.length).toBe(mockCards.length);
+		// Exactly the same set of UIDs as the mock, regardless of the
+		// previous "first 3 unique users" cap.
+		const uids = allUserCards.map(e => e.uid).sort((a, b) => a - b);
+		expect(uids).toEqual([1001, 1002, 1003, 1004]);
+		// Names alphabetised; Alice has two cards (1001, 1004) so two
+		// "Alice" entries are expected.
+		const names = allUserCards.map(e => e.name);
+		expect(names).toEqual(['Alice', 'Alice', 'Bob', 'Carol']);
+	});
+
+	it('debugLoadNewCard reads window.__E2E_NEXT_CARD_UID__ when set', () => {
+		(window as any).__E2E_NEXT_CARD_UID__ = 9_876_543_210;
+		let emittedUid: number | undefined;
+		component.cardIdChange.subscribe((uid: number) => emittedUid = uid);
+		void component.debugLoadNewCard();
+		expect(emittedUid).toBe(9_876_543_210);
+		// Override is consumed (single-shot) so subsequent calls fall back to
+		// the random generator.
+		expect((window as any).__E2E_NEXT_CARD_UID__).toBeUndefined();
 	});
 });

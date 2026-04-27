@@ -45,11 +45,17 @@ out.push('BEGIN;');
 out.push('');
 
 out.push('-- USERS');
+// Password placeholder format intentionally avoids the bcrypt prefix
+// ($2a$, $2b$, $2y$). A previous form `$2a$10$REPLACE_WITH_BCRYPT_OF_<pw>`
+// was indistinguishable from a real bcrypt hash to grep-based tooling and
+// embedded the plaintext after a recognisable separator. The PLACEHOLDER:
+// prefix below is loud and unmistakeable: any code that loads this seed
+// MUST bcrypt the plaintext before storing.
 out.push(insert('users', users.map(u => ({
 	id: u.id,
 	name: u.name,
 	email: u.email,
-	password_hash: `$2a$10$REPLACE_WITH_BCRYPT_OF_${u.password}`,
+	password_hash: `__E2E_PLACEHOLDER__BCRYPT_REQUIRED__plaintext=${u.password}`,
 	member_id: u.memberId,
 	blocked: u.blocked,
 }))));

@@ -1,6 +1,6 @@
 import { test as base, Page } from '@playwright/test';
 import { authAdapter, MODE } from '../fixtures/auth-adapter';
-import { installApiMock, MockState } from '../fixtures/api-mock';
+import { installApiMock, MockApi, MockState } from '../fixtures/api-mock';
 // Side-effect import — registers route handlers via on(...) on api-mock's routes array.
 // Imported here (not in api-mock.ts) to avoid a circular initialization between the
 // router module and the handlers module.
@@ -13,6 +13,7 @@ import { installBrowserShims } from './browser-shims';
 type Personas = {
 	browserShims: void;
 	consoleGuard: void;
+	mockApi: MockApi | null;
 	mockState: MockState | null;
 	asAdmin: Page;
 	asWorker: Page;
@@ -54,13 +55,21 @@ export const test = base.extend<Personas>({
 		}
 	}, { auto: true }],
 
-	mockState: async ({ page }, use) => {
+	// Composed: mockApi is the source-of-truth in mock mode (router + state +
+	// per-test override hook). mockState is a convenience accessor that just
+	// surfaces .state — kept for the common case where a test only wants to
+	// peek/mutate state without intercepting requests.
+	mockApi: async ({ page }, use) => {
 		if (MODE === 'mock') {
-			const state = await installApiMock(page);
-			await use(state);
+			const api = await installApiMock(page);
+			await use(api);
 		} else {
 			await use(null);
 		}
+	},
+
+	mockState: async ({ mockApi }, use) => {
+		await use(mockApi?.state ?? null);
 	},
 
 	asAdmin: async ({ page, mockState }, use) => {

@@ -13,16 +13,16 @@ BEGIN;
 
 -- USERS
 INSERT INTO users (id, name, email, password_hash, member_id, blocked) VALUES
-  (1, 'Admin Adminský', 'admin@test.cz', '$2a$10$REPLACE_WITH_BCRYPT_OF_admin123', 1001, FALSE),
-  (2, 'Pavel Pokladní', 'worker@test.cz', '$2a$10$REPLACE_WITH_BCRYPT_OF_worker123', 1002, FALSE),
-  (3, 'Petr PowerSales', 'power@test.cz', '$2a$10$REPLACE_WITH_BCRYPT_OF_power123', 1003, FALSE),
-  (4, 'Marie Členka', 'member@test.cz', '$2a$10$REPLACE_WITH_BCRYPT_OF_member123', 1004, FALSE),
-  (5, 'Jana Zákaznice', 'jana@test.cz', '$2a$10$REPLACE_WITH_BCRYPT_OF_jana123', 1005, FALSE),
-  (6, 'Karel Zablokovaný', 'karel@test.cz', '$2a$10$REPLACE_WITH_BCRYPT_OF_karel123', 1006, TRUE),
-  (7, 'Tomáš Tučný', 'tomas@test.cz', '$2a$10$REPLACE_WITH_BCRYPT_OF_pwd123', 1007, FALSE),
-  (8, 'Lucie Lišková', 'lucie@test.cz', '$2a$10$REPLACE_WITH_BCRYPT_OF_pwd123', 1008, FALSE),
-  (9, 'Ondřej Otec', 'ondrej@test.cz', '$2a$10$REPLACE_WITH_BCRYPT_OF_pwd123', 1009, FALSE),
-  (10, 'Eva Eko', 'eva@test.cz', '$2a$10$REPLACE_WITH_BCRYPT_OF_pwd123', 1010, FALSE);
+  (1, 'Admin Adminský', 'admin@test.cz', '__E2E_PLACEHOLDER__BCRYPT_REQUIRED__plaintext=admin123', 1001, FALSE),
+  (2, 'Pavel Pokladní', 'worker@test.cz', '__E2E_PLACEHOLDER__BCRYPT_REQUIRED__plaintext=worker123', 1002, FALSE),
+  (3, 'Petr PowerSales', 'power@test.cz', '__E2E_PLACEHOLDER__BCRYPT_REQUIRED__plaintext=power123', 1003, FALSE),
+  (4, 'Marie Členka', 'member@test.cz', '__E2E_PLACEHOLDER__BCRYPT_REQUIRED__plaintext=member123', 1004, FALSE),
+  (5, 'Jana Zákaznice', 'jana@test.cz', '__E2E_PLACEHOLDER__BCRYPT_REQUIRED__plaintext=jana123', 1005, FALSE),
+  (6, 'Karel Zablokovaný', 'karel@test.cz', '__E2E_PLACEHOLDER__BCRYPT_REQUIRED__plaintext=karel123', 1006, TRUE),
+  (7, 'Tomáš Tučný', 'tomas@test.cz', '__E2E_PLACEHOLDER__BCRYPT_REQUIRED__plaintext=pwd123', 1007, FALSE),
+  (8, 'Lucie Lišková', 'lucie@test.cz', '__E2E_PLACEHOLDER__BCRYPT_REQUIRED__plaintext=pwd123', 1008, FALSE),
+  (9, 'Ondřej Otec', 'ondrej@test.cz', '__E2E_PLACEHOLDER__BCRYPT_REQUIRED__plaintext=pwd123', 1009, FALSE),
+  (10, 'Eva Eko', 'eva@test.cz', '__E2E_PLACEHOLDER__BCRYPT_REQUIRED__plaintext=pwd123', 1010, FALSE);
 
 SELECT setval('users_id_seq', 11, false);
 

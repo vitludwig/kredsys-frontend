@@ -109,10 +109,9 @@ export class CardLoaderComponent implements OnInit, OnDestroy {
 		}
 	}
 
-	public selectDebugUser(uid: number): void {
-		if (uid != null) {
-			this.cardIdChange.emit(uid);
-		}
+	public selectDebugUser(uid: number | null | undefined): void {
+		if (uid == null) return;
+		this.cardIdChange.emit(uid);
 	}
 
 	public ngOnDestroy(): void {
@@ -121,6 +120,17 @@ export class CardLoaderComponent implements OnInit, OnDestroy {
 	}
 
 	public async debugLoadNewCard(): Promise<void> {
+		// E2E hook: tests can pin the next UID by setting `window.__E2E_NEXT_CARD_UID__`
+		// before clicking the button. Avoids the broken Math.random override that
+		// only worked for one call and didn't survive page reloads.
+		const e2eUid = (typeof window !== 'undefined')
+			? (window as unknown as { __E2E_NEXT_CARD_UID__?: number }).__E2E_NEXT_CARD_UID__
+			: undefined;
+		if (typeof e2eUid === 'number' && Number.isFinite(e2eUid)) {
+			delete (window as unknown as { __E2E_NEXT_CARD_UID__?: number }).__E2E_NEXT_CARD_UID__;
+			this.cardIdChange.emit(e2eUid);
+			return;
+		}
 		this.cardIdChange.emit(this.generateRandomCardId());
 	}
 
