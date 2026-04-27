@@ -19,6 +19,7 @@ export interface MockState {
 		user: number;
 		place: number;
 		goods: number;
+		goodsType: number;
 		currency: number;
 		group: number;
 		transaction: number;
@@ -38,7 +39,7 @@ export function createMockState(): MockState {
 		groups:       structuredClone(groups),
 		userGroups:   structuredClone(userGroups),
 		transactions: structuredClone(transactions),
-		nextId: { user: 1000, place: 1000, goods: 1000, currency: 1000, group: 1000, transaction: 10000, card: 1000 },
+		nextId: { user: 1000, place: 1000, goods: 1000, goodsType: 1000, currency: 1000, group: 1000, transaction: 10000, card: 1000 },
 	};
 }
 
@@ -87,26 +88,14 @@ function paginated<T>(items: T[], page = 1, pageSize = 50) {
 	};
 }
 
-export async function installApiMock(page: Page, state = createMockState()): Promise<MockState> {
-	// Headless Chromium has no Web Bluetooth. PrintService instantiates
-	// WebBluetoothReceiptPrinter at startup and crashes the app without this stub.
-	await page.addInitScript(() => {
-		if (!('bluetooth' in navigator)) {
-			Object.defineProperty(navigator, 'bluetooth', {
-				configurable: true,
-				value: {
-					addEventListener: () => {},
-					removeEventListener: () => {},
-					requestDevice: async () => { throw new Error('bluetooth disabled in E2E'); },
-				},
-			});
-		}
-	});
+// Matches /api/v1.1/<path> and /kredsys-api/<path> (the public flow).
+const API_PREFIX_RE = /^.*\/(api\/v1\.1|kredsys-api)\//;
 
-	await page.route('**/api/v1.1/**', async (route: Route) => {
+export async function installApiMock(page: Page, state = createMockState()): Promise<MockState> {
+	await page.route(/\/(api\/v1\.1|kredsys-api)\//, async (route: Route) => {
 		const req = route.request();
 		const url = new URL(req.url());
-		const path = url.pathname.replace(/^.*\/api\/v1\.1\//, '');
+		const path = url.pathname.replace(API_PREFIX_RE, '');
 
 		const matched = matchRoute(req.method(), path);
 		if (!matched) {

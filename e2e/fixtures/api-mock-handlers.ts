@@ -1,11 +1,54 @@
-import { on, paginated } from './api-mock';
+import { on, paginated, MockState } from './api-mock';
 import { createMockJwt } from './jwt';
+import { permissionsForRoles } from './permissions';
 
 function pageParams(url: URL): { page: number; pageSize: number } {
 	return {
 		page: Number(url.searchParams.get('page') ?? 1),
 		pageSize: Number(url.searchParams.get('pageSize') ?? 50),
 	};
+}
+
+function userName(state: MockState, userId: number | undefined): string {
+	if (userId == null) return '';
+	return state.users.find(u => u.id === userId)?.name ?? '';
+}
+
+function placeName(state: MockState, placeId: number | undefined): string {
+	if (placeId == null) return '';
+	return state.places.find(p => p.id === placeId)?.name ?? '';
+}
+
+interface PaymentRecord { goodsId: number; multiplier: number; creatorId?: number }
+interface DepositRecord { amount: number; text?: string; creatorId?: number }
+
+function buildPaymentRecords(state: MockState, records: PaymentRecord[]): {
+	records: any[];
+	total: number;
+} {
+	let total = 0;
+	const built: any[] = [];
+	for (const r of records ?? []) {
+		const g = state.goods.find(x => x.id === r.goodsId);
+		const price = g?.price ?? 0;
+		const multiplier = Number(r.multiplier ?? 0);
+		const sum = price * multiplier;
+		total += sum;
+		built.push({
+			id: ++state.nextId.transaction,
+			creatorId: r.creatorId,
+			text: g?.name ?? '',
+			type: 'Payment',
+			transactionId: 0,
+			goodsId: r.goodsId,
+			modifyLogId: 0,
+			created: new Date().toISOString(),
+			amountSum: sum,
+			amountItem: price,
+			multiplier,
+		});
+	}
+	return { records: built, total };
 }
 
 // AUTH
@@ -18,7 +61,7 @@ on('POST', /^authentication\/user\/email$/, ({ body, state }) => {
 	if (u.blocked) return { status: 403, body: { error: 'blocked' } };
 	const token = createMockJwt({
 		sub: String(u.id), name: u.name, email: u.email, roles: u.roles,
-		exp: Math.floor(Date.now() / 1000) + 3600,
+		exp: Math.floor(Date.now() / 1000) + 24 * 3600,
 	});
 	return {
 		body: {
@@ -26,7 +69,7 @@ on('POST', /^authentication\/user\/email$/, ({ body, state }) => {
 			userId: u.id,
 			placeId: 0,
 			roles: u.roles,
-			permissions: [],
+			permissions: permissionsForRoles(u.roles),
 		},
 	};
 });
@@ -34,29 +77,59 @@ on('POST', /^authentication\/user\/email$/, ({ body, state }) => {
 // USERS
 on('GET', /^users$/, ({ url, state }) => {
 	const { page, pageSize } = pageParams(url);
-	return { body: paginated(state.users, page, pageSize) };
+	const includeBlocked = url.searchParams.get('includeBlocked');
+	const filter = url.searchParams.get('filter') ?? '';
+	let list = state.users;
+	// Honour the most common filter forms the frontend emits:
+	//   blocked=true|false                       (UserList toggle)
+	//   name#=*<text>/i | memberId ^ <text>      (search)
+	const blockedMatch = filter.match(/blocked=(true|false)/);
+	if (blockedMatch && includeBlocked !== 'true') {
+		const want = blockedMatch[1] === 'true';
+		list = list.filter(u => !!u.blocked === want);
+	}
+	const searchMatch = filter.match(/name#=\*([^/]+)\/i/);
+	if (searchMatch) {
+		const q = searchMatch[1].toLowerCase();
+		list = list.filter(u =>
+			u.name.toLowerCase().includes(q) || String(u.memberId ?? '').includes(q),
+		);
+	}
+	return { body: paginated(list, page, pageSize) };
 });
 on('GET', /^users\/(\d+)$/, ({ match, state }) => {
 	const id = Number(match[1]);
 	const u = state.users.find(x => x.id === id);
-	return u ? { body: u } : { status: 404, body: { error: 'not found' } };
+	if (!u) return { status: 404, body: { error: 'not found' } };
+	const { password: _pw, ...safe } = u;
+	void _pw;
+	return { body: safe };
 });
 on('POST', /^users$/, ({ body, state }) => {
 	const id = ++state.nextId.user;
 	const u = { ...body, id };
 	state.users.push(u);
-	return { body: u };
+	const { password: _pw, ...safe } = u;
+	void _pw;
+	return { body: safe };
 });
 on('PUT', /^users\/(\d+)$/, ({ match, body, state }) => {
 	const id = Number(match[1]);
 	const i = state.users.findIndex(x => x.id === id);
 	if (i < 0) return { status: 404, body: {} };
 	state.users[i] = { ...state.users[i], ...body, id };
-	return { body: state.users[i] };
+	const { password: _pw, ...safe } = state.users[i];
+	void _pw;
+	return { body: safe };
 });
 on('DELETE', /^users\/(\d+)$/, ({ match, state }) => {
 	const id = Number(match[1]);
+	// Cascade — match real backend behaviour: clear user's cards / accounts /
+	// group memberships so list views don't show orphans.
 	state.users = state.users.filter(x => x.id !== id);
+	state.cards = state.cards.filter(c => c.userId !== id);
+	state.accounts = state.accounts.filter(a => a.userId !== id);
+	state.userGroups = state.userGroups.filter(ug => ug.userId !== id);
 	return { body: {} };
 });
 on('PUT', /^users\/(\d+)\/roles$/, ({ match, body, state }) => {
@@ -88,9 +161,24 @@ on('GET', /^users\/(\d+)\/accounts$/, ({ match, url, state }) => {
 });
 on('POST', /^users\/(\d+)\/card$/, ({ match, body, state }) => {
 	const userId = Number(match[1]);
+	if (!body?.uid) {
+		return { status: 400, body: { error: 'uid required' } };
+	}
+	const uid = Number(body.uid);
+	if (state.cards.some(c => c.uid === uid)) {
+		return { status: 409, body: { error: 'card already exists' } };
+	}
 	const id = ++state.nextId.card;
-	const card = { id, uid: body?.uid ?? Math.floor(Math.random() * 1e10), userId };
-	state.cards.push(card);
+	const card = {
+		id,
+		uid,
+		userId,
+		type: body.type ?? 'Card',
+		description: body.description ?? '',
+		blocked: false,
+		expirationDate: body.expirationDate,
+	};
+	state.cards.push(card as any);
 	return { body: card };
 });
 
@@ -104,7 +192,10 @@ on('GET', /^cards\/(\d+)\/user$/, ({ match, state }) => {
 	const c = state.cards.find(x => x.uid === uid);
 	if (!c) return { status: 404, body: {} };
 	const u = state.users.find(x => x.id === c.userId);
-	return u ? { body: u } : { status: 404, body: {} };
+	if (!u) return { status: 404, body: {} };
+	const { password: _pw, ...safe } = u;
+	void _pw;
+	return { body: safe };
 });
 on('DELETE', /^cards\/(\d+)$/, ({ match, state }) => {
 	const id = Number(match[1]);
@@ -127,9 +218,13 @@ on('GET', /^places\/(\d+)\/roles$/, ({ match, state }) => {
 	const p = state.places.find(x => x.id === id);
 	return { body: { roles: p?.type ? [p.type] : [] } };
 });
+// Real backend returns IPlaceGoodsResponse[] = { position, goods }[]
+// (consumer: PlaceService.getPlaceGoods → IPlaceGoodsResponse, see IPlace.ts).
 on('GET', /^places\/(\d+)\/goods$/, ({ match, url, state }) => {
 	const id = Number(match[1]);
-	const list = state.goods.filter(g => g.placeId === id);
+	const list = state.goods
+		.filter(g => g.placeId === id)
+		.map((g, i) => ({ position: i, goods: g }));
 	const { page, pageSize } = pageParams(url);
 	return { body: paginated(list, page, pageSize) };
 });
@@ -139,7 +234,8 @@ on('GET', /^places\/(\d+)\/transactions$/, ({ match, url, state }) => {
 	const { page, pageSize } = pageParams(url);
 	return { body: paginated(list, page, pageSize) };
 });
-on('POST', /^places$/, ({ body, state }) => {
+// PlaceService.addPlace POSTs to "places/" (trailing slash) — be lenient.
+on('POST', /^places\/?$/, ({ body, state }) => {
 	const id = ++state.nextId.place;
 	const p = { ...body, id };
 	state.places.push(p);
@@ -163,7 +259,9 @@ on('DELETE', /^places\/(\d+)$/, ({ match, state }) => {
 	state.places = state.places.filter(x => x.id !== id);
 	return { body: {} };
 });
-on('POST', /^places\/(\d+)\/goods/, ({ match, url, state }) => {
+// Anchor explicitly — earlier the unanchored `places/(\d+)/goods` would also
+// match `places/1/goods/42` and any future `places/1/goodsfoo`.
+on('POST', /^places\/(\d+)\/goods(\?|$)/, ({ match, url, state }) => {
 	const placeId = Number(match[1]);
 	const goodsId = Number(url.searchParams.get('goodsId'));
 	const g = state.goods.find(x => x.id === goodsId);
@@ -174,6 +272,20 @@ on('DELETE', /^places\/(\d+)\/goods\/(\d+)$/, ({ match, state }) => {
 	const goodsId = Number(match[2]);
 	const g = state.goods.find(x => x.id === goodsId);
 	if (g) g.placeId = null;
+	return { body: {} };
+});
+// Drag-to-reorder sortiment: PATCH places/:id/goods/move with IGoods[] in
+// the new order. Mock just trusts the order.
+on('PATCH', /^places\/(\d+)\/goods\/move$/, ({ match, body, state }) => {
+	const placeId = Number(match[1]);
+	const newOrder = (body ?? []) as { id: number }[];
+	const idToPosition = new Map(newOrder.map((g, i) => [g.id, i]));
+	state.goods.sort((a, b) => {
+		if (a.placeId !== placeId && b.placeId !== placeId) return 0;
+		if (a.placeId !== placeId) return 1;
+		if (b.placeId !== placeId) return -1;
+		return (idToPosition.get(a.id!) ?? 0) - (idToPosition.get(b.id!) ?? 0);
+	});
 	return { body: {} };
 });
 
@@ -215,7 +327,7 @@ on('GET', /^goodstypes\/(\d+)$/, ({ match, state }) => {
 	return t ? { body: t } : { status: 404, body: {} };
 });
 on('POST', /^goodstypes$/, ({ body, state }) => {
-	const id = ++state.nextId.goods;
+	const id = ++state.nextId.goodsType;
 	const t = { ...body, id };
 	state.goodsTypes.push(t);
 	return { body: t };
@@ -266,7 +378,11 @@ on('GET', /^currencyaccounts\/(\d+)$/, ({ match, state }) => {
 on('PUT', /^currencyaccounts\/(\d+)$/, ({ match, body, state }) => {
 	const id = Number(match[1]);
 	const a = state.accounts.find(x => x.id === id);
-	if (a) Object.assign(a, body);
+	if (a) {
+		Object.assign(a, body);
+		// Defensive: overdraftLimit can't be negative.
+		if (a.overdraftLimit < 0) a.overdraftLimit = 0;
+	}
 	return { body: a ?? {} };
 });
 
@@ -278,88 +394,192 @@ on('GET', /^transactions$/, ({ url, state }) => {
 on('GET', /^transactions\/(\d+)$/, ({ match, state }) => {
 	const id = Number(match[1]);
 	const t = state.transactions.find(x => x.id === id);
-	return t ? { body: t } : { status: 404, body: {} };
+	if (!t) return { status: 404, body: {} };
+	// ITransactionResponse extends ITransaction with records[].
+	return { body: { ...t, records: (t as any).records ?? [] } };
 });
+// TransactionService.pay POSTs { info, userId, placeId, records: [{ goodsId, multiplier }] }
 on('POST', /^transactions\/payment$/, ({ body, state }) => {
+	const userId: number = body?.userId;
+	const placeId: number = body?.placeId;
+	const acc = state.accounts.find(a => a.userId === userId);
+	const { records, total } = buildPaymentRecords(state, body?.records ?? []);
+
+	// Overdraft enforcement — match real backend semantics.
+	if (acc) {
+		const newBalance = acc.currentAmount - total;
+		if (newBalance < -acc.overdraftLimit) {
+			return { status: 400, body: { error: 'overdraft' } };
+		}
+		acc.currentAmount = newBalance;
+	}
+
 	const id = ++state.nextId.transaction;
-	const total = (body?.items ?? []).reduce(
-		(s: number, i: any) => s + (i.price ?? 0) * (i.amount ?? 1),
-		0,
-	);
-	const acc = state.accounts.find(a => a.userId === body?.userId);
-	if (acc) acc.currentAmount -= total;
-	const tx: any = {
+	const tx = {
 		id,
-		userId: body?.userId,
-		placeId: body?.placeId,
+		userId,
+		placeId,
 		amount: -total,
 		currencyId: 1,
 		created: new Date().toISOString(),
 		type: 'Payment',
 		cancellation: false,
-		info: '',
-		userName: '',
-		placeName: '',
-	};
+		info: body?.info ?? '',
+		userName: userName(state, userId),
+		placeName: placeName(state, placeId),
+		records,
+	} as any;
 	state.transactions.unshift(tx);
 	return { body: tx };
 });
 on('POST', /^transactions\/deposit$/, ({ body, state }) => {
-	const id = ++state.nextId.transaction;
-	const amt = Number(body?.amount ?? 0);
-	const acc = state.accounts.find(a => a.userId === body?.userId);
+	const userId: number = body?.userId;
+	const placeId: number = body?.placeId;
+	const recs: DepositRecord[] = body?.records ?? [];
+	const amt = recs.reduce((s, r) => s + Number(r.amount ?? 0), 0);
+	const acc = state.accounts.find(a => a.userId === userId);
 	if (acc) acc.currentAmount += amt;
-	const tx: any = {
+	const id = ++state.nextId.transaction;
+	const tx = {
 		id,
-		userId: body?.userId,
-		placeId: body?.placeId,
+		userId,
+		placeId,
 		amount: amt,
-		currencyId: 1,
+		currencyId: body?.currencyId ?? 1,
 		created: new Date().toISOString(),
 		type: 'Deposit',
 		cancellation: false,
-		info: '',
-		userName: '',
-		placeName: '',
-	};
+		info: body?.info ?? '',
+		userName: userName(state, userId),
+		placeName: placeName(state, placeId),
+		records: recs.map(r => ({
+			id: ++state.nextId.transaction,
+			creatorId: r.creatorId,
+			text: r.text ?? '',
+			type: 'Deposit',
+			transactionId: id,
+			goodsId: 0,
+			modifyLogId: 0,
+			created: new Date().toISOString(),
+			amountSum: r.amount,
+			amountItem: r.amount,
+			multiplier: 1,
+		})),
+	} as any;
 	state.transactions.unshift(tx);
 	return { body: tx };
 });
 on('POST', /^transactions\/withDraw$/, ({ body, state }) => {
+	const userId: number = body?.userId;
+	const placeId: number = body?.placeId;
+	const recs: DepositRecord[] = body?.records ?? [];
+	const amt = recs.reduce((s, r) => s + Number(r.amount ?? 0), 0);
+	const acc = state.accounts.find(a => a.userId === userId);
+	if (acc) {
+		const newBalance = acc.currentAmount - amt;
+		if (newBalance < -acc.overdraftLimit) {
+			return { status: 400, body: { error: 'overdraft' } };
+		}
+		acc.currentAmount = newBalance;
+	}
 	const id = ++state.nextId.transaction;
-	const amt = Number(body?.amount ?? 0);
-	const acc = state.accounts.find(a => a.userId === body?.userId);
-	if (acc) acc.currentAmount -= amt;
-	const tx: any = {
+	const tx = {
 		id,
-		userId: body?.userId,
-		placeId: body?.placeId,
+		userId,
+		placeId,
 		amount: -amt,
-		currencyId: 1,
+		currencyId: body?.currencyId ?? 1,
 		created: new Date().toISOString(),
 		type: 'Withdraw',
 		cancellation: false,
-		info: '',
-		userName: '',
-		placeName: '',
-	};
+		info: body?.info ?? '',
+		userName: userName(state, userId),
+		placeName: placeName(state, placeId),
+		records: recs.map(r => ({
+			id: ++state.nextId.transaction,
+			creatorId: r.creatorId,
+			text: r.text ?? '',
+			type: 'Withdraw',
+			transactionId: id,
+			goodsId: 0,
+			modifyLogId: 0,
+			created: new Date().toISOString(),
+			amountSum: -r.amount,
+			amountItem: r.amount,
+			multiplier: 1,
+		})),
+	} as any;
 	state.transactions.unshift(tx);
 	return { body: tx };
 });
+// Storno: flip cancellation on the original AND append a compensating row,
+// matching backend semantics so list-after-storno tests see the new row.
 on('PUT', /^transactions\/(\d+)\/cancellation$/, ({ match, state }) => {
 	const id = Number(match[1]);
-	const tx = state.transactions.find(t => t.id === id);
+	const tx = state.transactions.find(t => t.id === id) as any;
 	if (!tx) return { status: 404, body: {} };
 	const acc = state.accounts.find(a => a.userId === tx.userId);
-	if (acc) acc.currentAmount -= tx.amount;
+	if (acc) acc.currentAmount -= tx.amount; // reverse the original effect
 	tx.cancellation = true;
-	return { body: tx };
+	const compensatingId = ++state.nextId.transaction;
+	const compensating = {
+		id: compensatingId,
+		userId: tx.userId,
+		placeId: tx.placeId,
+		amount: -tx.amount,
+		currencyId: tx.currencyId,
+		created: new Date().toISOString(),
+		type: tx.type,
+		cancellation: true,
+		info: `Storno tx#${tx.id}`,
+		userName: tx.userName,
+		placeName: tx.placeName,
+		records: [],
+	};
+	state.transactions.unshift(compensating);
+	return { body: { ...tx, records: tx.records ?? [] } };
 });
 
 // STATISTICS
-on('GET', /^statistics\/(\d+)\/goods$/, () => ({ body: { items: [] } }));
-on('GET', /^statistics\/(\d+)\/groups-statistics$/, ({ state }) => ({
-	body: state.groups.map(g => ({ group: g, items: [] })),
+// Consumer expects ITransactionStatistics: { currencyId, sumGoods, sumPrice, sumTransactions, goods[] }
+on('GET', /^statistics\/(\d+)\/goods$/, ({ match, state }) => {
+	const currencyId = Number(match[1]);
+	const txs = state.transactions.filter(t => t.currencyId === currencyId);
+	const sumPrice = txs.reduce((s, t) => s + Math.max(0, -t.amount), 0);
+	return {
+		body: {
+			currencyId,
+			sumGoods: 0,
+			sumPrice,
+			sumTransactions: txs.length,
+			goods: [],
+		},
+	};
+});
+// Consumer expects IGroupStatistics: { sumGoods, sumPrice, groupsStatistics: [{ group, statistics }] }
+on('GET', /^statistics\/(\d+)\/groups-statistics$/, ({ match, state }) => {
+	const currencyId = Number(match[1]);
+	return {
+		body: {
+			sumGoods: 0,
+			sumPrice: 0,
+			groupsStatistics: state.groups.map(g => ({
+				group: g,
+				statistics: {
+					currencyId,
+					sumGoods: 0,
+					sumPrice: 0,
+					sumTransactions: 0,
+					goods: [],
+				},
+			})),
+		},
+	};
+});
+// Excel/CSV download — return an empty blob. Just enough that the request
+// resolves; tests that care about the file should mock per-test.
+on('GET', /^statistics\/(\d+)\/statistics-all-download$/, () => ({
+	body: '',
 }));
 
 // GROUPS
@@ -388,17 +608,62 @@ on('PUT', /^groups\/(\d+)$/, ({ match, body, state }) => {
 on('DELETE', /^groups\/(\d+)$/, ({ match, state }) => {
 	const id = Number(match[1]);
 	state.groups = state.groups.filter(x => x.id !== id);
+	state.userGroups = state.userGroups.filter(ug => ug.groupId !== id);
 	return { body: {} };
+});
+on('GET', /^groups\/(\d+)\/users$/, ({ match, url, state }) => {
+	const groupId = Number(match[1]);
+	const userIds = state.userGroups
+		.filter(ug => ug.groupId === groupId)
+		.map(ug => ug.userId);
+	const list = state.users
+		.filter(u => u.id && userIds.includes(u.id))
+		.map(({ password: _pw, ...rest }) => { void _pw; return rest; });
+	const { page, pageSize } = pageParams(url);
+	return { body: paginated(list, page, pageSize) };
+});
+on('GET', /^users\/(\d+)\/groups$/, ({ match, state }) => {
+	const userId = Number(match[1]);
+	const ids = state.userGroups
+		.filter(ug => ug.userId === userId)
+		.map(ug => ug.groupId);
+	return { body: state.groups.filter(g => ids.includes(g.id)) };
 });
 on('POST', /^groups\/(\d+)\/users\/(\d+)$/, ({ match, state }) => {
 	const groupId = Number(match[1]);
 	const userId = Number(match[2]);
-	state.userGroups.push({ groupId, userId });
+	if (!state.userGroups.some(ug => ug.groupId === groupId && ug.userId === userId)) {
+		state.userGroups.push({ groupId, userId });
+	}
+	const u = state.users.find(x => x.id === userId);
+	if (u) {
+		u.groups = [...new Set([...(u.groups ?? []), groupId])];
+	}
 	return { body: {} };
 });
 on('DELETE', /^groups\/(\d+)\/users\/(\d+)$/, ({ match, state }) => {
 	const groupId = Number(match[1]);
 	const userId = Number(match[2]);
 	state.userGroups = state.userGroups.filter(x => !(x.groupId === groupId && x.userId === userId));
+	const u = state.users.find(x => x.id === userId);
+	if (u && u.groups) {
+		u.groups = u.groups.filter(g => g !== groupId);
+	}
 	return { body: {} };
+});
+
+// PUBLIC kredsys-api endpoints (used by /public/card-info)
+on('GET', /^userIdByCard\/(\d+)$/, ({ match, state }) => {
+	const uid = Number(match[1]);
+	const c = state.cards.find(x => x.uid === uid);
+	if (!c) return { status: 404, body: {} };
+	return { body: { userId: c.userId } };
+});
+on('GET', /^userInfo\/(\d+)\/[^/]+$/, ({ match, state }) => {
+	const userId = Number(match[1]);
+	const u = state.users.find(x => x.id === userId);
+	if (!u) return { status: 404, body: {} };
+	const { password: _pw, ...safe } = u;
+	void _pw;
+	return { body: safe };
 });
