@@ -77,6 +77,10 @@ export const SEL = {
 		email: 'checkin-email',
 		group: 'checkin-group',
 		submit: 'checkin-submit',
+		reset: 'checkin-reset',
+		search: 'checkin-search',
+		userResult: (id: number) => `checkin-user-${id}`,
+		deposit: 'checkin-deposit',
 	},
 	placeSelect: {
 		option: (id: number) => `place-option-${id}`,

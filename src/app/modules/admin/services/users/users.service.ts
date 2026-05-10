@@ -17,7 +17,7 @@ import {ConfigService} from "../../../../common/services/config/config.service";
 })
 export class UsersService {
 	private http: HttpClient = inject(HttpClient);
-  private configService: ConfigService = inject(ConfigService);
+	private configService: ConfigService = inject(ConfigService);
 
 	protected limit = 15;
 
@@ -79,6 +79,9 @@ export class UsersService {
 
 	@invalidateCache([ECacheTag.USERS, ECacheTag.USER])
 	public async addUser(user: IUser): Promise<IUser> {
+		if(user.email === '') {
+			user.email = null;
+		}
 		return firstValueFrom(this.http.post<IUser>(this.configService.config.apiUrl + 'users', user));
 	}
 
@@ -107,16 +110,16 @@ export class UsersService {
 		return firstValueFrom(this.http.get<IUser>(this.configService.config.apiUrl + 'cards/' + uid + '/user'));
 	}
 
-  public async getPublicUserIdByCardUid(uid: number): Promise<number | null> {
+	public async getPublicUserIdByCardUid(uid: number): Promise<number | null> {
 		return firstValueFrom(this.http.get<{userId: number | null}>('/kredsys-api/userIdByCard/' + uid).pipe(
-      map((result) => result.userId ?? null)
-    ));
+			map((result) => result.userId ?? null)
+		));
 	}
 
-  public async getPublicUserInfo(userId: number, token: string): Promise<IPublicUserInfo | null> {
+	public async getPublicUserInfo(userId: number, token: string): Promise<IPublicUserInfo | null> {
 		return firstValueFrom(this.http.get<IPublicUserInfo>(`/kredsys-api/userInfo/${userId}/${token}`).pipe(
-      map((result) => Object.keys(result).length === 0 ? null : result)
-    ));
+			map((result) => Object.keys(result).length === 0 ? null : result)
+		));
 	}
 
 	public async getUserCurrencyAccounts(userId: number): Promise<ICurrencyAccount[]> {

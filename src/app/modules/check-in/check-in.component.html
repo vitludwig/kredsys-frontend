@@ -1,196 +1,154 @@
-<div class="mb-2">
-  <button mat-raised-button
-    color="accent"
-    (click)="resetForm()"
+@if (!newCard) {
+  <app-card-loader
+    (cardIdChange)="setCard($event)">
+  </app-card-loader>
+} @else {
+  <div class="mb-4">
+    <button mat-raised-button
+            color="accent"
+            (click)="resetForm()"
+            data-testid="checkin-reset"
     >
-    Resetovat
-  </button>
-</div>
+      Resetovat
+    </button>
+  </div>
 
-<div class="row">
-  <div class="col-md-6 col-xs-12">
-    <h2>Přidat nového uživatele</h2>
+  <div class="row">
+    <div class="col-md-6 col-xs-12">
 
-    @if (showValidationErrors) {
-      @if (memberId?.invalid) {
-        <div
-          class="alert alert-danger">
-          @if (memberId?.errors?.['required']) {
-            <div>
-              Vyplňte členské číslo
-            </div>
-          }
-        </div>
-      }
-      @if (name?.invalid) {
-        <div
-          class="alert alert-danger">
-          @if (name?.errors?.['required']) {
-            <div>
-              Vyplňte uživatelské jméno
-            </div>
-          }
-        </div>
-      }
-      @if (email?.invalid) {
-        <div
-          class="alert alert-danger">
-          @if (email?.errors?.['required']) {
-            <div>
-              Vyplňte email
-            </div>
-          }
-          @if (email?.errors?.['email']) {
-            <div>
-              Email není validní emailová adresa
-            </div>
-          }
-        </div>
-      }
-      @for (error of errors; track error) {
-        <div
-          class="alert alert-danger">
-          {{ error }}
-        </div>
-      }
-    }
+      <h2>Vyhledat uživatele v systému</h2>
 
-    <form [formGroup]="userForm"
-      (ngSubmit)=" onSubmit()"
-      >
-      <div [hidden]="!newCard">
+      <mat-form-field class="w-100">
+        <mat-label>Vyhledat podle jména</mat-label>
         <input matInput
-          name="id"
-          type="number"
-          formControlName="id"
-          hidden
-          >
-        <mat-form-field
-          class="w-100">
-          <mat-label>Členské ID</mat-label>
-          <input matInput
-            placeholder="Členské ID"
-            name="memberId"
-            type="number"
-            min="0"
-            formControlName="memberId"
-            data-testid="checkin-member-id"
-            >
-        </mat-form-field>
+               [(ngModel)]="search"
+               (ngModelChange)="searchStart(search!)"
+               data-testid="checkin-search">
+      </mat-form-field>
 
-        <mat-form-field
-          class="w-100">
-          <mat-label>Jméno</mat-label>
-          <input matInput
-            placeholder="Jméno"
-            name="name"
-            formControlName="name"
-            data-testid="checkin-name"
-            >
-        </mat-form-field>
-
-        <mat-form-field
-          class="w-100">
-          <mat-label>E-mail</mat-label>
-          <input matInput
-            placeholder="E-mail"
-            name="email"
-            formControlName="email"
-            data-testid="checkin-email"
-            >
-        </mat-form-field>
-
-        <mat-form-field
-          class="w-100">
-          <mat-label>Vklad (volitelné)</mat-label>
-          <input matInput
-            formControlName="deposit"
-            name="deposit"
-            type="number"
-            >
-          <div matSuffix>Kč</div>
-        </mat-form-field>
-
-        @if(groups$ | async; as groups) {
-          @if(groups.length > 0) {
-            <mat-form-field class="w-100">
-              <mat-label>Skupina (volitelné)</mat-label>
-              <mat-select formControlName="groupId" data-testid="checkin-group">
-                <mat-option [value]="null">Žádná</mat-option>
-                @for (group of groups; track group) {
-                  <mat-option [value]="group.id">
-                    {{ group.name }}
-                  </mat-option>
-                }
-              </mat-select>
-            </mat-form-field>
-          }
-        }
-      </div>
-
-      @if (!newCard) {
-        <app-card-loader
-          (cardIdChange)="setCard($event)">
-        </app-card-loader>
-      }
-
-      <div>
-        <button mat-raised-button
-          class="w-100 submit-btn"
-          color="primary"
-          type="submit"
-          [disabled]="userForm.invalid"
-          data-testid="checkin-submit"
-          >
-          Přidat uživatele
-        </button>
-      </div>
-    </form>
-  </div>
-
-  <div class="col-md-6 col-xs-12">
-    <div class="d-flex align-items-center justify-content-between">
-      <h2 class="mb-0 me-5">Vyhledat uživatele v systému</h2>
-
-      @if(newCard) {
-        <mat-form-field
-          >
-          <mat-label>Vyhledat podle jména</mat-label>
-          <input matInput
-            [(ngModel)]="search"
-            (ngModelChange)="searchStart(search!)">
-        </mat-form-field>
-      } @else {
-        <h3 class="mb-0">Pro vyhledávání naskenuj kartu</h3>
-      }
-    </div>
-    <mat-action-list>
-      @if(search) {
-        @if(searchLoading) {
-          <mat-spinner diameter="50"></mat-spinner>
-        } @else {
-          @if(users.length === 0) {
-            <h4>Žádní uživatele s tímhle jménem.</h4>
+      <mat-action-list>
+        @if (search) {
+          @if (searchLoading) {
+            <mat-spinner diameter="50"></mat-spinner>
           } @else {
-            <div class="alert alert-secondary">Po vybrání pokračuj v levém panelu</div>
+            @if (users.length === 0) {
+              <h4>Žádní uživatele s tímhle jménem.</h4>
+            } @else {
+              <div class="alert alert-secondary">Po vybrání pokračuj v levém panelu</div>
+            }
           }
         }
-      }
-      @for (user of users; track user) {
-        <button mat-list-item
-          (click)="selectUser(user)"
+        @for (user of users; track user) {
+          <button mat-list-item
+                  (click)="selectUser(user)"
+                  [attr.data-testid]="'checkin-user-' + user.id"
           >
-          <div class="d-flex align-items-center justify-content-between w-100">
-            <span>{{ user.name }} (id: {{ user.memberId }}) | {{ user.email }}</span>
-            <button mat-raised-button
-              color="accent"
-              class="ms-auto"
+            <div class="d-flex align-items-center justify-content-between w-100">
+              <span>{{ user.name }} (id: {{ user.memberId }}) | {{ user.email }}</span>
+              <button mat-raised-button
+                      color="accent"
+                      class="ms-auto"
               >
-              Vybrat
-            </button>
-          </div>
-        </button>
-      }
-    </mat-action-list>
+                Vybrat
+              </button>
+            </div>
+          </button>
+        }
+      </mat-action-list>
+    </div>
+
+    <div class="col-md-6 col-xs-12">
+      <h2>Údaje o uživateli</h2>
+
+      <form>
+        <div [hidden]="!newCard">
+          <input matInput
+                 type="number"
+                 class="d-none"
+                 [formField]="userForm.id"
+          >
+          <mat-form-field class="w-100">
+            <mat-label>Členské ID</mat-label>
+            <input matInput
+                   placeholder="Členské ID"
+                   type="number"
+                   [formField]="userForm.memberId"
+                   data-testid="checkin-member-id"
+            >
+            @for (err of userForm.memberId().errors(); track err.kind) {
+              <mat-error>{{ err.message }}</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field class="w-100">
+            <mat-label>Jméno</mat-label>
+            <input matInput
+                   placeholder="Jméno"
+                   [formField]="userForm.name"
+                   data-testid="checkin-name"
+            >
+            @for (err of userForm.name().errors(); track err.kind) {
+              <mat-error>{{ err.message }}</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field class="w-100">
+            <mat-label>E-mail (nepovinný)</mat-label>
+            <input matInput
+                   placeholder="E-mail"
+                   [formField]="userForm.email"
+                   data-testid="checkin-email"
+            >
+            @for (err of userForm.email().errors(); track err.kind) {
+              <mat-error>{{ err.message }}</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field class="w-100">
+            <mat-label>Vklad (volitelné)</mat-label>
+            <input matInput
+                   [formField]="userForm.deposit"
+                   type="number"
+                   data-testid="checkin-deposit"
+            >
+            <div matSuffix>Kč</div>
+          </mat-form-field>
+
+          @if (groups$ | async; as groups) {
+            @if (groups.length > 0) {
+              <mat-form-field class="w-100">
+                <mat-label>Skupina (volitelné)</mat-label>
+                <mat-select [formField]="userForm.groupId" data-testid="checkin-group">
+                  <mat-option [value]="null">Žádná</mat-option>
+                  @for (group of groups; track group) {
+                    <mat-option [value]="group.id">
+                      {{ group.name }}
+                    </mat-option>
+                  }
+                </mat-select>
+              </mat-form-field>
+            }
+          }
+        </div>
+      </form>
+    </div>
   </div>
-</div>
+  <div class="row">
+    <div>
+      @if (showValidationErrors) {
+        @for (error of errors; track error) {
+          <div class="alert alert-danger">{{ error }}</div>
+        }
+      }
+      <button mat-raised-button
+              class="w-100 submit-btn"
+              color="primary"
+              [disabled]="userForm().invalid()"
+              (click)="onSubmit()"
+              data-testid="checkin-submit"
+      >
+        Přidat uživatele
+      </button>
+    </div>
+  </div>
+}

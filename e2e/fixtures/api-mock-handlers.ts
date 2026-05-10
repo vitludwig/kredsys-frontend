@@ -114,7 +114,7 @@ on('GET', /^users\/(\d+)$/, ({ match, state }) => {
 });
 on('POST', /^users$/, ({ body, state }) => {
 	const id = ++state.nextId.user;
-	const u = { ...body, id };
+	const u = { roles: [], blocked: false, ...body, id };
 	state.users.push(u);
 	const { password: _pw, ...safe } = u;
 	void _pw;
