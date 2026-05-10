@@ -1,0 +1,114 @@
+:host {
+  flex: 1;
+}
+
+.uid__card--profile {
+  flex: 3;
+  padding: 16px;
+}
+
+.uid__card-header {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 16px;
+  position: relative;
+}
+
+.uid__profile-info {
+  flex: 1;
+
+  h2,
+  p {
+    margin: 0 0 4px;
+  }
+}
+
+.uid__name {
+  font-size: 1.25rem;
+}
+
+.uid__email {
+  font-size: 0.9rem;
+  opacity: 0.7;
+}
+
+.uid__member-id {
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.uid__groups {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 4px 0;
+}
+
+.uid__group-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  padding: 2px 2px 2px 8px;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.06);
+}
+
+.uid__group-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.uid__group-remove-btn {
+  width: 20px !important;
+  height: 20px !important;
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  padding: 0 !important;
+
+  mat-icon {
+    font-size: 14px;
+    width: 14px;
+    height: 14px;
+    line-height: 14px;
+  }
+}
+
+.uid__group-picker {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 4px;
+}
+
+.uid__group-select {
+  flex: 1;
+  max-width: 220px;
+}
+
+.uid__group-option {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.uid__edit-btn {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.uid__badge--blocked {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background-color: #f44336;
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 500;
+}

@@ -4,6 +4,7 @@
       <mat-label>Hledat uživatele</mat-label>
       <input
         matInput
+        data-testid="user-info-search"
         [formControl]="searchControl"
         [matAutocomplete]="auto"
         placeholder="Jméno nebo e-mail...">
@@ -15,7 +16,7 @@
         [displayWith]="displayFn"
         (optionSelected)="onUserSelected($event.option.value)">
         @for (user of userOptions; track user.id) {
-          <mat-option [value]="user">
+          <mat-option [value]="user" [attr.data-testid]="'user-info-option-' + user.id">
             {{ user.name }}
             <small class="user-info__search-email">{{ user.email }}</small>
           </mat-option>
@@ -48,6 +49,7 @@
       [transactions]="transactions"
       [transactionsTotal]="transactionsTotal"
       [cards]="cards"
+      [groups]="groups"
       [placeId]="placeId"
       [defaultCurrencyId]="defaultCurrencyId"
       (refresh)="onRefresh()"

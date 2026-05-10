@@ -10,10 +10,10 @@ import {firstValueFrom, Observable} from 'rxjs';
 import {IUser} from '../../../../common/types/IUser';
 
 @Component({
-    selector: 'app-storno-dialog',
-    templateUrl: './storno-dialog.component.html',
-    styleUrls: ['./storno-dialog.component.scss'],
-    standalone: false
+	selector: 'app-storno-dialog',
+	templateUrl: './storno-dialog.component.html',
+	styleUrls: ['./storno-dialog.component.scss'],
+	standalone: false
 })
 export class StornoDialogComponent implements OnInit{
 	protected lastTransaction: ITransaction | null = null;
@@ -55,7 +55,7 @@ export class StornoDialogComponent implements OnInit{
 		// user-transctions endpoint doesn't return detail of transaction with records
 		const transaction = await this.transactionService.getTransactionDetail(this.lastTransaction.id);
 
-		for(const record of transaction.records) {
+		for(const record of transaction.records ?? []) {
 			const goodie = await this.goodsService.getGoodie(record.goodsId);
 			this.purchased.push({
 				name: goodie.name,

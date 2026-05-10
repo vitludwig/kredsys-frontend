@@ -7,18 +7,18 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 
 @Component({
-  selector: 'app-user-info-charge-dialog',
-  templateUrl: './charge-dialog.component.html',
-  standalone: true,
-  imports: [FormsModule, MatDialogModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatIconModule],
+	selector: 'app-user-info-charge-dialog',
+	templateUrl: './charge-dialog.component.html',
+	standalone: true,
+	imports: [FormsModule, MatDialogModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatIconModule],
 })
 export class ChargeDialogComponent {
-  private dialogRef = inject(MatDialogRef<ChargeDialogComponent>);
+	private dialogRef = inject(MatDialogRef<ChargeDialogComponent>);
 
-  protected amount: number = 0;
-  protected readonly predefinedAmounts = [200, 500, 800, 1000, 1500, 2000];
+	protected amount: number = 0;
+	protected readonly predefinedAmounts = [200, 500, 800, 1000, 1500, 2000];
 
-  protected submit(): void {
-    this.dialogRef.close(this.amount);
-  }
+	protected submit(): void {
+		this.dialogRef.close(this.amount);
+	}
 }

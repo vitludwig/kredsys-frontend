@@ -1,0 +1,132 @@
+.uid__section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  h3 {
+    margin: 0;
+  }
+}
+
+.uid__section-header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.uid__empty {
+  opacity: 0.6;
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.uid__tx-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.uid__tx-filter--text { flex: 2; min-width: 180px; }
+.uid__tx-filter--datetime { flex: 1; min-width: 220px; }
+.uid__tx-filter--types { flex: 1; min-width: 160px; }
+
+.uid__tx-filter-suffixes {
+  display: inline-flex;
+  align-items: center;
+}
+
+.uid__tx-time-field {
+  margin: 0 12px 0 0;
+  width: 140px;
+}
+.uid__tx-filter--amount { flex: 1; min-width: 100px; }
+.uid__tx-filter--sort { flex: 1; min-width: 120px; }
+
+.uid__tx-list {
+  max-height: clamp(300px, 60vh, 700px);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.uid__tx-row {
+  display: grid;
+  grid-template-columns: 1fr 110px 100px 56px;
+  align-items: start;
+  gap: 8px;
+  padding: 6px 8px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 4px;
+}
+
+.uid__tx-info {
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px;
+  overflow: hidden;
+}
+
+.uid__tx-place {
+  opacity: 0.85;
+}
+
+.uid__tx-text {
+  opacity: 0.7;
+  font-size: 0.85rem;
+}
+
+.uid__tx-date {
+  font-size: 0.8rem;
+  opacity: 0.7;
+}
+
+.uid__tx-amount {
+  text-align: right;
+  font-weight: 500;
+}
+
+.uid__tx-amount--positive {
+  color: #4caf50;
+}
+
+.uid__tx-amount--negative {
+  color: var(--mat-sys-error, #f44336);
+}
+
+.uid__tx-storno {
+  display: flex;
+  justify-content: center;
+}
+
+.uid__tx-records {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.uid__tx-record-more {
+  font-size: 0.8rem;
+  font-weight: 500;
+  opacity: 0.7;
+  padding: 2px 4px;
+  white-space: nowrap;
+  line-height: 1.4;
+}
+
+.uid__tx-record-tag {
+  font-size: 0.8rem;
+  font-weight: 500;
+  background: var(--mat-sys-primary-container);
+  color: var(--mat-sys-on-primary-container);
+  border-radius: 12px;
+  padding: 2px 8px;
+  white-space: nowrap;
+  line-height: 1.4;
+}

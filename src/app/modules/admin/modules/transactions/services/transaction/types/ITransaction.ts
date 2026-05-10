@@ -21,6 +21,7 @@ export interface ITransactionRecord {
 	type: string; // Create... TODO: create enum
 	transactionId: number;
 	goodsId: number;
+	goodsName: string;
 	modifyLogId: number;
 	created: Date;
 	amountSum: number;
@@ -46,5 +47,5 @@ export interface ITransactionRecordWithdraw {
 }
 
 export interface ITransactionResponse extends ITransaction {
-	records: ITransactionRecord[]; // TODO type that correctly
+	records?: ITransactionRecord[];
 }

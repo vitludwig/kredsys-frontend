@@ -85,6 +85,15 @@ export const SEL = {
 	placeSelect: {
 		option: (id: number) => `place-option-${id}`,
 	},
+	userInfo: {
+		search: 'user-info-search',
+		userOption: (id: number) => `user-info-option-${id}`,
+		memberId: 'member-id',
+		groupChip: (id: number) => `profile-group-chip-${id}`,
+		groupRemove: (id: number) => `profile-group-remove-${id}`,
+		groupSelect: 'profile-group-select',
+		groupAddBtn: 'profile-group-add-btn',
+	},
 	tx: {
 		tabAll: 'tx-tab-all',
 		tabPlace: 'tx-tab-place',

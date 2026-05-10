@@ -1,0 +1,64 @@
+<mat-card class="uid__card--profile">
+  <div class="uid__card-header">
+    <div class="uid__profile-info">
+      <h2 class="uid__name">{{ user().name }}</h2>
+      <p class="uid__email">{{ user().email }}</p>
+      <p class="uid__member-id" data-testid="member-id">
+        @if (user().memberId !== null) {
+          Členské číslo {{ user().memberId }}
+        } @else {
+          &mdash;
+        }
+      </p>
+      @if (groups().length > 0) {
+        <div class="uid__groups">
+          Skupina:
+          @for (group of groups(); track group.id) {
+            <span class="uid__group-chip" [attr.data-testid]="'profile-group-chip-' + group.id">
+              <span class="uid__group-dot" [style.background-color]="group.color"></span>
+              {{ group.name }}
+              <button mat-icon-button class="uid__group-remove-btn"
+                      [attr.data-testid]="'profile-group-remove-' + group.id"
+                      [disabled]="saving()"
+                      aria-label="Odebrat ze skupiny"
+                      (click)="onRemoveGroup(group)">
+                <mat-icon>close</mat-icon>
+              </button>
+            </span>
+          }
+        </div>
+      }
+      @if (availableGroups().length > 0) {
+        <div class="uid__group-picker">
+          <mat-form-field appearance="outline" subscriptSizing="dynamic" class="uid__group-select">
+            <mat-label>Přidat do skupiny</mat-label>
+            <mat-select data-testid="profile-group-select"
+                        [ngModel]="selectedGroupId()" (ngModelChange)="selectedGroupId.set($event)">
+              @for (group of availableGroups(); track group.id) {
+                <mat-option [value]="group.id" [attr.data-testid]="'profile-group-option-' + group.id">
+                  <span class="uid__group-option">
+                    <span class="uid__group-dot" [style.background-color]="group.color"></span>
+                    {{ group.name }}
+                  </span>
+                </mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+          <button mat-icon-button color="primary"
+                  data-testid="profile-group-add-btn"
+                  [disabled]="selectedGroupId() === null || saving()"
+                  aria-label="Přidat"
+                  (click)="onAddGroup()">
+            <mat-icon>check</mat-icon>
+          </button>
+        </div>
+      }
+      @if (user().blocked) {
+        <span class="uid__badge--blocked">Zablokován</span>
+      }
+    </div>
+    <button mat-icon-button class="uid__edit-btn" (click)="onEditProfile()" aria-label="Upravit profil">
+      <mat-icon>edit</mat-icon>
+    </button>
+  </div>
+</mat-card>

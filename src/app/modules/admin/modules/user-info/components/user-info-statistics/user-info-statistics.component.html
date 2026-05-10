@@ -1,0 +1,19 @@
+<div class="uid__section">
+  <button type="button" class="uid__section-header uid__section-header--clickable"
+          (click)="onToggleStats()"
+          [attr.aria-expanded]="statsExpanded()">
+    <h3>
+      <mat-icon class="uid__stats-arrow">{{ statsExpanded() ? 'expand_more' : 'chevron_right' }}</mat-icon>
+      Statistiky
+    </h3>
+  </button>
+  @if (statsExpanded()) {
+    @if (loadingStats()) {
+      <div class="uid__stats-loading"><mat-spinner diameter="24"></mat-spinner></div>
+    } @else if (statistics() && statistics()!.goods.length > 0) {
+      <app-statistics-table [data]="statistics()!"></app-statistics-table>
+    } @else {
+      <p class="uid__empty">Žádná statistická data</p>
+    }
+  }
+</div>

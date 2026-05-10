@@ -1,0 +1,184 @@
+<div class="uid__section">
+  <div class="uid__section-header">
+    <h3>Transakce</h3>
+    <button mat-raised-button
+            [disabled]="financialDisabled()"
+            [matTooltip]="financialTooltip()"
+            (click)="onAddTransaction()">
+      <mat-icon>add</mat-icon>
+      Nová transakce
+    </button>
+  </div>
+
+  <!-- Filter bar -->
+  <div class="uid__tx-filters">
+    <mat-form-field class="uid__tx-filter--text" appearance="outline" subscriptSizing="dynamic">
+      <mat-label>Hledat (info, místo)</mat-label>
+      <input matInput [ngModel]="filterText()" (ngModelChange)="filterText.set($event); onFilterChange()">
+      @if (filterText()) {
+        <button matSuffix mat-icon-button aria-label="Vymazat"
+                (click)="filterText.set(''); onFilterChange()">
+          <mat-icon>close</mat-icon>
+        </button>
+      }
+    </mat-form-field>
+    <mat-form-field class="uid__tx-filter--datetime" subscriptSizing="dynamic">
+      <mat-label>Od</mat-label>
+      <input matInput readonly
+             [value]="formatDateTimeLabel(filterDateFrom())"
+             (click)="pickerFrom.open()">
+      <input [matDatepicker]="pickerFrom" hidden [ngModel]="draftDateFrom()" (ngModelChange)="draftDateFrom.set($event)">
+      <span matSuffix class="uid__tx-filter-suffixes">
+        @if (filterDateFrom()) {
+          <button mat-icon-button aria-label="Vymazat"
+                  (click)="$event.stopPropagation(); onPopupClear('from'); pickerFrom.close()">
+            <mat-icon>close</mat-icon>
+          </button>
+        }
+        <mat-datepicker-toggle [for]="pickerFrom"></mat-datepicker-toggle>
+      </span>
+      <mat-datepicker #pickerFrom (opened)="onPopupOpened('from')">
+        <mat-datepicker-actions>
+          <mat-form-field class="uid__tx-time-field" subscriptSizing="dynamic">
+            <mat-label>Čas</mat-label>
+            <input matInput [matTimepicker]="timeFrom" [ngModel]="draftTimeFrom()" (ngModelChange)="draftTimeFrom.set($event)">
+            <mat-timepicker-toggle matIconSuffix [for]="timeFrom"></mat-timepicker-toggle>
+            <mat-timepicker #timeFrom interval="15min"></mat-timepicker>
+          </mat-form-field>
+          <button mat-button (click)="onPopupClear('from')" matDatepickerCancel>Vymazat</button>
+          <button mat-raised-button color="primary" (click)="onPopupApply('from')" matDatepickerApply>Použít</button>
+        </mat-datepicker-actions>
+      </mat-datepicker>
+    </mat-form-field>
+    <mat-form-field class="uid__tx-filter--datetime" subscriptSizing="dynamic">
+      <mat-label>Do</mat-label>
+      <input matInput readonly
+             [value]="formatDateTimeLabel(filterDateTo())"
+             (click)="pickerTo.open()">
+      <input [matDatepicker]="pickerTo" hidden [ngModel]="draftDateTo()" (ngModelChange)="draftDateTo.set($event)">
+      <span matSuffix class="uid__tx-filter-suffixes">
+        @if (filterDateTo()) {
+          <button mat-icon-button aria-label="Vymazat"
+                  (click)="$event.stopPropagation(); onPopupClear('to'); pickerTo.close()">
+            <mat-icon>close</mat-icon>
+          </button>
+        }
+        <mat-datepicker-toggle [for]="pickerTo"></mat-datepicker-toggle>
+      </span>
+      <mat-datepicker #pickerTo (opened)="onPopupOpened('to')">
+        <mat-datepicker-actions>
+          <mat-form-field class="uid__tx-time-field" subscriptSizing="dynamic">
+            <mat-label>Čas</mat-label>
+            <input matInput [matTimepicker]="timeTo" [ngModel]="draftTimeTo()" (ngModelChange)="draftTimeTo.set($event)">
+            <mat-timepicker-toggle matIconSuffix [for]="timeTo"></mat-timepicker-toggle>
+            <mat-timepicker #timeTo interval="15min"></mat-timepicker>
+          </mat-form-field>
+          <button mat-button (click)="onPopupClear('to')" matDatepickerCancel>Vymazat</button>
+          <button mat-raised-button color="primary" (click)="onPopupApply('to')" matDatepickerApply>Použít</button>
+        </mat-datepicker-actions>
+      </mat-datepicker>
+    </mat-form-field>
+    <mat-form-field class="uid__tx-filter--types" appearance="outline" subscriptSizing="dynamic">
+      <mat-label>Typ</mat-label>
+      <mat-select [ngModel]="filterType()" (ngModelChange)="filterType.set($event); onFilterChange()">
+        <mat-option [value]="ETransactionType.PAYMENT">Platba</mat-option>
+        <mat-option [value]="ETransactionType.DEPOSIT">Dobití</mat-option>
+        <mat-option [value]="ETransactionType.WITHDRAW">Výběr</mat-option>
+      </mat-select>
+      @if (filterType()) {
+        <button matSuffix mat-icon-button aria-label="Vymazat"
+                (click)="$event.stopPropagation(); filterType.set(null); onFilterChange()">
+          <mat-icon>close</mat-icon>
+        </button>
+      }
+    </mat-form-field>
+    <mat-form-field class="uid__tx-filter--amount" appearance="outline" subscriptSizing="dynamic">
+      <mat-label>Min Kč</mat-label>
+      <input matInput type="number" [ngModel]="filterAmountMin()" (ngModelChange)="filterAmountMin.set($event ?? null); onFilterChange()">
+      @if (filterAmountMin() !== null) {
+        <button matSuffix mat-icon-button aria-label="Vymazat"
+                (click)="filterAmountMin.set(null); onFilterChange()">
+          <mat-icon>close</mat-icon>
+        </button>
+      }
+    </mat-form-field>
+    <mat-form-field class="uid__tx-filter--amount" appearance="outline" subscriptSizing="dynamic">
+      <mat-label>Max Kč</mat-label>
+      <input matInput type="number" [ngModel]="filterAmountMax()" (ngModelChange)="filterAmountMax.set($event ?? null); onFilterChange()">
+      @if (filterAmountMax() !== null) {
+        <button matSuffix mat-icon-button aria-label="Vymazat"
+                (click)="filterAmountMax.set(null); onFilterChange()">
+          <mat-icon>close</mat-icon>
+        </button>
+      }
+    </mat-form-field>
+    <mat-form-field class="uid__tx-filter--sort" appearance="outline" subscriptSizing="dynamic">
+      <mat-label>Řadit podle</mat-label>
+      <mat-select [ngModel]="sortField()" (ngModelChange)="sortField.set($event); onSortChange()">
+        <mat-option value="created">Datum</mat-option>
+        <mat-option value="amount">Částka</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field class="uid__tx-filter--sort" appearance="outline" subscriptSizing="dynamic">
+      <mat-label>Směr</mat-label>
+      <mat-select [ngModel]="sortDir()" (ngModelChange)="sortDir.set($event); onSortChange()">
+        <mat-option value="desc">Sestupně</mat-option>
+        <mat-option value="asc">Vzestupně</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <button mat-stroked-button (click)="onResetFilter()">
+      <mat-icon>clear</mat-icon> Reset
+    </button>
+  </div>
+
+  @if (transactions().length === 0 && accountLoaded()) {
+    <p class="uid__empty">Žádné transakce</p>
+  }
+
+  <div class="uid__tx-list" role="list">
+    @for (tx of transactions(); track tx.id) {
+      <div class="uid__tx-row" role="listitem">
+        <span class="uid__tx-info">
+          <strong>{{ typeLabel(tx.type) }}</strong>
+          @if (tx.placeName) { <span class="uid__tx-place">— {{ tx.placeName }}</span> }
+          @if (tx.info) { <span class="uid__tx-text">- {{ tx.info }}</span> }
+          @if (tx.records?.length) {
+            <span class="uid__tx-records" role="list" aria-label="Položky">
+              @for (r of recordsPreview(tx.records); track r.id) {
+                @if (r.goodsName) {
+                  <span class="uid__tx-record-tag" role="listitem">
+                    @if (tx.type === ETransactionType.PAYMENT) { {{ r.multiplier }}× }
+                    {{ r.goodsName }}
+                  </span>
+                }
+              }
+              @if (recordsOverflow(tx.records) > 0) {
+                <span class="uid__tx-record-more">+{{ recordsOverflow(tx.records) }}</span>
+              }
+            </span>
+          }
+        </span>
+        <span class="uid__tx-date">{{ tx.created | date:'dd.MM. HH:mm' }}</span>
+        <span
+          class="uid__tx-amount"
+          [class.uid__tx-amount--positive]="tx.type === ETransactionType.DEPOSIT"
+          [class.uid__tx-amount--negative]="tx.type === ETransactionType.PAYMENT || tx.type === ETransactionType.WITHDRAW">
+          {{ tx.type === ETransactionType.DEPOSIT ? '+' : '-' }}{{ tx.amount | number:'1.0-2' }} Kč
+        </span>
+        <span class="uid__tx-storno">
+          @if (canStorno(tx)) {
+            <button mat-icon-button (click)="onStorno(tx)" aria-label="Stornovat transakci">
+              <mat-icon>undo</mat-icon>
+            </button>
+          }
+        </span>
+      </div>
+    }
+  </div>
+
+  @if (hasMoreTransactions()) {
+    <button mat-stroked-button (click)="loadMoreTransactions.emit()">
+      Načíst více
+    </button>
+  }
+</div>

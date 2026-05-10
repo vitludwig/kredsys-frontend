@@ -1,0 +1,27 @@
+<mat-card class="uid__card--balance">
+  <h3>Zůstatek</h3>
+  @if (!accountLoaded()) {
+    <mat-spinner diameter="32"></mat-spinner>
+  } @else if (currencyAccount()) {
+    <p class="uid__balance" data-testid="balance">{{ currencyAccount()!.currentAmount }} Kč</p>
+  } @else {
+    <div class="uid__no-account" data-testid="no-account">
+      <mat-icon class="uid__no-account-icon">warning</mat-icon>
+      <div>Účet ještě nebyl aktivován</div>
+      <small>(první dobití ho vytvoří)</small>
+    </div>
+  }
+</mat-card>
+
+<div class="uid__row--actions">
+  <button mat-raised-button color="primary"
+    [disabled]="chargeDisabled()" [matTooltip]="financialTooltip()"
+    (click)="onCharge()">
+    + Dobít kredit
+  </button>
+  <button mat-raised-button
+    [disabled]="dischargeDisabled()" [matTooltip]="dischargeTooltip()"
+    (click)="onDischarge()">
+    &minus; Vybrat kredit
+  </button>
+</div>

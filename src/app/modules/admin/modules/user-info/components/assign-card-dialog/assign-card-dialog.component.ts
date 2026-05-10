@@ -8,36 +8,36 @@ import { AlertService } from '../../../../../../common/services/alert/alert.serv
 import { CardLoaderComponent } from '../../../../../../common/components/card-loader/card-loader.component';
 
 @Component({
-  selector: 'app-user-info-assign-card-dialog',
-  templateUrl: './assign-card-dialog.component.html',
-  standalone: true,
-  imports: [
-    MatDialogModule,
-    MatButtonModule,
-    MatIconModule,
-    MatProgressSpinnerModule,
-    CardLoaderComponent,
-  ],
+	selector: 'app-user-info-assign-card-dialog',
+	templateUrl: './assign-card-dialog.component.html',
+	standalone: true,
+	imports: [
+		MatDialogModule,
+		MatButtonModule,
+		MatIconModule,
+		MatProgressSpinnerModule,
+		CardLoaderComponent,
+	],
 })
 export class AssignCardDialogComponent {
-  private dialogRef = inject(MatDialogRef<AssignCardDialogComponent>);
-  private data: { userId: number } = inject(MAT_DIALOG_DATA);
-  private usersService = inject(UsersService);
-  private alertService = inject(AlertService);
+	private dialogRef = inject(MatDialogRef<AssignCardDialogComponent>);
+	private data: { userId: number } = inject(MAT_DIALOG_DATA);
+	private usersService = inject(UsersService);
+	private alertService = inject(AlertService);
 
-  protected inProgress = false;
+	protected inProgress = false;
 
-  protected async onCardLoaded(cardUid: number): Promise<void> {
-    if (this.inProgress) return;
-    this.inProgress = true;
-    try {
-      await this.usersService.addUserCard(this.data.userId, cardUid, '', 'Card');
-      this.alertService.success('Karta přiřazena');
-      this.dialogRef.close(true);
-    } catch {
-      this.alertService.error('Chyba při přiřazení karty — karta může být již přiřazena jinému uživateli');
-    } finally {
-      this.inProgress = false;
-    }
-  }
+	protected async onCardLoaded(cardUid: number): Promise<void> {
+		if (this.inProgress) return;
+		this.inProgress = true;
+		try {
+			await this.usersService.addUserCard(this.data.userId, cardUid, '', 'Card');
+			this.alertService.success('Karta přiřazena');
+			this.dialogRef.close(true);
+		} catch {
+			this.alertService.error('Chyba při přiřazení karty — karta může být již přiřazena jinému uživateli');
+		} finally {
+			this.inProgress = false;
+		}
+	}
 }

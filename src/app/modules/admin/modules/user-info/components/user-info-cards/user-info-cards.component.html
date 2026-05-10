@@ -1,0 +1,27 @@
+<div class="uid__section">
+  <div class="uid__section-header">
+    <h3>Karty</h3>
+    <button mat-raised-button (click)="onAssignCard()">
+      <mat-icon>add</mat-icon>
+      Přiřadit kartu
+    </button>
+  </div>
+  @if (cards().length === 0) {
+    <p class="uid__empty">Žádné karty</p>
+  }
+  @for (card of cards(); track card.id) {
+    <div class="uid__card-row">
+      <span class="uid__card-uid">...{{ last4(card.uid) }}</span>
+      <span class="uid__card-status">
+        @if (card.blocked) {
+          <span class="uid__badge--blocked">Zablokována</span>
+        } @else {
+          <span class="uid__badge--active">Aktivní</span>
+        }
+      </span>
+      <button mat-icon-button (click)="onToggleCardBlocked(card)" aria-label="Odebrat kartu">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </div>
+  }
+</div>

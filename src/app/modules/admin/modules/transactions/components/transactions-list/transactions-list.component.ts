@@ -7,7 +7,7 @@ import {GoodsService} from '../../../../services/goods/goods.service';
 import {IPaginatedResponse} from "../../../../../../common/types/IPaginatedResponse";
 import {ETransactionType} from "../../services/transaction/types/ETransactionType";
 import {AlertService} from "../../../../../../common/services/alert/alert.service";
-import {map, merge, of, startWith, Subject, switchMap, takeUntil} from "rxjs";
+import {map, merge, startWith, Subject, switchMap, takeUntil} from "rxjs";
 import {CurrencyService} from "../../../../services/currency/currency.service";
 import {ITransactionStatistics,} from '../../services/transaction/types/ITransactionStatistics';
 import {PlaceService} from '../../../../services/place/place/place.service';
@@ -15,13 +15,13 @@ import {MatSort, Sort} from '@angular/material/sort';
 import {MatTableDataSource} from '@angular/material/table';
 
 @Component({
-    selector: 'app-transactions-list',
-    templateUrl: './transactions-list.component.html',
-    styleUrls: ['./transactions-list.component.scss'],
-    animations: [
-        Animations.expandableTable,
-    ],
-    standalone: false
+	selector: 'app-transactions-list',
+	templateUrl: './transactions-list.component.html',
+	styleUrls: ['./transactions-list.component.scss'],
+	animations: [
+		Animations.expandableTable,
+	],
+	standalone: false
 })
 export class TransactionsListComponent implements OnInit, AfterViewInit, OnDestroy {
 	@ViewChild(MatPaginator)
@@ -64,7 +64,7 @@ export class TransactionsListComponent implements OnInit, AfterViewInit, OnDestr
 		this.#filterByRecord = value; // TODO: new paging, remove after api for statistics is gridify ready
 
 		this.loadData(this.paginator?.pageIndex ?? 0, this.paginator?.pageSize ?? 15, this.#filterBy);
-    this.loadStatisticsData();
+		this.loadStatisticsData();
 	}
 
 	public async ngAfterViewInit(): Promise<void> {
@@ -116,7 +116,7 @@ export class TransactionsListComponent implements OnInit, AfterViewInit, OnDestr
 
 	protected async loadStatisticsData(): Promise<void> {
 		const currency = await this.currencyService.getDefaultCurrency();
-		let filterBy: { [key: string]: any } = {
+		const filterBy: { [key: string]: any } = {
 			usersFilter: this.#filterByRecord.userId ? [this.#filterByRecord.userId] : [],
 			placesFilter: this.#filterByRecord.placeId ? [this.#filterByRecord.placeId] : [],
 			fromDate: this.statsDataFrom,
@@ -146,7 +146,7 @@ export class TransactionsListComponent implements OnInit, AfterViewInit, OnDestr
 			this.transactionDetails = [];
 
 			if(row.type === ETransactionType.PAYMENT) {
-				const records = (await this.transactionService.getTransactionDetail(row.id!)).records;
+				const records = (await this.transactionService.getTransactionDetail(row.id!)).records ?? [];
 				for(const record of records) {
 					const goods = await this.goodsService.getGoodie(record.goodsId);
 					this.transactionDetails.push({

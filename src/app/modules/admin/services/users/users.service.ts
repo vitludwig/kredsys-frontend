@@ -8,7 +8,7 @@ import {ICurrencyAccount} from '../../../../common/types/ICurrency';
 import {cache, invalidateCache} from '../../../../common/decorators/cache';
 import {ETime} from '../../../../common/types/ETime';
 import {ECacheTag} from '../../../../common/types/ECacheTag';
-import {ITransaction} from "../../modules/transactions/services/transaction/types/ITransaction";
+import {ITransactionResponse} from "../../modules/transactions/services/transaction/types/ITransaction";
 import {IPublicUserInfo} from "../../../public/card-info-public/types/IPublicUserInfo";
 import {ConfigService} from "../../../../common/services/config/config.service";
 
@@ -95,7 +95,7 @@ export class UsersService {
 	}
 
 	@cache(ETime.MINUTE * 2, [ECacheTag.TRANSACTION, ECacheTag.TRANSACTIONS])
-	public async getUserTransactions(id: number, page: number = 0, pageSize: number = 15, filter: string = '', orderBy: string = ''): Promise<IPaginatedResponse<ITransaction>> {
+	public async getUserTransactions(id: number, page: number = 0, pageSize: number = 15, filter: string = '', orderBy: string = ''): Promise<IPaginatedResponse<ITransactionResponse>> {
 		const params = {
 			filter,
 			page,
@@ -103,7 +103,7 @@ export class UsersService {
 			orderBy,
 		};
 
-		return firstValueFrom(this.http.get<IPaginatedResponse<ITransaction>>(this.configService.config.apiUrl + 'users/' + id + '/transactions', {params: params}));
+		return firstValueFrom(this.http.get<IPaginatedResponse<ITransactionResponse>>(this.configService.config.apiUrl + 'users/' + id + '/transactions', {params: params}));
 	}
 
 	public async getUserByCardUid(uid: number): Promise<IUser> {
