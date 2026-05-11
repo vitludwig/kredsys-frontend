@@ -14,35 +14,35 @@ import {WithSubscriptionsComponent} from "../../../../../../common/components/wi
 import {CanComponentDeactivate} from "../../../../../../common/types/CanComponentDeactivate";
 
 @Component({
-    selector: 'app-place-detail',
-    templateUrl: './place-detail.component.html',
-    styleUrls: ['./place-detail.component.scss'],
-    standalone: false
+	selector: 'app-place-detail',
+	templateUrl: './place-detail.component.html',
+	styleUrls: ['./place-detail.component.scss'],
+	standalone: false
 })
 export class PlaceDetailComponent extends WithSubscriptionsComponent implements OnInit, CanComponentDeactivate {
-  public readonly placeService = inject(PlaceService);
-  protected readonly route = inject(ActivatedRoute);
-  protected readonly router = inject(Router);
-  protected readonly dialog = inject(MatDialog);
-  protected readonly alertService = inject(AlertService);
+	public readonly placeService = inject(PlaceService);
+	protected readonly route = inject(ActivatedRoute);
+	protected readonly router = inject(Router);
+	protected readonly dialog = inject(MatDialog);
+	protected readonly alertService = inject(AlertService);
 
 	public place: IPlace;
 	public goods: IGoods[] = [];
 	public isLoading: boolean = false;
 	public isEdit: boolean = false;
-  protected goodsPositionChanged: boolean = false;
+	protected goodsPositionChanged: boolean = false;
 
 	public readonly ERoute = ERoute;
 
-  public canDeactivate(): boolean {
-    if (!this.goodsPositionChanged) {
-      return true;
-    }
+	public canDeactivate(): boolean {
+		if (!this.goodsPositionChanged) {
+			return true;
+		}
 
-    return window.confirm(
-      'Pozice zboží nebyla uložena, opravdu chcete odejít?'
-    );
-  };
+		return window.confirm(
+			'Pozice zboží nebyla uložena, opravdu chcete odejít?'
+		);
+	};
 
 	public async ngOnInit(): Promise<void> {
 		this.isLoading = true;
@@ -63,12 +63,12 @@ export class PlaceDetailComponent extends WithSubscriptionsComponent implements 
 			this.isLoading = false;
 		}
 
-    this.router.events
-      .pipe(
-        takeUntil(this.destroy$),
-        filter((e) => e instanceof NavigationStart)
-      )
-      .subscribe()
+		this.router.events
+			.pipe(
+				takeUntil(this.destroy$),
+				filter((e) => e instanceof NavigationStart)
+			)
+			.subscribe()
 	}
 
 
@@ -94,7 +94,7 @@ export class PlaceDetailComponent extends WithSubscriptionsComponent implements 
 
 	public async drop(event: CdkDragDrop<string[]>): Promise<void> {
 		try {
-      this.goodsPositionChanged = true;
+			this.goodsPositionChanged = true;
 			moveItemInArray(this.goods, event.previousIndex, event.currentIndex);
 		} catch(e) {
 			console.error('Canot move goods: ', e);
@@ -102,22 +102,22 @@ export class PlaceDetailComponent extends WithSubscriptionsComponent implements 
 		}
 	}
 
-  protected async confirmPosition(): Promise<void> {
-    try {
-      await this.placeService.moveGoods(this.place!.id!, this.goods);
-      this.goodsPositionChanged = false;
-      this.alertService.success('Pozice zboží změněna');
-    } catch(e) {
-      console.error('Canot move goods: ', e);
-      this.alertService.error('Nepovedlo se změnit pořadí');
-    }
-  }
+	protected async confirmPosition(): Promise<void> {
+		try {
+			await this.placeService.moveGoods(this.place!.id!, this.goods.map(g => g.id!));
+			this.goodsPositionChanged = false;
+			this.alertService.success('Pozice zboží změněna');
+		} catch(e) {
+			console.error('Canot move goods: ', e);
+			this.alertService.error('Nepovedlo se změnit pořadí');
+		}
+	}
 
 	public async removeItem(id: number): Promise<void> {
 		try {
-      if(this.isEdit) {
-        await this.placeService.removeGoods(id, this.place!.id!);
-      }
+			if(this.isEdit) {
+				await this.placeService.removeGoods(id, this.place!.id!);
+			}
 			this.goods = this.goods.filter((obj) => obj.id !== id);
 		} catch(e) {
 			this.alertService.error('Nepodařilo se odebrat zboží');
@@ -128,11 +128,11 @@ export class PlaceDetailComponent extends WithSubscriptionsComponent implements 
 	public openSortimentDetailDialog(): void {
 		const dialog = this.dialog.open<SortimentDetailComponent>(SortimentDetailComponent, {
 			width: '50%',
-      panelClass: 'responsive-dialog-container',
+			panelClass: 'responsive-dialog-container',
 			autoFocus: 'dialog',
-      position: {
-        top: '50px'
-      },
+			position: {
+				top: '50px'
+			},
 			data: {
 				existingItems: this.goods,
 			}
@@ -149,7 +149,7 @@ export class PlaceDetailComponent extends WithSubscriptionsComponent implements 
 						await this.placeService.addGoods(item.id, this.place.id);
 					}
 				}
-        this.goods.push(...result);
+				this.goods.push(...result);
 			} catch(e) {
 				if(e instanceof HttpErrorResponse) {
 					this.alertService.error(e.error.Message ?? 'Chyba při přidávání sortimentu');

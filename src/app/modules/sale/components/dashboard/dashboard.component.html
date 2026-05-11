@@ -1,17 +1,50 @@
 <div class="dashboard">
-  <app-filter-panel [(filter)]="filter"
-    [itemTypes]="itemTypes">
-  </app-filter-panel>
+  <div class="dashboard__toolbar">
+    @if (!reorderMode) {
+      <app-filter-panel [(filter)]="filter" [itemTypes]="itemTypes"></app-filter-panel>
+    } @else {
+      <span class="dashboard__reorder-label">Režim editace pořadí</span>
+    }
+    @if (canReorder) {
+      <div class="dashboard__reorder-controls">
+        @if (isSaving) {
+          <mat-spinner diameter="20" data-testid="reorder-saving-spinner"></mat-spinner>
+        }
+        <button
+          mat-icon-button
+          class="dashboard__reorder-toggle"
+          [class.dashboard__reorder-toggle--active]="reorderMode"
+          data-testid="reorder-toggle"
+          (click)="toggleReorderMode()"
+          [disabled]="isSaving"
+          [title]="reorderMode ? 'Ukončit řazení' : 'Přeřadit položky'">
+          <mat-icon>{{ reorderMode ? 'lock' : 'lock_open' }}</mat-icon>
+        </button>
+      </div>
+    }
+  </div>
 
-  <div class="dashboard__grid">
-    @for (item of items | filterSaleItems: filter; track item) {
+  <div
+    class="dashboard__grid"
+    cdkDropList
+    cdkDropListOrientation="mixed"
+    [cdkDropListDisabled]="!reorderMode || isSaving"
+    (cdkDropListDropped)="onDrop($event)">
+    @for (item of reorderMode ? items : (items | filterSaleItems: filter); track item.id) {
       <mat-card
         appearance="outlined"
         class="dashboard__item mat-elevation-z4"
+        [class.dashboard__item--reorder]="reorderMode"
         mat-ripple
+        [matRippleDisabled]="reorderMode"
+        cdkDrag
+        [cdkDragDisabled]="!reorderMode || isSaving"
         (click)="addItem(item)"
         [attr.data-testid]="'goods-tile-' + item.id"
         >
+        @if (reorderMode) {
+          <mat-icon class="dashboard__drag-handle">drag_indicator</mat-icon>
+        }
         <mat-card-content class="dashboard__content">
           <div class="dashboard__item-body">
             <mat-icon class="dashboard__item-icon">{{ item.icon }}</mat-icon>

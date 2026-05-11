@@ -55,6 +55,9 @@ export const SEL = {
 		goodsTile: (id: number) => `goods-tile-${id}`,
 		basketItem: (id: number) => `basket-item-${id}`,
 		filter: (typeId: number) => `filter-panel-${typeId}`,
+		reorderToggle: 'reorder-toggle',
+		reorderOverlay: 'reorder-overlay',
+		reorderExit: 'reorder-exit',
 	},
 	dialog: {
 		confirmYes: 'confirm-yes',

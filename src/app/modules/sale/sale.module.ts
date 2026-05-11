@@ -26,6 +26,7 @@ import {FilterSaleItemsPipe} from './components/dashboard/pipes/filter-sale-item
 import { FilterPanelComponent } from './components/dashboard/components/filter-panel/filter-panel.component';
 import {AnimatedLoaderComponent} from '../../common/components/animated-loader/animated-loader.component';
 import {IsFeatureAllowedPipe} from "../../common/modules/feature-flags/pipes/is-feature-allowed.pipe";
+import {DragDropModule} from '@angular/cdk/drag-drop';
 
 
 @NgModule({
@@ -37,32 +38,33 @@ import {IsFeatureAllowedPipe} from "../../common/modules/feature-flags/pipes/is-
 		ChargeDialogComponent,
 		StornoDialogComponent,
 		DischargeDialogComponent,
-  FilterPanelComponent,
+		FilterPanelComponent,
 	],
 	exports: [
 		SaleComponent,
 	],
-  imports: [
-    SharedModule,
-    SaleRoutingModule,
-    MatSidenavModule,
-    MatButtonModule,
-    MatIconModule,
-    MatCardModule,
-    MatRippleModule,
-    MatDialogModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatListModule,
-    MatDividerModule,
-    CardLoaderComponent,
-    MatProgressSpinnerModule,
-    IsIncludedPipe,
-    FilterSaleItemsPipe,
-    AnimatedLoaderComponent,
-    IsFeatureAllowedPipe,
-    MatButtonToggleModule,
-  ],
+	imports: [
+		SharedModule,
+		SaleRoutingModule,
+		MatSidenavModule,
+		MatButtonModule,
+		MatIconModule,
+		MatCardModule,
+		MatRippleModule,
+		MatDialogModule,
+		MatFormFieldModule,
+		MatInputModule,
+		MatListModule,
+		MatDividerModule,
+		CardLoaderComponent,
+		MatProgressSpinnerModule,
+		IsIncludedPipe,
+		FilterSaleItemsPipe,
+		AnimatedLoaderComponent,
+		IsFeatureAllowedPipe,
+		MatButtonToggleModule,
+		DragDropModule,
+	],
 })
 export class SaleModule {
 }

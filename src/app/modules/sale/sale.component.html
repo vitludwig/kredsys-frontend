@@ -1,15 +1,24 @@
 <mat-drawer-container class="sale-container">
   <div class="sale-content">
     <div class="sale-content__main">
-      <app-dashboard [place]="placeService.selectedPlace"></app-dashboard>
-      @if ((customerService.customer$ | async) === null) {
+      <app-dashboard
+        [place]="placeService.selectedPlace"
+        [(reorderMode)]="reorderMode">
+      </app-dashboard>
+      @if ((customerService.customer$ | async) === null && !reorderMode) {
         <div class="disabled-overlay"></div>
       }
     </div>
     <div class="sale-content__sidebar">
       <app-sale-summary [place]="placeService.selectedPlace"></app-sale-summary>
+      @if (reorderMode) {
+        <div class="sale-content__reorder-overlay" data-testid="reorder-overlay">
+          <mat-icon class="sale-content__reorder-icon">reorder</mat-icon>
+          <span class="sale-content__reorder-label">Režim editace pořadí</span>
+          <button mat-flat-button data-testid="reorder-exit" (click)="reorderMode = false">Přepnout na prodej</button>
+        </div>
+      }
     </div>
   </div>
 
 </mat-drawer-container>
-

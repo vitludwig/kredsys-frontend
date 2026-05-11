@@ -281,12 +281,12 @@ on('DELETE', /^places\/(\d+)\/goods\/(\d+)$/, ({ match, state }) => {
 	if (g) g.placeId = null;
 	return { body: {} };
 });
-// Drag-to-reorder sortiment: PATCH places/:id/goods/move with IGoods[] in
-// the new order. Mock just trusts the order.
+// Drag-to-reorder sortiment: PATCH places/:id/goods/move with number[] (IDs)
+// in the new order. Mock persists the order into state.goods.
 on('PATCH', /^places\/(\d+)\/goods\/move$/, ({ match, body, state }) => {
 	const placeId = Number(match[1]);
-	const newOrder = (body ?? []) as { id: number }[];
-	const idToPosition = new Map(newOrder.map((g, i) => [g.id, i]));
+	const newOrder = (body ?? []) as number[];
+	const idToPosition = new Map(newOrder.map((id, i) => [id, i]));
 	state.goods.sort((a, b) => {
 		if (a.placeId !== placeId && b.placeId !== placeId) return 0;
 		if (a.placeId !== placeId) return 1;

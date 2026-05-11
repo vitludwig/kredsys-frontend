@@ -63,13 +63,12 @@ describe('UserInfoDetailComponent', () => {
 		fixture = TestBed.createComponent(UserInfoDetailComponent);
 		component = fixture.componentInstance;
 
-		// Provide required input
-		component.user = { ...mockUser };
-		component.accountLoaded = false;
-		component.currencyAccount = null;
-		component.transactions = [];
-		component.transactionsTotal = 0;
-		component.cards = [];
+		fixture.componentRef.setInput('user', mockUser);
+		fixture.componentRef.setInput('accountLoaded', false);
+		fixture.componentRef.setInput('currencyAccount', null);
+		fixture.componentRef.setInput('transactions', []);
+		fixture.componentRef.setInput('transactionsTotal', 0);
+		fixture.componentRef.setInput('cards', []);
 	});
 
 	it('should create', () => {
@@ -78,7 +77,7 @@ describe('UserInfoDetailComponent', () => {
 	});
 
 	it('should show member ID', () => {
-		component.user = { ...mockUser, memberId: 4821 };
+		fixture.componentRef.setInput('user', { ...mockUser, memberId: 4821 });
 		fixture.detectChanges();
 
 		const el: HTMLElement = fixture.nativeElement.querySelector('[data-testid="member-id"]');
@@ -87,8 +86,8 @@ describe('UserInfoDetailComponent', () => {
 	});
 
 	it('should show no-account message when accountLoaded=true and currencyAccount=null', () => {
-		component.accountLoaded = true;
-		component.currencyAccount = null;
+		fixture.componentRef.setInput('accountLoaded', true);
+		fixture.componentRef.setInput('currencyAccount', null);
 		fixture.detectChanges();
 
 		const el: HTMLElement = fixture.nativeElement.querySelector('[data-testid="no-account"]');
@@ -103,8 +102,8 @@ describe('UserInfoDetailComponent', () => {
 			currentAmount: 450,
 			overdraftLimit: 0,
 		};
-		component.accountLoaded = true;
-		component.currencyAccount = account;
+		fixture.componentRef.setInput('accountLoaded', true);
+		fixture.componentRef.setInput('currencyAccount', account);
 		fixture.detectChanges();
 
 		const el: HTMLElement = fixture.nativeElement.querySelector('[data-testid="balance"]');

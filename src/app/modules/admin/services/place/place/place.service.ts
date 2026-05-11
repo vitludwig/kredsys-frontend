@@ -3,7 +3,6 @@ import {IPaginatedResponse} from '../../../../../common/types/IPaginatedResponse
 import {EPlaceRole, IPlace, IPlaceGoodsResponse} from '../../../../../common/types/IPlace';
 import {BehaviorSubject, firstValueFrom, Observable, Subject, takeUntil} from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import {IGoods} from '../../../../../common/types/IGoods';
 import {AuthService} from '../../../../login/services/auth/auth.service';
 import {cache, invalidateCache} from '../../../../../common/decorators/cache';
 import {ETime} from '../../../../../common/types/ETime';
@@ -15,9 +14,9 @@ import {ConfigService} from "../../../../../common/services/config/config.servic
 	providedIn: 'root',
 })
 export class PlaceService implements OnDestroy {
-  private configService: ConfigService = inject(ConfigService);
-  private http: HttpClient = inject(HttpClient);
-  private authService: AuthService = inject(AuthService)
+	private configService: ConfigService = inject(ConfigService);
+	private http: HttpClient = inject(HttpClient);
+	private authService: AuthService = inject(AuthService)
 
 	#selectedPlace: IPlace | null;
 	public placeRole: EPlaceRole;
@@ -86,10 +85,10 @@ export class PlaceService implements OnDestroy {
 
 	@cache(ETime.MINUTE * 2, [ECacheTag.PLACE, ECacheTag.PLACES])
 	public async getPlaces(search: string = '', page: number = 0, pageSize: number = this.limit): Promise<IPaginatedResponse<IPlace>> {
-    let filter = "";
-    if(search) {
-      filter = `name#=*${search}/i`;
-    }
+		let filter = "";
+		if(search) {
+			filter = `name#=*${search}/i`;
+		}
 		const params = {
 			filter,
 			page,
@@ -163,8 +162,8 @@ export class PlaceService implements OnDestroy {
 	}
 
 	@invalidateCache([ECacheTag.PLACES, ECacheTag.PLACE])
-	public async moveGoods(placeId: number, goods: IGoods[]): Promise<void> {
-		return firstValueFrom(this.http.patch<void>(this.configService.config.apiUrl + 'places/' + placeId + '/goods/move', goods));
+	public async moveGoods(placeId: number, ids: number[]): Promise<void> {
+		return firstValueFrom(this.http.patch<void>(this.configService.config.apiUrl + 'places/' + placeId + '/goods/move', ids));
 	}
 
 	public createNewPlace(id?: number, name?: string, role?: EPlaceRole): IPlace {

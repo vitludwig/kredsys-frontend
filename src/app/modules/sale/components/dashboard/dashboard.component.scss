@@ -17,6 +17,47 @@
 }
 
 .dashboard {
+  &__toolbar {
+    display: flex;
+    align-items: center;
+    position: relative;
+    z-index: 1001; // above the disabled-overlay (z-index:1000) so toggle is always clickable
+  }
+
+  &__reorder-label {
+    margin-left: 1em;
+    font-size: 0.95rem;
+    font-weight: 500;
+    opacity: 0.7;
+    letter-spacing: 0.02em;
+  }
+
+  &__reorder-controls {
+    margin-left: auto;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
+
+  &__reorder-toggle {
+    &--active {
+      color: var(--mat-sys-primary);
+    }
+  }
+
+  &__drag-handle {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    font-size: 1.2rem;
+    width: 1.2rem;
+    height: 1.2rem;
+    color: var(--mat-sys-on-surface-variant);
+    opacity: 0.5;
+    cursor: grab;
+  }
+
   &__grid {
     width: 100%;
     display: flex;
@@ -27,6 +68,7 @@
   &__item {
     flex: 1;
     flex-basis: var(--cy__sale-card--size);
+    position: relative;
     height: var(--cy__sale-card--size);
     margin: 1em;
     cursor: pointer;
@@ -84,5 +126,35 @@
         font-size: 0.6em;
       }
     }
+
+    &--reorder {
+      cursor: grab;
+
+      &:hover {
+        background-color: var(--mat-sys-surface-container);
+        box-shadow: none;
+      }
+
+      &:active {
+        cursor: grabbing;
+      }
+    }
   }
+}
+
+.cdk-drag-preview {
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+  opacity: 0.9;
+}
+
+.cdk-drag-placeholder {
+  opacity: 0.3;
+}
+
+.cdk-drag-animating {
+  transition: transform 200ms ease;
+}
+
+.cdk-drop-list-dragging .dashboard__item:not(.cdk-drag-placeholder) {
+  transition: transform 200ms ease;
 }
