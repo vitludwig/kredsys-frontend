@@ -1,10 +1,11 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { catchError, firstValueFrom, switchMap } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
 import { IChargeItem } from '../../../../common/types/IChargeItem';
 import { ConfigService } from '../../../../common/services/config/config.service';
 
 interface ISettingReadDto {
+  id: number;
   value: string | null;
 }
 
@@ -19,14 +20,19 @@ export class SettingsService {
     return this.configService.config.apiUrl + 'settings/';
   }
 
-  private settingExists: boolean | null = null;
+  private get settingsUrl(): string {
+    return this.configService.config.apiUrl + 'settings';
+  }
+
+  // null = unknown, 0 = doesn't exist, >0 = exists with this DB id
+  private settingId: number | null = null;
 
   async getChargeItems(): Promise<IChargeItem[]> {
     try {
       const dto = await firstValueFrom(
         this.http.get<ISettingReadDto>(`${this.baseUrl}charge_items`)
       );
-      this.settingExists = true;
+      this.settingId = dto.id;
       if (!dto.value) return [];
       let parsed: unknown;
       try {
@@ -45,7 +51,7 @@ export class SettingsService {
       );
     } catch (e) {
       if (e instanceof HttpErrorResponse && e.status === 404) {
-        this.settingExists = false;
+        this.settingId = 0;
       } else {
         console.error(e);
       }
@@ -56,55 +62,46 @@ export class SettingsService {
   async saveChargeItems(items: IChargeItem[]): Promise<void> {
     const value = JSON.stringify(items);
 
-    if (this.settingExists === true) {
+    // Resolve current existence state when unknown
+    if (this.settingId === null) {
       try {
-        await firstValueFrom(
-          this.http.put(`${this.baseUrl}charge_items`, { value })
+        const dto = await firstValueFrom(
+          this.http.get<ISettingReadDto>(`${this.baseUrl}charge_items`)
         );
+        this.settingId = dto.id;
       } catch (e) {
         if (e instanceof HttpErrorResponse && e.status === 404) {
-          // Setting was deleted externally — reset so next call re-detects
-          this.settingExists = null;
-        }
-        throw e;
-      }
-      return;
-    }
-
-    if (this.settingExists === false) {
-      await firstValueFrom(
-        this.http.post(this.configService.config.apiUrl + 'settings', {
-          key: 'charge_items',
-          value,
-          description: CHARGE_ITEMS_DESCRIPTION,
-          isPublic: true,
-        })
-      );
-      this.settingExists = true;
-      return;
-    }
-
-    // null: chain GET→PUT or GET→POST in one observable
-    await firstValueFrom(
-      this.http.get<ISettingReadDto>(`${this.baseUrl}charge_items`).pipe(
-        switchMap(() => {
-          this.settingExists = true;
-          return this.http.put(`${this.baseUrl}charge_items`, { value });
-        }),
-        catchError((e: unknown) => {
-          if (e instanceof HttpErrorResponse && e.status === 404) {
-            this.settingExists = false;
-            return this.http.post(this.configService.config.apiUrl + 'settings', {
-              key: 'charge_items',
-              value,
-              description: CHARGE_ITEMS_DESCRIPTION,
-              isPublic: true,
-            });
-          }
+          this.settingId = 0;
+        } else {
           throw e;
-        })
-      )
+        }
+      }
+    }
+
+    // DELETE existing before re-creating — workaround for backend PUT being broken
+    // for dynamically created settings (no registered ISettingConfig)
+    if (this.settingId > 0) {
+      try {
+        await firstValueFrom(
+          this.http.delete(this.settingsUrl, { params: { id: this.settingId } })
+        );
+      } catch (e) {
+        if (!(e instanceof HttpErrorResponse && e.status === 404)) {
+          throw e;
+        }
+        // Already gone externally — proceed to POST
+      }
+      this.settingId = 0;
+    }
+
+    const created = await firstValueFrom(
+      this.http.post<ISettingReadDto>(this.settingsUrl, {
+        key: 'charge_items',
+        value,
+        description: CHARGE_ITEMS_DESCRIPTION,
+        isPublic: true,
+      })
     );
-    this.settingExists = true;
+    this.settingId = created.id;
   }
 }
