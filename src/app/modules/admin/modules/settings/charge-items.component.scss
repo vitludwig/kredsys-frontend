@@ -3,6 +3,13 @@
   padding: 24px;
 }
 
+mat-accordion {
+  --mat-expansion-header-background-color: var(--mat-sys-primary-container);
+  --mat-expansion-header-text-color: var(--mat-sys-on-primary-container);
+  --mat-expansion-header-description-color: var(--mat-sys-on-primary-container);
+  --mat-expansion-container-background-color: var(--mat-sys-surface-container-high);
+}
+
 .items-list {
   display: flex;
   flex-direction: column;
