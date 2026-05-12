@@ -15,7 +15,7 @@
     @for (val of predefinedAmounts; track val) {
       <button mat-stroked-button (click)="amount = val">{{ val }} Kč</button>
     }
-    @for (item of chargeItems; track item.label) {
+    @for (item of chargeItems; track $index) {
       <button mat-stroked-button (click)="amount = item.amount">{{ item.label }}</button>
     }
   </div>

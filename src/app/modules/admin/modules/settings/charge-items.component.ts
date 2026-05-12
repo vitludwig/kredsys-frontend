@@ -37,7 +37,29 @@ export class ChargeItemsComponent implements OnInit {
   }
 
   async save(): Promise<void> {
+    const trimmed = this.items.map(i => ({ label: i.label.trim(), amount: i.amount }));
+
+    const emptyLabel = trimmed.find(i => !i.label);
+    if (emptyLabel !== undefined) {
+      this.alertService.error('Každá položka musí mít název');
+      return;
+    }
+
+    const labels = trimmed.map(i => i.label);
+    const hasDuplicate = labels.some((l, idx) => labels.indexOf(l) !== idx);
+    if (hasDuplicate) {
+      this.alertService.error('Názvy položek musí být jedinečné');
+      return;
+    }
+
+    const invalidAmount = trimmed.find(i => !Number.isFinite(i.amount) || i.amount <= 0);
+    if (invalidAmount !== undefined) {
+      this.alertService.error('Každá položka musí mít kladnou částku');
+      return;
+    }
+
     try {
+      this.items = trimmed;
       await this.settingsService.saveChargeItems(this.items);
       this.alertService.success('Nastavení uloženo');
     } catch (e) {

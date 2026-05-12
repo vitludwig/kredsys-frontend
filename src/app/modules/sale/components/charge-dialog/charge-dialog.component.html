@@ -28,7 +28,7 @@
       </button>
     }
 
-    @for (item of chargeItems; track item.label) {
+    @for (item of chargeItems; track $index) {
       <button mat-stroked-button
         (click)="amount = item.amount"
         >{{ item.label }}
