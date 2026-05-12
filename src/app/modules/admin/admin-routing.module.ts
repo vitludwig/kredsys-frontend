@@ -228,6 +228,16 @@ const routes: Routes = [
 		canActivate: [placeGuard],
 		data: { name: 'Uživatelský dashboard' },
 	},
+	{
+		path: ERoute.ADMIN_SETTINGS,
+		loadComponent: () =>
+			import('./modules/settings/charge-items.component').then(
+				(m) => m.ChargeItemsComponent
+			),
+		data: {
+			name: 'Nastavení',
+		},
+	},
 
 ];
 

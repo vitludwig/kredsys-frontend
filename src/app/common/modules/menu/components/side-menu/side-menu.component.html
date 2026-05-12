@@ -119,6 +119,16 @@
               Nabíjedlo
             </a>
           }
+          @if (userRoles | canAccessRoute: ERoute.ADMIN_SETTINGS) {
+            <a
+              [class.active]="router.url === '/' + ERoute.ADMIN + '/' + ERoute.ADMIN_SETTINGS"
+              [routerLink]="[ERoute.ADMIN, ERoute.ADMIN_SETTINGS]"
+              mat-list-item
+              data-testid="nav-admin-settings"
+              >
+              Nastavení
+            </a>
+          }
         </div>
       }
     }
