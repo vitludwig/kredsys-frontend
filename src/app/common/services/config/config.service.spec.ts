@@ -30,7 +30,7 @@ describe('ConfigService', () => {
   });
 
   it('should load and merge config from /assets/config.json', async () => {
-    const mockConfig = { apiUrl: '/custom-api/', cruciblePrice: 100 };
+    const mockConfig = { apiUrl: '/custom-api/' };
     const loadPromise = service.loadAppConfig();
 
     const req = httpMock.expectOne('/assets/config.json');
@@ -40,7 +40,6 @@ describe('ConfigService', () => {
     await loadPromise;
 
     expect(service.config.apiUrl).toBe('/custom-api/');
-    expect(service.config.cruciblePrice).toBe(100);
   });
 
   it('should fall back to environment on HTTP error', async () => {
@@ -61,7 +60,7 @@ describe('ConfigService', () => {
   });
 
   it('should merge remote config over environment defaults', async () => {
-    const partialConfig = { cruciblePrice: 200 };
+    const partialConfig = { apiUrl: '/partial-api/' };
     const loadPromise = service.loadAppConfig();
 
     const req = httpMock.expectOne('/assets/config.json');
@@ -69,7 +68,6 @@ describe('ConfigService', () => {
 
     await loadPromise;
 
-    expect(service.config.cruciblePrice).toBe(200);
-    expect(service.config.apiUrl).toBe(environment.apiUrl);
+    expect(service.config.apiUrl).toBe('/partial-api/');
   });
 });
