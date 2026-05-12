@@ -20,7 +20,7 @@
 
   <div class="btn-group predefined"
     role="group"
-    aria-label="Basic example">
+    aria-label="Rychlé částky">
     @for (value of predefinedAmounts; track value) {
       <button mat-stroked-button
         (click)="amount = value"
@@ -39,7 +39,7 @@
   <button mat-raised-button
     color="primary"
     class="submit-btn"
-    mat-dialog-close
+    [disabled]="amount <= 0"
     (click)="submit()"
     data-testid="charge-submit"
     >

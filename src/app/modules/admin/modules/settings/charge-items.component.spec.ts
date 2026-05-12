@@ -40,6 +40,7 @@ describe('ChargeItemsComponent', () => {
   it('should create and load items on init', () => {
     expect(component).toBeTruthy();
     expect(mockSettingsService.getChargeItems).toHaveBeenCalled();
+    expect(component['isLoading']).toBeFalse();
   });
 
   it('addItem appends an empty item', () => {
@@ -62,6 +63,13 @@ describe('ChargeItemsComponent', () => {
     expect(mockAlertService.success).toHaveBeenCalled();
   });
 
+  it('save updates labels in-place after successful save (preserves object refs)', async () => {
+    const item = { label: '  Kelímek  ', amount: 60 };
+    component['items'] = [item];
+    await component.save();
+    expect(item.label).toBe('Kelímek');
+  });
+
   it('save shows error and does not save when a label is empty', async () => {
     component['items'] = [{ label: '', amount: 60 }];
     await component.save();
@@ -69,23 +77,46 @@ describe('ChargeItemsComponent', () => {
     expect(mockAlertService.error).toHaveBeenCalled();
   });
 
-  it('save shows error and does not save when labels are not unique', async () => {
-    component['items'] = [{ label: 'Pivo', amount: 60 }, { label: 'Pivo', amount: 80 }];
+  it('save shows error when labels are duplicate (case-insensitive)', async () => {
+    component['items'] = [{ label: 'Pivo', amount: 60 }, { label: 'pivo', amount: 80 }];
     await component.save();
     expect(mockSettingsService.saveChargeItems).not.toHaveBeenCalled();
     expect(mockAlertService.error).toHaveBeenCalled();
   });
 
-  it('save shows error and does not save when amount is not positive', async () => {
+  it('save shows error when amount is not positive', async () => {
     component['items'] = [{ label: 'Kelímek', amount: 0 }];
     await component.save();
     expect(mockSettingsService.saveChargeItems).not.toHaveBeenCalled();
     expect(mockAlertService.error).toHaveBeenCalled();
   });
 
-  it('save shows error alert on service failure', async () => {
+  it('save shows error when amount exceeds maximum', async () => {
+    component['items'] = [{ label: 'Kelímek', amount: 200_000 }];
+    await component.save();
+    expect(mockSettingsService.saveChargeItems).not.toHaveBeenCalled();
+    expect(mockAlertService.error).toHaveBeenCalled();
+  });
+
+  it('save shows error when amount is not an integer', async () => {
+    component['items'] = [{ label: 'Kelímek', amount: 1.5 }];
+    await component.save();
+    expect(mockSettingsService.saveChargeItems).not.toHaveBeenCalled();
+    expect(mockAlertService.error).toHaveBeenCalled();
+  });
+
+  it('save shows error alert on service failure and does not update items', async () => {
+    const item = { label: 'Kelímek', amount: 60 };
+    component['items'] = [item];
     mockSettingsService.saveChargeItems.and.returnValue(Promise.reject(new Error('fail')));
     await component.save();
     expect(mockAlertService.error).toHaveBeenCalled();
+    expect(item.label).toBe('Kelímek'); // not trimmed yet — save failed
+  });
+
+  it('isSaving is false after save completes', async () => {
+    component['items'] = [{ label: 'Kelímek', amount: 60 }];
+    await component.save();
+    expect(component['isSaving']).toBeFalse();
   });
 });

@@ -1,12 +1,14 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { catchError, firstValueFrom, of, switchMap } from 'rxjs';
+import { catchError, firstValueFrom, switchMap } from 'rxjs';
 import { IChargeItem } from '../../../../common/types/IChargeItem';
 import { ConfigService } from '../../../../common/services/config/config.service';
 
 interface ISettingReadDto {
   value: string | null;
 }
+
+const CHARGE_ITEMS_DESCRIPTION = 'Dynamické položky při nabíjení kreditu';
 
 @Injectable({ providedIn: 'root' })
 export class SettingsService {
@@ -26,7 +28,21 @@ export class SettingsService {
       );
       this.settingExists = true;
       if (!dto.value) return [];
-      return JSON.parse(dto.value) as IChargeItem[];
+      let parsed: unknown;
+      try {
+        parsed = JSON.parse(dto.value);
+      } catch {
+        console.error('charge_items setting contains invalid JSON');
+        return [];
+      }
+      if (!Array.isArray(parsed)) return [];
+      return parsed.filter(
+        (item): item is IChargeItem =>
+          typeof item === 'object' &&
+          item !== null &&
+          typeof (item as IChargeItem).label === 'string' &&
+          typeof (item as IChargeItem).amount === 'number'
+      );
     } catch (e) {
       if (e instanceof HttpErrorResponse && e.status === 404) {
         this.settingExists = false;
@@ -41,9 +57,17 @@ export class SettingsService {
     const value = JSON.stringify(items);
 
     if (this.settingExists === true) {
-      await firstValueFrom(
-        this.http.put(`${this.baseUrl}charge_items`, { value })
-      );
+      try {
+        await firstValueFrom(
+          this.http.put(`${this.baseUrl}charge_items`, { value })
+        );
+      } catch (e) {
+        if (e instanceof HttpErrorResponse && e.status === 404) {
+          // Setting was deleted externally — reset so next call re-detects
+          this.settingExists = null;
+        }
+        throw e;
+      }
       return;
     }
 
@@ -52,7 +76,7 @@ export class SettingsService {
         this.http.post(this.configService.config.apiUrl + 'settings', {
           key: 'charge_items',
           value,
-          description: 'Dynamické položky při nabíjení kreditu',
+          description: CHARGE_ITEMS_DESCRIPTION,
           isPublic: true,
         })
       );
@@ -60,7 +84,7 @@ export class SettingsService {
       return;
     }
 
-    // settingExists is null — check and then create or update in a single observable chain
+    // null: chain GET→PUT or GET→POST in one observable
     await firstValueFrom(
       this.http.get<ISettingReadDto>(`${this.baseUrl}charge_items`).pipe(
         switchMap(() => {
@@ -73,7 +97,7 @@ export class SettingsService {
             return this.http.post(this.configService.config.apiUrl + 'settings', {
               key: 'charge_items',
               value,
-              description: 'Dynamické položky při nabíjení kreditu',
+              description: CHARGE_ITEMS_DESCRIPTION,
               isPublic: true,
             });
           }

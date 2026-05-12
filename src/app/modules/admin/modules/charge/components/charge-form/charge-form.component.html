@@ -36,6 +36,7 @@
   <button mat-raised-button
     color="primary"
     class="submit-btn"
+    [disabled]="!amount || amount <= 0 || isLoading"
     (click)="submit()"
     >
     Dobít

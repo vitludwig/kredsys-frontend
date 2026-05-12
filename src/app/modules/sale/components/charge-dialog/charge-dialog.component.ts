@@ -18,9 +18,12 @@ export class ChargeDialogComponent implements OnInit {
   protected predefinedAmounts: number[] = [500, 800, 1000, 1500, 2000];
   protected chargeItems: IChargeItem[] = [];
 
+  protected isLoading = true;
+
   async ngOnInit(): Promise<void> {
     this.chargeItems = await this.settingsService.getChargeItems();
-    this.cdr.detectChanges();
+    this.isLoading = false;
+    this.cdr.markForCheck();
   }
 
   public submit(): void {

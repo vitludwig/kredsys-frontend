@@ -15,6 +15,7 @@ import {TransactionsComponent} from './modules/transactions/transactions.compone
 import {ChangePasswordComponent} from './modules/user-list/components/change-password/change-password.component';
 import {unsavedChangesGuard} from "../../common/utils/unsaved-changes.guard";
 import {placeGuard} from "../../common/utils/place.guard";
+import {adminGuard} from "../../common/utils/admin.guard";
 
 const routes: Routes = [
 	{
@@ -234,6 +235,7 @@ const routes: Routes = [
 			import('./modules/settings/charge-items.component').then(
 				(m) => m.ChargeItemsComponent
 			),
+		canActivate: [adminGuard],
 		data: {
 			name: 'Nastavení',
 		},

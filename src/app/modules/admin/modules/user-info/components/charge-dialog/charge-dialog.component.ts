@@ -21,11 +21,13 @@ export class ChargeDialogComponent implements OnInit {
   private cdr = inject(ChangeDetectorRef);
 
   protected amount: number = 0;
-  protected readonly predefinedAmounts = [200, 500, 800, 1000, 1500, 2000];
+  protected readonly predefinedAmounts = [500, 800, 1000, 1500, 2000];
+  protected isLoading = true;
   protected chargeItems: IChargeItem[] = [];
 
   async ngOnInit(): Promise<void> {
     this.chargeItems = await this.settingsService.getChargeItems();
+    this.isLoading = false;
     this.cdr.markForCheck();
   }
 

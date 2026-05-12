@@ -20,7 +20,7 @@
     }
   </div>
 
-  <button mat-raised-button color="primary" style="width:100%" [disabled]="amount <= 0" (click)="submit()" data-testid="charge-submit">
+  <button mat-raised-button color="primary" style="width:100%" [disabled]="amount <= 0 || isLoading" (click)="submit()" data-testid="charge-submit">
     Dobít
   </button>
 </div>

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
 import { IUser } from '../../../../../../common/types/IUser';
 import { ICurrency, ICurrencyAccount } from '../../../../../../common/types/ICurrency';
 import { UsersService } from '../../../../services/users/users.service';
@@ -19,6 +19,7 @@ export class ChargeFormComponent implements OnInit {
   private currencyService = inject(CurrencyService);
   private alertService = inject(AlertService);
   private settingsService = inject(SettingsService);
+  private cdr = inject(ChangeDetectorRef);
 
   protected amount: number | null;
   protected predefinedAmounts: number[] = [500, 800, 1000, 1500, 2000];
@@ -42,11 +43,15 @@ export class ChargeFormComponent implements OnInit {
   #cardId: number | null;
   protected defaultCurrency: ICurrency;
 
+  protected isLoading = true;
+
   public async ngOnInit(): Promise<void> {
     [this.defaultCurrency, this.chargeItems] = await Promise.all([
       this.currencyService.getDefaultCurrency(),
       this.settingsService.getChargeItems(),
     ]);
+    this.isLoading = false;
+    this.cdr.markForCheck();
   }
 
   public async setCardId(id: number | null): Promise<void> {
