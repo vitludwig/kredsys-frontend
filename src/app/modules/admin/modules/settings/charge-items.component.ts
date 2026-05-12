@@ -40,7 +40,8 @@ export class ChargeItemsComponent implements OnInit {
     try {
       await this.settingsService.saveChargeItems(this.items);
       this.alertService.success('Nastavení uloženo');
-    } catch {
+    } catch (e) {
+      console.error(e);
       this.alertService.error('Chyba při ukládání nastavení');
     }
   }
