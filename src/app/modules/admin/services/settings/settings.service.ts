@@ -30,6 +30,8 @@ export class SettingsService {
     } catch (e) {
       if (e instanceof HttpErrorResponse && e.status === 404) {
         this.settingExists = false;
+      } else {
+        console.error(e);
       }
       return [];
     }

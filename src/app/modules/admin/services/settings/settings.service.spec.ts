@@ -66,6 +66,21 @@ describe('SettingsService', () => {
       await savePromise;
     });
 
+    it('GETs then PUTs when settingExists is unknown and setting exists', async () => {
+      // settingExists starts as null (no prior get)
+      const savePromise = service.saveChargeItems([{ label: 'Test', amount: 50 }]);
+      // Service issues GET to check existence
+      const getReq = httpMock.expectOne(`${baseUrl}settings/charge_items`);
+      expect(getReq.request.method).toBe('GET');
+      getReq.flush({ value: '[]' }); // setting exists
+      // Then PUTs
+      const putReq = httpMock.expectOne(`${baseUrl}settings/charge_items`);
+      expect(putReq.request.method).toBe('PUT');
+      expect(putReq.request.body).toEqual({ value: '[{"label":"Test","amount":50}]' });
+      putReq.flush({ value: '[{"label":"Test","amount":50}]' });
+      await savePromise;
+    });
+
     it('POSTs to create when setting does not exist', async () => {
       const savePromise = service.saveChargeItems([{ label: 'Test', amount: 50 }]);
       // GET to check existence — returns 404
