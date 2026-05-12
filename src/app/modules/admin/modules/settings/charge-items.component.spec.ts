@@ -1,0 +1,69 @@
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { ChargeItemsComponent } from './charge-items.component';
+import { SettingsService } from '../../services/settings/settings.service';
+import { AlertService } from '../../../../common/services/alert/alert.service';
+
+describe('ChargeItemsComponent', () => {
+  let component: ChargeItemsComponent;
+  let fixture: ComponentFixture<ChargeItemsComponent>;
+  let mockSettingsService: jasmine.SpyObj<SettingsService>;
+  let mockAlertService: jasmine.SpyObj<AlertService>;
+
+  beforeEach(async () => {
+    mockSettingsService = jasmine.createSpyObj('SettingsService', [
+      'getChargeItems',
+      'saveChargeItems',
+    ]);
+    mockSettingsService.getChargeItems.and.returnValue(Promise.resolve([
+      { label: 'Kelímek', amount: 60 },
+    ]));
+    mockSettingsService.saveChargeItems.and.returnValue(Promise.resolve());
+
+    mockAlertService = jasmine.createSpyObj('AlertService', ['success', 'error']);
+
+    await TestBed.configureTestingModule({
+      imports: [ChargeItemsComponent, NoopAnimationsModule],
+      providers: [
+        { provide: SettingsService, useValue: mockSettingsService },
+        { provide: AlertService, useValue: mockAlertService },
+      ],
+    }).compileComponents();
+
+    fixture = TestBed.createComponent(ChargeItemsComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+    await fixture.whenStable();
+    fixture.detectChanges();
+  });
+
+  it('should create and load items on init', () => {
+    expect(component).toBeTruthy();
+    expect(mockSettingsService.getChargeItems).toHaveBeenCalled();
+  });
+
+  it('addItem appends an empty item', () => {
+    const initialCount = component['items'].length;
+    component.addItem();
+    expect(component['items'].length).toBe(initialCount + 1);
+    expect(component['items'].at(-1)).toEqual({ label: '', amount: 0 });
+  });
+
+  it('removeItem removes item at given index', () => {
+    component['items'] = [{ label: 'A', amount: 10 }, { label: 'B', amount: 20 }];
+    component.removeItem(0);
+    expect(component['items']).toEqual([{ label: 'B', amount: 20 }]);
+  });
+
+  it('save calls saveChargeItems and shows success', async () => {
+    await component.save();
+    expect(mockSettingsService.saveChargeItems).toHaveBeenCalledWith(component['items']);
+    expect(mockAlertService.success).toHaveBeenCalled();
+  });
+
+  it('save shows error alert on failure', async () => {
+    mockSettingsService.saveChargeItems.and.returnValue(Promise.reject(new Error('fail')));
+    await component.save();
+    expect(mockAlertService.error).toHaveBeenCalled();
+  });
+});

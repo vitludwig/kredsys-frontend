@@ -1,0 +1,27 @@
+<h2>Rychlé položky při nabíjení</h2>
+
+<div class="items-list">
+  @for (item of items; track $index) {
+    <div class="item-row">
+      <mat-form-field>
+        <mat-label>Název</mat-label>
+        <input matInput [(ngModel)]="item.label" placeholder="např. Kelímek">
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Částka</mat-label>
+        <input matInput type="number" [(ngModel)]="item.amount">
+        <div matSuffix>Kč</div>
+      </mat-form-field>
+      <button mat-icon-button color="warn" (click)="removeItem($index)" aria-label="Smazat">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </div>
+  }
+</div>
+
+<div class="actions">
+  <button mat-stroked-button (click)="addItem()">
+    <mat-icon>add</mat-icon> Přidat položku
+  </button>
+  <button mat-raised-button color="primary" (click)="save()">Uložit</button>
+</div>
