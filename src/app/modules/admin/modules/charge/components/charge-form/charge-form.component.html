@@ -25,11 +25,13 @@
         >{{ value }} Kč
       </button>
     }
-    <button mat-stroked-button
-      class="me-2"
-      (click)="amount = cruciblePrice"
-      >Kelímek
-    </button>
+    @for (item of chargeItems; track item.label) {
+      <button mat-stroked-button
+        class="me-2"
+        (click)="amount = item.amount"
+        >{{ item.label }}
+      </button>
+    }
   </div>
   <button mat-raised-button
     color="primary"
