@@ -1,35 +1,36 @@
-<h2>Rychlé položky při nabíjení</h2>
+<mat-accordion>
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title>Rychlé položky při nabíjení</mat-panel-title>
+      <mat-panel-description>{{ isLoading ? 'Načítám...' : (items.length + ' položek') }}</mat-panel-description>
+    </mat-expansion-panel-header>
 
-@if (isLoading) {
-  <p>Načítám...</p>
-}
+    <div class="items-list">
+      @for (item of items; track item) {
+        <div class="item-row">
+          <mat-form-field>
+            <mat-label>Název</mat-label>
+            <input matInput [(ngModel)]="item.label" placeholder="např. Kelímek" maxlength="40">
+          </mat-form-field>
+          <mat-form-field>
+            <mat-label>Částka</mat-label>
+            <input matInput type="number" [(ngModel)]="item.amount" min="1" step="1" max="100000">
+            <span matSuffix>Kč</span>
+          </mat-form-field>
+          <button mat-icon-button color="warn" (click)="removeItem($index)" aria-label="Smazat" [disabled]="isSaving">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      }
+    </div>
 
-@if (!isLoading) {
-  <div class="items-list">
-    @for (item of items; track item) {
-      <div class="item-row">
-        <mat-form-field>
-          <mat-label>Název</mat-label>
-          <input matInput [(ngModel)]="item.label" placeholder="např. Kelímek" maxlength="40">
-        </mat-form-field>
-        <mat-form-field>
-          <mat-label>Částka</mat-label>
-          <input matInput type="number" [(ngModel)]="item.amount" min="1" step="1" max="100000">
-          <span matSuffix>Kč</span>
-        </mat-form-field>
-        <button mat-icon-button color="warn" (click)="removeItem($index)" aria-label="Smazat" [disabled]="isSaving">
-          <mat-icon>delete</mat-icon>
-        </button>
-      </div>
-    }
-  </div>
-
-  <div class="actions">
-    <button mat-stroked-button (click)="addItem()" [disabled]="isSaving">
-      <mat-icon>add</mat-icon> Přidat položku
-    </button>
-    <button mat-raised-button color="primary" (click)="save()" [disabled]="isSaving">
-      {{ isSaving ? 'Ukládám...' : 'Uložit' }}
-    </button>
-  </div>
-}
+    <mat-action-row>
+      <button mat-stroked-button (click)="addItem()" [disabled]="isSaving">
+        <mat-icon>add</mat-icon> Přidat položku
+      </button>
+      <button mat-raised-button color="primary" (click)="save()" [disabled]="isSaving">
+        {{ isSaving ? 'Ukládám...' : 'Uložit' }}
+      </button>
+    </mat-action-row>
+  </mat-expansion-panel>
+</mat-accordion>
