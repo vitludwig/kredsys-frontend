@@ -15,6 +15,9 @@
     @for (val of predefinedAmounts; track val) {
       <button mat-stroked-button (click)="amount = val">{{ val }} Kč</button>
     }
+    @for (item of chargeItems; track item.label) {
+      <button mat-stroked-button (click)="amount = item.amount">{{ item.label }}</button>
+    }
   </div>
 
   <button mat-raised-button color="primary" style="width:100%" [disabled]="amount <= 0" (click)="submit()" data-testid="charge-submit">
