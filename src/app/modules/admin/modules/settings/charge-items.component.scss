@@ -27,7 +27,17 @@ mat-accordion {
   }
 }
 
-.actions {
-  display: flex;
-  gap: 12px;
+.item-row--new {
+  border-left: 3px solid var(--mat-sys-primary);
+  padding-left: 8px;
+}
+
+.item-label {
+  flex: 1;
+}
+
+.item-amount {
+  min-width: 72px;
+  text-align: right;
+  color: var(--mat-sys-on-surface-variant);
 }

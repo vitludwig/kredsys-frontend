@@ -2,22 +2,35 @@
   <mat-expansion-panel>
     <mat-expansion-panel-header>
       <mat-panel-title>Rychlé položky při nabíjení</mat-panel-title>
-      <mat-panel-description>{{ isLoading ? 'Načítám...' : (items.length + ' položek') }}</mat-panel-description>
+      <mat-panel-description>{{ isLoading ? 'Načítám...' : (viewModels.length + ' položek') }}</mat-panel-description>
     </mat-expansion-panel-header>
 
     <div class="items-list">
-      @for (item of items; track item) {
-        <div class="item-row">
-          <mat-form-field>
-            <mat-label>Název</mat-label>
-            <input matInput [(ngModel)]="item.label" placeholder="např. Kelímek" maxlength="40">
-          </mat-form-field>
-          <mat-form-field>
-            <mat-label>Částka</mat-label>
-            <input matInput type="number" [(ngModel)]="item.amount" min="1" step="1" max="100000">
-            <span matSuffix>Kč</span>
-          </mat-form-field>
-          <button mat-icon-button color="warn" (click)="removeItem($index)" aria-label="Smazat" [disabled]="isSaving">
+      @for (vm of viewModels; track vm) {
+        <div class="item-row" [class.item-row--new]="vm.isNew">
+          @if (vm.editing) {
+            <mat-form-field>
+              <mat-label>Název</mat-label>
+              <input matInput [(ngModel)]="vm.data.label" placeholder="např. Kelímek" maxlength="40">
+            </mat-form-field>
+            <mat-form-field>
+              <mat-label>Částka</mat-label>
+              <input matInput type="number" [(ngModel)]="vm.data.amount" min="1" step="1" max="100000">
+              <span matSuffix>Kč</span>
+            </mat-form-field>
+            @if (!vm.isNew) {
+              <button mat-icon-button (click)="toggleEdit($index)" [disabled]="isSaving" aria-label="Zrušit úpravu">
+                <mat-icon>close</mat-icon>
+              </button>
+            }
+          } @else {
+            <span class="item-label">{{ vm.data.label }}</span>
+            <span class="item-amount">{{ vm.data.amount }} Kč</span>
+            <button mat-icon-button (click)="toggleEdit($index)" [disabled]="isSaving" aria-label="Upravit">
+              <mat-icon>edit</mat-icon>
+            </button>
+          }
+          <button mat-icon-button color="warn" (click)="removeItem($index)" [disabled]="isSaving" aria-label="Smazat">
             <mat-icon>delete</mat-icon>
           </button>
         </div>
