@@ -4,8 +4,9 @@ export interface IGoods {
 	name: string;
 	price: number | null;
 	currencyId: number | null;
-	placeId: number | null;
+	placeId: number | null; // owner: null = global, set = scoped/local to that place
 	deleted: boolean;
+	placeIds?: number[]; // ids of places this goods is added to (sortiment)
 }
 
 export interface IGoodsTableSource extends IGoods {

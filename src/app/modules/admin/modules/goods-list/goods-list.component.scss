@@ -1,0 +1,48 @@
+.goods-toolbar {
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.goods-place-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.8rem;
+  background: var(--mat-sys-primary-container);
+  color: var(--mat-sys-on-primary-container);
+  border-radius: 12px;
+  padding: 2px 8px;
+  margin: 2px 4px 2px 0;
+  white-space: nowrap;
+}
+
+.goods-place-chip__name {
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.goods-place-chip__name:hover {
+  text-decoration: underline;
+}
+
+.goods-place-chip__remove {
+  border: none;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  font-size: 1rem;
+  line-height: 1;
+  padding: 0 0 0 2px;
+}
+
+.goods-place-chip--add {
+  border: 1px dashed var(--mat-sys-outline);
+  background: transparent;
+  color: var(--mat-sys-on-surface);
+  cursor: pointer;
+}
+
+.goods-place-empty {
+  opacity: 0.5;
+}

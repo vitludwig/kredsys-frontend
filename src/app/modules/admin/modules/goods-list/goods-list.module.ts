@@ -13,8 +13,10 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {MatDialogModule} from '@angular/material/dialog';
 import {GoodsTypeDetailComponent} from './components/goods-type-detail/goods-type-detail.component';
+import {GoodsAddToPlaceDialogComponent} from './components/goods-add-to-place-dialog/goods-add-to-place-dialog.component';
 import {ClickConfirmDirective} from '../../../../common/directives/click-confirm/click-confirm.directive';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 
 
 @NgModule({
@@ -22,6 +24,7 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 		GoodsListComponent,
 		GoodsDetailComponent,
 		GoodsTypeDetailComponent,
+		GoodsAddToPlaceDialogComponent,
 	],
 	imports: [
 		SharedModule,
@@ -37,6 +40,7 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 		MatDialogModule,
 		ClickConfirmDirective,
 		MatProgressSpinnerModule,
+		MatSlideToggleModule,
 	],
 })
 export class GoodsListModule {

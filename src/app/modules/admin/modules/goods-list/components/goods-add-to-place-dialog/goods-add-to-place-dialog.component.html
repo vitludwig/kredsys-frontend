@@ -1,0 +1,21 @@
+<h2 mat-dialog-title>Přidat na místo</h2>
+<mat-dialog-content>
+	<mat-form-field class="w-100">
+		<mat-label>Místo</mat-label>
+		<mat-select [(ngModel)]="selectedPlaceId" data-testid="add-to-place-select">
+			@for (place of data.places; track place.id) {
+				<mat-option [value]="place.id">{{ place.name }}</mat-option>
+			}
+		</mat-select>
+	</mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+	<button mat-button mat-dialog-close>Zrušit</button>
+	<button mat-raised-button
+		color="primary"
+		[disabled]="selectedPlaceId == null"
+		(click)="confirm()"
+		data-testid="add-to-place-confirm">
+		Přidat
+	</button>
+</mat-dialog-actions>

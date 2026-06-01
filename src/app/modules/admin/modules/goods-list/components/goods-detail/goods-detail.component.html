@@ -60,6 +60,18 @@
               }
             </mat-select>
           </mat-form-field>
+          <mat-form-field
+            class="w-100">
+            <mat-label>Dostupnost</mat-label>
+            <mat-select name="placeId"
+              [(ngModel)]="item.placeId"
+              data-testid="form-scope">
+              <mat-option [value]="null">Globální (sdílené přes místa)</mat-option>
+              @for (place of places; track place.id) {
+                <mat-option [value]="place.id">Lokální: {{ place.name }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
           <div>
             <button mat-raised-button
               class="w-100"

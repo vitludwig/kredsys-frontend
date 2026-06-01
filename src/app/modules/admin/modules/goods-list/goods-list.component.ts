@@ -2,7 +2,7 @@ import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {MatTableDataSource} from '@angular/material/table';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
-import {map, merge, startWith, Subject, switchMap, takeUntil} from 'rxjs';
+import {firstValueFrom, map, merge, startWith, Subject, switchMap, takeUntil} from 'rxjs';
 import {ActivatedRoute} from '@angular/router';
 import {debounce} from '../../../../common/decorators/debounce';
 import {ERoute} from 'src/app/common/types/ERoute';
@@ -13,6 +13,10 @@ import {Utils} from '../../../../common/utils/Utils';
 import {ICurrency} from '../../../../common/types/ICurrency';
 import { HttpErrorResponse } from "@angular/common/http";
 import {AlertService} from "../../../../common/services/alert/alert.service";
+import {PlaceService} from '../../services/place/place/place.service';
+import {IPlace} from '../../../../common/types/IPlace';
+import {MatDialog} from '@angular/material/dialog';
+import {GoodsAddToPlaceDialogComponent} from './components/goods-add-to-place-dialog/goods-add-to-place-dialog.component';
 
 @Component({
     selector: 'app-goods-list',
@@ -21,8 +25,14 @@ import {AlertService} from "../../../../common/services/alert/alert.service";
     standalone: false
 })
 export class GoodsListComponent implements OnInit, OnDestroy {
-	public goodsDisplayedColumns: string[] = ['name', 'type', 'price', 'currency', 'actions'];
+	public goodsDisplayedColumns: string[] = ['name', 'type', 'price', 'places', 'actions'];
 	public goodsTypesDisplayedColumns: string[] = ['name', 'actions'];
+
+	public places: IPlace[] = [];
+	protected placesById: Record<number, string> = {};
+	protected placeFilter: number | null = null;
+	protected searchTerm: string = '';
+	protected editMode: boolean = false;
 
 	public goodsDataSource: MatTableDataSource<IGoodsTableSource>;
 	public goodsTypesDataSource: MatTableDataSource<IGoodsType>;
@@ -47,11 +57,21 @@ export class GoodsListComponent implements OnInit, OnDestroy {
 		protected goodsService: GoodsService,
 		protected currencyService: CurrencyService,
 		protected alertService: AlertService,
+		protected placeService: PlaceService,
+		protected dialog: MatDialog,
 	) {
 
 	}
 
 	public async ngOnInit(): Promise<void> {
+		this.places = await this.placeService.getAllPlaces();
+		this.placesById = {};
+		for(const place of this.places) {
+			if(place.id != null) {
+				this.placesById[place.id] = place.name;
+			}
+		}
+
 		await this.loadGoods();
 		await this.loadGoodsTypes();
 
@@ -62,9 +82,10 @@ export class GoodsListComponent implements OnInit, OnDestroy {
 					this.isLoading = true;
 
 					return this.goodsService.getGoods(
-						'',
+						this.searchTerm,
 						this.paginator.pageIndex + 1,
-						this.paginator.pageSize
+						this.paginator.pageSize,
+						this.placeFilter,
 					);
 				}),
 				map((data) => {
@@ -87,11 +108,64 @@ export class GoodsListComponent implements OnInit, OnDestroy {
 
 	@debounce()
 	public onSearch(value: string = ''): void {
-		this.loadGoods(value);
+		this.searchTerm = value;
+		this.loadGoods();
 	}
 
-	protected async loadGoods(filter: string = '', page: number = 0, pageSize: number = 15): Promise<void> {
-		const goods = await this.goodsService.getGoods(filter, page, pageSize);
+	public onPlaceFilterChange(): void {
+		this.loadGoods();
+	}
+
+	public placeName(id: number): string {
+		return this.placesById[id] ?? ('#' + id);
+	}
+
+	public async openAddToPlace(row: IGoodsTableSource): Promise<void> {
+		const existing = row.placeIds ?? [];
+		const available = this.places.filter(p => p.id != null && !existing.includes(p.id));
+
+		if(available.length === 0) {
+			this.alertService.error('Zboží je už přidáno na všech místech');
+			return;
+		}
+
+		const ref = this.dialog.open(GoodsAddToPlaceDialogComponent, {
+			width: '360px',
+			data: {places: available},
+		});
+
+		const placeId = await firstValueFrom(ref.afterClosed());
+		if(placeId == null) {
+			return;
+		}
+
+		try {
+			await this.placeService.addGoods(row.id!, placeId);
+			this.updateRowPlaces(row, [...existing, placeId]);
+		} catch(e) {
+			console.error('Cannot add goods to place', e);
+			this.alertService.error('Nepodařilo se přidat zboží na místo');
+		}
+	}
+
+	public async removeFromPlace(row: IGoodsTableSource, placeId: number): Promise<void> {
+		try {
+			await this.placeService.removeGoods(row.id!, placeId);
+			this.updateRowPlaces(row, (row.placeIds ?? []).filter(id => id !== placeId));
+		} catch(e) {
+			console.error('Cannot remove goods from place', e);
+			this.alertService.error('Nepodařilo se odebrat zboží z místa');
+		}
+	}
+
+	private updateRowPlaces(row: IGoodsTableSource, placeIds: number[]): void {
+		row.placeIds = placeIds;
+		// Re-emit so the table re-renders the chips.
+		this.goodsDataSource.data = [...this.goodsDataSource.data];
+	}
+
+	protected async loadGoods(page: number = 0, pageSize: number = 15): Promise<void> {
+		const goods = await this.goodsService.getGoods(this.searchTerm, page, pageSize, this.placeFilter);
 
 		this.goodsDataSource = new MatTableDataSource<IGoodsTableSource>(await this.transformGoodsToSource(goods.data));
 		this.goodsTotal = goods.count;

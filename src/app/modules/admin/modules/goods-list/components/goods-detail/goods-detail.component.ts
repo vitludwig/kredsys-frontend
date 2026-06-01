@@ -6,6 +6,8 @@ import {GoodsService} from '../../../../services/goods/goods.service';
 import {ICurrency} from '../../../../../../common/types/ICurrency';
 import {CurrencyService} from '../../../../services/currency/currency.service';
 import {AlertService} from '../../../../../../common/services/alert/alert.service';
+import {PlaceService} from '../../../../services/place/place/place.service';
+import {IPlace} from '../../../../../../common/types/IPlace';
 
 @Component({
     selector: 'app-goods-detail',
@@ -21,6 +23,7 @@ export class GoodsDetailComponent implements OnInit {
 
 	public goodsTypes: IGoodsType[] = [];
 	public currencies: ICurrency[] = [];
+	public places: IPlace[] = [];
 
 	constructor(
 		public goodsService: GoodsService,
@@ -28,12 +31,14 @@ export class GoodsDetailComponent implements OnInit {
 		protected route: ActivatedRoute,
 		protected router: Router,
 		protected alertService: AlertService,
+		protected placeService: PlaceService,
 	) {
 	}
 
 	public async ngOnInit(): Promise<void> {
 		this.goodsTypes = await this.goodsService.getGoodsTypes();
 		this.currencies = (await this.currencyService.getCurrencies()).data;
+		this.places = await this.placeService.getAllPlaces();
 
 		this.isLoading = true;
 		try {
