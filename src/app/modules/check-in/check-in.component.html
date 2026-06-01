@@ -1,5 +1,6 @@
 @if (!newCard) {
   <app-card-loader
+    [requireUnassigned]="true"
     (cardIdChange)="setCard($event)">
   </app-card-loader>
 } @else {

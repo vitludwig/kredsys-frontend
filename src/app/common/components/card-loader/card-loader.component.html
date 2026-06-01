@@ -7,6 +7,13 @@
 	</svg>
 	<h3>Načtěte kartu</h3>
 
+	@if (cardTakenError) {
+		<div class="card-loader__error" role="alert" data-testid="card-loader-taken-error">
+			<mat-icon>error</mat-icon>
+			<span>Karta je už přiřazená — použijte jinou.</span>
+		</div>
+	}
+
 	@if (authService.isLogged && authService.isDebug) {
 		@if (showNewCardButton) {
 			<button mat-button

@@ -44,6 +44,12 @@ export class CardLoaderComponent implements OnInit, OnDestroy {
 
 	@Input()
 	public hidden: boolean = false;
+
+	// When true, a card that is already assigned to a user is rejected (not emitted) and an inline error is shown.
+	@Input()
+	public requireUnassigned: boolean = false;
+
+	protected cardTakenError: boolean = false;
 	private usersService: UsersService = inject(UsersService);
 
 	@Output()
@@ -111,7 +117,35 @@ export class CardLoaderComponent implements OnInit, OnDestroy {
 
 	public selectDebugUser(uid: number | null | undefined): void {
 		if (uid == null) return;
+		void this.emitCard(uid);
+	}
+
+	// Funnel for the keyboard/NFC scan path: emits, and re-arms the listener if the card was rejected.
+	private async handleScannedCard(uid: number): Promise<void> {
+		const emitted = await this.emitCard(uid);
+		if(!emitted) {
+			// Card already assigned — re-arm the listener so another card can be scanned.
+			this.initCardListener();
+		}
+	}
+
+	private async emitCard(uid: number): Promise<boolean> {
+		this.cardTakenError = false;
+
+		if(this.requireUnassigned) {
+			try {
+				if(await this.usersService.isCardAssigned(uid)) {
+					this.cardTakenError = true;
+					return false;
+				}
+			} catch(e) {
+				// Fail-open: the backend unique index remains the final guard.
+				console.error('Card availability check failed', e);
+			}
+		}
+
 		this.cardIdChange.emit(uid);
+		return true;
 	}
 
 	public ngOnDestroy(): void {
@@ -128,14 +162,14 @@ export class CardLoaderComponent implements OnInit, OnDestroy {
 			: undefined;
 		if (typeof e2eUid === 'number' && Number.isFinite(e2eUid)) {
 			delete (window as unknown as { __E2E_NEXT_CARD_UID__?: number }).__E2E_NEXT_CARD_UID__;
-			this.cardIdChange.emit(e2eUid);
+			await this.emitCard(e2eUid);
 			return;
 		}
-		this.cardIdChange.emit(this.generateRandomCardId());
+		await this.emitCard(this.generateRandomCardId());
 	}
 
 	protected loadUserCard(cardId: number): void {
-		this.cardIdChange.emit(cardId);
+		void this.emitCard(cardId);
 	}
 
 	@HostListener("window:blur")
@@ -176,8 +210,8 @@ export class CardLoaderComponent implements OnInit, OnDestroy {
 					if(Number.isNaN(numberId)) {
 						numberId = this.convertFromCzechToNumbers(userId);
 					}
-          console.log(numberId);
-					this.cardIdChange.emit(numberId);
+
+					void this.handleScannedCard(numberId);
 				} catch(e) {
 					console.error('Card id loading error: ', e);
 					this.alertService.error('Nepodařilo se načíst kartu. Zkontroluj, jestli máš nastavenou CZ klávesnici.');

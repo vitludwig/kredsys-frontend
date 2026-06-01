@@ -14,7 +14,7 @@
     @if (!data.uid) {
       <div class="mt-3"
         >
-        <app-card-loader (cardIdChange)="setCardId($event)"></app-card-loader>
+        <app-card-loader [requireUnassigned]="true" (cardIdChange)="setCardId($event)"></app-card-loader>
       </div>
     }
 

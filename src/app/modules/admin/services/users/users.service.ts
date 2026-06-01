@@ -2,7 +2,7 @@ import {inject, Injectable} from '@angular/core';
 import {EUserRole, IUser} from '../../../../common/types/IUser';
 import {IPaginatedResponse} from '../../../../common/types/IPaginatedResponse';
 import {firstValueFrom, map} from 'rxjs';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import {ICard} from '../../../../common/types/ICard';
 import {ICurrencyAccount} from '../../../../common/types/ICurrency';
 import {cache, invalidateCache} from '../../../../common/decorators/cache';
@@ -114,6 +114,20 @@ export class UsersService {
 		return firstValueFrom(this.http.get<{userId: number | null}>('/kredsys-api/userIdByCard/' + uid).pipe(
 			map((result) => result.userId ?? null)
 		));
+	}
+
+	// Check whether a card UID is already assigned to a user. Uses the authed /api/v1.1 endpoint
+	// (the public userIdByCard route is not proxied in all environments). 404 = free, 200 = assigned.
+	public async isCardAssigned(uid: number): Promise<boolean> {
+		try {
+			await this.getUserByCardUid(uid);
+			return true;
+		} catch(e) {
+			if(e instanceof HttpErrorResponse && e.status === 404) {
+				return false;
+			}
+			throw e;
+		}
 	}
 
 	public async getPublicUserInfo(userId: number, token: string): Promise<IPublicUserInfo | null> {
