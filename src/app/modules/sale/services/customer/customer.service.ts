@@ -31,6 +31,9 @@ export class CustomerService {
 
 	public isLogged: boolean = false;
 
+	// UID of the card the customer was loaded with (sale flow), sent with transactions.
+	public cardUid: number | null = null;
+
 	constructor(
 		protected orderService: OrderService,
 		protected transactionService: TransactionService,
@@ -74,6 +77,7 @@ export class CustomerService {
 				place.id!,
 				this.currencyAccount?.currencyId ?? (await this.currencyService.getDefaultCurrency()).id!,
 				records,
+				this.cardUid,
 			);
 
 			await this.loadCurrencyAccount(this.customer!.id!);
@@ -95,6 +99,7 @@ export class CustomerService {
 				place.id!,
 				this.currencyAccount?.currencyId ?? (await this.currencyService.getDefaultCurrency()).id!,
 				records,
+				this.cardUid,
 			);
 
 			await this.loadCurrencyAccount(this.customer!.id!);
@@ -115,6 +120,7 @@ export class CustomerService {
 	public logout(): void {
 		this.customer = null;
 		this.currencyAccount = null;
+		this.cardUid = null;
 	}
 
 	protected async loadCurrencyAccount(userId?: number): Promise<void> {

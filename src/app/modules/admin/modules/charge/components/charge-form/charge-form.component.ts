@@ -74,6 +74,7 @@ export class ChargeFormComponent implements OnInit {
       amount: this.amount ?? 0,
       user: this.user,
       currencyId: this.currencyAccount?.currencyId ?? this.defaultCurrency.id!,
+      cardUid: this.#cardId,
     });
 
     this.user = null;

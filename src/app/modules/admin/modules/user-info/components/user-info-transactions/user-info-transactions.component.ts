@@ -9,6 +9,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatTimepickerModule } from '@angular/material/timepicker';
 import { provideNativeDateAdapter } from '@angular/material/core';
@@ -42,6 +43,7 @@ const RECORDS_PREVIEW_LIMIT = 3;
 		MatFormFieldModule,
 		MatInputModule,
 		MatSelectModule,
+		MatCheckboxModule,
 		MatDatepickerModule,
 		MatTimepickerModule,
 		TransactionsModule,
@@ -62,6 +64,9 @@ export class UserInfoTransactionsComponent {
 	filterChange = output<ITransactionFilter>();
 
 	protected readonly ETransactionType = ETransactionType;
+
+	// Optional display toggle: show the card UID the transaction was made with.
+	protected showCardId = signal(false);
 
 	protected financialDisabled = computed(() => this.placeId() === null);
 	protected financialTooltip = computed(() =>

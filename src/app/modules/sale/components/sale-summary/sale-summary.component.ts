@@ -77,6 +77,7 @@ export class SaleSummaryComponent implements OnInit, OnDestroy {
 	public async loadUserId(uid: number): Promise<void> {
 		try {
 			this.customerService.customer = await this.usersService.getUserByCardUid(uid);
+			this.customerService.cardUid = uid;
 			this.isUserLoaded = true;
 
 		} catch(e) {
@@ -110,7 +111,7 @@ export class SaleSummaryComponent implements OnInit, OnDestroy {
 			});
 		}
 		try {
-			await this.transactionService.pay(customerId, this.place.id!, records);
+			await this.transactionService.pay(customerId, this.place.id!, records, this.customerService.cardUid);
 
       if(this.featureFlagService.isEnabled(EFeatureFlag.PRINTER)) {
         this.printService.printReceipt(this.orderService.items, this.customerService.customer.name);

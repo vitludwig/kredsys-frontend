@@ -5,4 +5,5 @@ export interface IChargeResult {
 	amount: number;
 	user: IUser;
 	currencyId?: number;
+	cardUid?: number | null;
 }

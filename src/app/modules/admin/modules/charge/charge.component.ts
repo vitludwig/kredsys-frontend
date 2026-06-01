@@ -44,6 +44,7 @@ export class ChargeComponent {
 				this.placeService.selectedPlace!.id!,
 				currencyId,
 				records,
+				chargeData.cardUid ?? null,
 			);
 			this.alertService.success('Peňauze dobity!');
 		} catch(e) {

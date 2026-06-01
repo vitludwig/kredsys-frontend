@@ -12,6 +12,7 @@ export interface ITransaction {
 	cancellation: boolean;
 	userName: string;
 	placeName: string;
+	cardUid?: number | null;
 }
 
 export interface ITransactionRecord {

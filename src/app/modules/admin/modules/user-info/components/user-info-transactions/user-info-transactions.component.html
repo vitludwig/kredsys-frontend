@@ -129,6 +129,9 @@
     <button mat-stroked-button (click)="onResetFilter()">
       <mat-icon>clear</mat-icon> Reset
     </button>
+    <mat-checkbox [ngModel]="showCardId()" (ngModelChange)="showCardId.set($event)">
+      Zobrazit ID karty
+    </mat-checkbox>
   </div>
 
   @if (transactions().length === 0 && accountLoaded()) {
@@ -137,7 +140,7 @@
 
   <div class="uid__tx-list" role="list">
     @for (tx of transactions(); track tx.id) {
-      <div class="uid__tx-row" role="listitem">
+      <div class="uid__tx-row" [class.uid__tx-row--cards]="showCardId()" role="listitem">
         <span class="uid__tx-info">
           <strong>{{ typeLabel(tx.type) }}</strong>
           @if (tx.placeName) { <span class="uid__tx-place">— {{ tx.placeName }}</span> }
@@ -158,6 +161,11 @@
             </span>
           }
         </span>
+        @if (showCardId()) {
+          <span class="uid__tx-card">
+            @if (tx.cardUid != null) { Karta #{{ tx.cardUid }} } @else { bez karty }
+          </span>
+        }
         <span class="uid__tx-date">{{ tx.created | date:'dd.MM. HH:mm' }}</span>
         <span
           class="uid__tx-amount"

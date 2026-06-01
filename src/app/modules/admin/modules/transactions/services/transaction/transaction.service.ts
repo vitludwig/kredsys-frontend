@@ -24,7 +24,7 @@ export class TransactionService {
 
 	@cache(ETime.MINUTE * 2, [ECacheTag.TRANSACTION])
 	public getTransactionDetail(id: number, type?: ETransactionType): Promise<ITransactionResponse> {
-		const params: Partial<ITransaction> = {};
+		const params: { type?: ETransactionType } = {};
 		if(type) {
 			params['type'] = type
 		}
@@ -58,34 +58,37 @@ export class TransactionService {
   }
 
 	@invalidateCache([ECacheTag.TRANSACTIONS, ECacheTag.TRANSACTION])
-	public pay(userId: number, placeId: number, records: ITransactionRecordPayment[]): Promise<ITransactionResponse> {
+	public pay(userId: number, placeId: number, records: ITransactionRecordPayment[], cardUid: number | null = null): Promise<ITransactionResponse> {
 		return firstValueFrom(this.http.post<ITransactionResponse>(this.configService.config.apiUrl + 'transactions/payment', {
 			info: '',
 			userId: userId,
 			placeId: placeId,
 			records: records,
+			cardUid: cardUid ?? null,
 		}));
 	}
 
 	@invalidateCache([ECacheTag.TRANSACTIONS, ECacheTag.TRANSACTION])
-	public deposit(userId: number, placeId: number, currencyId: number, records: ITransactionRecordDeposit[]): Promise<ITransactionResponse> {
+	public deposit(userId: number, placeId: number, currencyId: number, records: ITransactionRecordDeposit[], cardUid: number | null = null): Promise<ITransactionResponse> {
 		return firstValueFrom(this.http.post<ITransactionResponse>(this.configService.config.apiUrl + 'transactions/deposit', {
 			info: '',
 			userId: userId,
 			placeId: placeId,
 			records: records,
 			currencyId: currencyId,
+			cardUid: cardUid ?? null,
 		}));
 	}
 
 	@invalidateCache([ECacheTag.TRANSACTIONS, ECacheTag.TRANSACTION])
-	public withDraw(userId: number, placeId: number, currencyId: number, records: ITransactionRecordWithdraw[]): Promise<ITransactionResponse> {
+	public withDraw(userId: number, placeId: number, currencyId: number, records: ITransactionRecordWithdraw[], cardUid: number | null = null): Promise<ITransactionResponse> {
 		return firstValueFrom(this.http.post<ITransactionResponse>(this.configService.config.apiUrl + 'transactions/withDraw', {
 			info: '',
 			userId: userId,
 			placeId: placeId,
 			records: records,
 			currencyId: currencyId,
+			cardUid: cardUid ?? null,
 		}));
 	}
 
