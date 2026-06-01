@@ -1,6 +1,7 @@
 // import our custom theme
 @use 'rzb.theme.scss';
-@import "styles/variables";
+@use "styles/variables" as *;
+@use "styles/overides" as *;
 @import 'material-icons/iconfont/material-icons.css';
 //@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
@@ -23,10 +24,6 @@
 }
 
 // specify theme class eg: <body class="my-theme"> ... </body>
-
-
-
-@import "styles/overides";
 
 html, body {
   height: 100%;

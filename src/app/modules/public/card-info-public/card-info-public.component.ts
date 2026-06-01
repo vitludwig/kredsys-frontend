@@ -3,7 +3,6 @@ import {LoginModule} from "../../login/login.module";
 import {MatButtonModule} from "@angular/material/button";
 import {MatIconModule} from "@angular/material/icon";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
-import {QRCodeComponent} from "angularx-qrcode";
 
 import {CardInfoModule} from "../../card-info/card-info.module";
 
@@ -14,7 +13,6 @@ import {CardInfoModule} from "../../card-info/card-info.module";
         MatButtonModule,
         MatIconModule,
         MatProgressSpinnerModule,
-        QRCodeComponent,
         CardInfoModule
     ],
     templateUrl: './card-info-public.component.html',

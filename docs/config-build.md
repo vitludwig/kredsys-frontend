@@ -49,19 +49,19 @@ Ships as `{}` in the repo. Deploy a populated version per environment without re
 
 ## TypeScript (`tsconfig.json`)
 
-Notable settings required for Angular 21 + TS 6:
+Notable settings required for Angular 21 + TS 5.9:
 
 ```json
 {
   "compilerOptions": {
     "strict": true,
     "moduleResolution": "bundler",
-    "ignoreDeprecations": "6.0"
+    "ignoreDeprecations": "5.0"
   }
 }
 ```
 
-`ignoreDeprecations: "6.0"` suppresses TS6 deprecation warnings for `baseUrl` and `downlevelIteration` still referenced by some tooling.
+`ignoreDeprecations: "5.0"` suppresses TS5-era deprecation errors for options still referenced by some tooling. Note: `"6.0"` is **not** a valid value for TS 5.9 — it throws `TS5103: Invalid value for '--ignoreDeprecations'`. The max accepted value on TS 5.x is `"5.0"`.
 
 ---
 

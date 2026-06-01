@@ -41,12 +41,12 @@
     "jwt-decode": "^3.1.2",
     "material-icons": "^1.13.14",
     "ng2-charts": "^10.0.0",
-    "ngx-mat-select-search": "^8.0.1",
+    "ngx-mat-select-search": "^8.0.6",
     "ngx-permissions": "^19.0.0",
     "path": "^0.12.7",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",
-    "typescript": "~6.0.3",
+    "typescript": "~5.9.0",
     "zone.js": "~0.15.1"
   },
   "devDependencies": {
@@ -70,5 +70,11 @@
     "karma-jasmine": "~4.0.0",
     "karma-jasmine-html-reporter": "~1.7.0",
     "tsx": "^4.21.0"
+  },
+  "overrides": {
+    "@manekinekko/angular-web-bluetooth": {
+      "@angular/common": "$@angular/common",
+      "@angular/core": "$@angular/core"
+    }
   }
 }

@@ -41,6 +41,9 @@
             },
             "scripts": [
               {"input": "src/assets/vendor/receipt-printer-encoder.umd.js"}
+            ],
+            "allowedCommonJsDependencies": [
+              "qrcode"
             ]
           },
           "configurations": {
