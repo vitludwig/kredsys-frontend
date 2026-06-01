@@ -166,6 +166,11 @@
             @if (tx.cardUid != null) { Karta #{{ tx.cardUid }} } @else { bez karty }
           </span>
         }
+        <span class="uid__tx-note">
+          @if (tx.info) {
+            <mat-icon class="uid__tx-info-icon" [matTooltip]="tx.info">info</mat-icon>
+          }
+        </span>
         <span class="uid__tx-date">{{ tx.created | date:'dd.MM. HH:mm' }}</span>
         <span
           class="uid__tx-amount"

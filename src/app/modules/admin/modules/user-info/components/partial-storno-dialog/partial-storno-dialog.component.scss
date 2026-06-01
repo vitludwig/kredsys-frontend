@@ -1,0 +1,63 @@
+.psd-section {
+  margin: 0 0 8px;
+  opacity: 0.8;
+}
+
+.psd-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 4px 0;
+}
+
+.psd-name {
+  flex: 1;
+  font-weight: 500;
+}
+
+.psd-price {
+  opacity: 0.7;
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+.psd-stepper {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.psd-qty {
+  min-width: 44px;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.psd-divider {
+  border: none;
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
+  margin: 12px 0;
+}
+
+.psd-summary-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  padding: 2px 0;
+}
+
+.psd-total {
+  margin-top: 6px;
+  font-weight: 700;
+}
+
+.psd-empty {
+  opacity: 0.6;
+  margin: 0;
+}
+
+.psd-kept {
+  margin-top: 12px;
+  font-size: 0.9rem;
+  opacity: 0.85;
+}

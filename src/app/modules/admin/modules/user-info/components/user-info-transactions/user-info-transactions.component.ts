@@ -21,7 +21,7 @@ import { ITransaction, ITransactionRecord, ITransactionResponse } from '../../..
 import { ETransactionType } from '../../../transactions/services/transaction/types/ETransactionType';
 import { TransactionService } from '../../../transactions/services/transaction/transaction.service';
 import { AlertService } from '../../../../../../common/services/alert/alert.service';
-import { ConfirmDialogComponent } from '../../../../../../common/components/confirm-dialog/confirm-dialog.component';
+import { PartialStornoDialogComponent } from '../partial-storno-dialog/partial-storno-dialog.component';
 import { NewTransactionDialogComponent } from '../new-transaction-dialog/new-transaction-dialog.component';
 import { TransactionsModule } from '../../../transactions/transactions.module';
 import { ITransactionFilter } from '../user-info-detail/user-info-detail.component';
@@ -222,22 +222,31 @@ export class UserInfoTransactionsComponent {
 		}
 	}
 
-	protected async onStorno(transaction: ITransaction): Promise<void> {
-		const ref = this.dialog.open(ConfirmDialogComponent, {
-			data: {
-				title: 'Stornovat transakci',
-				text: `Opravdu stornovat ${Math.abs(transaction.amount)} Kč?`,
-			},
+	protected async onStorno(transaction: ITransactionResponse): Promise<void> {
+		const ref = this.dialog.open(PartialStornoDialogComponent, {
+			width: '480px',
+			data: {records: transaction.records ?? []},
 		});
-		const confirmed = await firstValueFrom(ref.afterClosed());
-		if (!confirmed) return;
+		const result = await firstValueFrom(ref.afterClosed());
+		if (!result) return;
 
 		try {
+			// Cancel the whole original transaction...
 			await this.transactionService.storno(transaction.id);
+			// ...then re-charge the kept portion as a new transaction at the original place/user,
+			// carrying over the original description (+ a storno note) and card.
+			if (result.keep.length) {
+				const note = `New transaction after storno at ${new Date().toLocaleString('cs-CZ')}`;
+				const info = transaction.info ? `${transaction.info} ${note}` : note;
+				await this.transactionService.pay(transaction.userId, transaction.placeId, result.keep, transaction.cardUid ?? null, info);
+			}
 			this.alertService.success('Transakce stornována');
 			this.refresh.emit();
-		} catch {
+		} catch(e) {
+			console.error('Partial storno failed', e);
 			this.alertService.error('Chyba při stornování transakce');
+			// Make sure the dashboard reflects whatever actually happened (the original may already be cancelled).
+			this.refresh.emit();
 		}
 	}
 
