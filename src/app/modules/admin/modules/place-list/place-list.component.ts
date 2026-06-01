@@ -7,6 +7,8 @@ import {debounce} from '../../../../common/decorators/debounce';
 import {ERoute} from 'src/app/common/types/ERoute';
 import {PlaceService} from '../../services/place/place/place.service';
 import {IPlace} from '../../../../common/types/IPlace';
+import {AuthService} from '../../../login/services/auth/auth.service';
+import {EUserRole} from '../../../../common/types/IUser';
 
 @Component({
     selector: 'app-place-list',
@@ -32,9 +34,20 @@ export class PlaceListComponent implements OnInit, OnDestroy {
 	protected unsubscribe: Subject<void> = new Subject<void>();
 
 	private placeService: PlaceService = inject(PlaceService);
+	private authService: AuthService = inject(AuthService);
+
+	// Non-admins (e.g. PowerSalesman) may only see/manage the place they have selected.
+	private get restrictedToOwnPlace(): boolean {
+		return !this.authService.hasRole(EUserRole.ADMIN);
+	}
 
 	public async ngOnInit(): Promise<void> {
 		await this.loadPlaces();
+
+		if(this.restrictedToOwnPlace) {
+			// Only the selected place is shown — skip the paginated all-places stream.
+			return;
+		}
 
 		merge(this.paginator.page, this.paginator.pageSize)
 			.pipe(
@@ -72,6 +85,13 @@ export class PlaceListComponent implements OnInit, OnDestroy {
 	}
 
 	protected async loadPlaces(filter: string = '', page?: number, pageSize?: number): Promise<void> {
+		if(this.restrictedToOwnPlace) {
+			const place = this.placeService.selectedPlace;
+			this.placesData = place ? [place] : [];
+			this.placesTotal = this.placesData.length;
+			return;
+		}
+
 		const users = await this.placeService.getPlaces(filter, page, pageSize);
 
 		this.placesData = users.data;

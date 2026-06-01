@@ -34,11 +34,8 @@ export class StornoDialogComponent implements OnInit{
 	}
 
 	private async loadTransactions(): Promise<void> {
-		const filter = `
-			type=${ETransactionType.PAYMENT},
-			placeId=${this.placeService.selectedPlace!.id},
-			cancellation=false
-		`;
+		const selectedPlace = this.placeService.selectedPlace;
+		const filter = `type=${ETransactionType.PAYMENT},placeId=${selectedPlace!.id},cancellation=false`;
 		const sortBy = 'created desc';
 		const userId = (await firstValueFrom(this.data.user))?.id;
 		if(!userId) {
@@ -48,6 +45,11 @@ export class StornoDialogComponent implements OnInit{
 		const result = (await this.usersService.getUserTransactions(userId,0, 1, filter, sortBy)).data;
 
 		if(result.length === 0) {
+			return;
+		}
+
+		// Only allow storno of the last sale actually made at the worker's selected place.
+		if(result[0].placeId !== selectedPlace?.id) {
 			return;
 		}
 

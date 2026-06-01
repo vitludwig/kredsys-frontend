@@ -22,14 +22,17 @@
 		</mat-list>
 
 		<h2 class="mb-0 mt-3">Celkem {{ lastTransaction.amount }}Kč</h2>
+
+		<button mat-raised-button
+			color="primary"
+			class="submit-btn"
+			mat-dialog-close
+			(click)="submit()"
+			data-testid="storno-confirm"
+		>
+			Stornovat
+		</button>
+	} @else {
+		<p>Žádný nákup k vrácení na tomto místě.</p>
 	}
-	<button mat-raised-button
-		color="primary"
-		class="submit-btn"
-		mat-dialog-close
-		(click)="submit()"
-		data-testid="storno-confirm"
-	>
-		Stornovat
-	</button>
 </div>
