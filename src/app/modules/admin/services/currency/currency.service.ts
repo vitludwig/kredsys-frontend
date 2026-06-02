@@ -75,6 +75,14 @@ export class CurrencyService {
     }));
   }
 
+  public createCurrencyAccount(data: { userId: number; currencyId: number; overdraftLimit?: number }): Promise<ICurrencyAccount> {
+    return firstValueFrom(this.http.post<ICurrencyAccount>(this.configService.config.apiUrl + 'currencyaccounts', {
+      userId: data.userId,
+      currencyId: data.currencyId,
+      overdraftLimit: data.overdraftLimit ?? 0,
+    }));
+  }
+
   public createNewCurrency(): ICurrency {
     return {
       name: '',

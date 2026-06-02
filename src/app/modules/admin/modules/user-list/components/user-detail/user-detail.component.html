@@ -123,16 +123,26 @@
             <mat-form-field
               class="w-100"
               >
-              <mat-label>Limit přečerpání {{ currencies[account.currencyId].code }}</mat-label>
+              <mat-label>Limit přečerpání {{ defaultCurrency?.code }}</mat-label>
               <input matInput
                 placeholder="Limit přečerpání"
                 type="number"
                 [name]="'overdraftLimit' + account.currencyId"
                 [(ngModel)]="account.overdraftLimit"
                 >
-              <span matSuffix>{{ currencies[account.currencyId].symbol }}</span>
-              <!--TODO: pridat cudlik na vyrobeni accountu, aby slo nastavit precerpani-->
+              <span matSuffix>{{ defaultCurrency?.symbol }}</span>
             </mat-form-field>
+          }
+          @if(!hasDefaultAccount) {
+            <button mat-stroked-button
+              type="button"
+              class="w-100"
+              (click)="createAccount()"
+              [disabled]="accountCreating"
+              data-testid="create-account">
+              <mat-icon>add</mat-icon>
+              Vytvořit finanční účet
+            </button>
           }
         }
         <div>

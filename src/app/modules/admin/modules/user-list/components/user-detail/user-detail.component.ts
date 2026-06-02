@@ -10,7 +10,6 @@ import {AlertService} from '../../../../../../common/services/alert/alert.servic
 import {ICurrency, ICurrencyAccount} from '../../../../../../common/types/ICurrency';
 import {Utils} from '../../../../../../common/utils/Utils';
 import {CurrencyService} from '../../../../services/currency/currency.service';
-import {HashMap} from '../../../../../../common/types/HashMap';
 import { HttpErrorResponse } from '@angular/common/http';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import FormValidator from '../../../../../../common/utils/FormValidator';
@@ -45,7 +44,8 @@ export class UserDetailComponent implements OnInit {
 
 	public accounts: ICurrencyAccount[] = [];
 	public cards: ICard[] = [];
-	public currencies: HashMap<ICurrency>;
+	public defaultCurrency?: ICurrency;
+	public accountCreating: boolean = false;
 	public roles: string[] = Object.values(EUserRole);
 	public groups: IGroup[] = [];
 	public passwordAgain: string;
@@ -73,6 +73,33 @@ export class UserDetailComponent implements OnInit {
 
 	public ngOnInit(): void {
 		this.loadUserDetails();
+	}
+
+	protected get hasDefaultAccount(): boolean {
+		return this.accounts.some((account) => account.currencyId === this.defaultCurrency?.id);
+	}
+
+	public async createAccount(): Promise<void> {
+		if(!this.user?.id || !this.defaultCurrency?.id) {
+			return;
+		}
+		this.accountCreating = true;
+		try {
+			const account = await this.currencyService.createCurrencyAccount({
+				userId: this.user.id,
+				currencyId: this.defaultCurrency.id,
+			});
+			this.accounts = [...this.accounts, account];
+		} catch(e) {
+			console.error('Cannot create currency account', e);
+			if(e instanceof HttpErrorResponse) {
+				this.alertService.error(e.error?.Message ?? 'Nepodařilo se vytvořit účet');
+			} else {
+				this.alertService.error('Nepodařilo se vytvořit účet');
+			}
+		} finally {
+			this.accountCreating = false;
+		}
 	}
 
 	protected async onSubmit(): Promise<void> {
@@ -198,7 +225,14 @@ export class UserDetailComponent implements OnInit {
 		const editUser = Utils.mapValues(this.user, this.userForm);
 
 		await this.usersService.editUser(editUser);
-		await this.usersService.editRoles(this.user.id,[ this.userForm.role]);
+
+		// Keep the user's existing role — only (re)assign when they have no role yet,
+		// or the operator explicitly changed it in the select. Prevents edits from
+		// silently resetting an existing role to Member.
+		const existingRole = this.user.roles?.[0];
+		if(!existingRole || this.userForm.role !== existingRole) {
+			await this.usersService.editRoles(this.user.id, [this.userForm.role]);
+		}
 
     await this.manageUserGroups();
 
@@ -223,7 +257,7 @@ export class UserDetailComponent implements OnInit {
 
 				this.cards = (await this.usersService.getUserCards(userId)).data;
 				this.accounts = await this.usersService.getUserCurrencyAccounts(userId);
-				this.currencies = Utils.toHashMap<ICurrency>((await this.currencyService.getCurrencies()).data, 'id');
+				this.defaultCurrency = await this.currencyService.getDefaultCurrency();
 
 				this.isEdit = true;
 			} else {
@@ -244,7 +278,6 @@ export class UserDetailComponent implements OnInit {
 				passwordAgain: '',
 				groupId: user.groups?.[0] ?? null,
 			});
-      console.log(this.userFormGroup);
 			this.user = user;
 		} catch(e) {
 			this.alertService.error('Nepodařilo se načíst detail uživatele');
