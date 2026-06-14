@@ -145,12 +145,12 @@ export class UsersService {
 	}
 
 	@invalidateCache([ECacheTag.USER_CARDS])
-	public async addUserCard(userId: number, cardUid: number, description: string = '', type: EUserCardType = EUserCardType.CARD): Promise<ICard> {
+	public async addUserCard(userId: number, cardUid: number, description: string = '', type: EUserCardType = EUserCardType.CARD, expirationDate: string | null = null): Promise<ICard> {
 		return firstValueFrom(this.http.post<ICard>(this.configService.config.apiUrl + 'users/' + userId + '/card', {
 			uid: cardUid,
 			type: type,
 			description: description,
-			expirationDate: null,
+			expirationDate: expirationDate,
 		}));
 	}
 

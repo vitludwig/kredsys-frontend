@@ -4,7 +4,7 @@ import { UsersService } from './users.service';
 import { ConfigService } from '../../../../common/services/config/config.service';
 import { EUserRole, IUser } from '../../../../common/types/IUser';
 import { IPaginatedResponse } from '../../../../common/types/IPaginatedResponse';
-import { ICard } from '../../../../common/types/ICard';
+import { ICard, EUserCardType } from '../../../../common/types/ICard';
 import { ICurrencyAccount } from '../../../../common/types/ICurrency';
 import { ITransaction } from '../../modules/transactions/services/transaction/types/ITransaction';
 import { clearAllCaches } from '../../../../common/decorators/cache';
@@ -295,7 +295,7 @@ describe('UsersService', () => {
   });
 
   describe('addUserCard', () => {
-    it('should POST card with default type and description', async () => {
+    it('should POST card with default type, description and null expiration', async () => {
       const promise = service.addUserCard(11, 99999);
       const req = httpMock.expectOne(API_URL + 'users/11/card');
       expect(req.request.method).toBe('POST');
@@ -309,11 +309,11 @@ describe('UsersService', () => {
       await promise;
     });
 
-    it('should POST card with custom type and description', async () => {
-      const promise = service.addUserCard(12, 88888, 'My bracelet', 'Bracelet');
+    it('should POST card with custom description and expiration', async () => {
+      const promise = service.addUserCard(12, 88888, 'My card', EUserCardType.CARD, '2026-12-31T23:59:00');
       const req = httpMock.expectOne(API_URL + 'users/12/card');
-      expect(req.request.body.type).toBe('Bracelet');
-      expect(req.request.body.description).toBe('My bracelet');
+      expect(req.request.body.description).toBe('My card');
+      expect(req.request.body.expirationDate).toBe('2026-12-31T23:59:00');
       req.flush({ id: 2, uid: 88888 });
       await promise;
     });
