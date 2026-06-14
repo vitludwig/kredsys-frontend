@@ -80,6 +80,18 @@ interface ICurrencyAccount {
   currentAmount: number;    // always number, never undefined
   currencyId: number;
 }
+
+interface ICard {
+  id?: number;
+  uid?: number;
+  description: string;
+  type: EUserCardType;
+  expirationDate?: string | null;   // naive local ISO; null = no expiration
+  blocked?: boolean;
+  userId?: number;
+}
+
+enum EUserCardType { CARD = 'Card', TICKET = 'Ticket' }   // Ticket not used on FE
 ```
 
 ## Groups types (`modules/groups/types/`)

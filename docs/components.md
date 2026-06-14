@@ -107,6 +107,12 @@ Transaction reversal. Requires `PlaceService` (mocked in tests as `{ selectedPla
 - `UserDetailComponent` — create / edit form with role selector and group assignment
 - `ChangePasswordComponent` — password change form
 
+### `UserInfoCardsComponent` — `app-user-info-cards`
+Card list per user. Shows UID last-4, Active/Blocked badge, expiration (date+time, "vypršela" if past).
+Actions: edit expiration (`CardExpirationDialogComponent`), block/unblock, delete.
+"Přiřadit kartu" is disabled while an active card carries an expiration; a newly assigned card
+inherits the last-blocked card's expiration.
+
 ### Place management
 - `PlaceListComponent` — table
 - `PlaceDetailComponent` — form + goods sortiment with `CdkDragDrop`; "confirm position" button enabled only when `goodsPositionChanged`

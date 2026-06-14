@@ -75,6 +75,17 @@ updateUser(user: IUser): Promise<void>
 deleteUser(id: number): Promise<void>
 ```
 
+Card methods:
+
+```
+getUserCards(id): Promise<IPaginatedResponse<ICard>>            // @cache USER_CARDS
+addUserCard(userId, uid, description?, type?, expirationDate?): Promise<ICard>  // @invalidateCache
+setUserCardExpiration(card, expirationDate): Promise<ICard>     // PUT cards/{id}, resends type+description
+blockUserCard(id): Promise<void>                               // PUT cards/{id}/block
+unblockUserCard(id): Promise<void>                             // PUT cards/{id}/unblock
+deleteUserCard(id): Promise<void>                              // DELETE cards/{id}; 400 if used by transactions
+```
+
 ---
 
 ## GoodsService (`modules/admin/services/goods/`)
