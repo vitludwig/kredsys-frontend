@@ -1,12 +1,12 @@
 <div class="uid__section">
   <div class="uid__section-header">
     <h3>Karty</h3>
-    <button mat-raised-button (click)="onAssignCard()" [disabled]="!canAddCard"
-            [matTooltip]="canAddCard ? '' : 'Nejdřív zablokuj stávající kartu s expirací.'"
-            [matTooltipDisabled]="canAddCard">
-      <mat-icon>add</mat-icon>
-      Přiřadit kartu
-    </button>
+    <span [matTooltip]="'Nejdřív zablokuj stávající kartu s expirací.'" [matTooltipDisabled]="canAddCard">
+      <button mat-raised-button (click)="onAssignCard()" [disabled]="!canAddCard">
+        <mat-icon>add</mat-icon>
+        Přiřadit kartu
+      </button>
+    </span>
   </div>
   @if (cards().length === 0) {
     <p class="uid__empty">Žádné karty</p>

@@ -91,6 +91,7 @@ describe('UserInfoCardsComponent', () => {
     await component.onBlockCard(card({ id: 9 }));
     expect(usersService.blockUserCard).toHaveBeenCalledWith(9);
     expect(refreshSpy).toHaveBeenCalled();
+    expect(alertService.success).toHaveBeenCalledWith('Karta zablokována');
   });
 
   it('does not block when confirmation is cancelled', async () => {
@@ -116,6 +117,7 @@ describe('UserInfoCardsComponent', () => {
     await component.onEditExpiration(c);
     expect(usersService.setUserCardExpiration).toHaveBeenCalledWith(c, '2027-01-01T12:00:00');
     expect(refreshSpy).toHaveBeenCalled();
+    expect(alertService.success).toHaveBeenCalledWith('Expirace uložena');
   });
 
   it('clears expiration when dialog returns null', async () => {
@@ -141,5 +143,16 @@ describe('UserInfoCardsComponent', () => {
     usersService.deleteUserCard.and.rejectWith(new HttpErrorResponse({ status: 400 }));
     await component.onDeleteCard(c);
     expect(alertService.error).toHaveBeenCalledWith('Kartu nelze smazat — je použita v transakcích');
+  });
+
+  it('deletes a card after confirmation and reports success', async () => {
+    const c = card({ id: 9 });
+    setup([c]);
+    dialogReturns(true);
+    const refreshSpy = spyOn(component.refresh, 'emit');
+    await component.onDeleteCard(c);
+    expect(usersService.deleteUserCard).toHaveBeenCalledWith(9);
+    expect(alertService.success).toHaveBeenCalledWith('Karta smazána');
+    expect(refreshSpy).toHaveBeenCalled();
   });
 });
