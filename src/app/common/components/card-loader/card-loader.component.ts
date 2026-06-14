@@ -214,7 +214,7 @@ export class CardLoaderComponent implements OnInit, OnDestroy {
 					void this.handleScannedCard(numberId);
 				} catch(e) {
 					console.error('Card id loading error: ', e);
-					this.alertService.error('Nepodařilo se načíst kartu. Zkontroluj, jestli máš nastavenou CZ klávesnici.');
+					this.alertService.error('Nepodařilo se načíst čip. Zkontroluj, jestli máš nastavenou CZ klávesnici.');
 				}
 			} else if(event.key.length === 1) {
 				userId += event.key;

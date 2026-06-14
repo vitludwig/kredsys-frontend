@@ -105,6 +105,48 @@ describe('CustomerService', () => {
 		expect(orderServiceSpy.balance).toBe(500);
 	}));
 
+	it('currencyAccountLoading should start false', () => {
+		expect(service.currencyAccountLoading).toBeFalse();
+	});
+
+	it('currencyAccountLoading should be true while loading and false once resolved', fakeAsync(() => {
+		let resolveAccounts!: (accounts: ICurrencyAccount[]) => void;
+		usersServiceSpy.getUserCurrencyAccounts.and.returnValue(
+			new Promise<ICurrencyAccount[]>((resolve) => { resolveAccounts = resolve; }),
+		);
+
+		service.customer = mockUser;
+		// synchronous part of loadCurrencyAccount already ran — loading, account not yet available
+		expect(service.currencyAccountLoading).toBeTrue();
+		expect(service.currencyAccount).toBeNull();
+
+		resolveAccounts([mockAccount]);
+		tick();
+
+		expect(service.currencyAccountLoading).toBeFalse();
+		expect(service.currencyAccount).toEqual(mockAccount);
+	}));
+
+	it('currencyAccountLoading should be false after load even when user has no account', fakeAsync(() => {
+		usersServiceSpy.getUserCurrencyAccounts.and.returnValue(Promise.resolve([]));
+
+		service.customer = mockUser;
+		tick();
+
+		expect(service.currencyAccountLoading).toBeFalse();
+		expect(service.currencyAccount).toBeFalsy();
+	}));
+
+	it('logout should reset currencyAccountLoading', fakeAsync(() => {
+		service.customer = mockUser;
+		tick();
+
+		service.logout();
+		tick();
+
+		expect(service.currencyAccountLoading).toBeFalse();
+	}));
+
 	it('customer$ should emit when customer changes', fakeAsync(() => {
 		let emittedCustomer: any = undefined;
 		service.customer$.pipe(take(2)).subscribe((customer) => {
@@ -187,6 +229,7 @@ describe('CustomerService', () => {
 		expect(transactionServiceSpy.deposit).toHaveBeenCalledWith(
 			1, 1, 1,
 			[{ creatorId: -1, amount: 500, text: '' }],
+			null,
 		);
 	}));
 
@@ -225,6 +268,7 @@ describe('CustomerService', () => {
 		expect(transactionServiceSpy.withDraw).toHaveBeenCalledWith(
 			1, 1, 1,
 			[{ creatorId: 99, amount: 500, text: 'Vybití peněz' }],
+			null,
 		);
 	}));
 

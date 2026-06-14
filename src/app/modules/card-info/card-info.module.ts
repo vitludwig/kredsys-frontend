@@ -12,6 +12,7 @@ import { LoginModule } from "../login/login.module";
 import { CardInfoConfigDialogComponent } from "./components/card-info-config-dialog/card-info-config-dialog.component";
 import { MatSelectModule } from "@angular/material/select";
 import { MatFormFieldModule } from "@angular/material/form-field";
+import {MatDivider} from "@angular/material/list";
 
 @NgModule({
 	declarations: [
@@ -33,6 +34,7 @@ import { MatFormFieldModule } from "@angular/material/form-field";
 		CardInfoConfigDialogComponent,
 		MatSelectModule,
 		MatFormFieldModule,
+		MatDivider,
 	]
 })
 export class CardInfoModule {

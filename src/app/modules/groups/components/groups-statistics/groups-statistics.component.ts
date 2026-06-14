@@ -14,6 +14,17 @@ import {CurrencyService} from "../../../admin/services/currency/currency.service
 import {AlertService} from "../../../../common/services/alert/alert.service";
 import {Utils} from "../../../../common/utils/Utils";
 
+// Match the app-wide font (see styles.scss) so all chart text is consistent.
+const CHART_FONT_FAMILY = "'Oswald', sans-serif";
+
+// Axis label colour from the app-wide theme token. The canvas can't read CSS vars,
+// so resolve --mat-toolbar-container-text-color (defined at :root) to a concrete value.
+function getAxisLabelColor(): string {
+	return getComputedStyle(document.documentElement)
+		.getPropertyValue('--mat-toolbar-container-text-color')
+		.trim() || 'white';
+}
+
 
 @Component({
 	selector: 'app-groups-statistics',
@@ -87,9 +98,11 @@ export class GroupsStatisticsComponent {
   		x: {
   			stacked: true,
   			ticks: {
-  				color: 'white',
+  				color: getAxisLabelColor(),
+  				// Group names on the X axis enlarged 100% (16px → 32px) for TV readability.
   				font: {
-  					size: 16
+  					family: CHART_FONT_FAMILY,
+  					size: 32
   				}
   			},
   		},
@@ -98,7 +111,10 @@ export class GroupsStatisticsComponent {
   			beginAtZero: true,
   			// max: 100,
   			ticks: {
-  				color: 'white',
+  				color: getAxisLabelColor(),
+  				font: {
+  					family: CHART_FONT_FAMILY
+  				},
   				callback: (value) => value + '%'
   			}
   		}
@@ -120,12 +136,23 @@ export class GroupsStatisticsComponent {
   			anchor: 'center',
   			align: 'center',
   			display: 'auto',
+  			// Percentage labels enlarged 200% (Chart.js default 12px → 36px) for TV readability.
+  			font: {
+  				family: CHART_FONT_FAMILY,
+  				size: 36
+  			},
   			formatter: (value, ctx) => {
   				if (!value) return '';
   				return Math.round(value) + '%';
   			}
   		},
   		tooltip: {
+  			titleFont: {
+  				family: CHART_FONT_FAMILY
+  			},
+  			bodyFont: {
+  				family: CHART_FONT_FAMILY
+  			},
   			callbacks: {
   				label: (context) => {
   					const label = context.dataset.label || '';

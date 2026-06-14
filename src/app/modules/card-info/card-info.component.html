@@ -14,20 +14,17 @@
 
     @if (!isLoading) {
       @if (userInfo) {
-        <h2 class="text-center">{{ userInfo.name }} (Členské id: {{ userInfo.memberId }})</h2>
-        <h2 class="text-center">Zůstatek:</h2>
+        <h3 class="text-center">{{ userInfo.name }} (Členské id: {{ userInfo.memberId }})</h3>
+        <h3 class="text-center">Zůstatek:</h3>
         <h1 class="very-big text-center" data-testid="card-info-balance">{{ userInfo.totalSum }} Kč</h1>
-        @if (userGroup$ | async; as group) {
-          @if (group) {
-            <h3 class="text-center d-flex align-items-center justify-content-center">Skupina: {{ group.name }}
-              <div
-                style="width: 20px; height: 20px; display: inline-block; margin-left: 10px"
-              [style.background-color]="group.color"></div>
-            </h3>
-          }
-        }
-        @if (cardInfoConfig.groupManagement && user?.groups?.[0] === undefined) {
-          <h4 class="text-center">Po zvolení nejde změnit skupina</h4>
+        <br />
+        @if (cardInfoConfig.groupManagement) {
+          <h4 class="text-center">
+            Vyber svou skupinu
+            @if (userGroup$ | async; as group) {
+              <div class="group-banner" [style.background-color]="group.color"></div>
+            }
+          </h4>
           <div class="d-flex align-items-center justify-content-center mt-3 flex-wrap gap-2 group-buttons">
             @for (group of allGroups$ | async; track group.id) {
               @if (group.id === user?.groups?.[0]) {
@@ -36,6 +33,11 @@
                 <button mat-stroked-button color="primary" (click)="confirmGroupChange(group.id)" style="height: 56px;" [attr.data-testid]="'card-info-group-' + group.id">{{ group.name }}
                 </button>
               }
+            }
+            @if (!user?.groups?.[0]) {
+              <button mat-flat-button color="primary" style="height: 56px;" data-testid="card-info-group-none">Žádná</button>
+            } @else {
+              <button mat-stroked-button color="primary" (click)="confirmGroupChange(null)" style="height: 56px;" data-testid="card-info-group-none">Žádná</button>
             }
           </div>
         }

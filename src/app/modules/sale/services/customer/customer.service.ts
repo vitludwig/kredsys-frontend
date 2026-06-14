@@ -37,6 +37,8 @@ export class CustomerService {
 	// True when the card used to load the customer is expired — blocks payment/deposit, withdraw stays allowed.
 	public cardExpired: boolean = false;
 
+	public currencyAccountLoading: boolean = false;
+
 	constructor(
 		protected orderService: OrderService,
 		protected transactionService: TransactionService,
@@ -125,6 +127,7 @@ export class CustomerService {
 		this.currencyAccount = null;
 		this.cardUid = null;
 		this.cardExpired = false;
+		this.currencyAccountLoading = false;
 	}
 
 	protected async loadCurrencyAccount(userId?: number): Promise<void> {
@@ -133,8 +136,13 @@ export class CustomerService {
 			return;
 		}
 
-		this.currencyAccount = (await this.usersService.getUserCurrencyAccounts(userId))[0];
-		this.orderService.balance = this.currencyAccount?.currentAmount ?? 0;
+		this.currencyAccountLoading = true;
+		try {
+			this.currencyAccount = (await this.usersService.getUserCurrencyAccounts(userId))[0];
+			this.orderService.balance = this.currencyAccount?.currentAmount ?? 0;
+		} finally {
+			this.currencyAccountLoading = false;
+		}
 	}
 
 	private transformUserName(name: string): string {

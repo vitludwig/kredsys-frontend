@@ -79,7 +79,7 @@
 
     &:hover {
       background-color: var(--mat-sys-surface-container-high);
-      box-shadow: inset 0px 0px 2em var(--mat-sys-primary);
+      border: 2px solid var(--mat-sys-primary);
     }
 
     &-icon {
@@ -117,7 +117,7 @@
 
     &-price {
       color: var(--mat-sys-primary);
-      font-size: 1.4em;
+      font-size: 2em;
       font-weight: 900;
       align-self: flex-end;
       padding-bottom: 0.25rem;

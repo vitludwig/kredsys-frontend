@@ -127,7 +127,7 @@ export class UserInfoComponent implements OnInit {
 			this.searchControl.setValue(user);
 			this.onUserSelected(user);
 		} catch {
-			this.alertService.error('Karta nenalezena');
+			this.alertService.error('Čip nenalezen');
 		}
 	}
 
@@ -172,7 +172,7 @@ export class UserInfoComponent implements OnInit {
 		if (cardsResult.status === 'fulfilled') {
 			this.cards = cardsResult.value.data;
 		} else {
-			this.alertService.error('Chyba při načítání karet');
+			this.alertService.error('Chyba při načítání čipů');
 		}
 
 		this.groups = groupResults

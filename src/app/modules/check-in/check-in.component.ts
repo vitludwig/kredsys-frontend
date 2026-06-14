@@ -176,13 +176,13 @@ export class CheckInComponent extends WithSubscriptionsComponent implements OnIn
 
   		if (e instanceof HttpErrorResponse) {
   			if (e.status === 409) {
-  				this.errors.push('Uživatel se zadaným členským id, e-mailem nebo kartou již existuje');
+  				this.errors.push('Uživatel se zadaným členským id, e-mailem nebo čipem již existuje');
   				return;
   			}
   			if (e.status === 500) {
-  				msg = 'Neznámá chyba, změň ID/e-mail/kartu a zkus to znovu';
+  				msg = 'Neznámá chyba, změň ID/e-mail/čip a zkus to znovu';
   				if (e.error.includes('IX_UserCards_Uid')) {
-  					msg = 'Tahle karta je už k někomu přiřazená';
+  					msg = 'Tenhle čip je už k někomu přiřazený';
   				}
   			}
   		}

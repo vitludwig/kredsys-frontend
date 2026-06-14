@@ -168,7 +168,7 @@ export class UserDetailComponent implements OnInit {
 				this.cards.push(result);
 			} catch(e) {
 				if(e instanceof HttpErrorResponse) {
-					this.alertService.error(e.error.Message ?? 'Chyba při přidávání karty');
+					this.alertService.error(e.error.Message ?? 'Chyba při přidávání čipu');
 				}
 			}
 		});
@@ -190,7 +190,7 @@ export class UserDetailComponent implements OnInit {
 			this.newCards = this.cards;
 		} catch(e) {
 			if(e instanceof HttpErrorResponse) {
-				this.alertService.error(e.error.Message ?? 'Nepodarilo se odstranit kartu');
+				this.alertService.error(e.error.Message ?? 'Nepodarilo se odstranit čip');
 			}
 		}
 	}

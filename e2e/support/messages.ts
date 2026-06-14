@@ -1,6 +1,6 @@
 export const MSG = {
 	cardLoader: {
-		scanCard: 'Načtěte kartu',
+		scanCard: 'Načtěte čip',
 	},
 	buttons: {
 		save: 'Uložit',

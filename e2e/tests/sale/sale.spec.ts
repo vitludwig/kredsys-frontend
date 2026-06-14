@@ -88,7 +88,7 @@ test.describe('Sale — POS dashboard', () => {
 		await paymentResp;
 		// Customer is unloaded after submit → sale-summary-total disappears
 		// and the card-scan prompt comes back.
-		await expect(asWorker.getByText('Načtěte kartu', { exact: true })).toBeVisible();
+		await expect(asWorker.getByText('Načtěte čip', { exact: true })).toBeVisible();
 	});
 });
 
@@ -166,6 +166,6 @@ test.describe('Sale — customer reset', () => {
 		await submitOrder(asWorker);
 		// CustomerService.set(null) is called after submit; the card-loader
 		// prompt should reappear.
-		await expect(asWorker.getByText('Načtěte kartu', { exact: true })).toBeVisible();
+		await expect(asWorker.getByText('Načtěte čip', { exact: true })).toBeVisible();
 	});
 });

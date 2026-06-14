@@ -69,6 +69,10 @@
           </span>
         </button>
       </div>
+    } @else if(customerService.currencyAccountLoading) {
+      <div class="d-flex justify-content-center align-items-center h-100 text-center">
+        <mat-spinner diameter="48"></mat-spinner>
+      </div>
     } @else {
       <div class="d-flex justify-content-center align-items-center h-100 text-center">
         <h3>Uživatel ještě neprovedl první nabití</h3>

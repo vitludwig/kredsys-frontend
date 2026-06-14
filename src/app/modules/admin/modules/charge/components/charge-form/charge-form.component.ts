@@ -63,7 +63,7 @@ export class ChargeFormComponent implements OnInit {
   	} catch (e) {
   		console.error(e);
   		this.cardId = null;
-  		this.alertService.error('Uživatel s touto kartou je blokovaný nebo karta neexistuje');
+  		this.alertService.error('Uživatel s tímto čipem je blokovaný nebo čip neexistuje');
   	}
   }
 

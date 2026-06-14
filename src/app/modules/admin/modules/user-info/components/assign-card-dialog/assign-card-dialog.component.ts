@@ -33,10 +33,10 @@ export class AssignCardDialogComponent {
 		this.inProgress = true;
 		try {
 			await this.usersService.addUserCard(this.data.userId, cardUid, '', EUserCardType.CARD, this.data.expirationDate);
-			this.alertService.success('Karta přiřazena');
+			this.alertService.success('Čip přiřazen');
 			this.dialogRef.close(true);
 		} catch {
-			this.alertService.error('Chyba při přiřazení karty — karta může být již přiřazena jinému uživateli');
+			this.alertService.error('Chyba při přiřazení čipu — čip může být již přiřazen jinému uživateli');
 		} finally {
 			this.inProgress = false;
 		}

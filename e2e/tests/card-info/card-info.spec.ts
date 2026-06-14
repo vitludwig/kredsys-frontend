@@ -33,7 +33,7 @@ test.describe('Card-info — public flow', () => {
 		// Public page does NOT require authentication; we use plain `page`.
 		await page.goto('/public/card-info');
 		// CardLoader is presented for the user to scan.
-		await expect(page.getByText('Načtěte kartu')).toBeVisible();
+		await expect(page.getByText('Načtěte čip')).toBeVisible();
 	});
 });
 
@@ -57,6 +57,6 @@ test.describe('Card-info — empty / unknown', () => {
 		// CardLoader on card-info is configured with showNewCardButton=false,
 		// so the new-card button isn't shown. Instead just navigate fresh and
 		// verify the page renders the prompt.
-		await expect(asPowerSalesman.getByText('Načtěte kartu')).toBeVisible();
+		await expect(asPowerSalesman.getByText('Načtěte čip')).toBeVisible();
 	});
 });

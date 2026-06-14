@@ -1,22 +1,22 @@
 <div class="uid__section">
   <div class="uid__section-header">
-    <h3>Karty</h3>
-    <span [matTooltip]="'Nejdřív zablokuj stávající kartu s expirací.'" [matTooltipDisabled]="canAddCard">
+    <h3>Čipy</h3>
+    <span [matTooltip]="'Nejdřív zablokuj stávající čip s expirací.'" [matTooltipDisabled]="canAddCard">
       <button mat-raised-button (click)="onAssignCard()" [disabled]="!canAddCard" data-testid="user-card-add">
         <mat-icon>add</mat-icon>
-        Přiřadit kartu
+        Přiřadit čip
       </button>
     </span>
   </div>
   @if (cards().length === 0) {
-    <p class="uid__empty">Žádné karty</p>
+    <p class="uid__empty">Žádné čipy</p>
   }
   @for (card of cards(); track card.id) {
     <div class="uid__card-row" [attr.data-testid]="'user-card-row-' + card.id">
       <span class="uid__card-uid">...{{ last4(card.uid) }}</span>
       <span class="uid__card-status">
         @if (card.blocked) {
-          <span class="uid__badge--blocked">Zablokována</span>
+          <span class="uid__badge--blocked">Zablokován</span>
         } @else {
           <span class="uid__badge--active">Aktivní</span>
         }
@@ -39,7 +39,7 @@
       } @else {
         <button mat-button (click)="onBlockCard(card)" [attr.data-testid]="'user-card-block-' + card.id">Zablokovat</button>
       }
-      <button mat-icon-button (click)="onDeleteCard(card)" aria-label="Smazat kartu" matTooltip="Smazat kartu"
+      <button mat-icon-button (click)="onDeleteCard(card)" aria-label="Smazat čip" matTooltip="Smazat čip"
               [attr.data-testid]="'user-card-delete-' + card.id">
         <mat-icon>delete</mat-icon>
       </button>

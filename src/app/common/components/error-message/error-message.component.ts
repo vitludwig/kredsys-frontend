@@ -17,7 +17,7 @@ export class ErrorMessageComponent {
 			email: 'E-mail musí být ve formátu \'neco@neco.neco\'',
 			minlength: 'Nesplněn minimální počet znaků',
 			matching: 'Hesla se neshodují',
-			conflict: 'Uživatel se zadaným členským id nebo e-mailem nebo kartou již existuje',
+			conflict: 'Uživatel se zadaným členským id nebo e-mailem nebo čipem již existuje',
 			...value,
 		}
 	}});

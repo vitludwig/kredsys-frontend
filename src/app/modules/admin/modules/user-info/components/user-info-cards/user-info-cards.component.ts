@@ -86,44 +86,44 @@ export class UserInfoCardsComponent {
 
 	public async onBlockCard(card: ICard): Promise<void> {
 		const ref = this.dialog.open(ConfirmDialogComponent, {
-			data: { title: 'Zablokovat kartu', text: 'Opravdu zablokovat kartu?' },
+			data: { title: 'Zablokovat čip', text: 'Opravdu zablokovat čip?' },
 		});
 		const confirmed = await firstValueFrom(ref.afterClosed());
 		if (!confirmed) return;
 		try {
 			await this.usersService.blockUserCard(card.id!);
-			this.alertService.success('Karta zablokována');
+			this.alertService.success('Čip zablokován');
 			this.refresh.emit();
 		} catch {
-			this.alertService.error('Chyba při blokování karty');
+			this.alertService.error('Chyba při blokování čipu');
 		}
 	}
 
 	public async onUnblockCard(card: ICard): Promise<void> {
 		try {
 			await this.usersService.unblockUserCard(card.id!);
-			this.alertService.success('Karta odblokována');
+			this.alertService.success('Čip odblokován');
 			this.refresh.emit();
 		} catch {
-			this.alertService.error('Chyba při odblokování karty');
+			this.alertService.error('Chyba při odblokování čipu');
 		}
 	}
 
 	public async onDeleteCard(card: ICard): Promise<void> {
 		const ref = this.dialog.open(ConfirmDialogComponent, {
-			data: { title: 'Smazat kartu', text: 'Opravdu smazat kartu? Tuto akci nelze vrátit.' },
+			data: { title: 'Smazat čip', text: 'Opravdu smazat čip? Tuto akci nelze vrátit.' },
 		});
 		const confirmed = await firstValueFrom(ref.afterClosed());
 		if (!confirmed) return;
 		try {
 			await this.usersService.deleteUserCard(card.id!);
-			this.alertService.success('Karta smazána');
+			this.alertService.success('Čip smazán');
 			this.refresh.emit();
 		} catch (e) {
 			if (e instanceof HttpErrorResponse && e.status === 400) {
-				this.alertService.error('Kartu nelze smazat — je použita v transakcích');
+				this.alertService.error('Čip nelze smazat — je použit v transakcích');
 			} else {
-				this.alertService.error('Chyba při mazání karty');
+				this.alertService.error('Chyba při mazání čipu');
 			}
 		}
 	}

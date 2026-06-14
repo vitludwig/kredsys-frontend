@@ -130,7 +130,7 @@
       <mat-icon>clear</mat-icon> Reset
     </button>
     <mat-checkbox [ngModel]="showCardId()" (ngModelChange)="showCardId.set($event)">
-      Zobrazit ID karty
+      Zobrazit ID čipu
     </mat-checkbox>
   </div>
 
@@ -163,7 +163,7 @@
         </span>
         @if (showCardId()) {
           <span class="uid__tx-card">
-            @if (tx.cardUid != null) { Karta #{{ tx.cardUid }} } @else { bez karty }
+            @if (tx.cardUid != null) { Čip #{{ tx.cardUid }} } @else { bez čipu }
           </span>
         }
         <span class="uid__tx-note">
