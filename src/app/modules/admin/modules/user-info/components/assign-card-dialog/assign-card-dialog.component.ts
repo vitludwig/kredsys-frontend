@@ -22,7 +22,7 @@ import { EUserCardType } from '../../../../../../common/types/ICard';
 })
 export class AssignCardDialogComponent {
 	private dialogRef = inject(MatDialogRef<AssignCardDialogComponent>);
-	private data: { userId: number } = inject(MAT_DIALOG_DATA);
+	private data: { userId: number; expirationDate: string | null } = inject(MAT_DIALOG_DATA);
 	private usersService = inject(UsersService);
 	private alertService = inject(AlertService);
 
@@ -32,7 +32,7 @@ export class AssignCardDialogComponent {
 		if (this.inProgress) return;
 		this.inProgress = true;
 		try {
-			await this.usersService.addUserCard(this.data.userId, cardUid, '', EUserCardType.CARD);
+			await this.usersService.addUserCard(this.data.userId, cardUid, '', EUserCardType.CARD, this.data.expirationDate);
 			this.alertService.success('Karta přiřazena');
 			this.dialogRef.close(true);
 		} catch {
