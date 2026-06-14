@@ -59,3 +59,8 @@
   font-size: 0.75rem;
   font-weight: 500;
 }
+
+.uid__card-expiration--expired {
+  color: var(--mat-sys-error, #b00020);
+  font-weight: 600;
+}

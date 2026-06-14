@@ -1,7 +1,9 @@
 <div class="uid__section">
   <div class="uid__section-header">
     <h3>Karty</h3>
-    <button mat-raised-button (click)="onAssignCard()">
+    <button mat-raised-button (click)="onAssignCard()" [disabled]="!canAddCard"
+            [matTooltip]="canAddCard ? '' : 'Nejdřív zablokuj stávající kartu s expirací.'"
+            [matTooltipDisabled]="canAddCard">
       <mat-icon>add</mat-icon>
       Přiřadit kartu
     </button>
@@ -19,7 +21,23 @@
           <span class="uid__badge--active">Aktivní</span>
         }
       </span>
-      <button mat-icon-button (click)="onToggleCardBlocked(card)" aria-label="Odebrat kartu">
+      <span class="uid__card-expiration" [class.uid__card-expiration--expired]="isExpired(card)">
+        @if (card.expirationDate) {
+          {{ card.expirationDate | date:'dd.MM.yyyy HH:mm' }}
+          @if (isExpired(card)) { <span>(vypršela)</span> }
+        } @else {
+          bez expirace
+        }
+      </span>
+      <button mat-icon-button (click)="onEditExpiration(card)" aria-label="Změnit expiraci" matTooltip="Změnit expiraci">
+        <mat-icon>edit_calendar</mat-icon>
+      </button>
+      @if (card.blocked) {
+        <button mat-button (click)="onUnblockCard(card)">Odblokovat</button>
+      } @else {
+        <button mat-button (click)="onBlockCard(card)">Zablokovat</button>
+      }
+      <button mat-icon-button (click)="onDeleteCard(card)" aria-label="Smazat kartu" matTooltip="Smazat kartu">
         <mat-icon>delete</mat-icon>
       </button>
     </div>
