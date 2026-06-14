@@ -1,3 +1,12 @@
+<button
+  mat-icon-button
+  class="gs-anim-toggle"
+  data-testid="group-anim-toggle"
+  [matTooltip]="animationsEnabled() ? 'Vypnout konfety' : 'Zapnout konfety'"
+  (click)="toggleAnimations()">
+  <mat-icon>{{ animationsEnabled() ? 'celebration' : 'block' }}</mat-icon>
+</button>
+
 @if (chartData.datasets.length) {
   <div class="chart-container">
     <canvas baseChart [data]="chartData" [options]="chartOptions" [plugins]="chartPlugins" [type]="'bar'">
@@ -8,3 +17,11 @@
     <p>Žádné statistiky</p>
   </div>
 }
+
+@if (banner(); as b) {
+  <div class="gs-points-banner" [style.--banner-color]="b.color" data-testid="group-points-banner">
+    🎉 {{ b.text }} 🎉
+  </div>
+}
+
+<div #confettiLayer class="gs-confetti-layer" aria-hidden="true"></div>
