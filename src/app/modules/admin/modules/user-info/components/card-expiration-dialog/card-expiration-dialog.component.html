@@ -1,0 +1,16 @@
+<h2 mat-dialog-title>Expirace karty</h2>
+
+<div mat-dialog-content style="display:flex;flex-direction:column;gap:12px;padding-top:8px">
+  <label style="display:flex;flex-direction:column;gap:4px">
+    Platnost do
+    <input type="datetime-local" [(ngModel)]="value" data-testid="expiration-input">
+  </label>
+</div>
+
+<div mat-dialog-actions style="display:flex;justify-content:space-between;gap:8px">
+  <button mat-button (click)="onClear()">Vymazat expiraci</button>
+  <span style="display:flex;gap:8px">
+    <button mat-button (click)="onCancel()">Zrušit</button>
+    <button mat-raised-button color="primary" (click)="onSave()" data-testid="expiration-save">Uložit</button>
+  </span>
+</div>
