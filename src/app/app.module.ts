@@ -13,6 +13,7 @@ import {MatPaginatorIntl} from '@angular/material/paginator';
 import {CustomPaginatorConfiguration} from './common/providers/CustomPaginatorConfiguration';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import {authInterceptor} from './common/interceptors/auth/auth.interceptor';
+import {utcDateInterceptor} from './common/interceptors/utc-date/utc-date.interceptor';
 import {MatIconModule} from "@angular/material/icon";
 import {WebBluetoothModule} from "@manekinekko/angular-web-bluetooth";
 import {MAT_DATE_LOCALE} from '@angular/material/core';
@@ -43,7 +44,7 @@ registerLocaleData(localeCs);
 		{provide: MatPaginatorIntl, useValue: CustomPaginatorConfiguration()},
 		{provide: LOCALE_ID, useValue: 'cs-CZ'},
 		{provide: MAT_DATE_LOCALE, useValue: 'cs-CZ'},
-		provideHttpClient(withInterceptors([authInterceptor])),
+		provideHttpClient(withInterceptors([authInterceptor, utcDateInterceptor])),
 	],
 	bootstrap: [AppComponent],
 })

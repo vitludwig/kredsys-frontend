@@ -123,11 +123,23 @@ export class TransactionsListComponent implements OnInit, AfterViewInit, OnDestr
 		const filterBy: { [key: string]: any } = {
 			usersFilter: this.#filterByRecord.userId ? [this.#filterByRecord.userId] : [],
 			placesFilter: this.#filterByRecord.placeId ? [this.#filterByRecord.placeId] : [],
-			fromDate: this.statsDataFrom,
-			toDate: this.statsDataTo,
+			// The datetime-local inputs are local wall-clock; convert to UTC so they line
+			// up with the UTC timestamps the backend stores (matches user-info filter).
+			fromDate: this.toUtcIso(this.statsDataFrom),
+			toDate: this.toUtcIso(this.statsDataTo),
 		};
 		// const filterBy = `${this.filterBy}, created >= ${this.statsDataFrom}, created <= ${this.statsDataTo}`; // TODO: new paging
 		this.statistics = await this.transactionService.getStatistics(currency.id!, filterBy);
+	}
+
+	// Converts a `datetime-local` value (local wall-clock, no zone) to a UTC ISO string;
+	// empty/invalid input yields '' so no date bound is applied.
+	private toUtcIso(localDateTime: string): string {
+		if (!localDateTime) {
+			return '';
+		}
+		const parsed = new Date(localDateTime);
+		return isNaN(parsed.getTime()) ? '' : parsed.toISOString();
 	}
 
 	public async filterStatsData(reset: boolean = false): Promise<void> {
