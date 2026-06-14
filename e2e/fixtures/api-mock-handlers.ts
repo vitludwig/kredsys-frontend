@@ -602,16 +602,20 @@ on('PUT', /^transactions\/(\d+)\/cancellation$/, ({ match, state }) => {
 });
 
 // STATISTICS
-// Consumer expects ITransactionStatistics: { currencyId, sumGoods, sumPrice, sumTransactions, goods[] }
+// Consumer expects ITransactionStatistics: { currencyId, sumGoods, sumPrice, sumDeposit, sumWithdraw, sumTransactions, goods[] }
 on('GET', /^statistics\/(\d+)\/goods$/, ({ match, state }) => {
 	const currencyId = Number(match[1]);
 	const txs = state.transactions.filter(t => t.currencyId === currencyId);
 	const sumPrice = txs.reduce((s, t) => s + Math.max(0, -t.amount), 0);
+	const sumDeposit = txs.filter(t => (t as any).type === 'Deposit').reduce((s, t) => s + Math.abs(t.amount), 0);
+	const sumWithdraw = txs.filter(t => (t as any).type === 'Withdraw').reduce((s, t) => s + Math.abs(t.amount), 0);
 	return {
 		body: {
 			currencyId,
 			sumGoods: 0,
 			sumPrice,
+			sumDeposit,
+			sumWithdraw,
 			sumTransactions: txs.length,
 			goods: [],
 		},

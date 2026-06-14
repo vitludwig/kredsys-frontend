@@ -23,6 +23,10 @@ export class StatisticsTableComponent implements OnInit, AfterViewInit {
 	public dataSource: MatTableDataSource<ITransactionStatisticsGoods>;
 	public dataTotal: number = 0;
 
+	// When true, the summary also shows deposit/withdraw totals (place tab only).
+	@Input()
+	public showCashFlow: boolean = false;
+
 	private _data: ITransactionStatistics;
 
 	public get data(): ITransactionStatistics {

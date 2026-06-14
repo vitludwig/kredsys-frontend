@@ -2,6 +2,8 @@ export interface ITransactionStatistics {
 	currencyId: number;
 	sumGoods: number;
 	sumPrice: number;
+	sumDeposit: number;
+	sumWithdraw: number;
 	sumTransactions: number;
 	goods: ITransactionStatisticsGoods[];
 }

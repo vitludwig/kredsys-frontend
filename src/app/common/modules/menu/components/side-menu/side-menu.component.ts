@@ -25,6 +25,7 @@ export class SideMenuComponent implements OnInit, OnDestroy {
 
   @ViewChild('printerManualDialog', { static: true }) printerManualDialog: TemplateRef<any>;
 
+  protected bottomMoreMenuOpened: boolean = false;
   protected adminMenuOpened: boolean = false;
   protected groupsMenuOpened: boolean = false;
   protected userRoles: EUserRole[] = [];

@@ -49,6 +49,10 @@ export class TransactionsListComponent implements OnInit, AfterViewInit, OnDestr
 
 	protected readonly ETransactionType = ETransactionType;
 
+	// Forwarded to the statistics summary — shows deposit/withdraw totals (place tab only).
+	@Input()
+	public showCashFlow: boolean = false;
+
 	private unsubscribe: Subject<void> = new Subject<void>();
 
 	#filterBy: string;

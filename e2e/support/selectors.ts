@@ -117,6 +117,8 @@ export const SEL = {
 		storno: 'tx-row-storno-btn',
 		filterFrom: 'tx-filter-from',
 		filterTo: 'tx-filter-to',
+		sumDeposit: 'stats-sum-deposit',
+		sumWithdraw: 'stats-sum-withdraw',
 	},
 	row: {
 		user: (id: number) => `row-user-${id}`,

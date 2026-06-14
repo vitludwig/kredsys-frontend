@@ -15,7 +15,7 @@
       <mat-list-item (click)="adminMenuOpened = !adminMenuOpened"
         class="expandable"
         data-testid="nav-admin-toggle"
-        >
+      >
         <mat-icon matListItemIcon> {{ adminMenuOpened ? 'expand_more' : 'chevron_right' }}</mat-icon>
         <div matListItemTitle>Admin</div>
       </mat-list-item>
@@ -162,61 +162,60 @@
       </a>
     }
 
-    @if (authService.isLogged) {
-      <a (click)="authService.logout()"
-        href="#"
-        mat-list-item
-        data-testid="nav-logout"
-        >
-        Odhlásit
-      </a>
-    }
-
     <div class="bottom-menu">
-      @if((EFeatureFlag.PRINTER | isFeatureAllowed) && EUserRole.ADMIN | isIncluded : userRoles) {
-        @if(printService.isConnected()) {
-          <mat-list-item>
-            <mat-icon matListItemIcon>print_disabled</mat-icon>
-            <button mat-button
-              (click)="printService.disconnect()"
-              >
-              Odpojit tiskárnu
-            </button>
-          </mat-list-item>
-          <mat-list-item>
-            <mat-icon matListItemIcon>print</mat-icon>
-            <button mat-button
-              (click)="printService.testPrint()"
-              >
-              Test tisk
-            </button>
-          </mat-list-item>
-        } @else {
-          <mat-list-item>
-            <mat-icon matListItemIcon>print_add</mat-icon>
-            <button mat-button
-              (click)="printService.connect()"
-              >
-              Připojit tiskárnu
-            </button>
-          </mat-list-item>
-
-          <mat-list-item>
-            <mat-icon matListItemIcon>help</mat-icon>
-            <button mat-button
-              (click)="openPrinterManualDialog()"
-              >
-              Nastavení tiskárny
-            </button>
-          </mat-list-item>
-        }
-      }
-
-      <mat-list-item>
-        <mat-icon matListItemIcon>bug_report</mat-icon>
-        <mat-slide-toggle (ngModelChange)="reloadPage()" [(ngModel)]="authService.isDebug" data-testid="nav-debug-toggle">Debug</mat-slide-toggle>
+      <mat-list-item (click)="bottomMoreMenuOpened = !bottomMoreMenuOpened"
+        class="expandable"
+      >
+        <mat-icon matListItemIcon> {{ bottomMoreMenuOpened ? 'expand_more' : 'chevron_right' }}</mat-icon>
+        <div matListItemTitle>Další</div>
       </mat-list-item>
+      @if (bottomMoreMenuOpened) {
+        <div class="sub-menu">
+          @if((EFeatureFlag.PRINTER | isFeatureAllowed) && EUserRole.ADMIN | isIncluded : userRoles) {
+            @if(printService.isConnected()) {
+              <mat-list-item>
+                <mat-icon matListItemIcon>print_disabled</mat-icon>
+                <button mat-button
+                  (click)="printService.disconnect()"
+                  >
+                  Odpojit tiskárnu
+                </button>
+              </mat-list-item>
+              <mat-list-item>
+                <mat-icon matListItemIcon>print</mat-icon>
+                <button mat-button
+                  (click)="printService.testPrint()"
+                  >
+                  Test tisk
+                </button>
+              </mat-list-item>
+            } @else {
+              <mat-list-item>
+                <mat-icon matListItemIcon>print_add</mat-icon>
+                <button mat-button
+                  (click)="printService.connect()"
+                  >
+                  Připojit tiskárnu
+                </button>
+              </mat-list-item>
 
+              <mat-list-item>
+                <mat-icon matListItemIcon>help</mat-icon>
+                <button mat-button
+                  (click)="openPrinterManualDialog()"
+                  >
+                  Nastavení tiskárny
+                </button>
+              </mat-list-item>
+            }
+          }
+
+          <mat-list-item>
+            <mat-icon matListItemIcon>bug_report</mat-icon>
+            <mat-slide-toggle (ngModelChange)="reloadPage()" [(ngModel)]="authService.isDebug" data-testid="nav-debug-toggle">Debug</mat-slide-toggle>
+          </mat-list-item>
+        </div>
+      }
       <mat-list-item>
         <mat-icon matListItemIcon>person</mat-icon>
         @if (user) {
@@ -224,6 +223,16 @@
           matListItemTitle>{{ user.name }} ({{ user.roles[0] }})</span>
         }
       </mat-list-item>
+
+      @if (authService.isLogged) {
+        <a (click)="authService.logout()"
+           href="#"
+           mat-list-item
+           data-testid="nav-logout"
+        >
+          Odhlásit
+        </a>
+      }
     </div>
   </mat-nav-list>
 </div>

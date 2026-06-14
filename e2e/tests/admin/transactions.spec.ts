@@ -1,7 +1,7 @@
 import { test, expect } from '../../support/personas';
 import { SEL } from '../../support/selectors';
-import { place1 } from '../../fixtures/data/places';
-import { transactions } from '../../fixtures/data/transactions';
+import { place1 } from '../../fixtures/data';
+import { transactions } from '../../fixtures/data';
 
 test.describe('Admin / transactions', () => {
 	test('place tab loads place transactions when a place is selected', async ({
@@ -45,6 +45,14 @@ test.describe('Admin / transactions', () => {
 	}) => {
 		await asAdmin.goto(`/admin/transactions/${place1.id}`);
 		await expect(asAdmin.locator('[data-testid^="tx-row-"]').first()).toBeVisible();
+	});
+
+	test('place tab statistics show deposit and withdraw totals', async ({ asAdmin }) => {
+		await asAdmin.goto(`/admin/transactions/${place1.id}`);
+		await expect(asAdmin.getByTestId(SEL.tx.sumDeposit)).toBeVisible();
+		await expect(asAdmin.getByTestId(SEL.tx.sumDeposit)).toContainText('Celkem vloženo');
+		await expect(asAdmin.getByTestId(SEL.tx.sumWithdraw)).toBeVisible();
+		await expect(asAdmin.getByTestId(SEL.tx.sumWithdraw)).toContainText('Celkem vybráno');
 	});
 
 	test('storno button visible on a payment row', async ({ asAdmin }) => {

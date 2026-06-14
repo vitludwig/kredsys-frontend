@@ -62,4 +62,16 @@
 		<label>Celkem prodáno: </label>
 		{{ data.sumPrice }} Kč
 	</div>
+
+	@if (showCashFlow) {
+		<div data-testid="stats-sum-deposit">
+			<label>Celkem vloženo: </label>
+			{{ data.sumDeposit }} Kč
+		</div>
+
+		<div data-testid="stats-sum-withdraw">
+			<label>Celkem vybráno: </label>
+			{{ data.sumWithdraw }} Kč
+		</div>
+	}
 </div>
