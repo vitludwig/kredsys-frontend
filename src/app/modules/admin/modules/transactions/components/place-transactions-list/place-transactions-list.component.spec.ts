@@ -19,15 +19,15 @@ describe('PlaceTransactionsListComponent', () => {
 		clearAllCaches();
 
 		await TestBed.configureTestingModule({
-    declarations: [PlaceTransactionsListComponent],
-    schemas: [NO_ERRORS_SCHEMA],
-    imports: [MatSnackBarModule, MatDialogModule],
-    providers: [{ provide: AuthService, useValue: { isLogged$: new BehaviorSubject(false), isLogged: false, user: null, isDebug: false } },
-        {
-            provide: ActivatedRoute,
-            useValue: { snapshot: { paramMap: { get: () => '1' } }, params: of({}) },
-        }, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting(),]
-}).compileComponents();
+			declarations: [PlaceTransactionsListComponent],
+			schemas: [NO_ERRORS_SCHEMA],
+			imports: [MatSnackBarModule, MatDialogModule],
+			providers: [{ provide: AuthService, useValue: { isLogged$: new BehaviorSubject(false), isLogged: false, user: null, isDebug: false } },
+				{
+					provide: ActivatedRoute,
+					useValue: { snapshot: { paramMap: { get: () => '1' } }, params: of({}) },
+				}, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting(),]
+		}).compileComponents();
 
 		fixture = TestBed.createComponent(PlaceTransactionsListComponent);
 		component = fixture.componentInstance;

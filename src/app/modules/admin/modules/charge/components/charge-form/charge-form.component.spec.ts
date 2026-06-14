@@ -15,11 +15,11 @@ describe('ChargeFormComponent', () => {
 		clearAllCaches();
 
 		await TestBed.configureTestingModule({
-    declarations: [ChargeFormComponent],
-    schemas: [NO_ERRORS_SCHEMA],
-    imports: [MatSnackBarModule, MatDialogModule],
-    providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
-}).compileComponents();
+			declarations: [ChargeFormComponent],
+			schemas: [NO_ERRORS_SCHEMA],
+			imports: [MatSnackBarModule, MatDialogModule],
+			providers: [provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+		}).compileComponents();
 
 		fixture = TestBed.createComponent(ChargeFormComponent);
 		component = fixture.componentInstance;

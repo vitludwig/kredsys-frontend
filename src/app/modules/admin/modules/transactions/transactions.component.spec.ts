@@ -17,11 +17,11 @@ describe('TransactionsComponent', () => {
 		clearAllCaches();
 
 		await TestBed.configureTestingModule({
-    declarations: [TransactionsComponent],
-    schemas: [NO_ERRORS_SCHEMA],
-    imports: [MatSnackBarModule, MatDialogModule],
-    providers: [{ provide: AuthService, useValue: { isLogged$: new BehaviorSubject(false), isLogged: false, user: { id: 1, roles: ['Admin'] }, isDebug: false } }, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
-}).compileComponents();
+			declarations: [TransactionsComponent],
+			schemas: [NO_ERRORS_SCHEMA],
+			imports: [MatSnackBarModule, MatDialogModule],
+			providers: [{ provide: AuthService, useValue: { isLogged$: new BehaviorSubject(false), isLogged: false, user: { id: 1, roles: ['Admin'] }, isDebug: false } }, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
+		}).compileComponents();
 
 		fixture = TestBed.createComponent(TransactionsComponent);
 		component = fixture.componentInstance;

@@ -19,13 +19,13 @@ describe('CardDetailComponent', () => {
 		clearAllCaches();
 
 		await TestBed.configureTestingModule({
-    declarations: [CardDetailComponent],
-    schemas: [NO_ERRORS_SCHEMA],
-    imports: [MatSnackBarModule, MatDialogModule, FormsModule],
-    providers: [{ provide: AuthService, useValue: { isLogged$: new BehaviorSubject(false), isLogged: false, user: null, isDebug: false } },
-        { provide: MatDialogRef, useValue: {} },
-        { provide: MAT_DIALOG_DATA, useValue: { uid: 0, description: '', type: 'Card' } }, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting(),]
-}).compileComponents();
+			declarations: [CardDetailComponent],
+			schemas: [NO_ERRORS_SCHEMA],
+			imports: [MatSnackBarModule, MatDialogModule, FormsModule],
+			providers: [{ provide: AuthService, useValue: { isLogged$: new BehaviorSubject(false), isLogged: false, user: null, isDebug: false } },
+				{ provide: MatDialogRef, useValue: {} },
+				{ provide: MAT_DIALOG_DATA, useValue: { uid: 0, description: '', type: 'Card' } }, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting(),]
+		}).compileComponents();
 
 		fixture = TestBed.createComponent(CardDetailComponent);
 		component = fixture.componentInstance;

@@ -53,20 +53,20 @@ export class TransactionService {
 	}
 
   @cache(ETime.MINUTE * 2, [ECacheTag.TRANSACTIONS])
-  public getExcelStatistics(currencyId: number): Promise<Blob> {
-    return firstValueFrom(this.http.get<Blob>(this.configService.config.apiUrl + 'statistics/' + currencyId + '/statistics-all-download', {responseType: 'blob' as 'json'}));
-  }
+	public getExcelStatistics(currencyId: number): Promise<Blob> {
+		return firstValueFrom(this.http.get<Blob>(this.configService.config.apiUrl + 'statistics/' + currencyId + '/statistics-all-download', {responseType: 'blob' as 'json'}));
+	}
 
 	@invalidateCache([ECacheTag.TRANSACTIONS, ECacheTag.TRANSACTION])
-	public pay(userId: number, placeId: number, records: ITransactionRecordPayment[], cardUid: number | null = null, info: string = ''): Promise<ITransactionResponse> {
-		return firstValueFrom(this.http.post<ITransactionResponse>(this.configService.config.apiUrl + 'transactions/payment', {
-			info: info,
-			userId: userId,
-			placeId: placeId,
-			records: records,
-			cardUid: cardUid ?? null,
-		}));
-	}
+  public pay(userId: number, placeId: number, records: ITransactionRecordPayment[], cardUid: number | null = null, info: string = ''): Promise<ITransactionResponse> {
+  	return firstValueFrom(this.http.post<ITransactionResponse>(this.configService.config.apiUrl + 'transactions/payment', {
+  		info: info,
+  		userId: userId,
+  		placeId: placeId,
+  		records: records,
+  		cardUid: cardUid ?? null,
+  	}));
+  }
 
 	@invalidateCache([ECacheTag.TRANSACTIONS, ECacheTag.TRANSACTION])
 	public deposit(userId: number, placeId: number, currencyId: number, records: ITransactionRecordDeposit[], cardUid: number | null = null): Promise<ITransactionResponse> {

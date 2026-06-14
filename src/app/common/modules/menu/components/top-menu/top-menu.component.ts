@@ -16,10 +16,10 @@ import {
 } from "../../../../../modules/sale/components/discharge-dialog/discharge-dialog.component";
 
 @Component({
-    selector: 'app-top-menu',
-    templateUrl: './top-menu.component.html',
-    styleUrls: ['./top-menu.component.scss'],
-    standalone: false
+	selector: 'app-top-menu',
+	templateUrl: './top-menu.component.html',
+	styleUrls: ['./top-menu.component.scss'],
+	standalone: false
 })
 export class TopMenuComponent implements OnInit, OnDestroy {
 	protected router: Router = inject(Router);
@@ -80,14 +80,14 @@ export class TopMenuComponent implements OnInit, OnDestroy {
 	protected openDischargeDialog(): void {
 		const dialogRef = this.dialog.open<DischargeDialogComponent, { user: Observable<IUser | null>; currencyAccount: ICurrencyAccount }>(
 			DischargeDialogComponent, {
-			width: '350px',
-			minWidth: '250px',
-			autoFocus: 'dialog',
-			data: {
-				user: this.customerService.customer$,
-				currencyAccount: this.customerService.currencyAccount!,
-			},
-		});
+				width: '350px',
+				minWidth: '250px',
+				autoFocus: 'dialog',
+				data: {
+					user: this.customerService.customer$,
+					currencyAccount: this.customerService.currencyAccount!,
+				},
+			});
 
 		dialogRef.afterClosed()
 			.pipe(takeUntil(this.unsubscribe$))

@@ -17,18 +17,18 @@ describe('CurrencyDetailComponent', () => {
 		clearAllCaches();
 
 		await TestBed.configureTestingModule({
-    declarations: [CurrencyDetailComponent],
-    schemas: [NO_ERRORS_SCHEMA],
-    imports: [MatSnackBarModule, MatDialogModule],
-    providers: [
-        {
-            provide: ActivatedRoute,
-            useValue: { snapshot: { paramMap: { get: () => '1' } }, params: of({}) },
-        },
-        provideHttpClient(withInterceptorsFromDi()),
-        provideHttpClientTesting(),
-    ]
-}).compileComponents();
+			declarations: [CurrencyDetailComponent],
+			schemas: [NO_ERRORS_SCHEMA],
+			imports: [MatSnackBarModule, MatDialogModule],
+			providers: [
+				{
+					provide: ActivatedRoute,
+					useValue: { snapshot: { paramMap: { get: () => '1' } }, params: of({}) },
+				},
+				provideHttpClient(withInterceptorsFromDi()),
+				provideHttpClientTesting(),
+			]
+		}).compileComponents();
 
 		fixture = TestBed.createComponent(CurrencyDetailComponent);
 		component = fixture.componentInstance;

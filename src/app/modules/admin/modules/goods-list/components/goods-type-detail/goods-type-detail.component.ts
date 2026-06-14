@@ -6,10 +6,10 @@ import {ERoute} from '../../../../../../common/types/ERoute';
 import {AlertService} from '../../../../../../common/services/alert/alert.service';
 
 @Component({
-    selector: 'app-goods-type-detail',
-    templateUrl: './goods-type-detail.component.html',
-    styleUrls: ['./goods-type-detail.component.scss'],
-    standalone: false
+	selector: 'app-goods-type-detail',
+	templateUrl: './goods-type-detail.component.html',
+	styleUrls: ['./goods-type-detail.component.scss'],
+	standalone: false
 })
 export class GoodsTypeDetailComponent implements OnInit {
 

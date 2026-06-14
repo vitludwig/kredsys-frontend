@@ -4,8 +4,8 @@ import allowedRoutes from '../../types/AllowedRoutes';
 import {ERoute} from '../../../../../../common/types/ERoute';
 
 @Pipe({
-    name: 'canAccessRoute',
-    standalone: false
+	name: 'canAccessRoute',
+	standalone: false
 })
 export class CanAccessRoutePipe implements PipeTransform {
 

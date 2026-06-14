@@ -17,18 +17,18 @@ describe('UserTransactionsListComponent', () => {
 		clearAllCaches();
 
 		await TestBed.configureTestingModule({
-    declarations: [UserTransactionsListComponent],
-    schemas: [NO_ERRORS_SCHEMA],
-    imports: [MatSnackBarModule, MatDialogModule],
-    providers: [
-        {
-            provide: ActivatedRoute,
-            useValue: { snapshot: { paramMap: { get: () => '1' } }, params: of({}) },
-        },
-        provideHttpClient(withInterceptorsFromDi()),
-        provideHttpClientTesting(),
-    ]
-}).compileComponents();
+			declarations: [UserTransactionsListComponent],
+			schemas: [NO_ERRORS_SCHEMA],
+			imports: [MatSnackBarModule, MatDialogModule],
+			providers: [
+				{
+					provide: ActivatedRoute,
+					useValue: { snapshot: { paramMap: { get: () => '1' } }, params: of({}) },
+				},
+				provideHttpClient(withInterceptorsFromDi()),
+				provideHttpClientTesting(),
+			]
+		}).compileComponents();
 
 		fixture = TestBed.createComponent(UserTransactionsListComponent);
 		component = fixture.componentInstance;

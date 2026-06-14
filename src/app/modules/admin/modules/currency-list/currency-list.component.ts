@@ -11,10 +11,10 @@ import {ICurrency} from '../../../../common/types/ICurrency';
 import { ERoute } from 'src/app/common/types/ERoute';
 
 @Component({
-    selector: 'app-currency-list',
-    templateUrl: './currency-list.component.html',
-    styleUrls: ['./currency-list.component.scss'],
-    standalone: false
+	selector: 'app-currency-list',
+	templateUrl: './currency-list.component.html',
+	styleUrls: ['./currency-list.component.scss'],
+	standalone: false
 })
 export class CurrencyListComponent implements OnInit, OnDestroy {
 	public displayedColumns: string[] = ['name', 'symbol', 'actions'];

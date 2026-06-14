@@ -10,10 +10,10 @@ import {PlaceService} from '../../../../services/place/place/place.service';
 import {IPlace} from '../../../../../../common/types/IPlace';
 
 @Component({
-    selector: 'app-goods-detail',
-    templateUrl: './goods-detail.component.html',
-    styleUrls: ['./goods-detail.component.scss'],
-    standalone: false
+	selector: 'app-goods-detail',
+	templateUrl: './goods-detail.component.html',
+	styleUrls: ['./goods-detail.component.scss'],
+	standalone: false
 })
 export class GoodsDetailComponent implements OnInit {
 	public item: IGoods;

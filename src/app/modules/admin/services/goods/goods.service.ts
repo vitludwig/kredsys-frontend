@@ -12,8 +12,8 @@ import {ConfigService} from "../../../../common/services/config/config.service";
 	providedIn: 'root',
 })
 export class GoodsService {
-  private configService: ConfigService = inject(ConfigService);
-  private http: HttpClient = inject(HttpClient);
+	private configService: ConfigService = inject(ConfigService);
+	private http: HttpClient = inject(HttpClient);
 
 	protected goods: IGoods[] = [];
 	protected limit = 5;
@@ -33,13 +33,13 @@ export class GoodsService {
 	public async getGoods(search: string = '', page: number = 0, pageSize = this.limit, placeId: number | null = null): Promise<IPaginatedResponse<IGoods>> {
 		let filter = 'deleted=false';
 
-    if(search) {
-      filter += `,name#=*${search}/i`;
-    }
-    if(placeId != null) {
-      filter += `,inPlace=${placeId}`;
-    }
-    const params = {
+		if(search) {
+			filter += `,name#=*${search}/i`;
+		}
+		if(placeId != null) {
+			filter += `,inPlace=${placeId}`;
+		}
+		const params = {
 			filter,
 			page,
 			pageSize,

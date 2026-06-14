@@ -16,18 +16,18 @@ describe('SaleSummaryComponent', () => {
 	beforeEach(async () => {
 		clearAllCaches();
 		await TestBed.configureTestingModule({
-    declarations: [SaleSummaryComponent],
-    schemas: [NO_ERRORS_SCHEMA],
-    imports: [MatSnackBarModule],
-    providers: [
-        { provide: AuthService, useValue: { isLogged$: new BehaviorSubject(false), isLogged: false, user: null, isDebug: false } },
-        { provide: PrintService, useValue: { printReceipt: jasmine.createSpy('printReceipt') } },
-        provideHttpClient(withInterceptorsFromDi()),
-        provideHttpClientTesting(),
-    ]
-})
-		.overrideComponent(SaleSummaryComponent, {set: {template: ''}})
-		.compileComponents();
+			declarations: [SaleSummaryComponent],
+			schemas: [NO_ERRORS_SCHEMA],
+			imports: [MatSnackBarModule],
+			providers: [
+				{ provide: AuthService, useValue: { isLogged$: new BehaviorSubject(false), isLogged: false, user: null, isDebug: false } },
+				{ provide: PrintService, useValue: { printReceipt: jasmine.createSpy('printReceipt') } },
+				provideHttpClient(withInterceptorsFromDi()),
+				provideHttpClientTesting(),
+			]
+		})
+			.overrideComponent(SaleSummaryComponent, {set: {template: ''}})
+			.compileComponents();
 	});
 
 	beforeEach(() => {

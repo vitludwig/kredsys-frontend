@@ -18,10 +18,10 @@ import { IGroup } from '../../../../../groups/types/IGroup';
 import { map } from "rxjs";
 
 @Component({
-    selector: 'app-user-detail',
-    templateUrl: './user-detail.component.html',
-    styleUrls: ['./user-detail.component.scss'],
-    standalone: false
+	selector: 'app-user-detail',
+	templateUrl: './user-detail.component.html',
+	styleUrls: ['./user-detail.component.scss'],
+	standalone: false
 })
 export class UserDetailComponent implements OnInit {
 	protected userFormGroup: FormGroup = new FormGroup({
@@ -56,9 +56,9 @@ export class UserDetailComponent implements OnInit {
 
 	public readonly EUserRole = EUserRole;
 
-  protected groups$ = this.groupsService.getGroups().pipe(
-    map((result) => result.data)
-  )
+	protected groups$ = this.groupsService.getGroups().pipe(
+		map((result) => result.data)
+	)
 
 	constructor(
 		public usersService: UsersService,
@@ -209,9 +209,9 @@ export class UserDetailComponent implements OnInit {
 
 		if(user.id) {
 			await this.usersService.editRoles(user.id, [this.userForm.role]);
-      if(this.userForm.groupId != null) {
-        await this.groupsService.addUserToGroup(user.id, this.userForm.groupId);
-      }
+			if(this.userForm.groupId != null) {
+				await this.groupsService.addUserToGroup(user.id, this.userForm.groupId);
+			}
 		}
 
 		return user;
@@ -234,7 +234,7 @@ export class UserDetailComponent implements OnInit {
 			await this.usersService.editRoles(this.user.id, [this.userForm.role]);
 		}
 
-    await this.manageUserGroups();
+		await this.manageUserGroups();
 
 		// TODO: send edit request only for dirty accounts to eliminae requests amount
 		for(const account of this.accounts) {
@@ -287,24 +287,24 @@ export class UserDetailComponent implements OnInit {
 		}
 	}
 
-  private async manageUserGroups(): Promise<void> {
-    if(!this.user || !this.user.id) {
-      throw new Error('User is not defined');
-    }
+	private async manageUserGroups(): Promise<void> {
+		if(!this.user || !this.user.id) {
+			throw new Error('User is not defined');
+		}
 
-    if(this.userForm.groupId === null && this.user.groups?.length) {
-      for(const groupId of this.user.groups) {
-        await this.groupsService.removeUserFromGroup(this.user.id, groupId);
-      }
-    }
+		if(this.userForm.groupId === null && this.user.groups?.length) {
+			for(const groupId of this.user.groups) {
+				await this.groupsService.removeUserFromGroup(this.user.id, groupId);
+			}
+		}
 
-    if(this.userForm.groupId != null) {
-      if(this.user.groups?.length) {
-        for(const groupId of this.user.groups) {
-          await this.groupsService.removeUserFromGroup(this.user.id, groupId);
-        }
-      }
-      await this.groupsService.addUserToGroup(this.user.id, this.userForm.groupId);
-    }
-  }
+		if(this.userForm.groupId != null) {
+			if(this.user.groups?.length) {
+				for(const groupId of this.user.groups) {
+					await this.groupsService.removeUserFromGroup(this.user.id, groupId);
+				}
+			}
+			await this.groupsService.addUserToGroup(this.user.id, this.userForm.groupId);
+		}
+	}
 }

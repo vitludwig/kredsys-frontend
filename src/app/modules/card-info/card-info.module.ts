@@ -14,26 +14,26 @@ import { MatSelectModule } from "@angular/material/select";
 import { MatFormFieldModule } from "@angular/material/form-field";
 
 @NgModule({
-    declarations: [
-        CardInfoComponent,
-    ],
-    exports: [
-        CardInfoComponent
-    ],
-    imports: [
-        SharedModule,
-        CardInfoRoutingModule,
-        CardLoaderComponent,
-        MatProgressSpinnerModule,
-        QRCodeComponent,
-        MatButtonModule,
-        MatDialogModule,
-        MatIconModule,
-        LoginModule,
-        CardInfoConfigDialogComponent,
-        MatSelectModule,
-        MatFormFieldModule,
-    ]
+	declarations: [
+		CardInfoComponent,
+	],
+	exports: [
+		CardInfoComponent
+	],
+	imports: [
+		SharedModule,
+		CardInfoRoutingModule,
+		CardLoaderComponent,
+		MatProgressSpinnerModule,
+		QRCodeComponent,
+		MatButtonModule,
+		MatDialogModule,
+		MatIconModule,
+		LoginModule,
+		CardInfoConfigDialogComponent,
+		MatSelectModule,
+		MatFormFieldModule,
+	]
 })
 export class CardInfoModule {
 }

@@ -18,10 +18,10 @@ import {AlertService} from "../../../../../../common/services/alert/alert.servic
 import {IUser} from '../../../../../../common/types/IUser';
 
 @Component({
-    selector: 'app-new-transaction',
-    templateUrl: './new-transaction.component.html',
-    styleUrls: ['./new-transaction.component.scss'],
-    standalone: false
+	selector: 'app-new-transaction',
+	templateUrl: './new-transaction.component.html',
+	styleUrls: ['./new-transaction.component.scss'],
+	standalone: false
 })
 export class NewTransactionComponent implements OnInit {
 	public user: IUser | null;

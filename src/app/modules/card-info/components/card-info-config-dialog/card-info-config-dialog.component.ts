@@ -14,34 +14,34 @@ import {MatSlideToggleModule} from "@angular/material/slide-toggle";
 import {MatInputModule} from "@angular/material/input";
 
 @Component({
-    selector: 'app-card-info-config-dialog',
-    imports: [
-    AutofocusDirective,
-    MatButtonModule,
-    MatDialogModule,
-    MatIconModule,
-    MatAutocompleteModule,
-    MatChipsModule,
-    MatFormFieldModule,
-    MatOptionModule,
-    MatButtonToggleModule,
-    FormsModule,
-    MatSlideToggleModule,
-    MatInputModule,
-],
-    templateUrl: './card-info-config-dialog.component.html',
-    styleUrl: './card-info-config-dialog.component.scss'
+	selector: 'app-card-info-config-dialog',
+	imports: [
+		AutofocusDirective,
+		MatButtonModule,
+		MatDialogModule,
+		MatIconModule,
+		MatAutocompleteModule,
+		MatChipsModule,
+		MatFormFieldModule,
+		MatOptionModule,
+		MatButtonToggleModule,
+		FormsModule,
+		MatSlideToggleModule,
+		MatInputModule,
+	],
+	templateUrl: './card-info-config-dialog.component.html',
+	styleUrl: './card-info-config-dialog.component.scss'
 })
 export class CardInfoConfigDialogComponent {
-  protected dialogRef = inject(MatDialogRef<CardInfoConfigDialogComponent>)
-  protected config: ICardInfoConfig = inject(MAT_DIALOG_DATA);
+	protected dialogRef = inject(MatDialogRef<CardInfoConfigDialogComponent>)
+	protected config: ICardInfoConfig = inject(MAT_DIALOG_DATA);
 
   @ViewChild('configForm')
-  protected form: NgForm;
+	protected form: NgForm;
 
   public submit(): void {
-    if(!this.form.invalid) {
-      this.dialogRef.close(this.config);
-    }
+  	if(!this.form.invalid) {
+  		this.dialogRef.close(this.config);
+  	}
   }
 }

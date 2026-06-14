@@ -5,10 +5,10 @@ import {MatButtonModule} from '@angular/material/button';
 import {AutofocusDirective} from '../../directives/autofocus.directive';
 
 @Component({
-    selector: 'app-confirm-dialog',
-    imports: [MatDialogModule, MatButtonModule, AutofocusDirective],
-    templateUrl: './confirm-dialog.component.html',
-    styleUrls: ['./confirm-dialog.component.scss']
+	selector: 'app-confirm-dialog',
+	imports: [MatDialogModule, MatButtonModule, AutofocusDirective],
+	templateUrl: './confirm-dialog.component.html',
+	styleUrls: ['./confirm-dialog.component.scss']
 })
 export class ConfirmDialogComponent {
 

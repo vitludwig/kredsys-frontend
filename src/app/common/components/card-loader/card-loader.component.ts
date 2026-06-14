@@ -26,11 +26,11 @@ import {FormsModule} from '@angular/forms';
 import {AuthService} from '../../../modules/login/services/auth/auth.service';
 
 @Component({
-    selector: 'app-card-loader',
-    templateUrl: './card-loader.component.html',
-    styleUrls: ['./card-loader.component.scss'],
-    imports: [CommonModule, MatButtonModule, MatIconModule, MatTooltipModule,
-              MatFormFieldModule, MatSelectModule, FormsModule]
+	selector: 'app-card-loader',
+	templateUrl: './card-loader.component.html',
+	styleUrls: ['./card-loader.component.scss'],
+	imports: [CommonModule, MatButtonModule, MatIconModule, MatTooltipModule,
+		MatFormFieldModule, MatSelectModule, FormsModule]
 })
 export class CardLoaderComponent implements OnInit, OnDestroy {
 	@Input()

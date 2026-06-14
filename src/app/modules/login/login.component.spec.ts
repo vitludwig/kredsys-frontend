@@ -16,18 +16,18 @@ describe('LoginComponent', () => {
 	beforeEach(async () => {
 		clearAllCaches();
 		await TestBed.configureTestingModule({
-    declarations: [LoginComponent],
-    schemas: [NO_ERRORS_SCHEMA],
-    imports: [MatSnackBarModule],
-    providers: [
-        { provide: Router, useValue: { navigate: jasmine.createSpy('navigate'), events: of() } },
-        { provide: AuthService, useValue: { isLogged$: new BehaviorSubject(false), isLogged: false, user: null, isDebug: false } },
-        provideHttpClient(withInterceptorsFromDi()),
-        provideHttpClientTesting(),
-    ]
-})
-		.overrideComponent(LoginComponent, {set: {template: ''}})
-		.compileComponents();
+			declarations: [LoginComponent],
+			schemas: [NO_ERRORS_SCHEMA],
+			imports: [MatSnackBarModule],
+			providers: [
+				{ provide: Router, useValue: { navigate: jasmine.createSpy('navigate'), events: of() } },
+				{ provide: AuthService, useValue: { isLogged$: new BehaviorSubject(false), isLogged: false, user: null, isDebug: false } },
+				provideHttpClient(withInterceptorsFromDi()),
+				provideHttpClientTesting(),
+			]
+		})
+			.overrideComponent(LoginComponent, {set: {template: ''}})
+			.compileComponents();
 	});
 
 	beforeEach(() => {

@@ -6,10 +6,10 @@ import {PlaceService} from "../../../../services/place/place/place.service";
 import {ActivatedRoute} from "@angular/router";
 
 @Component({
-    selector: 'app-place-transactions-list',
-    templateUrl: './place-transactions-list.component.html',
-    styleUrls: ['./place-transactions-list.component.scss'],
-    standalone: false
+	selector: 'app-place-transactions-list',
+	templateUrl: './place-transactions-list.component.html',
+	styleUrls: ['./place-transactions-list.component.scss'],
+	standalone: false
 })
 export class PlaceTransactionsListComponent implements OnInit {
 	public places: IPlace[];

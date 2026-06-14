@@ -21,14 +21,14 @@ describe('CardLoaderComponent', () => {
 	beforeEach(async () => {
 		clearAllCaches();
 		await TestBed.configureTestingModule({
-    schemas: [NO_ERRORS_SCHEMA],
-    imports: [CardLoaderComponent, MatSnackBarModule],
-    providers: [
-        { provide: AuthService, useValue: { isLogged$: new BehaviorSubject(false), isLogged: false, user: null, isDebug: false } },
-        provideHttpClient(withInterceptorsFromDi()),
-        provideHttpClientTesting(),
-    ]
-}).compileComponents();
+			schemas: [NO_ERRORS_SCHEMA],
+			imports: [CardLoaderComponent, MatSnackBarModule],
+			providers: [
+				{ provide: AuthService, useValue: { isLogged$: new BehaviorSubject(false), isLogged: false, user: null, isDebug: false } },
+				provideHttpClient(withInterceptorsFromDi()),
+				provideHttpClientTesting(),
+			]
+		}).compileComponents();
 	});
 
 	beforeEach(() => {

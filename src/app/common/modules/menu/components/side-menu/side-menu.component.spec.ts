@@ -18,19 +18,19 @@ describe('SideMenuComponent', () => {
 	beforeEach(async () => {
 		clearAllCaches();
 		await TestBed.configureTestingModule({
-    declarations: [SideMenuComponent],
-    schemas: [NO_ERRORS_SCHEMA],
-    imports: [MatSnackBarModule, MatDialogModule],
-    providers: [
-        { provide: Router, useValue: { navigate: jasmine.createSpy('navigate'), events: of() } },
-        { provide: AuthService, useValue: { isLogged$: new BehaviorSubject(false), isLogged: false, user: null, isDebug: false } },
-        { provide: PrintService, useValue: { printReceipt: jasmine.createSpy('printReceipt') } },
-        provideHttpClient(withInterceptorsFromDi()),
-        provideHttpClientTesting(),
-    ]
-})
-		.overrideComponent(SideMenuComponent, {set: {template: ''}})
-		.compileComponents();
+			declarations: [SideMenuComponent],
+			schemas: [NO_ERRORS_SCHEMA],
+			imports: [MatSnackBarModule, MatDialogModule],
+			providers: [
+				{ provide: Router, useValue: { navigate: jasmine.createSpy('navigate'), events: of() } },
+				{ provide: AuthService, useValue: { isLogged$: new BehaviorSubject(false), isLogged: false, user: null, isDebug: false } },
+				{ provide: PrintService, useValue: { printReceipt: jasmine.createSpy('printReceipt') } },
+				provideHttpClient(withInterceptorsFromDi()),
+				provideHttpClientTesting(),
+			]
+		})
+			.overrideComponent(SideMenuComponent, {set: {template: ''}})
+			.compileComponents();
 	});
 
 	beforeEach(() => {

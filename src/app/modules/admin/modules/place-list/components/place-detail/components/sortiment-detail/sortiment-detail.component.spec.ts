@@ -16,16 +16,16 @@ describe('SortimentDetailComponent', () => {
 		clearAllCaches();
 
 		await TestBed.configureTestingModule({
-    declarations: [SortimentDetailComponent],
-    schemas: [NO_ERRORS_SCHEMA],
-    imports: [MatSnackBarModule, MatDialogModule],
-    providers: [
-        { provide: MatDialogRef, useValue: {} },
-        { provide: MAT_DIALOG_DATA, useValue: { existingItems: [] } },
-        provideHttpClient(withInterceptorsFromDi()),
-        provideHttpClientTesting(),
-    ]
-}).compileComponents();
+			declarations: [SortimentDetailComponent],
+			schemas: [NO_ERRORS_SCHEMA],
+			imports: [MatSnackBarModule, MatDialogModule],
+			providers: [
+				{ provide: MatDialogRef, useValue: {} },
+				{ provide: MAT_DIALOG_DATA, useValue: { existingItems: [] } },
+				provideHttpClient(withInterceptorsFromDi()),
+				provideHttpClientTesting(),
+			]
+		}).compileComponents();
 
 		fixture = TestBed.createComponent(SortimentDetailComponent);
 		component = fixture.componentInstance;

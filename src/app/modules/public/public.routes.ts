@@ -3,11 +3,11 @@ import {CardInfoPublicComponent} from "./card-info-public/card-info-public.compo
 import {ERoute} from "../../common/types/ERoute";
 
 export const routes: Routes = [
-  {
-    path: ERoute.CARD_INFO,
-    component: CardInfoPublicComponent,
-    data: {
-      name: 'Infokartářka',
-    },
-  },
+	{
+		path: ERoute.CARD_INFO,
+		component: CardInfoPublicComponent,
+		data: {
+			name: 'Infokartářka',
+		},
+	},
 ];

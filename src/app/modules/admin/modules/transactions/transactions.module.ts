@@ -45,7 +45,7 @@ import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 		ClickConfirmDirective,
 		AutofocusDirective,
 		MatIconModule,
-    MatProgressSpinnerModule
+		MatProgressSpinnerModule
 	],
 	providers: [
 		provideCharts(withDefaultRegisterables())

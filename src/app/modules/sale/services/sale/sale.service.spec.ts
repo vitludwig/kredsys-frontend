@@ -4,19 +4,19 @@ import { SaleService } from './sale.service';
 import { clearAllCaches } from '../../../../common/decorators/cache';
 
 describe('SaleService', () => {
-  let service: SaleService;
+	let service: SaleService;
 
-  beforeEach(() => {
-    clearAllCaches();
-    TestBed.configureTestingModule({
-      providers: [
-        { provide: MatDialog, useValue: {} },
-      ],
-    });
-    service = TestBed.inject(SaleService);
-  });
+	beforeEach(() => {
+		clearAllCaches();
+		TestBed.configureTestingModule({
+			providers: [
+				{ provide: MatDialog, useValue: {} },
+			],
+		});
+		service = TestBed.inject(SaleService);
+	});
 
-  it('should be created', () => {
-    expect(service).toBeTruthy();
-  });
+	it('should be created', () => {
+		expect(service).toBeTruthy();
+	});
 });

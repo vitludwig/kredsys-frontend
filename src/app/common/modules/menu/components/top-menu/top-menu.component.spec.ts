@@ -17,19 +17,19 @@ describe('TopMenuComponent', () => {
 	beforeEach(async () => {
 		clearAllCaches();
 		await TestBed.configureTestingModule({
-    declarations: [TopMenuComponent],
-    schemas: [NO_ERRORS_SCHEMA],
-    imports: [MatSnackBarModule, MatDialogModule],
-    providers: [
-        { provide: Router, useValue: { navigate: jasmine.createSpy('navigate'), events: of() } },
-        { provide: ActivatedRoute, useValue: { snapshot: { paramMap: { get: () => '1' } }, params: of({}), queryParams: of({}) } },
-        { provide: AuthService, useValue: { isLogged$: new BehaviorSubject(false), isLogged: false, user: null, isDebug: false } },
-        provideHttpClient(withInterceptorsFromDi()),
-        provideHttpClientTesting(),
-    ]
-})
-		.overrideComponent(TopMenuComponent, {set: {template: ''}})
-		.compileComponents();
+			declarations: [TopMenuComponent],
+			schemas: [NO_ERRORS_SCHEMA],
+			imports: [MatSnackBarModule, MatDialogModule],
+			providers: [
+				{ provide: Router, useValue: { navigate: jasmine.createSpy('navigate'), events: of() } },
+				{ provide: ActivatedRoute, useValue: { snapshot: { paramMap: { get: () => '1' } }, params: of({}), queryParams: of({}) } },
+				{ provide: AuthService, useValue: { isLogged$: new BehaviorSubject(false), isLogged: false, user: null, isDebug: false } },
+				provideHttpClient(withInterceptorsFromDi()),
+				provideHttpClientTesting(),
+			]
+		})
+			.overrideComponent(TopMenuComponent, {set: {template: ''}})
+			.compileComponents();
 	});
 
 	beforeEach(() => {

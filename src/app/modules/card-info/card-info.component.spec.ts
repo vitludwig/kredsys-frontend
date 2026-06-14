@@ -16,17 +16,17 @@ describe('CardInfoComponent', () => {
 	beforeEach(async () => {
 		clearAllCaches();
 		await TestBed.configureTestingModule({
-    declarations: [CardInfoComponent],
-    schemas: [NO_ERRORS_SCHEMA],
-    imports: [MatSnackBarModule, MatDialogModule],
-    providers: [
-        { provide: AuthService, useValue: { isLogged$: new BehaviorSubject(false), isLogged: false, user: null, isDebug: false, hasRole: () => false } },
-        provideHttpClient(withInterceptorsFromDi()),
-        provideHttpClientTesting(),
-    ]
-})
-		.overrideComponent(CardInfoComponent, {set: {template: ''}})
-		.compileComponents();
+			declarations: [CardInfoComponent],
+			schemas: [NO_ERRORS_SCHEMA],
+			imports: [MatSnackBarModule, MatDialogModule],
+			providers: [
+				{ provide: AuthService, useValue: { isLogged$: new BehaviorSubject(false), isLogged: false, user: null, isDebug: false, hasRole: () => false } },
+				provideHttpClient(withInterceptorsFromDi()),
+				provideHttpClientTesting(),
+			]
+		})
+			.overrideComponent(CardInfoComponent, {set: {template: ''}})
+			.compileComponents();
 	});
 
 	beforeEach(() => {

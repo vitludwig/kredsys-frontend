@@ -3,11 +3,11 @@ import {NgControl} from '@angular/forms';
 import {TErrorMessages} from './types/TErrorMessages';
 
 @Component({
-    selector: 'app-error-message',
-    imports: [
-],
-    templateUrl: './error-message.component.html',
-    styleUrl: './error-message.component.scss'
+	selector: 'app-error-message',
+	imports: [
+	],
+	templateUrl: './error-message.component.html',
+	styleUrl: './error-message.component.scss'
 })
 export class ErrorMessageComponent {
 	public control = input.required<NgControl>();

@@ -12,7 +12,7 @@ import {PlaceDetailComponent} from './components/place-detail/place-detail.compo
 import {SharedModule} from '../../../../shared.module';
 import {DragDropModule} from '@angular/cdk/drag-drop';
 import {
-  SortimentDetailComponent
+	SortimentDetailComponent
 } from './components/place-detail/components/sortiment-detail/sortiment-detail.component';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatChipsModule} from '@angular/material/chips';
@@ -26,32 +26,32 @@ import {NgxMatSelectSearchModule} from "ngx-mat-select-search";
 
 
 @NgModule({
-  declarations: [
-    PlaceListComponent,
-    PlaceDetailComponent,
-    SortimentDetailComponent,
-  ],
-  imports: [
-    SharedModule,
-    RouterModule,
-    MatTableModule,
-    MatSortModule,
-    MatPaginatorModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatChipsModule,
-    MatSelectModule,
-    MatAutocompleteModule,
-    MatButtonModule,
-    MatIconModule,
-    MatDialogModule,
-    DragDropModule,
-    AutofocusDirective,
-    ClickConfirmDirective,
-    MatProgressSpinnerModule,
-    ReactiveFormsModule,
-    NgxMatSelectSearchModule,
-  ],
+	declarations: [
+		PlaceListComponent,
+		PlaceDetailComponent,
+		SortimentDetailComponent,
+	],
+	imports: [
+		SharedModule,
+		RouterModule,
+		MatTableModule,
+		MatSortModule,
+		MatPaginatorModule,
+		MatFormFieldModule,
+		MatInputModule,
+		MatChipsModule,
+		MatSelectModule,
+		MatAutocompleteModule,
+		MatButtonModule,
+		MatIconModule,
+		MatDialogModule,
+		DragDropModule,
+		AutofocusDirective,
+		ClickConfirmDirective,
+		MatProgressSpinnerModule,
+		ReactiveFormsModule,
+		NgxMatSelectSearchModule,
+	],
 })
 export class PlaceListModule {
 }

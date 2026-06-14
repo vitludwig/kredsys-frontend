@@ -20,15 +20,15 @@ describe('ChangePasswordComponent', () => {
 		clearAllCaches();
 
 		await TestBed.configureTestingModule({
-    declarations: [ChangePasswordComponent],
-    schemas: [NO_ERRORS_SCHEMA],
-    imports: [MatSnackBarModule, MatDialogModule, FormsModule, ReactiveFormsModule],
-    providers: [{ provide: AuthService, useValue: { isLogged$: new BehaviorSubject(false), isLogged: false, user: null, isDebug: false } },
-        {
-            provide: ActivatedRoute,
-            useValue: { snapshot: { paramMap: { get: () => '1' } }, params: of({}) },
-        }, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting(),]
-}).compileComponents();
+			declarations: [ChangePasswordComponent],
+			schemas: [NO_ERRORS_SCHEMA],
+			imports: [MatSnackBarModule, MatDialogModule, FormsModule, ReactiveFormsModule],
+			providers: [{ provide: AuthService, useValue: { isLogged$: new BehaviorSubject(false), isLogged: false, user: null, isDebug: false } },
+				{
+					provide: ActivatedRoute,
+					useValue: { snapshot: { paramMap: { get: () => '1' } }, params: of({}) },
+				}, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting(),]
+		}).compileComponents();
 
 		fixture = TestBed.createComponent(ChangePasswordComponent);
 		component = fixture.componentInstance;

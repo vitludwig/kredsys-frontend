@@ -15,14 +15,14 @@ describe('GroupsStatisticsComponent', () => {
 	beforeEach(async () => {
 		clearAllCaches();
 		await TestBed.configureTestingModule({
-    schemas: [NO_ERRORS_SCHEMA],
-    imports: [GroupsStatisticsComponent, MatSnackBarModule],
-    providers: [
-        { provide: AuthService, useValue: { isLogged$: new BehaviorSubject(false), isLogged: false, user: null, isDebug: false } },
-        provideHttpClient(withInterceptorsFromDi()),
-        provideHttpClientTesting(),
-    ]
-}).compileComponents();
+			schemas: [NO_ERRORS_SCHEMA],
+			imports: [GroupsStatisticsComponent, MatSnackBarModule],
+			providers: [
+				{ provide: AuthService, useValue: { isLogged$: new BehaviorSubject(false), isLogged: false, user: null, isDebug: false } },
+				provideHttpClient(withInterceptorsFromDi()),
+				provideHttpClientTesting(),
+			]
+		}).compileComponents();
 
 		fixture = TestBed.createComponent(GroupsStatisticsComponent);
 		component = fixture.componentInstance;

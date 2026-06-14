@@ -12,66 +12,66 @@ import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {SharedModule} from "../../../../shared.module";
 
 @Component({
-    selector: 'app-group-detail',
-    templateUrl: './group-detail.component.html',
-    styleUrls: ['./group-detail.component.scss'],
-    imports: [
-    FormsModule,
-    ReactiveFormsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatButtonModule,
-    MatIconModule,
-    MatProgressSpinnerModule,
-    SharedModule
-]
+	selector: 'app-group-detail',
+	templateUrl: './group-detail.component.html',
+	styleUrls: ['./group-detail.component.scss'],
+	imports: [
+		FormsModule,
+		ReactiveFormsModule,
+		MatFormFieldModule,
+		MatInputModule,
+		MatButtonModule,
+		MatIconModule,
+		MatProgressSpinnerModule,
+		SharedModule
+	]
 })
 export class GroupDetailComponent implements OnInit {
-  groupForm: FormGroup;
-  groupId: number | null = null;
+	groupForm: FormGroup;
+	groupId: number | null = null;
 
-  constructor(
+	constructor(
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
     private groupsService: GroupsService
-  ) {}
+	) {}
 
-  ngOnInit(): void {
-    const groupId = this.route.snapshot.paramMap.get('id');
-    this.groupId = groupId === null ? null : +groupId
+	ngOnInit(): void {
+		const groupId = this.route.snapshot.paramMap.get('id');
+		this.groupId = groupId === null ? null : +groupId
 
-    this.groupForm = this.fb.group({
-      name: ['', Validators.required],
-      description: ['', Validators.required],
-      color: ['', Validators.required],
-    });
+		this.groupForm = this.fb.group({
+			name: ['', Validators.required],
+			description: ['', Validators.required],
+			color: ['', Validators.required],
+		});
 
-    if (this.groupId != null) {
-      this.groupsService.getGroup(this.groupId).subscribe((group) => {
-        this.groupForm.patchValue(group);
-      });
-    }
-  }
+		if (this.groupId != null) {
+			this.groupsService.getGroup(this.groupId).subscribe((group) => {
+				this.groupForm.patchValue(group);
+			});
+		}
+	}
 
-  saveGroup(): void {
-    if (this.groupForm.valid) {
-      const groupData = this.groupForm.value;
-      if (this.groupId != null) {
-        this.groupsService
-          .updateGroup(this.groupId, groupData)
-          .subscribe(() => {
-            this.router.navigate(['/', ERoute.ADMIN, ERoute.ADMIN_GROUPS]);
-          });
-      } else {
-        this.groupsService.createGroup(groupData).subscribe(() => {
-          this.router.navigate(['/', ERoute.ADMIN, ERoute.ADMIN_GROUPS]);
-        });
-      }
-    }
-  }
+	saveGroup(): void {
+		if (this.groupForm.valid) {
+			const groupData = this.groupForm.value;
+			if (this.groupId != null) {
+				this.groupsService
+					.updateGroup(this.groupId, groupData)
+					.subscribe(() => {
+						this.router.navigate(['/', ERoute.ADMIN, ERoute.ADMIN_GROUPS]);
+					});
+			} else {
+				this.groupsService.createGroup(groupData).subscribe(() => {
+					this.router.navigate(['/', ERoute.ADMIN, ERoute.ADMIN_GROUPS]);
+				});
+			}
+		}
+	}
 
-  cancel(): void {
-    this.router.navigate(['/', ERoute.ADMIN, ERoute.ADMIN_GROUPS]);
-  }
+	cancel(): void {
+		this.router.navigate(['/', ERoute.ADMIN, ERoute.ADMIN_GROUPS]);
+	}
 }

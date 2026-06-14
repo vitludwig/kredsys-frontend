@@ -7,155 +7,155 @@ import {StringUtils} from "../../../../common/utils/StringUtils";
 import {FeatureFlagService} from "../../../../common/modules/feature-flags/services/feature-flag/feature-flag.service";
 import {EFeatureFlag} from "../../../../common/modules/feature-flags/types/EFeatureFlag";
 
-declare var ReceiptPrinterEncoder: any;
+declare let ReceiptPrinterEncoder: any;
 
 @Injectable({
-  providedIn: 'root'
+	providedIn: 'root'
 })
 export class PrintService {
-  private readonly alertService = inject(AlertService);
-  private readonly featureFlagService = inject(FeatureFlagService);
+	private readonly alertService = inject(AlertService);
+	private readonly featureFlagService = inject(FeatureFlagService);
 
-  public connectInProgress: Signal<boolean>;
-  public canPrint: boolean = false;
+	public connectInProgress: Signal<boolean>;
+	public canPrint: boolean = false;
 
-  private receiptPrinter?: WebBluetoothReceiptPrinter;
-  private encoder?: any;
-  private printerLanguage?: any;
-  private lastUsedDevice?: any;
-  private logo?: HTMLImageElement;
+	private receiptPrinter?: WebBluetoothReceiptPrinter;
+	private encoder?: any;
+	private printerLanguage?: any;
+	private lastUsedDevice?: any;
+	private logo?: HTMLImageElement;
 
-  constructor() {
-    if(this.featureFlagService.isEnabled(EFeatureFlag.PRINTER)) {
-      this.initPrinter();
-    }
-  }
+	constructor() {
+		if(this.featureFlagService.isEnabled(EFeatureFlag.PRINTER)) {
+			this.initPrinter();
+		}
+	}
 
-  private initPrinter(): void {
-    this.loadLogo();
-    this.receiptPrinter = new WebBluetoothReceiptPrinter();
+	private initPrinter(): void {
+		this.loadLogo();
+		this.receiptPrinter = new WebBluetoothReceiptPrinter();
 
-    this.connectInProgress = this.receiptPrinter.connectInProgress;
+		this.connectInProgress = this.receiptPrinter.connectInProgress;
 
-    effect(() => {
-      console.log('Connecting printer', this.connectInProgress());
-    });
+		effect(() => {
+			console.log('Connecting printer', this.connectInProgress());
+		});
 
-    this.receiptPrinter.addEventListener('connected', (device: any) => {
-      console.log(`Connected to ${device.name} (#${device.id})`);
-      console.log(device);
-      this.printerLanguage = device.language;
+		this.receiptPrinter.addEventListener('connected', (device: any) => {
+			console.log(`Connected to ${device.name} (#${device.id})`);
+			console.log(device);
+			this.printerLanguage = device.language;
 
-      /* Store device for reconnecting */
-      this.lastUsedDevice = device;
-      localStorage.setItem('lastUsedDevice', JSON.stringify(device));
+			/* Store device for reconnecting */
+			this.lastUsedDevice = device;
+			localStorage.setItem('lastUsedDevice', JSON.stringify(device));
 
-      this.encoder = new ReceiptPrinterEncoder({
-        language: this.printerLanguage,
-        codepageMapping: 'mpt'
-      });
-      this.alertService.success("Tiskárna připojena");
-      this.canPrint = true;
-    });
+			this.encoder = new ReceiptPrinterEncoder({
+				language: this.printerLanguage,
+				codepageMapping: 'mpt'
+			});
+			this.alertService.success("Tiskárna připojena");
+			this.canPrint = true;
+		});
 
-    this.tryReconnectLast();
-  }
+		this.tryReconnectLast();
+	}
 
-  public async connect(): Promise<void> {
-    if(!this.receiptPrinter) {
-      console.error('Printer not initialized');
-      return;
-    }
+	public async connect(): Promise<void> {
+		if(!this.receiptPrinter) {
+			console.error('Printer not initialized');
+			return;
+		}
 
-    await this.receiptPrinter.connect();
-  }
+		await this.receiptPrinter.connect();
+	}
 
-  public async disconnect(): Promise<void> {
-    if(!this.receiptPrinter) {
-      console.error('Printer not initialized');
-      return;
-    }
+	public async disconnect(): Promise<void> {
+		if(!this.receiptPrinter) {
+			console.error('Printer not initialized');
+			return;
+		}
 
-    await this.receiptPrinter.disconnect();
-    localStorage.removeItem('lastUsedDevice');
-  }
+		await this.receiptPrinter.disconnect();
+		localStorage.removeItem('lastUsedDevice');
+	}
 
-  public printReceipt(receipt: IOrderItem[], customerName: string): void {
-    if(!this.receiptPrinter || !this.encoder) {
-      console.error('Printer not initialized');
-      return;
-    }
+	public printReceipt(receipt: IOrderItem[], customerName: string): void {
+		if(!this.receiptPrinter || !this.encoder) {
+			console.error('Printer not initialized');
+			return;
+		}
 
-    const now = new Date().toLocaleTimeString('cs-CZ', {
-      hour: '2-digit',
-      minute: '2-digit'
-    });
+		const now = new Date().toLocaleTimeString('cs-CZ', {
+			hour: '2-digit',
+			minute: '2-digit'
+		});
 
-    const data = this.encoder
-      .codepage('auto')
-      .align('center')
-      .image(this.logo, 128, 128)
-      .align('left')
-      .line('--------------------------------')
-      .line(`Pro: ${StringUtils.removeAccents(customerName)}`)
-      .line(now)
-      .line('--------------------------------')
-      .newline()
+		const data = this.encoder
+			.codepage('auto')
+			.align('center')
+			.image(this.logo, 128, 128)
+			.align('left')
+			.line('--------------------------------')
+			.line(`Pro: ${StringUtils.removeAccents(customerName)}`)
+			.line(now)
+			.line('--------------------------------')
+			.newline()
 
-    data.size(2);
-    for (const item of receipt) {
-      data.line(`${item.count}x ${StringUtils.removeAccents(item.item.name)}`);
-    }
-    data.size(1);
+		data.size(2);
+		for (const item of receipt) {
+			data.line(`${item.count}x ${StringUtils.removeAccents(item.item.name)}`);
+		}
+		data.size(1);
 
-    data.newline();
-    data.newline();
-    data.newline();
+		data.newline();
+		data.newline();
+		data.newline();
 
-    this.receiptPrinter.print(data.encode());
-  }
+		this.receiptPrinter.print(data.encode());
+	}
 
-  public testPrint(): void {
-    if(!this.receiptPrinter) {
-      console.error('Printer not initialized');
-      return;
-    }
+	public testPrint(): void {
+		if(!this.receiptPrinter) {
+			console.error('Printer not initialized');
+			return;
+		}
 
-    this.printReceipt([{item: {id: -1, name: 'Pivíčko', icon: '', type: 1, price: 1}, count: 1}], 'Uživatel 1');
-  }
+		this.printReceipt([{item: {id: -1, name: 'Pivíčko', icon: '', type: 1, price: 1}, count: 1}], 'Uživatel 1');
+	}
 
-  private async tryReconnectLast(): Promise<void> {
-    if(!this.receiptPrinter) {
-      console.error('Printer not initialized');
-      return;
-    }
+	private async tryReconnectLast(): Promise<void> {
+		if(!this.receiptPrinter) {
+			console.error('Printer not initialized');
+			return;
+		}
 
-    const last = localStorage.getItem('lastUsedDevice');
-    if (last) {
-      this.lastUsedDevice = JSON.parse(last);
-      if (this.lastUsedDevice) {
-        try {
-          await this.receiptPrinter.reconnect(this.lastUsedDevice);
-        } catch (e) {
-          if (e instanceof SavedPrinterNotFound) {
-            this.alertService.error("Uložená tiskárna nenalezena. Připojte ji znovu");
-          }
-          this.alertService.error("Neznámá chyba tiskárny. Připojte ji znovu");
-          console.error('Printer reconnect error: ', e);
-          localStorage.removeItem('lastUsedDevice');
-        }
-      }
-    }
-  }
+		const last = localStorage.getItem('lastUsedDevice');
+		if (last) {
+			this.lastUsedDevice = JSON.parse(last);
+			if (this.lastUsedDevice) {
+				try {
+					await this.receiptPrinter.reconnect(this.lastUsedDevice);
+				} catch (e) {
+					if (e instanceof SavedPrinterNotFound) {
+						this.alertService.error("Uložená tiskárna nenalezena. Připojte ji znovu");
+					}
+					this.alertService.error("Neznámá chyba tiskárny. Připojte ji znovu");
+					console.error('Printer reconnect error: ', e);
+					localStorage.removeItem('lastUsedDevice');
+				}
+			}
+		}
+	}
 
-  public isConnected(): boolean {
-    return this.receiptPrinter?.isConnected() ?? false;
-  }
+	public isConnected(): boolean {
+		return this.receiptPrinter?.isConnected() ?? false;
+	}
 
-  private loadLogo(): void {
-    this.logo = new Image();
-    this.logo.src = '/assets/images/print-logo.png'
-  }
+	private loadLogo(): void {
+		this.logo = new Image();
+		this.logo.src = '/assets/images/print-logo.png'
+	}
 }
 
 //

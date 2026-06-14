@@ -7,10 +7,10 @@ import { HttpErrorResponse } from '@angular/common/http';
 import {AlertService} from '../../common/services/alert/alert.service';
 
 @Component({
-    selector: 'app-place-select',
-    templateUrl: './place-select.component.html',
-    styleUrls: ['./place-select.component.scss'],
-    standalone: false
+	selector: 'app-place-select',
+	templateUrl: './place-select.component.html',
+	styleUrls: ['./place-select.component.scss'],
+	standalone: false
 })
 export class PlaceSelectComponent implements OnInit{
 	public place: IPlace;

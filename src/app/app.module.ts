@@ -25,19 +25,19 @@ registerLocaleData(localeCs);
 	declarations: [
 		AppComponent,
 	],
-    imports: [
-        SharedModule,
-        BrowserModule,
-        AppRoutingModule,
-        BrowserAnimationsModule,
-        MatSidenavModule,
-        MenuModule,
-        SaleModule,
-        MatIconModule,
-        WebBluetoothModule.forRoot({
-          enableTracing: true // or false, this will enable logs in the browser's console
-        })
-    ],
+	imports: [
+		SharedModule,
+		BrowserModule,
+		AppRoutingModule,
+		BrowserAnimationsModule,
+		MatSidenavModule,
+		MenuModule,
+		SaleModule,
+		MatIconModule,
+		WebBluetoothModule.forRoot({
+			enableTracing: true // or false, this will enable logs in the browser's console
+		})
+	],
 	providers: [
 		{provide: APP_INITIALIZER, useFactory: appInitializerFactory, deps: [InitService], multi: true},
 		{provide: MatPaginatorIntl, useValue: CustomPaginatorConfiguration()},

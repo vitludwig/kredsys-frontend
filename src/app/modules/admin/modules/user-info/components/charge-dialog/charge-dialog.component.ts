@@ -9,29 +9,29 @@ import { IChargeItem } from '../../../../../../common/types/IChargeItem';
 import { SettingsService } from '../../../../services/settings/settings.service';
 
 @Component({
-  selector: 'app-user-info-charge-dialog',
-  templateUrl: './charge-dialog.component.html',
-  standalone: true,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [FormsModule, MatDialogModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatIconModule],
+	selector: 'app-user-info-charge-dialog',
+	templateUrl: './charge-dialog.component.html',
+	standalone: true,
+	changeDetection: ChangeDetectionStrategy.OnPush,
+	imports: [FormsModule, MatDialogModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatIconModule],
 })
 export class ChargeDialogComponent implements OnInit {
-  private dialogRef = inject(MatDialogRef<ChargeDialogComponent>);
-  private settingsService = inject(SettingsService);
-  private cdr = inject(ChangeDetectorRef);
+	private dialogRef = inject(MatDialogRef<ChargeDialogComponent>);
+	private settingsService = inject(SettingsService);
+	private cdr = inject(ChangeDetectorRef);
 
-  protected amount: number = 0;
-  protected readonly predefinedAmounts = [500, 800, 1000, 1500, 2000];
-  protected isLoading = true;
-  protected chargeItems: IChargeItem[] = [];
+	protected amount: number = 0;
+	protected readonly predefinedAmounts = [500, 800, 1000, 1500, 2000];
+	protected isLoading = true;
+	protected chargeItems: IChargeItem[] = [];
 
-  async ngOnInit(): Promise<void> {
-    this.chargeItems = await this.settingsService.getChargeItems();
-    this.isLoading = false;
-    this.cdr.markForCheck();
-  }
+	async ngOnInit(): Promise<void> {
+		this.chargeItems = await this.settingsService.getChargeItems();
+		this.isLoading = false;
+		this.cdr.markForCheck();
+	}
 
-  protected submit(): void {
-    this.dialogRef.close(this.amount);
-  }
+	protected submit(): void {
+		this.dialogRef.close(this.amount);
+	}
 }

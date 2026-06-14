@@ -13,9 +13,9 @@ import {ConfigService} from "../../../../common/services/config/config.service";
 	providedIn: 'root',
 })
 export class AuthService {
-  private configService: ConfigService = inject(ConfigService);
-  protected http: HttpClient = inject(HttpClient);
-  protected usersService: UsersService = inject(UsersService);
+	private configService: ConfigService = inject(ConfigService);
+	protected http: HttpClient = inject(HttpClient);
+	protected usersService: UsersService = inject(UsersService);
 
 	public get user(): IUser | null {
 		return this.#user;
@@ -59,23 +59,23 @@ export class AuthService {
 
 	#user: IUser | null = null;
 
-    public get apiTokenPayload(): JwtPayload {
-      return this.#apiTokenPayload;
-    }
+	public get apiTokenPayload(): JwtPayload {
+		return this.#apiTokenPayload;
+	}
 
-    public async init(): Promise<void> {
-      this.isLogged$ = this.isLoggedSubject.asObservable();
-      const userId = Number(localStorage.getItem('userId')) ?? null;
-      if (userId) {
-        try {
-          this.user = await this.usersService.getUser(userId);
-        } catch (e) {
-          if (e instanceof HttpErrorResponse && e.status === 404) {
-            this.logout();
-          }
-        }
-      }
-    }
+	public async init(): Promise<void> {
+		this.isLogged$ = this.isLoggedSubject.asObservable();
+		const userId = Number(localStorage.getItem('userId')) ?? null;
+		if (userId) {
+			try {
+				this.user = await this.usersService.getUser(userId);
+			} catch (e) {
+				if (e instanceof HttpErrorResponse && e.status === 404) {
+					this.logout();
+				}
+			}
+		}
+	}
 
 	public getPermissions(): EPermission[] {
 		return JSON.parse(localStorage.getItem('permissions') ?? '[]');

@@ -6,22 +6,22 @@ import { IsIncludedPipe } from '../../../../../../common/pipes/is-included/is-in
 import { FilterPanelComponent } from './filter-panel.component';
 
 describe('FilterPanelComponent', () => {
-  let component: FilterPanelComponent;
-  let fixture: ComponentFixture<FilterPanelComponent>;
+	let component: FilterPanelComponent;
+	let fixture: ComponentFixture<FilterPanelComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [ FilterPanelComponent ],
-      imports: [ CommonModule, MatIconModule, MatButtonModule, IsIncludedPipe ],
-    })
-    .compileComponents();
+	beforeEach(async () => {
+		await TestBed.configureTestingModule({
+			declarations: [ FilterPanelComponent ],
+			imports: [ CommonModule, MatIconModule, MatButtonModule, IsIncludedPipe ],
+		})
+			.compileComponents();
 
-    fixture = TestBed.createComponent(FilterPanelComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+		fixture = TestBed.createComponent(FilterPanelComponent);
+		component = fixture.componentInstance;
+		fixture.detectChanges();
+	});
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+	it('should create', () => {
+		expect(component).toBeTruthy();
+	});
 });

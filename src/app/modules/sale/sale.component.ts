@@ -9,8 +9,8 @@ import {CustomerService} from './services/customer/customer.service';
 	standalone: false
 })
 export class SaleComponent {
-  public placeService = inject(PlaceService);
-  public customerService = inject(CustomerService);
+	public placeService = inject(PlaceService);
+	public customerService = inject(CustomerService);
 
 	public reorderMode = false;
 }

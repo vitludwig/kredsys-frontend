@@ -13,8 +13,8 @@ export class InitService {
 	private configService: ConfigService = inject(ConfigService);
 
 	public async init(): Promise<void> {
-    await this.configService.loadAppConfig();
-    await this.authService.init();
+		await this.configService.loadAppConfig();
+		await this.authService.init();
 
 		if(this.authService.isLogged) {
 			this.currencyService.defaultCurrency = await this.currencyService.getDefaultCurrency();

@@ -32,14 +32,14 @@ describe('AuthService', () => {
 		usersServiceSpy.getUser.and.returnValue(Promise.resolve(mockUser));
 
 		TestBed.configureTestingModule({
-    imports: [],
-    providers: [
-        { provide: ConfigService, useValue: mockConfig },
-        { provide: UsersService, useValue: usersServiceSpy },
-        provideHttpClient(withInterceptorsFromDi()),
-        provideHttpClientTesting(),
-    ]
-});
+			imports: [],
+			providers: [
+				{ provide: ConfigService, useValue: mockConfig },
+				{ provide: UsersService, useValue: usersServiceSpy },
+				provideHttpClient(withInterceptorsFromDi()),
+				provideHttpClientTesting(),
+			]
+		});
 		service = TestBed.inject(AuthService);
 		httpMock = TestBed.inject(HttpTestingController);
 	});

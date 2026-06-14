@@ -5,10 +5,10 @@ import {ActivatedRoute} from '@angular/router';
 import {Location} from '@angular/common';
 
 @Component({
-    selector: 'app-change-password',
-    templateUrl: './change-password.component.html',
-    styleUrls: ['./change-password.component.scss'],
-    standalone: false
+	selector: 'app-change-password',
+	templateUrl: './change-password.component.html',
+	styleUrls: ['./change-password.component.scss'],
+	standalone: false
 })
 export class ChangePasswordComponent {
 	protected oldPassword: string;

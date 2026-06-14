@@ -17,18 +17,18 @@ describe('StornoDialogComponent', () => {
 	beforeEach(async () => {
 		clearAllCaches();
 		await TestBed.configureTestingModule({
-    declarations: [StornoDialogComponent],
-    schemas: [NO_ERRORS_SCHEMA],
-    imports: [MatSnackBarModule],
-    providers: [
-        { provide: MatDialogRef, useValue: { close: jasmine.createSpy('close') } },
-        { provide: MAT_DIALOG_DATA, useValue: { user: of(null) } },
-        { provide: AuthService, useValue: { isLogged$: new BehaviorSubject(false), isLogged: false, user: null, isDebug: false } },
-        { provide: PlaceService, useValue: { selectedPlace: { id: 1, name: 'Test Place' } } },
-        provideHttpClient(withInterceptorsFromDi()),
-        provideHttpClientTesting(),
-    ]
-}).compileComponents();
+			declarations: [StornoDialogComponent],
+			schemas: [NO_ERRORS_SCHEMA],
+			imports: [MatSnackBarModule],
+			providers: [
+				{ provide: MatDialogRef, useValue: { close: jasmine.createSpy('close') } },
+				{ provide: MAT_DIALOG_DATA, useValue: { user: of(null) } },
+				{ provide: AuthService, useValue: { isLogged$: new BehaviorSubject(false), isLogged: false, user: null, isDebug: false } },
+				{ provide: PlaceService, useValue: { selectedPlace: { id: 1, name: 'Test Place' } } },
+				provideHttpClient(withInterceptorsFromDi()),
+				provideHttpClientTesting(),
+			]
+		}).compileComponents();
 	});
 
 	beforeEach(() => {

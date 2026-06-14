@@ -19,10 +19,10 @@ import {MatDialog} from '@angular/material/dialog';
 import {GoodsAddToPlaceDialogComponent} from './components/goods-add-to-place-dialog/goods-add-to-place-dialog.component';
 
 @Component({
-    selector: 'app-goods-list',
-    templateUrl: './goods-list.component.html',
-    styleUrls: ['./goods-list.component.scss'],
-    standalone: false
+	selector: 'app-goods-list',
+	templateUrl: './goods-list.component.html',
+	styleUrls: ['./goods-list.component.scss'],
+	standalone: false
 })
 export class GoodsListComponent implements OnInit, OnDestroy {
 	public goodsDisplayedColumns: string[] = ['name', 'type', 'price', 'places', 'actions'];

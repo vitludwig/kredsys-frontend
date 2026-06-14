@@ -6,10 +6,10 @@ import {ERoute} from '../../../../../../common/types/ERoute';
 import {AlertService} from '../../../../../../common/services/alert/alert.service';
 
 @Component({
-    selector: 'app-currency-detail',
-    templateUrl: './currency-detail.component.html',
-    styleUrls: ['./currency-detail.component.scss'],
-    standalone: false
+	selector: 'app-currency-detail',
+	templateUrl: './currency-detail.component.html',
+	styleUrls: ['./currency-detail.component.scss'],
+	standalone: false
 })
 export class CurrencyDetailComponent implements OnInit {
 	public item: ICurrency;

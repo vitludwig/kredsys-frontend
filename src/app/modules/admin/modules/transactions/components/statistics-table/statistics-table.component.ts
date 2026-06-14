@@ -8,10 +8,10 @@ import {MatSort} from '@angular/material/sort';
 import {MatPaginator} from '@angular/material/paginator';
 
 @Component({
-    selector: 'app-statistics-table',
-    templateUrl: './statistics-table.component.html',
-    styleUrls: ['./statistics-table.component.scss'],
-    standalone: false
+	selector: 'app-statistics-table',
+	templateUrl: './statistics-table.component.html',
+	styleUrls: ['./statistics-table.component.scss'],
+	standalone: false
 })
 export class StatisticsTableComponent implements OnInit, AfterViewInit {
 

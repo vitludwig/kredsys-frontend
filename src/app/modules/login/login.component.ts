@@ -16,10 +16,10 @@ import {PlaceService} from '../admin/services/place/place/place.service';
 import {Subject, takeUntil} from 'rxjs';
 
 @Component({
-    selector: 'app-login',
-    templateUrl: './login.component.html',
-    styleUrls: ['./login.component.scss'],
-    standalone: false
+	selector: 'app-login',
+	templateUrl: './login.component.html',
+	styleUrls: ['./login.component.scss'],
+	standalone: false
 })
 export class LoginComponent implements OnDestroy {
 	protected authService: AuthService = inject(AuthService);

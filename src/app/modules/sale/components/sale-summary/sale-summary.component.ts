@@ -14,10 +14,10 @@ import {EFeatureFlag} from "../../../../common/modules/feature-flags/types/EFeat
 import {FeatureFlagService} from "../../../../common/modules/feature-flags/services/feature-flag/feature-flag.service";
 
 @Component({
-    selector: 'app-sale-summary',
-    templateUrl: './sale-summary.component.html',
-    styleUrls: ['./sale-summary.component.scss'],
-    standalone: false
+	selector: 'app-sale-summary',
+	templateUrl: './sale-summary.component.html',
+	styleUrls: ['./sale-summary.component.scss'],
+	standalone: false
 })
 export class SaleSummaryComponent implements OnInit, OnDestroy {
 	@Input()
@@ -29,7 +29,7 @@ export class SaleSummaryComponent implements OnInit, OnDestroy {
 
 	protected unsubscribe: Subject<void> = new Subject();
 
-  protected readonly EFeatureFlag = EFeatureFlag;
+	protected readonly EFeatureFlag = EFeatureFlag;
 
 	constructor(
 		public orderService: OrderService,
@@ -120,9 +120,9 @@ export class SaleSummaryComponent implements OnInit, OnDestroy {
 		try {
 			await this.transactionService.pay(customerId, this.place.id!, records, this.customerService.cardUid);
 
-      if(this.featureFlagService.isEnabled(EFeatureFlag.PRINTER)) {
-        this.printService.printReceipt(this.orderService.items, this.customerService.customer.name);
-      }
+			if(this.featureFlagService.isEnabled(EFeatureFlag.PRINTER)) {
+				this.printService.printReceipt(this.orderService.items, this.customerService.customer.name);
+			}
 
 			this.orderService.clearOrder();
 			this.customerService.logout();

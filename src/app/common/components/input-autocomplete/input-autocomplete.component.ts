@@ -16,10 +16,10 @@ import {IPaginatedResponse} from "../../types/IPaginatedResponse";
 import {MatAutocompleteTrigger} from '@angular/material/autocomplete';
 
 @Component({
-    selector: 'app-input-autocomplete',
-    templateUrl: './input-autocomplete.component.html',
-    styleUrls: ['./input-autocomplete.component.scss'],
-    standalone: false
+	selector: 'app-input-autocomplete',
+	templateUrl: './input-autocomplete.component.html',
+	styleUrls: ['./input-autocomplete.component.scss'],
+	standalone: false
 })
 export class InputAutocompleteComponent<T> implements OnInit, AfterViewInit, OnChanges {
 
@@ -58,7 +58,7 @@ export class InputAutocompleteComponent<T> implements OnInit, AfterViewInit, OnC
 
 	@ViewChild(MatAutocompleteTrigger)
 	public autocompleteTrigger: MatAutocompleteTrigger;
-  
+
 	constructor() { }
 
 	public ngOnInit(): void {
@@ -99,7 +99,7 @@ export class InputAutocompleteComponent<T> implements OnInit, AfterViewInit, OnC
 	protected async getData(search: string): Promise<T[]> {
 		return (await this.dataLoader(search)).data;
 	}
-    
+
 	public propagateValue(value: T): void {
 		this.valueChange.emit(value);
 	}
