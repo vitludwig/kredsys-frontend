@@ -57,7 +57,7 @@
         <button mat-raised-button
           class="submit-btn"
           color="primary"
-          [disabled]="orderService.items.length === 0 || totalLeft < -((customerService.currencyAccount$ | async)?.overdraftLimit ?? 0) || payInProgress"
+          [disabled]="orderService.items.length === 0 || totalLeft < -((customerService.currencyAccount$ | async)?.overdraftLimit ?? 0) || payInProgress || customerService.cardExpired"
           (click)="submitOrder()"
           data-testid="sale-submit"
           >

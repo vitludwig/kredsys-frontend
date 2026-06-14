@@ -58,6 +58,18 @@ export const SEL = {
 		reorderToggle: 'reorder-toggle',
 		reorderOverlay: 'reorder-overlay',
 		reorderExit: 'reorder-exit',
+		expiredOverlay: 'sidebar-expired-overlay',
+	},
+	userCard: {
+		add: 'user-card-add',
+		row: (id: number) => `user-card-row-${id}`,
+		exp: (id: number) => `user-card-exp-${id}`,
+		edit: (id: number) => `user-card-edit-${id}`,
+		block: (id: number) => `user-card-block-${id}`,
+		unblock: (id: number) => `user-card-unblock-${id}`,
+		delete: (id: number) => `user-card-delete-${id}`,
+		expirationInput: 'expiration-input',
+		expirationSave: 'expiration-save',
 	},
 	dialog: {
 		confirmYes: 'confirm-yes',

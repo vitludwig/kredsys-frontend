@@ -188,15 +188,25 @@ describe('UsersService', () => {
   });
 
   describe('getUserCards', () => {
-    it('should GET user cards with pageSize=999', async () => {
+    it('should GET user cards with pageSize=999 and exclude blocked by default', async () => {
       const mockResponse: IPaginatedResponse<ICard> = { data: [], count: 0 };
       const promise = service.getUserCards(6);
       const req = httpMock.expectOne(r => r.url === API_URL + 'users/6/cards');
       expect(req.request.method).toBe('GET');
       expect(req.request.params.get('pageSize')).toBe('999');
+      expect(req.request.params.get('includeBlocked')).toBe('false');
       req.flush(mockResponse);
       const result = await promise;
       expect(result.count).toBe(0);
+    });
+
+    it('should request blocked cards when includeBlocked is true', async () => {
+      const mockResponse: IPaginatedResponse<ICard> = { data: [], count: 0 };
+      const promise = service.getUserCards(6, true);
+      const req = httpMock.expectOne(r => r.url === API_URL + 'users/6/cards');
+      expect(req.request.params.get('includeBlocked')).toBe('true');
+      req.flush(mockResponse);
+      await promise;
     });
   });
 
@@ -227,14 +237,15 @@ describe('UsersService', () => {
   });
 
   describe('getUserByCardUid', () => {
-    it('should GET user by card uid', async () => {
+    it('should GET user by card uid and return user + expired flag', async () => {
       const mockUser: IUser = { id: 8, name: 'Frank', email: 'frank@test.com', memberId: 600, roles: [], blocked: false };
       const promise = service.getUserByCardUid(12345);
       const req = httpMock.expectOne(API_URL + 'cards/12345/user');
       expect(req.request.method).toBe('GET');
-      req.flush(mockUser);
+      req.flush({ user: mockUser, expired: true });
       const result = await promise;
-      expect(result.name).toBe('Frank');
+      expect(result.user.name).toBe('Frank');
+      expect(result.expired).toBe(true);
     });
   });
 

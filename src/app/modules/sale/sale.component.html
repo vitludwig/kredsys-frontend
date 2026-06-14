@@ -11,6 +11,12 @@
     </div>
     <div class="sale-content__sidebar">
       <app-sale-summary [place]="placeService.selectedPlace"></app-sale-summary>
+      @if (customerService.cardExpired) {
+        <div class="sale-content__expired-overlay" data-testid="sidebar-expired-overlay">
+          <mat-icon class="sale-content__expired-icon">block</mat-icon>
+          <span class="sale-content__expired-label">Čip je expirovaný<br>prodej ani dobití nejsou možné</span>
+        </div>
+      }
       @if (reorderMode) {
         <div class="sale-content__reorder-overlay" data-testid="reorder-overlay">
           <mat-icon class="sale-content__reorder-icon">reorder</mat-icon>

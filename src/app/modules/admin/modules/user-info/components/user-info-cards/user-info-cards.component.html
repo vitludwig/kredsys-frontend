@@ -2,7 +2,7 @@
   <div class="uid__section-header">
     <h3>Karty</h3>
     <span [matTooltip]="'Nejdřív zablokuj stávající kartu s expirací.'" [matTooltipDisabled]="canAddCard">
-      <button mat-raised-button (click)="onAssignCard()" [disabled]="!canAddCard">
+      <button mat-raised-button (click)="onAssignCard()" [disabled]="!canAddCard" data-testid="user-card-add">
         <mat-icon>add</mat-icon>
         Přiřadit kartu
       </button>
@@ -12,7 +12,7 @@
     <p class="uid__empty">Žádné karty</p>
   }
   @for (card of cards(); track card.id) {
-    <div class="uid__card-row">
+    <div class="uid__card-row" [attr.data-testid]="'user-card-row-' + card.id">
       <span class="uid__card-uid">...{{ last4(card.uid) }}</span>
       <span class="uid__card-status">
         @if (card.blocked) {
@@ -21,7 +21,8 @@
           <span class="uid__badge--active">Aktivní</span>
         }
       </span>
-      <span class="uid__card-expiration" [class.uid__card-expiration--expired]="isExpired(card)">
+      <span class="uid__card-expiration" [class.uid__card-expiration--expired]="isExpired(card)"
+            [attr.data-testid]="'user-card-exp-' + card.id">
         @if (card.expirationDate) {
           {{ card.expirationDate | date:'dd.MM.yyyy HH:mm' }}
           @if (isExpired(card)) { <span>(vypršela)</span> }
@@ -29,15 +30,17 @@
           bez expirace
         }
       </span>
-      <button mat-icon-button (click)="onEditExpiration(card)" aria-label="Změnit expiraci" matTooltip="Změnit expiraci">
+      <button mat-icon-button (click)="onEditExpiration(card)" aria-label="Změnit expiraci" matTooltip="Změnit expiraci"
+              [attr.data-testid]="'user-card-edit-' + card.id">
         <mat-icon>edit_calendar</mat-icon>
       </button>
       @if (card.blocked) {
-        <button mat-button (click)="onUnblockCard(card)">Odblokovat</button>
+        <button mat-button (click)="onUnblockCard(card)" [attr.data-testid]="'user-card-unblock-' + card.id">Odblokovat</button>
       } @else {
-        <button mat-button (click)="onBlockCard(card)">Zablokovat</button>
+        <button mat-button (click)="onBlockCard(card)" [attr.data-testid]="'user-card-block-' + card.id">Zablokovat</button>
       }
-      <button mat-icon-button (click)="onDeleteCard(card)" aria-label="Smazat kartu" matTooltip="Smazat kartu">
+      <button mat-icon-button (click)="onDeleteCard(card)" aria-label="Smazat kartu" matTooltip="Smazat kartu"
+              [attr.data-testid]="'user-card-delete-' + card.id">
         <mat-icon>delete</mat-icon>
       </button>
     </div>

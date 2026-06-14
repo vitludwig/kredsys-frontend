@@ -11,4 +11,5 @@ export const currencyAccounts: ICurrencyAccount[] = [
 	{ id: 8,  userId: 8,  currencyId: 1, currentAmount: 750,  overdraftLimit: 0   },
 	{ id: 9,  userId: 9,  currencyId: 1, currentAmount: 0,    overdraftLimit: 0   },
 	{ id: 10, userId: 10, currencyId: 1, currentAmount: 100,  overdraftLimit: 0   },
+	{ id: 11, userId: 11, currencyId: 1, currentAmount: 300,  overdraftLimit: 0   },
 ];

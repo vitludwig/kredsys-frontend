@@ -103,6 +103,8 @@ out.push(setSeq('currency_accounts', Math.max(...currencyAccounts.map(a => a.id)
 out.push('-- CARDS');
 out.push(insert('cards', cards.map(c => ({
 	id: c.id, uid: c.uid, user_id: c.userId,
+	blocked: c.blocked ?? false,
+	expiration_date: c.expirationDate ?? null,
 }))));
 out.push(setSeq('cards', Math.max(...cards.map(c => c.id))));
 

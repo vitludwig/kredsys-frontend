@@ -134,7 +134,7 @@ export class CardInfoComponent {
         totalSum: this.userPublic?.user.TotalSum!
       }
     } else {
-      this.user = (await this.usersService.getUserByCardUid(cardId)) ?? null;
+      this.user = (await this.usersService.getUserByCardUid(cardId))?.user ?? null;
       if (!this.user) {
         return;
       }

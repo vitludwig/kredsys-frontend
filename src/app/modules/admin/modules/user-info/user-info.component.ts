@@ -123,7 +123,7 @@ export class UserInfoComponent implements OnInit {
 
 	protected async onCardLoaded(uid: number): Promise<void> {
 		try {
-			const user = await this.usersService.getUserByCardUid(uid);
+			const { user } = await this.usersService.getUserByCardUid(uid);
 			this.searchControl.setValue(user);
 			this.onUserSelected(user);
 		} catch {
@@ -152,7 +152,7 @@ export class UserInfoComponent implements OnInit {
 				user.id, 1, UserInfoComponent.TRANSACTIONS_PAGE_SIZE,
 				this.transactionFilter, this.transactionSort,
 			),
-			this.usersService.getUserCards(user.id),
+			this.usersService.getUserCards(user.id, true),
 			...groupIds.map(id => firstValueFrom(this.groupsService.getGroup(id))),
 		]);
 

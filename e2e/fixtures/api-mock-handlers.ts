@@ -1,6 +1,16 @@
 import { on, paginated, MockState } from './api-mock';
+import { FixtureCard } from './data';
 import { createMockJwt } from './jwt';
 import { permissionsForRoles } from './permissions';
+
+function cardExpired(card: FixtureCard): boolean {
+	return !!card.expirationDate && new Date(card.expirationDate).getTime() <= Date.now();
+}
+
+function cardByUid(state: MockState, uid: unknown): FixtureCard | undefined {
+	if (uid == null) return undefined;
+	return state.cards.find(c => c.uid === Number(uid));
+}
 
 function pageParams(url: URL): { page: number; pageSize: number } {
 	return {
@@ -150,7 +160,9 @@ on('PUT', /^users\/(\d+)\/changepassword$/, () => ({ body: {} }));
 // USER → cards / transactions / accounts / card-assign
 on('GET', /^users\/(\d+)\/cards$/, ({ match, url, state }) => {
 	const id = Number(match[1]);
-	const list = state.cards.filter(c => c.userId === id);
+	const includeBlocked = url.searchParams.get('includeBlocked') === 'true';
+	let list = state.cards.filter(c => c.userId === id);
+	if (!includeBlocked) list = list.filter(c => !c.blocked);
 	const { page, pageSize } = pageParams(url);
 	return { body: paginated(list, page, pageSize) };
 });
@@ -197,12 +209,38 @@ on('GET', /^cards$/, ({ url, state }) => {
 on('GET', /^cards\/(\d+)\/user$/, ({ match, state }) => {
 	const uid = Number(match[1]);
 	const c = state.cards.find(x => x.uid === uid);
-	if (!c) return { status: 404, body: {} };
+	// Blocked cards do not resolve (404) — matches GetByUidRequiredAsync(enableBlocked: false).
+	// Expired cards DO resolve (so the holder can still withdraw) but carry expired=true.
+	if (!c || c.blocked) return { status: 404, body: {} };
 	const u = state.users.find(x => x.id === c.userId);
 	if (!u) return { status: 404, body: {} };
 	const { password: _pw, ...safe } = u;
 	void _pw;
-	return { body: safe };
+	return { body: { user: safe, expired: cardExpired(c) } };
+});
+on('PUT', /^cards\/(\d+)\/block$/, ({ match, state }) => {
+	const id = Number(match[1]);
+	const c = state.cards.find(x => x.id === id);
+	if (!c) return { status: 404, body: {} };
+	c.blocked = true;
+	return { body: {} };
+});
+on('PUT', /^cards\/(\d+)\/unblock$/, ({ match, state }) => {
+	const id = Number(match[1]);
+	const c = state.cards.find(x => x.id === id);
+	if (!c) return { status: 404, body: {} };
+	c.blocked = false;
+	return { body: {} };
+});
+// Edit card (setUserCardExpiration sends { type, description, expirationDate }).
+on('PUT', /^cards\/(\d+)$/, ({ match, body, state }) => {
+	const id = Number(match[1]);
+	const c = state.cards.find(x => x.id === id);
+	if (!c) return { status: 404, body: {} };
+	if (body?.type !== undefined) c.type = body.type;
+	if (body?.description !== undefined) c.description = body.description;
+	c.expirationDate = body?.expirationDate ?? null;
+	return { body: c };
 });
 on('DELETE', /^cards\/(\d+)$/, ({ match, state }) => {
 	const id = Number(match[1]);
@@ -409,6 +447,12 @@ on('GET', /^transactions\/(\d+)$/, ({ match, state }) => {
 on('POST', /^transactions\/payment$/, ({ body, state }) => {
 	const userId: number = body?.userId;
 	const placeId: number = body?.placeId;
+	// Payment requires an active card: reject blocked or expired (matches backend
+	// ResolveCardForTransaction → GetActiveByUidRequiredAsync → 404).
+	const payCard = cardByUid(state, body?.cardUid);
+	if (payCard && (payCard.blocked || cardExpired(payCard))) {
+		return { status: 404, body: { error: 'card not active' } };
+	}
 	const acc = state.accounts.find(a => a.userId === userId);
 	const { records, total } = buildPaymentRecords(state, body?.records ?? []);
 
@@ -442,6 +486,11 @@ on('POST', /^transactions\/payment$/, ({ body, state }) => {
 on('POST', /^transactions\/deposit$/, ({ body, state }) => {
 	const userId: number = body?.userId;
 	const placeId: number = body?.placeId;
+	// Deposit also requires an active card (blocked/expired → 404).
+	const depCard = cardByUid(state, body?.cardUid);
+	if (depCard && (depCard.blocked || cardExpired(depCard))) {
+		return { status: 404, body: { error: 'card not active' } };
+	}
 	const recs: DepositRecord[] = body?.records ?? [];
 	const amt = recs.reduce((s, r) => s + Number(r.amount ?? 0), 0);
 	const acc = state.accounts.find(a => a.userId === userId);
@@ -479,6 +528,11 @@ on('POST', /^transactions\/deposit$/, ({ body, state }) => {
 on('POST', /^transactions\/withDraw$/, ({ body, state }) => {
 	const userId: number = body?.userId;
 	const placeId: number = body?.placeId;
+	// Withdraw stays possible on an EXPIRED card (refund) but not a blocked one.
+	const wdCard = cardByUid(state, body?.cardUid);
+	if (wdCard && wdCard.blocked) {
+		return { status: 404, body: { error: 'card blocked' } };
+	}
 	const recs: DepositRecord[] = body?.records ?? [];
 	const amt = recs.reduce((s, r) => s + Number(r.amount ?? 0), 0);
 	const acc = state.accounts.find(a => a.userId === userId);

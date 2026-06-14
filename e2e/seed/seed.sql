@@ -22,9 +22,10 @@ INSERT INTO users (id, name, email, password_hash, member_id, blocked) VALUES
   (7, 'Tomáš Tučný', 'tomas@test.cz', '__E2E_PLACEHOLDER__BCRYPT_REQUIRED__plaintext=pwd123', 1007, FALSE),
   (8, 'Lucie Lišková', 'lucie@test.cz', '__E2E_PLACEHOLDER__BCRYPT_REQUIRED__plaintext=pwd123', 1008, FALSE),
   (9, 'Ondřej Otec', 'ondrej@test.cz', '__E2E_PLACEHOLDER__BCRYPT_REQUIRED__plaintext=pwd123', 1009, FALSE),
-  (10, 'Eva Eko', 'eva@test.cz', '__E2E_PLACEHOLDER__BCRYPT_REQUIRED__plaintext=pwd123', 1010, FALSE);
+  (10, 'Eva Eko', 'eva@test.cz', '__E2E_PLACEHOLDER__BCRYPT_REQUIRED__plaintext=pwd123', 1010, FALSE),
+  (11, 'Edita Expirovaná', 'edita@test.cz', '__E2E_PLACEHOLDER__BCRYPT_REQUIRED__plaintext=pwd123', 1011, FALSE);
 
-SELECT setval('users_id_seq', 11, false);
+SELECT setval('users_id_seq', 12, false);
 
 -- USER_ROLES
 INSERT INTO user_roles (user_id, role) VALUES
@@ -37,7 +38,8 @@ INSERT INTO user_roles (user_id, role) VALUES
   (7, 'Member'),
   (8, 'Member'),
   (9, 'Member'),
-  (10, 'Member');
+  (10, 'Member'),
+  (11, 'Member');
 
 -- PLACES
 INSERT INTO places (id, name, type, api_token) VALUES
@@ -91,22 +93,26 @@ INSERT INTO currency_accounts (id, user_id, currency_id, current_amount, overdra
   (7, 7, 1, 200, 0),
   (8, 8, 1, 750, 0),
   (9, 9, 1, 0, 0),
-  (10, 10, 1, 100, 0);
+  (10, 10, 1, 100, 0),
+  (11, 11, 1, 300, 0);
 
-SELECT setval('currency_accounts_id_seq', 11, false);
+SELECT setval('currency_accounts_id_seq', 12, false);
 
 -- CARDS
-INSERT INTO cards (id, uid, user_id) VALUES
-  (1, 1111111111, 4),
-  (2, 2222222222, 5),
-  (3, 3333333333, 3),
-  (4, 4444444444, 7),
-  (5, 5555555555, 8),
-  (6, 6666666666, 9),
-  (7, 7777777777, 10),
-  (8, 8888888888, 1);
+INSERT INTO cards (id, uid, user_id, blocked, expiration_date) VALUES
+  (1, 1111111111, 4, FALSE, NULL),
+  (2, 2222222222, 5, FALSE, NULL),
+  (3, 3333333333, 3, FALSE, NULL),
+  (4, 4444444444, 7, FALSE, NULL),
+  (5, 5555555555, 8, FALSE, NULL),
+  (6, 6666666666, 9, FALSE, NULL),
+  (7, 7777777777, 10, FALSE, NULL),
+  (8, 8888888888, 1, FALSE, NULL),
+  (101, 1010101010, 11, FALSE, '2020-01-01T00:00:00'),
+  (102, 1020202020, 10, TRUE, NULL),
+  (103, 1030303030, 8, FALSE, '2099-12-31T23:59:00');
 
-SELECT setval('cards_id_seq', 9, false);
+SELECT setval('cards_id_seq', 104, false);
 
 -- GROUPS
 INSERT INTO groups (id, name, description, color) VALUES

@@ -34,6 +34,9 @@ export class CustomerService {
 	// UID of the card the customer was loaded with (sale flow), sent with transactions.
 	public cardUid: number | null = null;
 
+	// True when the card used to load the customer is expired — blocks payment/deposit, withdraw stays allowed.
+	public cardExpired: boolean = false;
+
 	constructor(
 		protected orderService: OrderService,
 		protected transactionService: TransactionService,
@@ -121,6 +124,7 @@ export class CustomerService {
 		this.customer = null;
 		this.currencyAccount = null;
 		this.cardUid = null;
+		this.cardExpired = false;
 	}
 
 	protected async loadCurrencyAccount(userId?: number): Promise<void> {

@@ -23,6 +23,8 @@ export const users: FixtureUser[] = [
 		memberId: 1009, roles: [EUserRole.MEMBER],         blocked: false, groups: [3] },
 	{ id: 10, name: 'Eva Eko',           email: 'eva@test.cz',     password: 'pwd123',
 		memberId: 1010, roles: [EUserRole.MEMBER],         blocked: false },
+	{ id: 11, name: 'Edita Expirovaná',  email: 'edita@test.cz',   password: 'pwd123',
+		memberId: 1011, roles: [EUserRole.MEMBER],         blocked: false },
 ];
 
 export const adminUser   = users[0];
@@ -31,3 +33,6 @@ export const powerUser   = users[2];
 export const memberUser  = users[3];
 export const janaUser    = users[4];
 export const blockedUser = users[5];
+export const luciaUser   = users[7];  // id 8 — has an active expiring card
+export const evaUser     = users[9];  // id 10 — has a blocked card
+export const expiredCardUser = users[10]; // id 11 — sole card is expired

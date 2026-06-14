@@ -84,6 +84,8 @@
           mat-raised-button
           color="accent"
           class="ms-3"
+          [disabled]="customerService.cardExpired"
+          [matTooltip]="customerService.cardExpired ? 'Čip je expirovaný — dobití není možné' : ''"
           (click)="openChargeDialog()"
   >
     Dobít

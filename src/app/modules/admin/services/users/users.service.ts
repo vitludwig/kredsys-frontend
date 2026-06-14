@@ -4,6 +4,7 @@ import {IPaginatedResponse} from '../../../../common/types/IPaginatedResponse';
 import {firstValueFrom, map} from 'rxjs';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import {ICard, EUserCardType} from '../../../../common/types/ICard';
+import {IUserByCard} from '../../../../common/types/IUserByCard';
 import {ICurrencyAccount} from '../../../../common/types/ICurrency';
 import {cache, invalidateCache} from '../../../../common/decorators/cache';
 import {ETime} from '../../../../common/types/ETime';
@@ -86,9 +87,10 @@ export class UsersService {
 	}
 
 	@cache(ETime.MINUTE * 2, [ECacheTag.USER_CARDS])
-	public async getUserCards(id: number): Promise<IPaginatedResponse<ICard>> {
+	public async getUserCards(id: number, includeBlocked: boolean = false): Promise<IPaginatedResponse<ICard>> {
 		const params = {
 			pageSize: 999,
+			includeBlocked,
 		};
 
 		return firstValueFrom(this.http.get<IPaginatedResponse<ICard>>(this.configService.config.apiUrl + 'users/' + id + '/cards', {params: params}));
@@ -106,8 +108,8 @@ export class UsersService {
 		return firstValueFrom(this.http.get<IPaginatedResponse<ITransactionResponse>>(this.configService.config.apiUrl + 'users/' + id + '/transactions', {params: params}));
 	}
 
-	public async getUserByCardUid(uid: number): Promise<IUser> {
-		return firstValueFrom(this.http.get<IUser>(this.configService.config.apiUrl + 'cards/' + uid + '/user'));
+	public async getUserByCardUid(uid: number): Promise<IUserByCard> {
+		return firstValueFrom(this.http.get<IUserByCard>(this.configService.config.apiUrl + 'cards/' + uid + '/user'));
 	}
 
 	public async getPublicUserIdByCardUid(uid: number): Promise<number | null> {

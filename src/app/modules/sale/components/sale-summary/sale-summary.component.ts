@@ -76,8 +76,10 @@ export class SaleSummaryComponent implements OnInit, OnDestroy {
 
 	public async loadUserId(uid: number): Promise<void> {
 		try {
-			this.customerService.customer = await this.usersService.getUserByCardUid(uid);
+			const result = await this.usersService.getUserByCardUid(uid);
+			this.customerService.customer = result.user;
 			this.customerService.cardUid = uid;
+			this.customerService.cardExpired = result.expired;
 			this.isUserLoaded = true;
 
 		} catch(e) {
@@ -97,6 +99,11 @@ export class SaleSummaryComponent implements OnInit, OnDestroy {
 
 	public async submitOrder(): Promise<void> {
 		if(this.orderService.items.length === 0 || !this.place || !this.customerService.customer) {
+			return;
+		}
+
+		if(this.customerService.cardExpired) {
+			this.alertService.error('Čip je expirovaný — platba není možná.');
 			return;
 		}
 
