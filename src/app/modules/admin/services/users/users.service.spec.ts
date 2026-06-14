@@ -319,6 +319,33 @@ describe('UsersService', () => {
     });
   });
 
+  describe('setUserCardExpiration', () => {
+    it('should PUT cards/{id} resending type and description', async () => {
+      const card: ICard = { id: 7, uid: 555, description: 'Main', type: EUserCardType.CARD, blocked: false };
+      const promise = service.setUserCardExpiration(card, '2026-12-31T23:59:00');
+      const req = httpMock.expectOne(API_URL + 'cards/7');
+      expect(req.request.method).toBe('PUT');
+      expect(req.request.body).toEqual({
+        type: 'Card',
+        description: 'Main',
+        expirationDate: '2026-12-31T23:59:00',
+      });
+      req.flush({ ...card, expirationDate: '2026-12-31T23:59:00' });
+      await promise;
+    });
+
+    it('should send empty description when card has none, and allow clearing expiration', async () => {
+      const card: ICard = { id: 8, uid: 556, description: '', type: EUserCardType.CARD };
+      const promise = service.setUserCardExpiration(card, null);
+      const req = httpMock.expectOne(API_URL + 'cards/8');
+      expect(req.request.body.expirationDate).toBeNull();
+      expect(req.request.body.description).toBe('');
+      expect(req.request.body.type).toBe('Card');
+      req.flush({ ...card, expirationDate: null });
+      await promise;
+    });
+  });
+
   describe('deleteUserCard', () => {
     it('should DELETE card by id', async () => {
       const promise = service.deleteUserCard(42);

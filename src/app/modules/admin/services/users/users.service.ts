@@ -155,6 +155,15 @@ export class UsersService {
 	}
 
 	@invalidateCache([ECacheTag.USER_CARDS])
+	public async setUserCardExpiration(card: ICard, expirationDate: string | null): Promise<ICard> {
+		return firstValueFrom(this.http.put<ICard>(this.configService.config.apiUrl + 'cards/' + card.id, {
+			type: card.type,
+			description: card.description ?? '',
+			expirationDate: expirationDate,
+		}));
+	}
+
+	@invalidateCache([ECacheTag.USER_CARDS])
 	public deleteUserCard(id: number): Promise<void> {
 		return firstValueFrom(this.http.delete<void>(this.configService.config.apiUrl + 'cards/' + id));
 	}
