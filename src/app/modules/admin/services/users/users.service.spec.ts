@@ -356,6 +356,25 @@ describe('UsersService', () => {
     });
   });
 
+  describe('blockUserCard / unblockUserCard', () => {
+    it('should PUT cards/{id}/block', async () => {
+      const promise = service.blockUserCard(42);
+      const req = httpMock.expectOne(API_URL + 'cards/42/block');
+      expect(req.request.method).toBe('PUT');
+      expect(req.request.body).toBeNull();
+      req.flush(null);
+      await promise;
+    });
+
+    it('should PUT cards/{id}/unblock', async () => {
+      const promise = service.unblockUserCard(42);
+      const req = httpMock.expectOne(API_URL + 'cards/42/unblock');
+      expect(req.request.method).toBe('PUT');
+      req.flush(null);
+      await promise;
+    });
+  });
+
   describe('changePassword', () => {
     it('should PUT password change', async () => {
       const promise = service.changePassword(5, 'oldPass', 'newPass');

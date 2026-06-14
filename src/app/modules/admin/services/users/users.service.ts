@@ -164,6 +164,16 @@ export class UsersService {
 	}
 
 	@invalidateCache([ECacheTag.USER_CARDS])
+	public blockUserCard(id: number): Promise<void> {
+		return firstValueFrom(this.http.put<void>(this.configService.config.apiUrl + 'cards/' + id + '/block', null));
+	}
+
+	@invalidateCache([ECacheTag.USER_CARDS])
+	public unblockUserCard(id: number): Promise<void> {
+		return firstValueFrom(this.http.put<void>(this.configService.config.apiUrl + 'cards/' + id + '/unblock', null));
+	}
+
+	@invalidateCache([ECacheTag.USER_CARDS])
 	public deleteUserCard(id: number): Promise<void> {
 		return firstValueFrom(this.http.delete<void>(this.configService.config.apiUrl + 'cards/' + id));
 	}
