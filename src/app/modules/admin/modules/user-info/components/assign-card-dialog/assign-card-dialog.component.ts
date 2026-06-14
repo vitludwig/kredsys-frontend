@@ -6,6 +6,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { UsersService } from '../../../../services/users/users.service';
 import { AlertService } from '../../../../../../common/services/alert/alert.service';
 import { CardLoaderComponent } from '../../../../../../common/components/card-loader/card-loader.component';
+import { EUserCardType } from '../../../../../../common/types/ICard';
 
 @Component({
 	selector: 'app-user-info-assign-card-dialog',
@@ -31,7 +32,7 @@ export class AssignCardDialogComponent {
 		if (this.inProgress) return;
 		this.inProgress = true;
 		try {
-			await this.usersService.addUserCard(this.data.userId, cardUid, '', 'Card');
+			await this.usersService.addUserCard(this.data.userId, cardUid, '', EUserCardType.CARD);
 			this.alertService.success('Karta přiřazena');
 			this.dialogRef.close(true);
 		} catch {

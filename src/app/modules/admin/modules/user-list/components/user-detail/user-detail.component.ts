@@ -5,7 +5,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {ERoute} from '../../../../../../common/types/ERoute';
 import {MatDialog} from '@angular/material/dialog';
 import {CardDetailComponent} from './components/card-detail/card-detail.component';
-import {ICard} from '../../../../../../common/types/ICard';
+import {ICard, EUserCardType} from '../../../../../../common/types/ICard';
 import {AlertService} from '../../../../../../common/services/alert/alert.service';
 import {ICurrency, ICurrencyAccount} from '../../../../../../common/types/ICurrency';
 import {Utils} from '../../../../../../common/utils/Utils';
@@ -144,7 +144,7 @@ export class UserDetailComponent implements OnInit {
 	protected openCardDetailDialog(): void {
 		const newCard = {
 			description: '',
-			type: 'Card',
+			type: EUserCardType.CARD,
 		};
 		const dialog = this.dialog.open<CardDetailComponent, ICard>(CardDetailComponent, {
 			width: '350px',

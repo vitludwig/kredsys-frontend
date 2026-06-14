@@ -3,7 +3,7 @@ import {EUserRole, IUser} from '../../../../common/types/IUser';
 import {IPaginatedResponse} from '../../../../common/types/IPaginatedResponse';
 import {firstValueFrom, map} from 'rxjs';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import {ICard} from '../../../../common/types/ICard';
+import {ICard, EUserCardType} from '../../../../common/types/ICard';
 import {ICurrencyAccount} from '../../../../common/types/ICurrency';
 import {cache, invalidateCache} from '../../../../common/decorators/cache';
 import {ETime} from '../../../../common/types/ETime';
@@ -145,7 +145,7 @@ export class UsersService {
 	}
 
 	@invalidateCache([ECacheTag.USER_CARDS])
-	public async addUserCard(userId: number, cardUid: number, description: string = '', type: string = 'Card'): Promise<ICard> {
+	public async addUserCard(userId: number, cardUid: number, description: string = '', type: EUserCardType = EUserCardType.CARD): Promise<ICard> {
 		return firstValueFrom(this.http.post<ICard>(this.configService.config.apiUrl + 'users/' + userId + '/card', {
 			uid: cardUid,
 			type: type,

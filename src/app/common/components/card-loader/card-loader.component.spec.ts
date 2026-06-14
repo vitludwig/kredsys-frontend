@@ -12,7 +12,7 @@ import {UsersService} from '../../../modules/admin/services/users/users.service'
 import {CardsService} from '../../../modules/admin/services/cards/cards.service';
 import {CustomerService} from '../../../modules/sale/services/customer/customer.service';
 import {IUser} from '../../types/IUser';
-import {ICard} from '../../types/ICard';
+import {ICard, EUserCardType} from '../../types/ICard';
 
 describe('CardLoaderComponent', () => {
 	let component: CardLoaderComponent;
@@ -53,10 +53,10 @@ describe('CardLoaderComponent — debug mode with user-select dropdown', () => {
 	];
 
 	const mockCards: ICard[] = [
-		{ uid: 1001, userId: 1, description: 'card1', type: 'Card' },
-		{ uid: 1002, userId: 2, description: 'card2', type: 'Card' },
-		{ uid: 1003, userId: 3, description: 'card3', type: 'Card' },
-		{ uid: 1004, userId: 1, description: 'card4', type: 'Card' },
+		{ uid: 1001, userId: 1, description: 'card1', type: EUserCardType.CARD },
+		{ uid: 1002, userId: 2, description: 'card2', type: EUserCardType.CARD },
+		{ uid: 1003, userId: 3, description: 'card3', type: EUserCardType.CARD },
+		{ uid: 1004, userId: 1, description: 'card4', type: EUserCardType.CARD },
 	];
 
 	let mockCardsService: jasmine.SpyObj<CardsService>;
