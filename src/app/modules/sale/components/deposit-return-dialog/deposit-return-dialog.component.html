@@ -1,0 +1,51 @@
+<button mat-icon-button class="close-btn" mat-dialog-close>
+  <mat-icon>close</mat-icon>
+</button>
+
+<h2 mat-dialog-title>Vrácení zálohy</h2>
+
+<div mat-dialog-content>
+  @if (isLoading) {
+    <div class="dr-loading">
+      <mat-spinner diameter="40"></mat-spinner>
+    </div>
+  } @else if (items.length === 0) {
+    <p class="dr-empty">Nejsou nastavené žádné zálohované věci. Přidej je v administraci → Nastavení.</p>
+  } @else {
+    <div class="dr-grid">
+      @for (item of items; track item.label; let i = $index) {
+        <div class="dr-item" [class.dr-item--active]="counts[i] > 0">
+          <button class="dr-item__add"
+            (click)="increment(i)"
+            [attr.data-testid]="'deposit-return-add-' + i">
+            <span class="dr-item__label">{{ item.label }}</span>
+            <span class="dr-item__amount">{{ item.amount }} Kč</span>
+            @if (counts[i] > 0) {
+              <span class="dr-item__badge" [attr.data-testid]="'deposit-return-count-' + i">{{ counts[i] }}</span>
+            }
+          </button>
+          <div class="dr-item__counter">
+            <button mat-icon-button (click)="decrement(i)" [disabled]="counts[i] === 0" aria-label="Ubrat">
+              <mat-icon>remove</mat-icon>
+            </button>
+            <span class="dr-item__count">{{ counts[i] }}</span>
+            <button mat-icon-button (click)="increment(i)" aria-label="Přidat">
+              <mat-icon>add</mat-icon>
+            </button>
+          </div>
+        </div>
+      }
+    </div>
+
+    <div class="dr-total" data-testid="deposit-return-total">Vrátit: {{ total }} Kč</div>
+
+    <button mat-raised-button
+      color="primary"
+      class="dr-confirm"
+      [disabled]="total <= 0"
+      (click)="confirm()"
+      data-testid="deposit-return-confirm">
+      Vrátit zálohu
+    </button>
+  }
+</div>

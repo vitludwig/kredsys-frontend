@@ -91,6 +91,27 @@ export class CustomerService {
 		}
 	}
 
+	// Refunds a deposit (vratná záloha, e.g. cups/cards) back onto the card. The `info`
+	// marker tags the transaction so deposit returns can be tracked/filtered.
+	public async returnDeposit(amount: number, place: IPlace, info: string): Promise<void> {
+		const records: ITransactionRecordDeposit[] = [{
+			creatorId: -1,
+			amount: amount,
+			text: info,
+		}];
+
+		await this.transactionService.deposit(
+			this.customer!.id!,
+			place.id!,
+			this.currencyAccount?.currencyId ?? (await this.currencyService.getDefaultCurrency()).id!,
+			records,
+			this.cardUid,
+			info,
+		);
+
+		await this.loadCurrencyAccount(this.customer!.id!);
+	}
+
 	public async dischargeMoney(place: IPlace): Promise<void> {
 		try {
 			const records: ITransactionRecordDeposit[] = [{

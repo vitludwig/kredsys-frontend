@@ -258,6 +258,32 @@ describe('CustomerService', () => {
 		expect(caughtError!.message).toBe('deposit failed');
 	}));
 
+	it('returnDeposit should deposit the amount with the tracking info marker', fakeAsync(() => {
+		service.customer = mockUser;
+		tick();
+
+		service.returnDeposit(75, mockPlace, 'Vrácení zálohy: 2× Kelímek');
+		tick();
+
+		expect(transactionServiceSpy.deposit).toHaveBeenCalledWith(
+			1, 1, 1,
+			[{ creatorId: -1, amount: 75, text: 'Vrácení zálohy: 2× Kelímek' }],
+			null,
+			'Vrácení zálohy: 2× Kelímek',
+		);
+	}));
+
+	it('returnDeposit should reload currency account afterwards', fakeAsync(() => {
+		service.customer = mockUser;
+		tick();
+
+		usersServiceSpy.getUserCurrencyAccounts.calls.reset();
+		service.returnDeposit(25, mockPlace, 'Vrácení zálohy: 1× Karta');
+		tick();
+
+		expect(usersServiceSpy.getUserCurrencyAccounts).toHaveBeenCalledWith(1);
+	}));
+
 	it('dischargeMoney should call transactionService.withDraw with full balance', fakeAsync(() => {
 		service.customer = mockUser;
 		tick();

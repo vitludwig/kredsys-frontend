@@ -1,4 +1,4 @@
-export interface IChargeItem {
+export interface IDepositItem {
   label: string;
   amount: number;
 }

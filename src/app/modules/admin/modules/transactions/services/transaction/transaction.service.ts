@@ -69,9 +69,9 @@ export class TransactionService {
   }
 
 	@invalidateCache([ECacheTag.TRANSACTIONS, ECacheTag.TRANSACTION])
-	public deposit(userId: number, placeId: number, currencyId: number, records: ITransactionRecordDeposit[], cardUid: number | null = null): Promise<ITransactionResponse> {
+	public deposit(userId: number, placeId: number, currencyId: number, records: ITransactionRecordDeposit[], cardUid: number | null = null, info: string = ''): Promise<ITransactionResponse> {
 		return firstValueFrom(this.http.post<ITransactionResponse>(this.configService.config.apiUrl + 'transactions/deposit', {
-			info: '',
+			info: info,
 			userId: userId,
 			placeId: placeId,
 			records: records,

@@ -23,9 +23,9 @@ describe('SettingsService', () => {
 
 	afterEach(() => httpMock.verify());
 
-	describe('getChargeItems', () => {
+	describe('getDepositItems', () => {
 		it('returns parsed items when setting exists', async () => {
-			const promise = service.getChargeItems();
+			const promise = service.getDepositItems();
 			const req = httpMock.expectOne(`${baseUrl}settings/charge_items`);
 			expect(req.request.method).toBe('GET');
 			req.flush({ id: 1, value: '[{"label":"Kelímek","amount":60}]' });
@@ -34,7 +34,7 @@ describe('SettingsService', () => {
 		});
 
 		it('returns empty array on 404', async () => {
-			const promise = service.getChargeItems();
+			const promise = service.getDepositItems();
 			const req = httpMock.expectOne(`${baseUrl}settings/charge_items`);
 			req.flush('Not found', { status: 404, statusText: 'Not Found' });
 			const result = await promise;
@@ -42,7 +42,7 @@ describe('SettingsService', () => {
 		});
 
 		it('returns empty array when value is null', async () => {
-			const promise = service.getChargeItems();
+			const promise = service.getDepositItems();
 			const req = httpMock.expectOne(`${baseUrl}settings/charge_items`);
 			req.flush({ id: 1, value: null });
 			const result = await promise;
@@ -51,7 +51,7 @@ describe('SettingsService', () => {
 
 		it('returns empty array and logs error when value is invalid JSON', async () => {
 			spyOn(console, 'error');
-			const promise = service.getChargeItems();
+			const promise = service.getDepositItems();
 			const req = httpMock.expectOne(`${baseUrl}settings/charge_items`);
 			req.flush({ id: 1, value: 'not-json{' });
 			const result = await promise;
@@ -60,7 +60,7 @@ describe('SettingsService', () => {
 		});
 
 		it('returns empty array when value is valid JSON but not an array', async () => {
-			const promise = service.getChargeItems();
+			const promise = service.getDepositItems();
 			const req = httpMock.expectOne(`${baseUrl}settings/charge_items`);
 			req.flush({ id: 1, value: '{"label":"foo","amount":10}' });
 			const result = await promise;
@@ -68,7 +68,7 @@ describe('SettingsService', () => {
 		});
 
 		it('filters out items with wrong shape', async () => {
-			const promise = service.getChargeItems();
+			const promise = service.getDepositItems();
 			const req = httpMock.expectOne(`${baseUrl}settings/charge_items`);
 			req.flush({ id: 1, value: '[{"label":"ok","amount":10},{"label":42,"amount":"bad"},null]' });
 			const result = await promise;
@@ -77,7 +77,7 @@ describe('SettingsService', () => {
 
 		it('returns empty array and logs when HTTP error is non-404', async () => {
 			spyOn(console, 'error');
-			const promise = service.getChargeItems();
+			const promise = service.getDepositItems();
 			const req = httpMock.expectOne(`${baseUrl}settings/charge_items`);
 			req.flush('Server error', { status: 500, statusText: 'Internal Server Error' });
 			const result = await promise;
@@ -86,14 +86,14 @@ describe('SettingsService', () => {
 		});
 	});
 
-	describe('saveChargeItems', () => {
-		it('DELETEs then POSTs when setting already exists (primed by getChargeItems)', async () => {
-			const getPromise = service.getChargeItems();
+	describe('saveDepositItems', () => {
+		it('DELETEs then POSTs when setting already exists (primed by getDepositItems)', async () => {
+			const getPromise = service.getDepositItems();
 			httpMock.expectOne(`${baseUrl}settings/charge_items`).flush({ id: 7, value: '[]' });
 			await getPromise;
 
-			// settingId = 7, DELETE is initiated synchronously on saveChargeItems call
-			const savePromise = service.saveChargeItems([{ label: 'Test', amount: 50 }]);
+			// settingId = 7, DELETE is initiated synchronously on saveDepositItems call
+			const savePromise = service.saveDepositItems([{ label: 'Test', amount: 50 }]);
 			const deleteReq = httpMock.expectOne(r => r.method === 'DELETE');
 			expect(deleteReq.request.params.get('id')).toBe('7');
 			deleteReq.flush(null);
@@ -105,7 +105,7 @@ describe('SettingsService', () => {
 			expect(postReq.request.body).toEqual({
 				key: 'charge_items',
 				value: '[{"label":"Test","amount":50}]',
-				description: 'Dynamické položky při nabíjení kreditu',
+				description: 'Zálohované věci',
 				isPublic: true,
 			});
 			postReq.flush({ id: 8, value: '[{"label":"Test","amount":50}]' });
@@ -114,7 +114,7 @@ describe('SettingsService', () => {
 
 		it('GETs then DELETEs then POSTs when settingId is unknown and setting exists', async () => {
 			// settingId starts null → GET is initiated synchronously
-			const savePromise = service.saveChargeItems([{ label: 'Test', amount: 50 }]);
+			const savePromise = service.saveDepositItems([{ label: 'Test', amount: 50 }]);
 			const getReq = httpMock.expectOne(`${baseUrl}settings/charge_items`);
 			expect(getReq.request.method).toBe('GET');
 			getReq.flush({ id: 5, value: '[]' });
@@ -134,7 +134,7 @@ describe('SettingsService', () => {
 		});
 
 		it('GETs then POSTs when settingId is unknown and setting does not exist', async () => {
-			const savePromise = service.saveChargeItems([{ label: 'Test', amount: 50 }]);
+			const savePromise = service.saveDepositItems([{ label: 'Test', amount: 50 }]);
 			const getReq = httpMock.expectOne(`${baseUrl}settings/charge_items`);
 			getReq.flush('Not found', { status: 404, statusText: 'Not Found' });
 
@@ -145,7 +145,7 @@ describe('SettingsService', () => {
 			expect(postReq.request.body).toEqual({
 				key: 'charge_items',
 				value: '[{"label":"Test","amount":50}]',
-				description: 'Dynamické položky při nabíjení kreditu',
+				description: 'Zálohované věci',
 				isPublic: true,
 			});
 			postReq.flush({ id: 3, value: '[{"label":"Test","amount":50}]' });
@@ -153,14 +153,14 @@ describe('SettingsService', () => {
 		});
 
 		it('POSTs directly when setting is known not to exist', async () => {
-			const getPromise = service.getChargeItems();
+			const getPromise = service.getDepositItems();
 			httpMock.expectOne(`${baseUrl}settings/charge_items`).flush(
 				'Not found', { status: 404, statusText: 'Not Found' }
 			);
 			await getPromise; // settingId = 0
 
 			// settingId = 0 → skip null check and skip DELETE → POST is initiated synchronously
-			const savePromise = service.saveChargeItems([{ label: 'Test', amount: 50 }]);
+			const savePromise = service.saveDepositItems([{ label: 'Test', amount: 50 }]);
 			const postReq = httpMock.expectOne(`${baseUrl}settings`);
 			expect(postReq.request.method).toBe('POST');
 			postReq.flush({ id: 4, value: '[{"label":"Test","amount":50}]' });
@@ -168,11 +168,11 @@ describe('SettingsService', () => {
 		});
 
 		it('proceeds to POST if DELETE returns 404 (setting deleted externally)', async () => {
-			const getPromise = service.getChargeItems();
+			const getPromise = service.getDepositItems();
 			httpMock.expectOne(`${baseUrl}settings/charge_items`).flush({ id: 9, value: '[]' });
 			await getPromise; // settingId = 9
 
-			const savePromise = service.saveChargeItems([{ label: 'Test', amount: 50 }]);
+			const savePromise = service.saveDepositItems([{ label: 'Test', amount: 50 }]);
 			const deleteReq = httpMock.expectOne(r => r.method === 'DELETE');
 			deleteReq.flush('Not found', { status: 404, statusText: 'Not Found' });
 
@@ -185,7 +185,7 @@ describe('SettingsService', () => {
 		});
 
 		it('throws and does not swallow non-404 GET error in unknown-state path', async () => {
-			const savePromise = service.saveChargeItems([{ label: 'Test', amount: 50 }]);
+			const savePromise = service.saveDepositItems([{ label: 'Test', amount: 50 }]);
 			httpMock.expectOne(`${baseUrl}settings/charge_items`).flush(
 				'Server error', { status: 500, statusText: 'Internal Server Error' }
 			);

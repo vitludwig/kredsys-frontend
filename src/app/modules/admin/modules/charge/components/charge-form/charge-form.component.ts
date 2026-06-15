@@ -5,8 +5,6 @@ import { UsersService } from '../../../../services/users/users.service';
 import { CurrencyService } from '../../../../services/currency/currency.service';
 import { AlertService } from '../../../../../../common/services/alert/alert.service';
 import { IChargeResult } from '../../types/IChargeResult';
-import { IChargeItem } from '../../../../../../common/types/IChargeItem';
-import { SettingsService } from '../../../../services/settings/settings.service';
 
 @Component({
 	selector: 'app-charge-form',
@@ -18,12 +16,10 @@ export class ChargeFormComponent implements OnInit {
 	private usersService = inject(UsersService);
 	private currencyService = inject(CurrencyService);
 	private alertService = inject(AlertService);
-	private settingsService = inject(SettingsService);
 	private cdr = inject(ChangeDetectorRef);
 
 	protected amount: number | null;
 	protected predefinedAmounts: number[] = [500, 800, 1000, 1500, 2000];
-	protected chargeItems: IChargeItem[] = [];
 	protected user: IUser | null;
 	protected currencyAccount: ICurrencyAccount | null;
 
@@ -46,10 +42,7 @@ export class ChargeFormComponent implements OnInit {
   protected isLoading = true;
 
   public async ngOnInit(): Promise<void> {
-  	[this.defaultCurrency, this.chargeItems] = await Promise.all([
-  		this.currencyService.getDefaultCurrency(),
-  		this.settingsService.getChargeItems(),
-  	]);
+  	this.defaultCurrency = await this.currencyService.getDefaultCurrency();
   	this.isLoading = false;
   	this.cdr.markForCheck();
   }

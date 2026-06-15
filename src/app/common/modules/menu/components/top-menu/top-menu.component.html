@@ -37,6 +37,7 @@
           <div class="desktop-buttons">
             @if(canChargeMoney) {
               <ng-container *ngTemplateOutlet="chargeButton"></ng-container>
+              <ng-container *ngTemplateOutlet="depositReturnButton"></ng-container>
             }
             @if(canChargeMoney && (customerService.currencyAccount$ | async) !== undefined) {
               <ng-container *ngTemplateOutlet="dischargeButton"></ng-container>
@@ -53,6 +54,9 @@
               <mat-menu #mobileMenu="matMenu">
                 <div mat-menu-item>
                     <ng-container *ngTemplateOutlet="chargeButton"></ng-container>
+                </div>
+                <div mat-menu-item>
+                    <ng-container *ngTemplateOutlet="depositReturnButton"></ng-container>
                 </div>
                 @if((customerService.currencyAccount$ | async) !== undefined) {
                   <div mat-menu-item>
@@ -89,6 +93,20 @@
           (click)="openChargeDialog()"
   >
     Dobít
+  </button>
+</ng-template>
+
+<ng-template #depositReturnButton>
+  <button mat-button
+          mat-raised-button
+          color="accent"
+          class="ms-3"
+          [disabled]="customerService.cardExpired"
+          [matTooltip]="customerService.cardExpired ? 'Čip je expirovaný — vrácení zálohy není možné' : ''"
+          (click)="openDepositReturnDialog()"
+          data-testid="top-menu-deposit-return"
+  >
+    Vrátit zálohu
   </button>
 </ng-template>
 

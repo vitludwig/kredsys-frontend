@@ -5,17 +5,17 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { IChargeItem } from '../../../../common/types/IChargeItem';
+import { IDepositItem } from '../../../../common/types/IDepositItem';
 import { SettingsService } from '../../services/settings/settings.service';
 import { AlertService } from '../../../../common/services/alert/alert.service';
 
 const MAX_AMOUNT = 100_000;
 
 interface ItemViewModel {
-  data: IChargeItem;
+  data: IDepositItem;
   editing: boolean;
   isNew: boolean;
-  original?: IChargeItem;
+  original?: IDepositItem;
 }
 
 @Component({
@@ -36,7 +36,7 @@ export class ChargeItemsComponent implements OnInit {
 	protected isSaving = false;
 
 	async ngOnInit(): Promise<void> {
-		const items = await this.settingsService.getChargeItems();
+		const items = await this.settingsService.getDepositItems();
 		this.viewModels = items.map(item => ({ data: item, editing: false, isNew: false }));
 		this.isLoading = false;
 		this.cdr.markForCheck();
@@ -93,7 +93,7 @@ export class ChargeItemsComponent implements OnInit {
 
 		try {
 			const toSave = items.map((item, i) => ({ label: trimmedLabels[i], amount: item.amount }));
-			await this.settingsService.saveChargeItems(toSave);
+			await this.settingsService.saveDepositItems(toSave);
 			this.viewModels.forEach((vm, i) => {
 				vm.data.label = trimmedLabels[i];
 				vm.editing = false;

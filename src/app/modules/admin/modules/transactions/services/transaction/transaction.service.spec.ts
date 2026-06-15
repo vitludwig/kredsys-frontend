@@ -145,7 +145,7 @@ describe('TransactionService', () => {
 			const promise = service.pay(5, 3, records);
 			const req = httpMock.expectOne(API_URL + 'transactions/payment');
 			expect(req.request.method).toBe('POST');
-			expect(req.request.body).toEqual({ info: '', userId: 5, placeId: 3, records });
+			expect(req.request.body).toEqual({ info: '', userId: 5, placeId: 3, records, cardUid: null });
 			req.flush(mockResponse);
 			const result = await promise;
 			expect(result.id).toBe(100);
@@ -171,7 +171,7 @@ describe('TransactionService', () => {
 			const promise = service.deposit(6, 4, 1, records);
 			const req = httpMock.expectOne(API_URL + 'transactions/deposit');
 			expect(req.request.method).toBe('POST');
-			expect(req.request.body).toEqual({ info: '', userId: 6, placeId: 4, records, currencyId: 1 });
+			expect(req.request.body).toEqual({ info: '', userId: 6, placeId: 4, records, currencyId: 1, cardUid: null });
 			req.flush(mockResponse);
 			const result = await promise;
 			expect(result.amount).toBe(200);
@@ -189,7 +189,7 @@ describe('TransactionService', () => {
 			const promise = service.withDraw(7, 5, 1, records);
 			const req = httpMock.expectOne(API_URL + 'transactions/withDraw');
 			expect(req.request.method).toBe('POST');
-			expect(req.request.body).toEqual({ info: '', userId: 7, placeId: 5, records, currencyId: 1 });
+			expect(req.request.body).toEqual({ info: '', userId: 7, placeId: 5, records, currencyId: 1, cardUid: null });
 			req.flush(mockResponse);
 			const result = await promise;
 			expect(result.type).toBe(ETransactionType.WITHDRAW);

@@ -14,6 +14,10 @@ import { AlertService } from "../../../../services/alert/alert.service";
 import {
 	DischargeDialogComponent
 } from "../../../../../modules/sale/components/discharge-dialog/discharge-dialog.component";
+import {
+	DepositReturnDialogComponent,
+	IDepositReturnResult
+} from "../../../../../modules/sale/components/deposit-return-dialog/deposit-return-dialog.component";
 
 @Component({
 	selector: 'app-top-menu',
@@ -99,6 +103,23 @@ export class TopMenuComponent implements OnInit, OnDestroy {
 			);
 	}
 
+	protected openDepositReturnDialog(): void {
+		const dialogRef = this.dialog.open<DepositReturnDialogComponent, void, IDepositReturnResult>(
+			DepositReturnDialogComponent, {
+				width: '440px',
+				minWidth: '300px',
+				autoFocus: 'dialog',
+			});
+
+		dialogRef.afterClosed()
+			.pipe(takeUntil(this.unsubscribe$))
+			.subscribe((result) => {
+				if (result) {
+					this.returnDeposit(result.amount, result.info);
+				}
+			});
+	}
+
 	protected openStornoDialog(): void {
 		const dialogRef = this.dialog.open<StornoDialogComponent, { user: Observable<IUser | null> }>(StornoDialogComponent, {
 			width: '400px',
@@ -130,6 +151,24 @@ export class TopMenuComponent implements OnInit, OnDestroy {
 		} catch (e) {
 			console.error('Cannot deposit money: ', e);
 			this.alertService.error('Nepodařilo se nabít peníze');
+		} finally {
+			this.amountLoading = false;
+		}
+	}
+
+	private async returnDeposit(amount: number, info: string): Promise<void> {
+		if (!this.place) {
+			return;
+		}
+
+		try {
+			this.amountLoading = true;
+			await this.customerService.returnDeposit(amount, this.place, info);
+
+			this.alertService.success('Záloha vrácena');
+		} catch (e) {
+			console.error('Cannot return deposit: ', e);
+			this.alertService.error('Nepodařilo se vrátit zálohu');
 		} finally {
 			this.amountLoading = false;
 		}

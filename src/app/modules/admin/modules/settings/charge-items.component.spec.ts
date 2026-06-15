@@ -12,13 +12,13 @@ describe('ChargeItemsComponent', () => {
 
 	beforeEach(async () => {
 		mockSettingsService = jasmine.createSpyObj('SettingsService', [
-			'getChargeItems',
-			'saveChargeItems',
+			'getDepositItems',
+			'saveDepositItems',
 		]);
-		mockSettingsService.getChargeItems.and.returnValue(Promise.resolve([
+		mockSettingsService.getDepositItems.and.returnValue(Promise.resolve([
 			{ label: 'Kelímek', amount: 60 },
 		]));
-		mockSettingsService.saveChargeItems.and.returnValue(Promise.resolve());
+		mockSettingsService.saveDepositItems.and.returnValue(Promise.resolve());
 
 		mockAlertService = jasmine.createSpyObj('AlertService', ['success', 'error']);
 
@@ -39,7 +39,7 @@ describe('ChargeItemsComponent', () => {
 
 	it('should create and load items on init', () => {
 		expect(component).toBeTruthy();
-		expect(mockSettingsService.getChargeItems).toHaveBeenCalled();
+		expect(mockSettingsService.getDepositItems).toHaveBeenCalled();
 		expect(component['isLoading']).toBeFalse();
 		expect(component['viewModels'].length).toBe(1);
 		expect(component['viewModels'][0]).toEqual(
@@ -90,12 +90,12 @@ describe('ChargeItemsComponent', () => {
 		});
 	});
 
-	it('save calls saveChargeItems with trimmed labels and shows success', async () => {
+	it('save calls saveDepositItems with trimmed labels and shows success', async () => {
 		component['viewModels'] = [
 			{ data: { label: '  Kelímek  ', amount: 60 }, editing: true, isNew: false },
 		];
 		await component.save();
-		expect(mockSettingsService.saveChargeItems).toHaveBeenCalledWith([{ label: 'Kelímek', amount: 60 }]);
+		expect(mockSettingsService.saveDepositItems).toHaveBeenCalledWith([{ label: 'Kelímek', amount: 60 }]);
 		expect(mockAlertService.success).toHaveBeenCalled();
 	});
 
@@ -113,7 +113,7 @@ describe('ChargeItemsComponent', () => {
 			{ data: { label: '', amount: 60 }, editing: true, isNew: true },
 		];
 		await component.save();
-		expect(mockSettingsService.saveChargeItems).not.toHaveBeenCalled();
+		expect(mockSettingsService.saveDepositItems).not.toHaveBeenCalled();
 		expect(mockAlertService.error).toHaveBeenCalled();
 	});
 
@@ -123,7 +123,7 @@ describe('ChargeItemsComponent', () => {
 			{ data: { label: 'pivo', amount: 80 }, editing: false, isNew: false },
 		];
 		await component.save();
-		expect(mockSettingsService.saveChargeItems).not.toHaveBeenCalled();
+		expect(mockSettingsService.saveDepositItems).not.toHaveBeenCalled();
 		expect(mockAlertService.error).toHaveBeenCalled();
 	});
 
@@ -132,7 +132,7 @@ describe('ChargeItemsComponent', () => {
 			{ data: { label: 'Kelímek', amount: 0 }, editing: true, isNew: true },
 		];
 		await component.save();
-		expect(mockSettingsService.saveChargeItems).not.toHaveBeenCalled();
+		expect(mockSettingsService.saveDepositItems).not.toHaveBeenCalled();
 		expect(mockAlertService.error).toHaveBeenCalled();
 	});
 
@@ -141,7 +141,7 @@ describe('ChargeItemsComponent', () => {
 			{ data: { label: 'Kelímek', amount: 200_000 }, editing: true, isNew: true },
 		];
 		await component.save();
-		expect(mockSettingsService.saveChargeItems).not.toHaveBeenCalled();
+		expect(mockSettingsService.saveDepositItems).not.toHaveBeenCalled();
 		expect(mockAlertService.error).toHaveBeenCalled();
 	});
 
@@ -150,14 +150,14 @@ describe('ChargeItemsComponent', () => {
 			{ data: { label: 'Kelímek', amount: 1.5 }, editing: true, isNew: true },
 		];
 		await component.save();
-		expect(mockSettingsService.saveChargeItems).not.toHaveBeenCalled();
+		expect(mockSettingsService.saveDepositItems).not.toHaveBeenCalled();
 		expect(mockAlertService.error).toHaveBeenCalled();
 	});
 
 	it('save shows error alert on service failure and does not update label', async () => {
 		const vm = { data: { label: 'Kelímek', amount: 60 }, editing: false, isNew: false };
 		component['viewModels'] = [vm];
-		mockSettingsService.saveChargeItems.and.returnValue(Promise.reject(new Error('fail')));
+		mockSettingsService.saveDepositItems.and.returnValue(Promise.reject(new Error('fail')));
 		await component.save();
 		expect(mockAlertService.error).toHaveBeenCalled();
 		expect(vm.data.label).toBe('Kelímek');

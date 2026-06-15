@@ -25,13 +25,6 @@
         >{{ value }} Kč
       </button>
     }
-    @for (item of chargeItems; track $index) {
-      <button mat-stroked-button
-        class="me-2"
-        (click)="amount = item.amount"
-        >{{ item.label }}
-      </button>
-    }
   </div>
   <button mat-raised-button
     color="primary"
