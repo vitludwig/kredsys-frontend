@@ -10,6 +10,11 @@
           &mdash;
         }
       </p>
+      @if (user().ticketId) {
+        <p class="uid__ticket-id" data-testid="ticket-id">
+          Číslo vstupenky {{ user().ticketId }}
+        </p>
+      }
       @if (groups().length > 0) {
         <div class="uid__groups">
           Skupina:

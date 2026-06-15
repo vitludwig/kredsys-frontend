@@ -27,7 +27,7 @@ export class UsersService {
 		let filter = `blocked=${blocked}`;
 
 		if(search) {
-			filter += `,name#=*${search}/i | memberId ^ ${search}`;
+			filter += `,name#=*${search}/i | memberId ^ ${search} | ticketId#=*${search}/i`;
 		}
 		const params = {
 			filter,

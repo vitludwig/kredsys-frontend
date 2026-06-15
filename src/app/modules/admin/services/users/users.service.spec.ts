@@ -62,7 +62,7 @@ describe('UsersService', () => {
 		it('should add search to filter when provided', async () => {
 			const promise = service.getUsers('john');
 			const req = httpMock.expectOne(r => r.url === API_URL + 'users');
-			expect(req.request.params.get('filter')).toBe('blocked=false,name#=*john/i | memberId ^ john');
+			expect(req.request.params.get('filter')).toBe('blocked=false,name#=*john/i | memberId ^ john | ticketId#=*john/i');
 			req.flush(mockResponse);
 			await promise;
 		});

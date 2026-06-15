@@ -7,6 +7,7 @@ export interface IUser {
 	roles: EUserRole[]; // basic, band, org...
 	blocked: boolean;
 	groups?: number[];
+	ticketId?: string | null;
 }
 
 export enum EUserRole {
