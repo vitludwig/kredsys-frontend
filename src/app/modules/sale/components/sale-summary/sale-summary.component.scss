@@ -9,7 +9,8 @@
 	.summary-list {
 		flex: 1;
 		min-height: 0;
-		//overflow-y: auto;
+		overflow-y: auto;
+		overflow-x: hidden;
 
 		.summary-item {
 			display: flex;
@@ -99,13 +100,51 @@
 @media (max-width: 768px) {
   .summary {
     font-size: 10px;
+
     .summary-list {
       flex: 1;
       min-height: 0;
+      // cap the scroll area so the total + Potvrdit always stay visible below it (≈2-3 items fit)
+      max-height: 19vh;
       overflow-y: auto;
     }
+
     .summary-actions {
+      display: flex;
+      flex-direction: row;
+      align-items: stretch;
+      gap: 0.5em;
       margin-top: unset;
+
+      // price + "Zbyde" stacked on the left
+      .summary-totals {
+        flex: 1 1 auto;
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+
+        .total {
+          margin: 0;
+          font-size: 2.2em;
+        }
+
+        .total-left {
+          border-top: 0;
+          padding: 0.25em 0;
+          font-size: 1.3em;
+        }
+      }
+
+      // big confirm button on the right
+      .submit-btn {
+        flex: 0 0 45%;
+        width: auto;
+        height: auto;
+        margin: 0;
+        padding: 0.5em;
+        font-size: 1.6em;
+      }
     }
   }
 }

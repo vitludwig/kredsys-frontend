@@ -101,8 +101,6 @@
           mat-raised-button
           color="accent"
           class="ms-3"
-          [disabled]="customerService.cardExpired"
-          [matTooltip]="customerService.cardExpired ? 'Čip je expirovaný — vrácení zálohy není možné' : ''"
           (click)="openDepositReturnDialog()"
           data-testid="top-menu-deposit-return"
   >

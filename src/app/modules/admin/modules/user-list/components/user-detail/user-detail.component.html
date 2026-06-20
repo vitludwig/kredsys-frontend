@@ -158,34 +158,6 @@
           </button>
         </div>
       </div>
-      <div class="col-xs-12 col-md-6">
-        <h2 class="d-flex justify-content-between">
-          <span>Napárované čipy</span>
-          <button mat-button
-            color="primary"
-            (click)="openCardDetailDialog()">
-            <mat-icon>add</mat-icon>
-            Přidat čip
-          </button>
-        </h2>
-        <mat-list role="list">
-          @for (card of cards; track card) {
-            <mat-list-item role="listitem"
-              >
-              <div class="card-item">
-                <span>{{ card.type }} (id:{{ card.uid }})</span>
-                <button mat-raised-button
-                  (clickConfirm)="deleteCard(card)"
-                  confirmPreset="remove"
-                  color="warn"
-                  >
-                  Odstranit
-                </button>
-              </div>
-            </mat-list-item>
-          }
-        </mat-list>
-      </div>
     </div>
   } @else {
     <div class="d-flex align-items-center justify-content-center w-100">

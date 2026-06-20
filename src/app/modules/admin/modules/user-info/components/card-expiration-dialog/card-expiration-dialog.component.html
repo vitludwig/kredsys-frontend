@@ -1,10 +1,30 @@
-<h2 mat-dialog-title>Expirace čipu</h2>
+<h2 mat-dialog-title>{{ cascadeWarning ? 'Expirace vstupenky' : 'Expirace čipu' }}</h2>
 
 <div mat-dialog-content style="display:flex;flex-direction:column;gap:12px;padding-top:8px">
-  <label style="display:flex;flex-direction:column;gap:4px">
-    Platnost do
-    <input type="datetime-local" [(ngModel)]="value" data-testid="expiration-input">
-  </label>
+  @if (cascadeWarning) {
+    <div data-testid="cascade-warning"
+         style="display:flex;gap:8px;align-items:center;padding:12px;border-radius:6px;background:#fff3e0;color:#e65100;font-weight:600">
+      <mat-icon>warning</mat-icon>
+      <span>Změna ovlivní expiraci všech čipů uživatele.</span>
+    </div>
+  }
+  <div style="display:flex;flex-direction:column;gap:4px">
+    <span>Platnost do</span>
+    <div style="display:flex;gap:12px">
+      <mat-form-field>
+        <mat-label>Datum</mat-label>
+        <input matInput [matDatepicker]="datePicker" [ngModel]="value" (ngModelChange)="onDateChange($event)" data-testid="expiration-date">
+        <mat-datepicker-toggle matIconSuffix [for]="datePicker"></mat-datepicker-toggle>
+        <mat-datepicker #datePicker></mat-datepicker>
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Čas</mat-label>
+        <input matInput [matTimepicker]="timePicker" [(ngModel)]="value" data-testid="expiration-time">
+        <mat-timepicker-toggle matIconSuffix [for]="timePicker"></mat-timepicker-toggle>
+        <mat-timepicker #timePicker></mat-timepicker>
+      </mat-form-field>
+    </div>
+  </div>
 </div>
 
 <div mat-dialog-actions style="display:flex;justify-content:space-between;gap:8px">

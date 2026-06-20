@@ -91,7 +91,7 @@ interface ICard {
   userId?: number;
 }
 
-enum EUserCardType { CARD = 'Card', TICKET = 'Ticket' }   // Ticket not used on FE
+enum EUserCardType { CARD = 'Card', TICKET = 'Ticket' }   // Ticket governs card expiration (see UserInfoCardsComponent)
 ```
 
 ## Groups types (`modules/groups/types/`)

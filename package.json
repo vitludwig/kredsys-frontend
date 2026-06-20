@@ -76,5 +76,6 @@
       "@angular/common": "$@angular/common",
       "@angular/core": "$@angular/core"
     }
-  }
+  },
+  "packageManager": "npm"
 }

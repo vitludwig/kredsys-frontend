@@ -107,7 +107,6 @@ export class UserDetailComponent implements OnInit {
 			return;
 		}
 
-		// TODO: pridat osetren erroru, globalne
 		try {
 			let user: IUser;
 
@@ -121,6 +120,8 @@ export class UserDetailComponent implements OnInit {
 				await this.addCards(user.id);
 			}
 
+			this.alertService.success(this.isEdit ? 'Uživatel uložen' : 'Uživatel přidán');
+
 			const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl');
 			if(returnUrl) {
 				this.router.navigateByUrl(returnUrl);
@@ -132,11 +133,17 @@ export class UserDetailComponent implements OnInit {
 
 			if(e instanceof HttpErrorResponse) {
 				if(e.status === 409) {
+					// duplicate member id / e-mail / card
 					this.userFormGroup.get('memberId')?.setErrors({conflict: true});
 					this.userFormGroup.get('memberId')?.markAsTouched();
+					this.alertService.error('Uživatel se zadaným členským číslem, e-mailem nebo čipem už existuje');
+				} else if(e.status === 500) {
+					this.alertService.error('Chyba serveru — uživatele se nepodařilo přidat, zkuste to znovu');
 				} else {
-					this.alertService.error(e.error.Message);
+					this.alertService.error(e.error?.Message ?? 'Uživatele se nepodařilo přidat');
 				}
+			} else {
+				this.alertService.error('Uživatele se nepodařilo přidat');
 			}
 		}
 	}

@@ -144,3 +144,55 @@ describe('CardLoaderComponent — debug mode with user-select dropdown', () => {
 		expect((window as any).__E2E_NEXT_CARD_UID__).toBeUndefined();
 	});
 });
+
+describe('CardLoaderComponent — scan terminator (Enter) handling', () => {
+	let component: CardLoaderComponent;
+	let fixture: ComponentFixture<CardLoaderComponent>;
+
+	beforeEach(async () => {
+		clearAllCaches();
+		await TestBed.configureTestingModule({
+			schemas: [NO_ERRORS_SCHEMA],
+			imports: [CardLoaderComponent, MatSnackBarModule],
+			providers: [
+				{ provide: AuthService, useValue: { isLogged$: new BehaviorSubject(false), isLogged: false, user: null, isDebug: false } },
+				{ provide: CustomerService, useValue: { customer$: new BehaviorSubject(null) } },
+				provideHttpClient(withInterceptorsFromDi()),
+				provideHttpClientTesting(),
+			]
+		}).compileComponents();
+
+		fixture = TestBed.createComponent(CardLoaderComponent);
+		component = fixture.componentInstance;
+		fixture.detectChanges(); // ngOnInit -> customer$ emits null -> the keydown scan listener is armed
+	});
+
+	afterEach(() => fixture.destroy());
+
+	function keydown(init: { key: string; keyCode?: number }): KeyboardEvent {
+		const ev = new KeyboardEvent('keydown', { key: init.key, bubbles: true, cancelable: true });
+		if (init.keyCode != null) {
+			Object.defineProperty(ev, 'keyCode', { get: () => init.keyCode });
+		}
+		spyOn(ev, 'preventDefault').and.callThrough();
+		document.dispatchEvent(ev);
+		return ev;
+	}
+
+	it('preventDefaults the terminating Enter so it cannot activate focused UI (e.g. a dialog close button)', () => {
+		let emitted: number | undefined;
+		component.cardIdChange.subscribe(uid => emitted = uid);
+
+		keydown({ key: '1' });
+		keydown({ key: '2' });
+		const enter = keydown({ key: 'Enter', keyCode: 13 });
+
+		expect(enter.preventDefault).toHaveBeenCalled();
+		expect(emitted).toBe(12);
+	});
+
+	it('does not preventDefault a bare Enter when no scan is in progress', () => {
+		const enter = keydown({ key: 'Enter', keyCode: 13 });
+		expect(enter.preventDefault).not.toHaveBeenCalled();
+	});
+});

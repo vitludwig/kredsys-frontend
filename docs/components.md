@@ -112,6 +112,12 @@ Card list per user. Shows UID last-4, Active/Blocked badge, expiration (date+tim
 Actions: edit expiration (`CardExpirationDialogComponent`), block/unblock, delete.
 "Přiřadit kartu" is disabled while an active card carries an expiration; a newly assigned card
 inherits the last-blocked card's expiration.
+**Ticket-driven expiration:** when the user holds a governing ticket (non-blocked `EUserCardType.TICKET`
+card), it renders in its own "Vstupenka" section (`physicalCards` keeps it out of the chip list); the
+backend forces every assigned/edited card to the ticket's expiration, so the per-chip expiration edit is
+disabled (`hasTicketExpiration`) and "Přiřadit kartu" stays enabled (`canAddCard` exemption — multiple
+cards allowed). Editing the ticket expiration opens the dialog in cascade-warning mode and the backend
+cascades the new value to all cards.
 
 ### Place management
 - `PlaceListComponent` — table

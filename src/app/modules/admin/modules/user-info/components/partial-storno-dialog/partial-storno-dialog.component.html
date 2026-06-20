@@ -1,47 +1,50 @@
 <h2 mat-dialog-title>Stornovat transakci</h2>
 
 <mat-dialog-content>
-	<h4 class="psd-section">Nastavení storna</h4>
+	<h4 class="psd-section">Stornovat tyto položky</h4>
 	@for (line of lines; track line) {
 		<div class="psd-row">
 			<span class="psd-name">{{ line.name }}</span>
 			<span class="psd-price">{{ line.unitPrice | number:'1.0-2' }} Kč/ks</span>
-			<span class="psd-stepper">
-				<button mat-icon-button type="button" (click)="dec(line)" [disabled]="line.stornoQty === 0" aria-label="Méně">
-					<mat-icon>remove</mat-icon>
-				</button>
-				<span class="psd-qty">{{ line.stornoQty }} / {{ line.quantity }}</span>
-				<button mat-icon-button type="button" (click)="inc(line)" [disabled]="line.stornoQty === line.quantity" aria-label="Více">
-					<mat-icon>add</mat-icon>
-				</button>
-			</span>
+			@if (multipleLines) {
+				<span class="psd-stepper">
+					<button mat-icon-button type="button" (click)="dec(line)" [disabled]="line.stornoQty === 0" aria-label="Méně">
+						<mat-icon>remove</mat-icon>
+					</button>
+					<span class="psd-qty">{{ line.stornoQty }} / {{ line.quantity }}</span>
+					<button mat-icon-button type="button" (click)="inc(line)" [disabled]="line.stornoQty === line.quantity" aria-label="Více">
+						<mat-icon>add</mat-icon>
+					</button>
+				</span>
+			} @else {
+				<span class="psd-qty">{{ line.quantity }}×</span>
+			}
 		</div>
-	}
-
-	<hr class="psd-divider">
-
-	<h4 class="psd-section">Bude stornováno</h4>
-	@if (stornoLines.length) {
-		@for (line of stornoLines; track line) {
-			<div class="psd-summary-row">
-				<span>{{ line.stornoQty }}× {{ line.name }}</span>
-				<span>{{ line.stornoQty * line.unitPrice | number:'1.0-2' }} Kč</span>
-			</div>
-		}
-		<div class="psd-total">Celkem storno: {{ totalStornoAmount | number:'1.0-2' }} Kč</div>
-	} @else {
-		<p class="psd-empty">Nic nevybráno ke stornu.</p>
 	}
 
 	@if (keptLines.length) {
-		<div class="psd-kept">
-			Ponecháno:
+		<hr class="psd-divider">
+
+		<h4 class="psd-section">V transakci zůstane:</h4>
+		<div class="psd-summary-row">
 			@for (line of keptLines; track line) {
 				{{ keepQty(line) }}× {{ line.name }}@if (!$last) {, }
 			}
-			= {{ totalKeepAmount | number:'1.0-2' }} Kč
 		</div>
 	}
+<!--	@if (stornoLines.length) {-->
+<!--		@for (line of stornoLines; track line) {-->
+<!--			<div class="psd-summary-row">-->
+<!--				<span>{{ line.stornoQty }}× {{ line.name }}</span>-->
+<!--				<span>{{ line.stornoQty * line.unitPrice | number:'1.0-2' }} Kč</span>-->
+<!--			</div>-->
+<!--		}-->
+<!--		<div class="psd-total">Celkem storno: {{ totalStornoAmount | number:'1.0-2' }} Kč</div>-->
+<!--	} @else {-->
+<!--		<p class="psd-empty">Nic nevybráno ke stornu.</p>-->
+<!--	}-->
+
+
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">

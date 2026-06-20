@@ -43,16 +43,18 @@
       </div>
 
       <div class="summary-actions">
-        <div class="total" data-testid="sale-summary-total">
-          {{ orderService.total }} Kč
-        </div>
-        <div [class.text-danger]="totalLeft < -((customerService.currencyAccount$ | async)?.overdraftLimit ?? 0)" class="total-left" data-testid="sale-summary-total-left">
-          Zbyde: {{ totalLeft }}
-        </div>
+        <div class="summary-totals">
+          <div class="total" data-testid="sale-summary-total">
+            {{ orderService.total }} Kč
+          </div>
+          <div [class.text-danger]="totalLeft < -((customerService.currencyAccount$ | async)?.overdraftLimit ?? 0)" class="total-left" data-testid="sale-summary-total-left">
+            Zbyde: {{ totalLeft }}
+          </div>
 
-        @if (totalLeft < -((customerService.currencyAccount$ | async)?.overdraftLimit ?? 0)) {
-          <div data-testid="sale-overdraft-warning" class="text-danger">Překročen limit přečerpání</div>
-        }
+          @if (totalLeft < -((customerService.currencyAccount$ | async)?.overdraftLimit ?? 0)) {
+            <div data-testid="sale-overdraft-warning" class="text-danger">Překročen limit přečerpání</div>
+          }
+        </div>
 
         <button mat-raised-button
           class="submit-btn"

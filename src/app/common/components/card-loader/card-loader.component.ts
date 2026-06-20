@@ -45,7 +45,9 @@ export class CardLoaderComponent implements OnInit, OnDestroy {
 	@Input()
 	public hidden: boolean = false;
 
-	// When true, a card that is already assigned to a user is rejected (not emitted) and an inline error is shown.
+  /**
+   * When true, a card that is already assigned to a user is rejected (not emitted) and an inline error is shown.
+   */
 	@Input()
 	public requireUnassigned: boolean = false;
 
@@ -202,6 +204,9 @@ export class CardLoaderComponent implements OnInit, OnDestroy {
 
 			// loading sequence is completed with Enter key (13)
 			if(event.keyCode === 13 && userId.length > 0) {
+				// The scan terminator must not leak into the UI: a focused button (e.g. a dialog's
+				// close "X") or a form would otherwise be activated/submitted by this Enter.
+				event.preventDefault();
 				this.removeKeydownListener();
 
 				try {

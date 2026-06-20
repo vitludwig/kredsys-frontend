@@ -8,7 +8,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 
 import { IUser } from '../../../../../../common/types/IUser';
-import { ICard } from '../../../../../../common/types/ICard';
+import { ICard, EUserCardType } from '../../../../../../common/types/ICard';
 import { UsersService } from '../../../../services/users/users.service';
 import { AlertService } from '../../../../../../common/services/alert/alert.service';
 import { ConfirmDialogComponent } from '../../../../../../common/components/confirm-dialog/confirm-dialog.component';
@@ -37,16 +37,42 @@ export class UserInfoCardsComponent {
 	private usersService = inject(UsersService);
 	private alertService = inject(AlertService);
 
-	// Adding is blocked while an active (non-blocked) card carries an expiration.
+	// Physical access cards (the ticket is rendered in its own "Vstupenka" section, not the chip list).
+	public get physicalCards(): ICard[] {
+		return this.cards().filter(c => c.type !== EUserCardType.TICKET);
+	}
+
+	// The user's governing ticket: their non-blocked Type=Ticket card. When several exist, the one with
+	// the latest expiration wins (a ticket carrying an expiration is preferred). Mirrors the backend rule.
+	public get activeTicket(): ICard | null {
+		return this.cards()
+			.filter(c => c.type === EUserCardType.TICKET && !c.blocked)
+			.sort((a, b) => this.expTime(b.expirationDate) - this.expTime(a.expirationDate))[0] ?? null;
+	}
+
+	// True when a governing ticket carries an expiration — then the backend owns every card's expiration
+	// and the per-chip expiration edit is disabled on the frontend.
+	public get hasTicketExpiration(): boolean {
+		return this.activeTicket?.expirationDate != null;
+	}
+
+	// Adding is blocked while an active (non-blocked) card carries an expiration — unless a ticket governs
+	// expirations, in which case multiple cards are allowed (the ticket, not this rule, sets expiration).
 	public get canAddCard(): boolean {
-		return !this.cards().some(c => !c.blocked && c.expirationDate != null);
+		if (this.activeTicket) return true;
+		return !this.physicalCards.some(c => !c.blocked && c.expirationDate != null);
 	}
 
 	// Expiration of the most recently blocked card carrying one (highest id; ICard has no blockedAt).
+	// Tickets never participate — they govern expiration through the dedicated ticket flow.
 	public get inheritedExpiration(): string | null {
 		return this.cards()
-			.filter(c => c.blocked && c.expirationDate != null)
+			.filter(c => c.type !== EUserCardType.TICKET && c.blocked && c.expirationDate != null)
 			.sort((a, b) => (b.id ?? 0) - (a.id ?? 0))[0]?.expirationDate ?? null;
+	}
+
+	private expTime(date: string | null | undefined): number {
+		return date == null ? -Infinity : new Date(date).getTime();
 	}
 
 	public isExpired(card: ICard): boolean {
@@ -60,12 +86,36 @@ export class UserInfoCardsComponent {
 	protected async onAssignCard(): Promise<void> {
 		const userId = this.user().id;
 		if (userId == null) return;
+		// When a ticket governs the user, the backend sets the new card's expiration from it — send none.
+		const expirationDate = this.activeTicket ? null : this.inheritedExpiration;
+		// autoFocus:false keeps focus off the close "X" button so a card scan's terminating Enter
+		// can't accidentally activate it and close the dialog mid-error.
 		const ref = this.dialog.open(AssignCardDialogComponent, {
 			width: '420px',
-			data: { userId, expirationDate: this.inheritedExpiration },
+			autoFocus: false,
+			data: { userId, expirationDate },
 		});
 		const result = await firstValueFrom(ref.afterClosed());
 		if (result) this.refresh.emit();
+	}
+
+	public async onEditTicketExpiration(): Promise<void> {
+		const ticket = this.activeTicket;
+		if (ticket == null) return;
+		const ref = this.dialog.open(CardExpirationDialogComponent, {
+			width: '360px',
+			data: { expirationDate: ticket.expirationDate ?? null, cascadeWarning: true },
+		});
+		const result = await firstValueFrom(ref.afterClosed());
+		if (result === undefined) return; // cancelled
+		try {
+			// Backend cascades the new ticket expiration to every card; refresh reloads the new values.
+			await this.usersService.setUserCardExpiration(ticket, result as string | null);
+			this.alertService.success('Expirace vstupenky uložena');
+			this.refresh.emit();
+		} catch {
+			this.alertService.error('Chyba při ukládání expirace');
+		}
 	}
 
 	public async onEditExpiration(card: ICard): Promise<void> {
