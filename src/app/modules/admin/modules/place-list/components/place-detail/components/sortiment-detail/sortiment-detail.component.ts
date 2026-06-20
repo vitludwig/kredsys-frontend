@@ -34,7 +34,7 @@ export class SortimentDetailComponent implements OnInit, OnDestroy {
 		public goodsService: GoodsService,
 		protected dialogRef: MatDialogRef<SortimentDetailComponent>,
 		protected alertService: AlertService,
-		@Inject(MAT_DIALOG_DATA) protected data: { existingItems: IGoods[] },
+		@Inject(MAT_DIALOG_DATA) protected data: { existingItems: IGoods[]; placeId?: number | null },
 	) {
 	}
 
@@ -42,8 +42,12 @@ export class SortimentDetailComponent implements OnInit, OnDestroy {
 		try {
 			this.isLoading = true;
 			const existingItemsId = this.data.existingItems.map((obj) => obj.id);
+			// "Dostupnost": offer only global goods (placeId null) or goods local to this place.
+			// A not-yet-saved place has no id, so only global goods are offered.
+			const placeId = this.data.placeId ?? null;
 			this.allGoods = (await this.goodsService.getAllGoods())
-				.filter((obj) => !existingItemsId.includes(obj.id));
+				.filter((obj) => !existingItemsId.includes(obj.id))
+				.filter((obj) => obj.placeId == null || obj.placeId === placeId);
 			this.filteredGoods.next(this.allGoods.slice());
 		} catch(e) {
 			this.alertService.error('Nepodařilo se načíst zboží');

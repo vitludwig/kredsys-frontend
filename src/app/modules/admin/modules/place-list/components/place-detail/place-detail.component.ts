@@ -135,6 +135,7 @@ export class PlaceDetailComponent extends WithSubscriptionsComponent implements 
 			},
 			data: {
 				existingItems: this.goods,
+				placeId: this.place.id,
 			}
 		});
 
