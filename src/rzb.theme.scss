@@ -175,11 +175,13 @@ $dark-theme: mat.define-theme((
 }
 
 // Raised / filled buttons — enforce contrast against dark background
-// Colors are sourced from $_palettes, not hardcoded
-.mat-mdc-raised-button,
-.mat-mdc-unelevated-button,
-.mat-mdc-fab,
-.mat-mdc-mini-fab {
+// Colors are sourced from $_palettes, not hardcoded.
+// Scoped to :not(:disabled) (as Material's own rules are) so disabled buttons keep
+// Material's greyed disabled tokens instead of being painted with enabled colors.
+.mat-mdc-raised-button:not(:disabled):not(.mat-mdc-button-disabled),
+.mat-mdc-unelevated-button:not(:disabled):not(.mat-mdc-button-disabled),
+.mat-mdc-fab:not(:disabled):not(.mat-mdc-button-disabled),
+.mat-mdc-mini-fab:not(:disabled):not(.mat-mdc-button-disabled) {
   &.mat-primary,
   &.mat-accent {
     background-color: map.get($_palettes, primary, 80) !important;
@@ -198,7 +200,7 @@ $dark-theme: mat.define-theme((
 }
 
 // Stroked buttons
-.mat-mdc-outlined-button {
+.mat-mdc-outlined-button:not(:disabled):not(.mat-mdc-button-disabled) {
   &.mat-primary,
   &.mat-accent {
     border-color: map.get($_palettes, primary, 80) !important;
@@ -217,7 +219,7 @@ $dark-theme: mat.define-theme((
 }
 
 // Text buttons (mat-button)
-.mat-mdc-button {
+.mat-mdc-button:not(:disabled):not(.mat-mdc-button-disabled) {
   &.mat-primary,
   &.mat-accent {
     color: map.get($_palettes, primary, 80) !important;

@@ -111,14 +111,6 @@ export class UserInfoTransactionsComponent {
 		});
 	}
 
-	protected recordsPreview(records?: ITransactionRecord[]): ITransactionRecord[] {
-		return records?.slice(0, RECORDS_PREVIEW_LIMIT) ?? [];
-	}
-
-	protected recordsOverflow(records?: ITransactionRecord[]): number {
-		return Math.max(0, (records?.length ?? 0) - RECORDS_PREVIEW_LIMIT);
-	}
-
 	protected onFilterChange(): void {
 		this.filterChange$.next();
 	}

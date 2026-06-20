@@ -147,16 +147,13 @@
           @if (tx.info) { <span class="uid__tx-text">- {{ tx.info }}</span> }
           @if (tx.records?.length) {
             <span class="uid__tx-records" role="list" aria-label="Položky">
-              @for (r of recordsPreview(tx.records); track r.id) {
+              @for (r of tx.records; track r.id) {
                 @if (r.goodsName) {
                   <span class="uid__tx-record-tag" role="listitem">
                     @if (tx.type === ETransactionType.PAYMENT) { {{ r.multiplier }}× }
                     {{ r.goodsName }}
                   </span>
                 }
-              }
-              @if (recordsOverflow(tx.records) > 0) {
-                <span class="uid__tx-record-more">+{{ recordsOverflow(tx.records) }}</span>
               }
             </span>
           }

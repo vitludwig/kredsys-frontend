@@ -30,16 +30,20 @@ export class PartialStornoDialogComponent {
 	private dialogRef = inject(MatDialogRef<PartialStornoDialogComponent, IPartialStornoResult | null>);
 	private data: { records: ITransactionRecord[] } = inject(MAT_DIALOG_DATA);
 
-	protected lines: IStornoLine[] = (this.data.records ?? [])
-		.filter((r) => r.goodsId != null)
-		.map((r) => ({
-			goodsId: r.goodsId,
-			name: r.goodsName ?? ('#' + r.goodsId),
-			unitPrice: r.multiplier > 0 ? r.amountSum / r.multiplier : r.amountSum,
-			quantity: r.multiplier,
-			creatorId: r.creatorId,
-			stornoQty: r.multiplier, // default: cancel everything
-		}));
+	private records: ITransactionRecord[] = (this.data.records ?? []).filter((r) => r.goodsId != null);
+
+	// One line -> no stepper, the whole item is cancelled. Multiple lines -> steppers, each starting at 0
+	// so the operator adds how many of each to cancel ("jdu stornovat tyto položky").
+	protected readonly multipleLines: boolean = this.records.length > 1 || this.records.some((r) => r.multiplier > 1);
+
+	protected lines: IStornoLine[] = this.records.map((r) => ({
+		goodsId: r.goodsId,
+		name: r.goodsName ?? ('#' + r.goodsId),
+		unitPrice: r.multiplier > 0 ? r.amountSum / r.multiplier : r.amountSum,
+		quantity: r.multiplier,
+		creatorId: r.creatorId,
+		stornoQty: this.multipleLines ? 0 : r.multiplier,
+	}));
 
 	protected dec(line: IStornoLine): void {
 		if (line.stornoQty > 0) {
