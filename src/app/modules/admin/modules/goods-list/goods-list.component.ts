@@ -122,10 +122,20 @@ export class GoodsListComponent implements OnInit, OnDestroy {
 
 	public async openAddToPlace(row: IGoodsTableSource): Promise<void> {
 		const existing = row.placeIds ?? [];
-		const available = this.places.filter(p => p.id != null && !existing.includes(p.id));
+		let available = this.places.filter(p => p.id != null && !existing.includes(p.id));
+
+		// Goods scoped to a place (placeId != null) are local to it and can only be
+		// added to that place — never anywhere else.
+		if(row.placeId != null) {
+			available = available.filter(p => p.id === row.placeId);
+		}
 
 		if(available.length === 0) {
-			this.alertService.error('Zboží je už přidáno na všech místech');
+			this.alertService.error(
+				row.placeId != null
+					? 'Lokální zboží lze přidat jen na jeho vlastní místo'
+					: 'Zboží je už přidáno na všech místech',
+			);
 			return;
 		}
 
@@ -135,7 +145,9 @@ export class GoodsListComponent implements OnInit, OnDestroy {
 		});
 
 		const placeId = await firstValueFrom(ref.afterClosed());
-		if(placeId == null) {
+		// Only proceed on an actual place selection — a cancelled dialog yields
+		// null/undefined (and a bare mat-dialog-close historically '').
+		if(typeof placeId !== 'number') {
 			return;
 		}
 

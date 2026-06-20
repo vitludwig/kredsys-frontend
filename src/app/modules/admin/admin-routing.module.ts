@@ -224,10 +224,21 @@ const routes: Routes = [
 	},
 	{
 		path: ERoute.ADMIN_USER_INFO,
-		loadComponent: () =>
-			import('./modules/user-info/user-info.component').then(m => m.UserInfoComponent),
 		canActivate: [placeGuard],
-		data: { name: 'Uživatelský dashboard' },
+		children: [
+			{
+				path: '',
+				loadComponent: () =>
+					import('./modules/user-info/user-info.component').then(m => m.UserInfoComponent),
+				data: { name: 'Uživatelský dashboard' },
+			},
+			{
+				path: ':id',
+				loadComponent: () =>
+					import('./modules/user-info/user-info.component').then(m => m.UserInfoComponent),
+				data: { name: 'Uživatelský dashboard' },
+			},
+		],
 	},
 	{
 		path: ERoute.ADMIN_SETTINGS,

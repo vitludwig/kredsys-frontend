@@ -10,7 +10,7 @@
 	</mat-form-field>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
-	<button mat-button mat-dialog-close>Zrušit</button>
+	<button mat-button [mat-dialog-close]="null">Zrušit</button>
 	<button mat-raised-button
 		color="primary"
 		[disabled]="selectedPlaceId == null"

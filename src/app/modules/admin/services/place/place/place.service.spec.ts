@@ -6,7 +6,8 @@ import { AuthService } from '../../../../login/services/auth/auth.service';
 import { EPlaceRole, IPlace } from '../../../../../common/types/IPlace';
 import { IPaginatedResponse } from '../../../../../common/types/IPaginatedResponse';
 import { BehaviorSubject } from 'rxjs';
-import { clearAllCaches } from '../../../../../common/decorators/cache';
+import { clearAllCaches, cacheTags } from '../../../../../common/decorators/cache';
+import { ECacheTag } from '../../../../../common/types/ECacheTag';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('PlaceService', () => {
@@ -192,6 +193,43 @@ describe('PlaceService', () => {
 		req.flush(null);
 
 		await promise;
+	});
+
+	// The goods list (incl. each item's place chips/placeIds) is cached under
+	// ECacheTag.GOODS. Adding/removing/moving a goods-place association must
+	// invalidate that cache, otherwise the chips show stale data after navigating
+	// away and back within the cache window.
+	it('addGoods should invalidate the GOODS cache', async () => {
+		expect(cacheTags[ECacheTag.GOODS]).toBeUndefined();
+
+		const promise = service.addGoods(10, 9);
+		const req = httpMock.expectOne(API_URL + 'places/9/goods?placeId=9&goodsId=10');
+		req.flush(null);
+		await promise;
+
+		expect(cacheTags[ECacheTag.GOODS]).toBeDefined();
+	});
+
+	it('removeGoods should invalidate the GOODS cache', async () => {
+		expect(cacheTags[ECacheTag.GOODS]).toBeUndefined();
+
+		const promise = service.removeGoods(10, 11);
+		const req = httpMock.expectOne(API_URL + 'places/11/goods/10');
+		req.flush(null);
+		await promise;
+
+		expect(cacheTags[ECacheTag.GOODS]).toBeDefined();
+	});
+
+	it('moveGoods should invalidate the GOODS cache', async () => {
+		expect(cacheTags[ECacheTag.GOODS]).toBeUndefined();
+
+		const promise = service.moveGoods(12, [1, 3, 2]);
+		const req = httpMock.expectOne(API_URL + 'places/12/goods/move');
+		req.flush(null);
+		await promise;
+
+		expect(cacheTags[ECacheTag.GOODS]).toBeDefined();
 	});
 
 	it('createNewPlace should return empty place template', () => {

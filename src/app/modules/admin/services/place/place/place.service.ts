@@ -148,7 +148,7 @@ export class PlaceService implements OnDestroy {
 		return firstValueFrom(this.http.post<IPlace>(this.configService.config.apiUrl + 'places/', item));
 	}
 
-	@invalidateCache([ECacheTag.PLACES, ECacheTag.PLACE])
+	@invalidateCache([ECacheTag.PLACES, ECacheTag.PLACE, ECacheTag.GOODS, ECacheTag.GOODIE])
 	public async addGoods(goodsId: number, placeId: number): Promise<void> {
 		return firstValueFrom(this.http.post<void>(this.configService.config.apiUrl + 'places/' + placeId + '/goods?placeId=' + placeId + '&goodsId=' + goodsId, {
 			placeId,
@@ -156,12 +156,12 @@ export class PlaceService implements OnDestroy {
 		}));
 	}
 
-	@invalidateCache([ECacheTag.PLACES, ECacheTag.PLACE])
+	@invalidateCache([ECacheTag.PLACES, ECacheTag.PLACE, ECacheTag.GOODS, ECacheTag.GOODIE])
 	public async removeGoods(goodsId: number, placeId: number): Promise<void> {
 		return firstValueFrom(this.http.delete<void>(this.configService.config.apiUrl + 'places/' + placeId + '/goods/' + goodsId));
 	}
 
-	@invalidateCache([ECacheTag.PLACES, ECacheTag.PLACE])
+	@invalidateCache([ECacheTag.PLACES, ECacheTag.PLACE, ECacheTag.GOODS, ECacheTag.GOODIE])
 	public async moveGoods(placeId: number, ids: number[]): Promise<void> {
 		return firstValueFrom(this.http.patch<void>(this.configService.config.apiUrl + 'places/' + placeId + '/goods/move', ids));
 	}

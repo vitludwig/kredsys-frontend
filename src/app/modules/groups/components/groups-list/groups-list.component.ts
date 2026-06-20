@@ -50,7 +50,7 @@ export class GroupsListComponent {
 
 	protected groups: WritableSignal<IGroup[]> = signal([]);
 	protected groupsTotal: WritableSignal<number> = signal(0);
-	protected displayedColumns: string[] = ['name', 'actions'];
+	protected displayedColumns: string[] = ['name', 'memberCount', 'actions'];
 
 	protected searchControl = new FormControl<string>('', {nonNullable: true});
 	private refresh$ = new BehaviorSubject<void>(void 0);

@@ -21,6 +21,8 @@ import { IGroup } from '../../../groups/types/IGroup';
 import { ITransactionResponse } from '../transactions/services/transaction/types/ITransaction';
 import { ITransactionFilter, UserInfoDetailComponent } from './components/user-info-detail/user-info-detail.component';
 import { CardLoaderComponent } from '../../../../common/components/card-loader/card-loader.component';
+import {ActivatedRoute, Router} from "@angular/router";
+import {ERoute} from '../../../../common/types/ERoute';
 
 @Component({
 	selector: 'app-user-info',
@@ -46,6 +48,8 @@ export class UserInfoComponent implements OnInit {
 	private alertService = inject(AlertService);
 	private currencyService = inject(CurrencyService);
 	private groupsService = inject(GroupsService);
+	private route = inject(ActivatedRoute);
+	private router = inject(Router);
 
 	protected searchControl = new FormControl<string | IUser>('');
 	protected userOptions: IUser[] = [];
@@ -69,7 +73,7 @@ export class UserInfoComponent implements OnInit {
 	private transactionSort = UserInfoComponent.DEFAULT_SORT + UserInfoComponent.SORT_TIEBREAKER;
 	private filterEpoch = 0;
 
-	public ngOnInit(): void {
+	public async ngOnInit(): Promise<void> {
 		this.defaultCurrencyId = this.currencyService.defaultCurrency?.id ?? null;
 
 		this.searchControl.valueChanges.pipe(
@@ -82,6 +86,18 @@ export class UserInfoComponent implements OnInit {
 		this.placeService.selectedPlace$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(place => {
 			this.placeId = place?.id ?? null;
 		});
+
+		const userId = Number(this.route.snapshot.paramMap.get('id'));
+
+		if (userId) {
+			try {
+				const user = await this.usersService.getUser(userId);
+				this.onUserSelected(user);
+			} catch {
+				this.alertService.error('Uživatel nenalezen');
+				void this.router.navigate([ERoute.ADMIN, ERoute.ADMIN_USER_INFO]);
+			}
+		}
 	}
 
 	private async doSearch(query: string): Promise<void> {

@@ -40,7 +40,7 @@ describe('GroupsService', () => {
 
 	describe('getGroups', () => {
 		const mockResponse: IPaginatedResponse<IGroup> = {
-			data: [{ id: 1, name: 'Group A', description: 'First group', color: '#ff0000' }],
+			data: [{ id: 1, name: 'Group A', description: 'First group', color: '#ff0000', memberCount: 4 }],
 			count: 1,
 		};
 
@@ -49,6 +49,7 @@ describe('GroupsService', () => {
 				next: (result) => {
 					expect(result.data.length).toBe(1);
 					expect(result.data[0].name).toBe('Group A');
+					expect(result.data[0].memberCount).toBe(4);
 					done();
 				},
 				error: done.fail,
