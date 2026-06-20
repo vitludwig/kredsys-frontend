@@ -45,7 +45,7 @@ export class CardLoaderComponent implements OnInit, OnDestroy {
 	@Input()
 	public hidden: boolean = false;
 
-  /**
+	/**
    * When true, a card that is already assigned to a user is rejected (not emitted) and an inline error is shown.
    */
 	@Input()

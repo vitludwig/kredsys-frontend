@@ -184,7 +184,7 @@ export class TopMenuComponent implements OnInit, OnDestroy {
 			await this.customerService.dischargeMoney(this.place)
 
 			this.alertService.success('Peníze vybity');
-      this.customerService.logout();
+			this.customerService.logout();
 		} catch (e) {
 			console.error('Cannot discharge money: ', e);
 			this.alertService.error('Nepodařilo se vybít peníze');
