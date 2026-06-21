@@ -210,6 +210,13 @@
             }
           }
 
+          @if (EUserRole.ADMIN | isIncluded : userRoles) {
+            <mat-list-item>
+              <mat-icon matListItemIcon>print</mat-icon>
+              <mat-slide-toggle (ngModelChange)="reloadPage()" [(ngModel)]="printerEnabled" data-testid="nav-printer-toggle">Tiskárna</mat-slide-toggle>
+            </mat-list-item>
+          }
+
           <mat-list-item>
             <mat-icon matListItemIcon>bug_report</mat-icon>
             <mat-slide-toggle (ngModelChange)="reloadPage()" [(ngModel)]="authService.isDebug" data-testid="nav-debug-toggle">Debug</mat-slide-toggle>

@@ -9,6 +9,7 @@ import {EPlaceRole} from "../../../../types/IPlace";
 import {PrintService} from "../../../../../modules/sale/services/print/print.service";
 import {MatDialog} from "@angular/material/dialog";
 import {EFeatureFlag} from "../../../feature-flags/types/EFeatureFlag";
+import {FeatureFlagService} from "../../../feature-flags/services/feature-flag/feature-flag.service";
 
 @Component({
 	selector: 'app-side-menu',
@@ -22,6 +23,7 @@ export class SideMenuComponent implements OnInit, OnDestroy {
 	protected printService: PrintService = inject(PrintService);
 	private placeService: PlaceService = inject(PlaceService);
 	private dialog: MatDialog = inject(MatDialog);
+	private featureFlagService: FeatureFlagService = inject(FeatureFlagService);
 
   @ViewChild('printerManualDialog', { static: true }) printerManualDialog: TemplateRef<any>;
 
@@ -63,6 +65,16 @@ export class SideMenuComponent implements OnInit, OnDestroy {
 
   public ngOnDestroy(): void {
   	this.unsubscribe.next();
+  }
+
+  // Printer feature flag (per-device, Web Bluetooth is Chrome-only). Toggling persists the
+  // flag; the template triggers reloadPage() on change so PrintService re-initialises.
+  protected get printerEnabled(): boolean {
+  	return this.featureFlagService.isEnabled(EFeatureFlag.PRINTER);
+  }
+
+  protected set printerEnabled(value: boolean) {
+  	this.featureFlagService.setEnabled(EFeatureFlag.PRINTER, value);
   }
 
   protected reloadPage(): void {

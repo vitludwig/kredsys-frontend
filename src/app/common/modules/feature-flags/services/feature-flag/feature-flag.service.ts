@@ -5,11 +5,14 @@ import {EFeatureFlag} from "../../types/EFeatureFlag";
 	providedIn: 'root'
 })
 export class FeatureFlagService {
-	private featureFlags: Record<EFeatureFlag, boolean> = {
-		[EFeatureFlag.PRINTER]: true,
-	};
+	// Feature flags are per-device: stored in localStorage, default OFF.
+	private static readonly STORAGE_PREFIX = 'featureFlag.';
 
 	public isEnabled(flag: EFeatureFlag): boolean {
-		return this.featureFlags[flag] ?? false;
+		return localStorage.getItem(FeatureFlagService.STORAGE_PREFIX + flag) === 'true';
+	}
+
+	public setEnabled(flag: EFeatureFlag, enabled: boolean): void {
+		localStorage.setItem(FeatureFlagService.STORAGE_PREFIX + flag, enabled + '');
 	}
 }
