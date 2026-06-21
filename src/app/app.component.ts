@@ -32,6 +32,15 @@ export class AppComponent implements OnInit, OnDestroy {
 	protected showNetworkAlert: boolean = false;
 	protected fullPageHeight: boolean = false;
 
+	// Anything under /public is a chrome-less surface (e.g. kiosk scoreboard): never show the
+	// top menu there, regardless of login state. Exact "/public" or a "/public/..." child only —
+	// "/publication" must not match.
+	protected get isPublicRoute(): boolean {
+		const publicBase = '/' + ERoute.PUBLIC;
+		const url = this.router.url.split('?')[0].split('#')[0];
+		return url === publicBase || url.startsWith(publicBase + '/');
+	}
+
 	public async ngOnInit(): Promise<void> {
 		this.router.events
 			.pipe(takeUntil(this.unsubscribe))
@@ -41,7 +50,9 @@ export class AppComponent implements OnInit, OnDestroy {
 					this.mainContent.nativeElement.focus();
 				}
 				if(event instanceof ActivationEnd) {
-					this.fullPageHeight = [ERoute.LOGIN_SIGN_IN, ERoute.LOGIN].includes(event.snapshot.routeConfig?.path as ERoute);
+					this.fullPageHeight =
+						[ERoute.LOGIN_SIGN_IN, ERoute.LOGIN].includes(event.snapshot.routeConfig?.path as ERoute)
+						|| !!event.snapshot.data?.['fullHeight'];
 				}
 			});
 

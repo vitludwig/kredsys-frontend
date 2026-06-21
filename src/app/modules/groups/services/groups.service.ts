@@ -6,6 +6,7 @@ import {IPaginatedResponse} from "../../../common/types/IPaginatedResponse";
 import {ConfigService} from "../../../common/services/config/config.service";
 import {IGroup, IGroupCreate} from "../types/IGroup";
 import {IGroupStatistics} from "../types/IGroupStatistics";
+import {IPublicGroupStatistics} from "../types/IPublicGroupStatistics";
 import {invalidateCache} from "../../../common/decorators/cache";
 import {ECacheTag} from "../../../common/types/ECacheTag";
 
@@ -49,6 +50,10 @@ export class GroupsService {
 
 	public getGroupStatistics(currencyId: number): Observable<IGroupStatistics> {
 		return this.http.get<IGroupStatistics>(`${this.configService.config.apiUrl}statistics/${currencyId}/groups-statistics`);
+	}
+
+	public getPublicGroupStatistics(): Observable<IPublicGroupStatistics> {
+		return this.http.get<IPublicGroupStatistics>(`${this.configService.config.apiUrl}public/groups-statistics`);
 	}
 
   @invalidateCache([ECacheTag.USER, ECacheTag.USERS])

@@ -171,6 +171,22 @@ describe('GroupsService', () => {
 		});
 	});
 
+	describe('getPublicGroupStatistics', () => {
+		it('should GET the anonymous public endpoint without a currency id', (done) => {
+			service.getPublicGroupStatistics().subscribe({
+				next: (result) => {
+					expect(result.sumPrice).toBe(30);
+					expect(result.groups.length).toBe(1);
+					done();
+				},
+				error: done.fail,
+			});
+			const req = httpMock.expectOne(API_URL + 'public/groups-statistics');
+			expect(req.request.method).toBe('GET');
+			req.flush({ sumPrice: 30, groups: [{ id: 1, name: 'A', color: '#ff0000', points: 30 }] });
+		});
+	});
+
 	describe('addUserToGroup', () => {
 		it('should POST to add user to group', async () => {
 			const promise = service.addUserToGroup(10, 3);

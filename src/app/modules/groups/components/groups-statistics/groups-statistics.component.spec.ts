@@ -1,90 +1,72 @@
-import {ComponentFixture, TestBed} from '@angular/core/testing';
-import { provideHttpClientTesting } from '@angular/common/http/testing';
+import {Component, Input} from '@angular/core';
+import {ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
+import {provideHttpClientTesting} from '@angular/common/http/testing';
 import {NO_ERRORS_SCHEMA} from '@angular/core';
+import {of, throwError} from 'rxjs';
 import {GroupsStatisticsComponent} from './groups-statistics.component';
-import {clearAllCaches} from '../../../../common/decorators/cache';
-import {AuthService} from '../../../login/services/auth/auth.service';
-import {BehaviorSubject} from 'rxjs';
-import {MatSnackBarModule} from '@angular/material/snack-bar';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import {GroupsService} from '../../services/groups.service';
+import {CurrencyService} from '../../../admin/services/currency/currency.service';
+import {AlertService} from '../../../../common/services/alert/alert.service';
+import {provideHttpClient, withInterceptorsFromDi} from '@angular/common/http';
+import {IScoreboardGroup} from '../../types/IScoreboardGroup';
 
-function makeStats(groupATotal: number): any {
-	return {
-		sumGoods: 0,
-		sumPrice: 0,
-		groupsStatistics: [
-			{ group: { id: 1, name: 'A', color: '#ff0000' }, statistics: { goods: [{ sumPrice: groupATotal }] } },
-			{ group: { id: 2, name: 'B', color: '#00ff00' }, statistics: { goods: [{ sumPrice: 100 }] } },
-		],
-	};
+@Component({ selector: 'app-groups-scoreboard', template: '', standalone: true })
+class GroupsScoreboardStub {
+	@Input() groups: IScoreboardGroup[] | null = null;
 }
 
-describe('GroupsStatisticsComponent', () => {
+describe('GroupsStatisticsComponent (container)', () => {
 	let component: GroupsStatisticsComponent;
 	let fixture: ComponentFixture<GroupsStatisticsComponent>;
+	let getStats: jasmine.Spy;
+	let alertSpy: { error: jasmine.Spy; success: jasmine.Spy; info: jasmine.Spy };
 
 	beforeEach(async () => {
-		clearAllCaches();
-		localStorage.clear();
+		getStats = jasmine.createSpy('getGroupStatistics').and.returnValue(of({
+			sumGoods: 0, sumPrice: 0,
+			groupsStatistics: [
+				{ group: { id: 1, name: 'A', color: '#ff0000' }, statistics: { goods: [{ sumPrice: 30 }] } },
+			],
+		}));
+		alertSpy = {
+			error: jasmine.createSpy('error'),
+			success: jasmine.createSpy('success'),
+			info: jasmine.createSpy('info'),
+		};
 		await TestBed.configureTestingModule({
 			schemas: [NO_ERRORS_SCHEMA],
-			imports: [GroupsStatisticsComponent, MatSnackBarModule],
+			imports: [GroupsStatisticsComponent],
 			providers: [
-				{ provide: AuthService, useValue: { isLogged$: new BehaviorSubject(false), isLogged: false, user: null, isDebug: false } },
+				{ provide: CurrencyService, useValue: { getDefaultCurrency$: () => of({ id: 1, name: 'CZK' }) } },
+				{ provide: GroupsService, useValue: { getGroupStatistics: getStats } },
+				{ provide: AlertService, useValue: alertSpy },
 				provideHttpClient(withInterceptorsFromDi()),
 				provideHttpClientTesting(),
-			]
-		}).compileComponents();
+			],
+		})
+		.overrideComponent(GroupsStatisticsComponent, {
+			set: { imports: [GroupsScoreboardStub] }
+		})
+		.compileComponents();
+	});
 
+	it('maps group statistics to scoreboard rows (total = sum of goods sumPrice)', fakeAsync(() => {
 		fixture = TestBed.createComponent(GroupsStatisticsComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
-	});
+		tick(0);
+		expect(component['scoreboard']()).toEqual([{ id: 1, name: 'A', color: '#ff0000', total: 30 }]);
+		expect(alertSpy.error).not.toHaveBeenCalled();
+	}));
 
-	it('should create', () => {
-		expect(component).toBeTruthy();
-	});
-
-	it('does not celebrate on the first poll', () => {
-		(component as any).updateChartData(makeStats(50));
-		expect(component['banner']()).toBeNull();
-	});
-
-	it('banners the group that gained points between polls', () => {
-		(component as any).updateChartData(makeStats(50));
-		(component as any).updateChartData(makeStats(80)); // group A grew 50 → 80
-		expect(component['banner']()).toEqual({ text: 'Skupina A získala body!', color: '#ff0000' });
-	});
-
-	it('does not banner when no group gained points', () => {
-		(component as any).updateChartData(makeStats(50));
-		(component as any).updateChartData(makeStats(50)); // unchanged
-		expect(component['banner']()).toBeNull();
-	});
-
-	it('the toggle gates only the confetti — banner still shows when off', () => {
-		const confettiSpy = spyOn(component as any, 'spawnConfetti');
-		component['animationsEnabled'].set(false);
-		(component as any).updateChartData(makeStats(50));
-		(component as any).updateChartData(makeStats(80)); // group A grew
-		expect(confettiSpy).not.toHaveBeenCalled();                       // confetti suppressed
-		expect(component['banner']()).toEqual({ text: 'Skupina A získala body!', color: '#ff0000' }); // banner still shows
-	});
-
-	it('spawns confetti when the toggle is on', () => {
-		const confettiSpy = spyOn(component as any, 'spawnConfetti');
-		(component as any).updateChartData(makeStats(50));
-		(component as any).updateChartData(makeStats(80)); // group A grew
-		expect(confettiSpy).toHaveBeenCalled();
-	});
-
-	it('toggleAnimations flips and persists the preference', () => {
-		expect(component['animationsEnabled']()).toBe(true);
-		(component as any).toggleAnimations();
-		expect(component['animationsEnabled']()).toBe(false);
-		expect(localStorage.getItem('groupsStatistics.animationsEnabled')).toBe('off');
-		(component as any).toggleAnimations();
-		expect(component['animationsEnabled']()).toBe(true);
-		expect(localStorage.getItem('groupsStatistics.animationsEnabled')).toBe('on');
-	});
+	it('shows an error toast when the statistics fetch fails', fakeAsync(() => {
+		spyOn(console, 'error'); // the container logs the failure by design — keep test output pristine
+		getStats.and.returnValue(throwError(() => new Error('boom')));
+		fixture = TestBed.createComponent(GroupsStatisticsComponent);
+		component = fixture.componentInstance;
+		fixture.detectChanges();
+		tick(0);
+		expect(alertSpy.error).toHaveBeenCalledWith('Chyba při načítání statistik');
+		expect(component['scoreboard']()).toBeNull();
+	}));
 });

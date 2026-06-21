@@ -19,6 +19,7 @@ export enum ERoute {
 	ADMIN_SETTINGS = 'settings',
 	CARD_INFO = 'card-info',
 	PUBLIC = 'public',
+	PUBLIC_GROUP_STATISTICS = 'groups-statistics',
 	EDIT = 'edit',
 	NEW = 'new',
 }
