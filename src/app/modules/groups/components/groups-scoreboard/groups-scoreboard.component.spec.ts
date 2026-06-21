@@ -37,6 +37,17 @@ describe('GroupsScoreboardComponent', () => {
 		expect(component).toBeTruthy();
 	});
 
+	it('applies the fullscreen host class only when fillViewport is set', () => {
+		// default fixture (fillViewport unset) → no fullscreen class
+		expect((fixture.nativeElement as HTMLElement).classList.contains('gs-fullscreen')).toBeFalse();
+
+		// fresh instance with the input set before first change detection (as the public page binds it)
+		const f2 = TestBed.createComponent(GroupsScoreboardComponent);
+		f2.componentInstance.fillViewport = true;
+		f2.detectChanges();
+		expect((f2.nativeElement as HTMLElement).classList.contains('gs-fullscreen')).toBeTrue();
+	});
+
 	it('clears the chart and shows NO error toast when given null (initial render before data)', () => {
 		component.groups = rows(50);          // first real data
 		component.groups = null;              // e.g. initial binding / later cleared

@@ -9,6 +9,7 @@ import {IScoreboardGroup} from '../../groups/types/IScoreboardGroup';
 @Component({ selector: 'app-groups-scoreboard', template: '', standalone: true })
 class GroupsScoreboardStub {
 	@Input() groups: IScoreboardGroup[] | null = null;
+	@Input() fillViewport = false;
 }
 
 describe('PublicGroupsStatisticsComponent', () => {

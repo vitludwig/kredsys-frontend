@@ -24,10 +24,15 @@ function getAxisLabelColor(): string {
 	selector: 'app-groups-scoreboard',
 	imports: [BaseChartDirective, MatButtonModule, MatIconModule, MatTooltipModule],
 	templateUrl: './groups-scoreboard.component.html',
-	styleUrl: './groups-scoreboard.component.scss'
+	styleUrl: './groups-scoreboard.component.scss',
+	host: { '[class.gs-fullscreen]': 'fillViewport' }
 })
 export class GroupsScoreboardComponent {
 	private destroyRef = inject(DestroyRef);
+
+	// When true (kiosk/public fullscreen), the chart fills the viewport height instead of the
+	// fixed default height. Toggles the .gs-fullscreen host class consumed by the SCSS.
+	@Input() fillViewport = false;
 
 	// Absolute per-group totals from the previous poll (group id → total); null until first poll.
 	private previousTotals: Record<number, number> | null = null;
