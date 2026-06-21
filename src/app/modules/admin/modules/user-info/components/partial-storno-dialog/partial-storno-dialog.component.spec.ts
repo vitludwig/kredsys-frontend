@@ -27,11 +27,18 @@ describe('PartialStornoDialogComponent', () => {
 		return TestBed.createComponent(PartialStornoDialogComponent).componentInstance;
 	}
 
-	it('single line: no stepper, the whole line is pre-selected for storno', () => {
-		const c = setup([record({ goodsId: 10, multiplier: 3 })]);
+	it('single line, qty 1: no stepper, the whole line is pre-selected for storno', () => {
+		const c = setup([record({ goodsId: 10, multiplier: 1 })]);
 		expect((c as any).multipleLines).toBeFalse();
-		expect((c as any).lines[0].stornoQty).toBe(3);
-		expect((c as any).totalStornoQty).toBe(3);
+		expect((c as any).lines[0].stornoQty).toBe(1);
+		expect((c as any).totalStornoQty).toBe(1);
+	});
+
+	it('single line, qty > 1: steppers shown, each starts at 0', () => {
+		const c = setup([record({ goodsId: 10, multiplier: 3 })]);
+		expect((c as any).multipleLines).toBeTrue();
+		expect((c as any).lines[0].stornoQty).toBe(0);
+		expect((c as any).totalStornoQty).toBe(0);
 	});
 
 	it('multiple lines: steppers shown, each starts at 0', () => {
@@ -51,9 +58,17 @@ describe('PartialStornoDialogComponent', () => {
 		]});
 	});
 
-	it('confirm for a single line cancels it entirely (keep empty)', () => {
-		const c = setup([record({ goodsId: 10, multiplier: 3 })]);
+	it('confirm for a single line (qty 1) cancels it entirely (keep empty)', () => {
+		const c = setup([record({ goodsId: 10, multiplier: 1 })]);
 		(c as any).confirm();
 		expect(dialogRef.close).toHaveBeenCalledWith({ keep: [] });
+	});
+
+	it('confirm for a single qty>1 line with nothing selected keeps the whole line', () => {
+		const c = setup([record({ goodsId: 10, multiplier: 3 })]);
+		(c as any).confirm();
+		expect(dialogRef.close).toHaveBeenCalledWith({ keep: [
+			{ goodsId: 10, multiplier: 3, creatorId: 1 },
+		]});
 	});
 });

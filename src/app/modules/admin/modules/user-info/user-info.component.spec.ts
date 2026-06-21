@@ -7,6 +7,7 @@ import { AlertService } from '../../../../common/services/alert/alert.service';
 import { CurrencyService } from '../../services/currency/currency.service';
 import { CardLoaderComponent } from '../../../../common/components/card-loader/card-loader.component';
 import { BehaviorSubject } from 'rxjs';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 @Component({
@@ -45,6 +46,9 @@ describe('UserInfoComponent', () => {
 				{ provide: PlaceService, useValue: mockPlaceService },
 				{ provide: AlertService, useValue: { success: () => {}, error: () => {} } },
 				{ provide: CurrencyService, useValue: { defaultCurrency: null } },
+				// No :id param → ngOnInit skips the deep-link branch (matches "no user selected" assertions).
+				{ provide: ActivatedRoute, useValue: { snapshot: { paramMap: { get: () => null } } } },
+				{ provide: Router, useValue: { navigate: () => {} } },
 			],
 		})
 			.overrideComponent(UserInfoComponent, {

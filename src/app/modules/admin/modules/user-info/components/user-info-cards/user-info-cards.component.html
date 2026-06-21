@@ -1,17 +1,17 @@
 <div class="uid__section">
   <div class="uid__section-header">
     <h3>Čipy</h3>
-    <span [matTooltip]="'Nejdřív zablokuj stávající čip s expirací.'" [matTooltipDisabled]="canAddCard">
-      <button mat-raised-button (click)="onAssignCard()" [disabled]="!canAddCard" data-testid="user-card-add">
+    <span [matTooltip]="'Nejdřív zablokuj stávající čip s expirací.'" [matTooltipDisabled]="canAddCard()">
+      <button mat-raised-button (click)="onAssignCard()" [disabled]="!canAddCard()" data-testid="user-card-add">
         <mat-icon>add</mat-icon>
         Přiřadit čip
       </button>
     </span>
   </div>
-  @if (physicalCards.length === 0) {
+  @if (physicalCards().length === 0) {
     <p class="uid__empty">Žádné čipy</p>
   }
-  @for (card of physicalCards; track card.id) {
+  @for (card of physicalCards(); track card.id) {
     <div class="uid__card-row" [attr.data-testid]="'user-card-row-' + card.id">
       <span class="uid__card-uid">...{{ last4(card.uid) }}</span>
       <span class="uid__card-status">
@@ -30,8 +30,8 @@
           bez expirace
         }
       </span>
-      <span [matTooltip]="hasTicketExpiration ? 'Expirace nastavena automaticky podle vstupenky' : 'Změnit expiraci'">
-        <button mat-icon-button (click)="onEditExpiration(card)" [disabled]="hasTicketExpiration"
+      <span [matTooltip]="hasTicketExpiration() ? 'Expirace nastavena automaticky podle vstupenky' : 'Změnit expiraci'">
+        <button mat-icon-button (click)="onEditExpiration(card)" [disabled]="hasTicketExpiration()"
                 aria-label="Změnit expiraci" [attr.data-testid]="'user-card-edit-' + card.id">
           <mat-icon>edit_calendar</mat-icon>
         </button>
@@ -49,7 +49,7 @@
   }
 </div>
 
-@if (activeTicket; as ticket) {
+@if (activeTicket(); as ticket) {
   <div class="uid__section" data-testid="ticket-section">
     <div class="uid__section-header">
       <h3>Vstupenka</h3>

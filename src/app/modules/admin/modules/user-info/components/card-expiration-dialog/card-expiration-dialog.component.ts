@@ -40,11 +40,18 @@ export class CardExpirationDialogComponent {
 	// bound to <mat-datepicker> (via onDateChange, which preserves the time) and to <mat-timepicker> (two-way; it preserves the date)
 	protected value: Date | null = this.toDate(this.data.expirationDate);
 
+	// Guards against a double-click closing/saving twice while the dialog animates out.
+	protected saving = false;
+
 	protected onSave(): void {
+		if (this.saving) return;
+		this.saving = true;
 		this.dialogRef.close(this.toIso(this.value));
 	}
 
 	protected onClear(): void {
+		if (this.saving) return;
+		this.saving = true;
 		this.dialogRef.close(null);
 	}
 

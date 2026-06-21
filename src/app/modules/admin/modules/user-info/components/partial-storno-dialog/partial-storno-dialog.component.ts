@@ -32,8 +32,6 @@ export class PartialStornoDialogComponent {
 
 	private records: ITransactionRecord[] = (this.data.records ?? []).filter((r) => r.goodsId != null);
 
-	// One line -> no stepper, the whole item is cancelled. Multiple lines -> steppers, each starting at 0
-	// so the operator adds how many of each to cancel ("jdu stornovat tyto položky").
 	protected readonly multipleLines: boolean = this.records.length > 1 || this.records.some((r) => r.multiplier > 1);
 
 	protected lines: IStornoLine[] = this.records.map((r) => ({
@@ -44,6 +42,8 @@ export class PartialStornoDialogComponent {
 		creatorId: r.creatorId,
 		stornoQty: this.multipleLines ? 0 : r.multiplier,
 	}));
+
+	protected saving = false;
 
 	protected dec(line: IStornoLine): void {
 		if (line.stornoQty > 0) {
@@ -61,10 +61,6 @@ export class PartialStornoDialogComponent {
 		return line.quantity - line.stornoQty;
 	}
 
-	protected get stornoLines(): IStornoLine[] {
-		return this.lines.filter((l) => l.stornoQty > 0);
-	}
-
 	protected get keptLines(): IStornoLine[] {
 		return this.lines.filter((l) => this.keepQty(l) > 0);
 	}
@@ -73,15 +69,11 @@ export class PartialStornoDialogComponent {
 		return this.lines.reduce((sum, l) => sum + l.stornoQty, 0);
 	}
 
-	protected get totalStornoAmount(): number {
-		return this.lines.reduce((sum, l) => sum + l.stornoQty * l.unitPrice, 0);
-	}
-
-	protected get totalKeepAmount(): number {
-		return this.lines.reduce((sum, l) => sum + this.keepQty(l) * l.unitPrice, 0);
-	}
-
 	protected confirm(): void {
+		if (this.saving) {
+			return;
+		}
+		this.saving = true;
 		const keep = this.lines
 			.map((l) => ({goodsId: l.goodsId, multiplier: this.keepQty(l), creatorId: l.creatorId}))
 			.filter((k) => k.multiplier > 0);

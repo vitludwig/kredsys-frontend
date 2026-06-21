@@ -56,17 +56,17 @@ describe('UserInfoCardsComponent', () => {
 
 	it('canAddCard is false when an active card has expiration', () => {
 		setup([card({ blocked: false, expirationDate: '2026-12-31T23:59:00' })]);
-		expect(component.canAddCard).toBe(false);
+		expect(component.canAddCard()).toBe(false);
 	});
 
 	it('canAddCard is true when the only expiring card is blocked', () => {
 		setup([card({ blocked: true, expirationDate: '2026-12-31T23:59:00' })]);
-		expect(component.canAddCard).toBe(true);
+		expect(component.canAddCard()).toBe(true);
 	});
 
 	it('canAddCard is true when cards have no expiration', () => {
 		setup([card({ blocked: false, expirationDate: null })]);
-		expect(component.canAddCard).toBe(true);
+		expect(component.canAddCard()).toBe(true);
 	});
 
 	it('inheritedExpiration picks the highest-id blocked card with expiration', () => {
@@ -75,12 +75,12 @@ describe('UserInfoCardsComponent', () => {
 			card({ id: 3, blocked: true, expirationDate: '2026-12-31T23:59:00' }),
 			card({ id: 2, blocked: true, expirationDate: '2024-01-01T00:00:00' }),
 		]);
-		expect(component.inheritedExpiration).toBe('2026-12-31T23:59:00');
+		expect(component.inheritedExpiration()).toBe('2026-12-31T23:59:00');
 	});
 
 	it('inheritedExpiration is null when no blocked card carries expiration', () => {
 		setup([card({ id: 1, blocked: false, expirationDate: '2026-12-31T23:59:00' })]);
-		expect(component.inheritedExpiration).toBeNull();
+		expect(component.inheritedExpiration()).toBeNull();
 	});
 
 	it('isExpired is true for a past date', () => {
@@ -168,7 +168,7 @@ describe('UserInfoCardsComponent', () => {
 			card({ id: 1, type: EUserCardType.CARD }),
 			card({ id: 2, type: EUserCardType.TICKET, expirationDate: '2030-01-01T00:00:00' }),
 		]);
-		expect(component.physicalCards.map(c => c.id)).toEqual([1]);
+		expect(component.physicalCards().map(c => c.id)).toEqual([1]);
 	});
 
 	it('activeTicket picks the non-blocked ticket with the latest expiration', () => {
@@ -176,22 +176,22 @@ describe('UserInfoCardsComponent', () => {
 			card({ id: 1, type: EUserCardType.TICKET, blocked: false, expirationDate: '2030-01-01T00:00:00' }),
 			card({ id: 2, type: EUserCardType.TICKET, blocked: false, expirationDate: '2031-06-01T00:00:00' }),
 		]);
-		expect(component.activeTicket?.id).toBe(2);
+		expect(component.activeTicket()?.id).toBe(2);
 	});
 
 	it('activeTicket is null when the only ticket is blocked', () => {
 		setup([card({ id: 1, type: EUserCardType.TICKET, blocked: true, expirationDate: '2030-01-01T00:00:00' })]);
-		expect(component.activeTicket).toBeNull();
+		expect(component.activeTicket()).toBeNull();
 	});
 
 	it('hasTicketExpiration is true when the active ticket has an expiration', () => {
 		setup([card({ id: 1, type: EUserCardType.TICKET, expirationDate: '2030-01-01T00:00:00' })]);
-		expect(component.hasTicketExpiration).toBe(true);
+		expect(component.hasTicketExpiration()).toBe(true);
 	});
 
 	it('hasTicketExpiration is false when the active ticket has no expiration', () => {
 		setup([card({ id: 1, type: EUserCardType.TICKET, expirationDate: null })]);
-		expect(component.hasTicketExpiration).toBe(false);
+		expect(component.hasTicketExpiration()).toBe(false);
 	});
 
 	it('canAddCard is true when a ticket governs even with an expiring active card', () => {
@@ -199,12 +199,12 @@ describe('UserInfoCardsComponent', () => {
 			card({ id: 1, type: EUserCardType.CARD, blocked: false, expirationDate: '2030-12-31T23:59:00' }),
 			card({ id: 2, type: EUserCardType.TICKET, expirationDate: '2030-12-31T23:59:00' }),
 		]);
-		expect(component.canAddCard).toBe(true);
+		expect(component.canAddCard()).toBe(true);
 	});
 
 	it('inheritedExpiration ignores ticket cards', () => {
 		setup([card({ id: 1, type: EUserCardType.TICKET, blocked: true, expirationDate: '2030-01-01T00:00:00' })]);
-		expect(component.inheritedExpiration).toBeNull();
+		expect(component.inheritedExpiration()).toBeNull();
 	});
 
 	it('onAssignCard sends null expiration when a ticket governs', () => {

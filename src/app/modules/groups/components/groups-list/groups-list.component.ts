@@ -85,7 +85,7 @@ export class GroupsListComponent {
 				tap(() => this.refresh$.next()),
 				catchError((e) => {
 					console.error('Cannot remove group', e);
-					if (e instanceof HttpErrorResponse && e.error.Message) {
+					if (e instanceof HttpErrorResponse && e.error?.Message) {
 						this.alertService.error(e.error.Message);
 					} else {
 						this.alertService.error('Nepodařilo se odstranit skupinu');

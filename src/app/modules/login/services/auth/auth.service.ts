@@ -53,9 +53,9 @@ export class AuthService {
 	public get isLogged(): boolean {
 		return this.#user !== null || !!localStorage.getItem('userId');
 	}
-	public isLogged$: Observable<boolean>
 
 	protected isLoggedSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+	public isLogged$: Observable<boolean> = this.isLoggedSubject.asObservable();
 
 	#user: IUser | null = null;
 
@@ -64,7 +64,6 @@ export class AuthService {
 	}
 
 	public async init(): Promise<void> {
-		this.isLogged$ = this.isLoggedSubject.asObservable();
 		const userId = Number(localStorage.getItem('userId')) ?? null;
 		if (userId) {
 			try {

@@ -32,26 +32,13 @@
 			}
 		</div>
 	}
-<!--	@if (stornoLines.length) {-->
-<!--		@for (line of stornoLines; track line) {-->
-<!--			<div class="psd-summary-row">-->
-<!--				<span>{{ line.stornoQty }}× {{ line.name }}</span>-->
-<!--				<span>{{ line.stornoQty * line.unitPrice | number:'1.0-2' }} Kč</span>-->
-<!--			</div>-->
-<!--		}-->
-<!--		<div class="psd-total">Celkem storno: {{ totalStornoAmount | number:'1.0-2' }} Kč</div>-->
-<!--	} @else {-->
-<!--		<p class="psd-empty">Nic nevybráno ke stornu.</p>-->
-<!--	}-->
-
-
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
 	<button mat-button mat-dialog-close>Zrušit</button>
 	<button mat-raised-button
 		color="warn"
-		[disabled]="totalStornoQty === 0"
+		[disabled]="totalStornoQty === 0 || saving"
 		(click)="confirm()"
 		data-testid="partial-storno-confirm">
 		Stornovat

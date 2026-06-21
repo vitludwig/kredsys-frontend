@@ -28,9 +28,9 @@
 </div>
 
 <div mat-dialog-actions style="display:flex;justify-content:space-between;gap:8px">
-  <button mat-button (click)="onClear()">Vymazat expiraci</button>
+  <button mat-button (click)="onClear()" [disabled]="saving">Vymazat expiraci</button>
   <span style="display:flex;gap:8px">
     <button mat-button (click)="onCancel()">Zrušit</button>
-    <button mat-raised-button color="primary" (click)="onSave()" data-testid="expiration-save">Uložit</button>
+    <button mat-raised-button color="primary" (click)="onSave()" [disabled]="saving" data-testid="expiration-save">Uložit</button>
   </span>
 </div>

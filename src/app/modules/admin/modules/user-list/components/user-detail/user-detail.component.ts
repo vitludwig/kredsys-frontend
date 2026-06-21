@@ -3,9 +3,6 @@ import {UsersService} from '../../../../services/users/users.service';
 import {EUserRole, IUser} from '../../../../../../common/types/IUser';
 import {ActivatedRoute, Router} from '@angular/router';
 import {ERoute} from '../../../../../../common/types/ERoute';
-import {MatDialog} from '@angular/material/dialog';
-import {CardDetailComponent} from './components/card-detail/card-detail.component';
-import {ICard, EUserCardType} from '../../../../../../common/types/ICard';
 import {AlertService} from '../../../../../../common/services/alert/alert.service';
 import {ICurrency, ICurrencyAccount} from '../../../../../../common/types/ICurrency';
 import {Utils} from '../../../../../../common/utils/Utils';
@@ -43,14 +40,12 @@ export class UserDetailComponent implements OnInit {
 	}
 
 	public accounts: ICurrencyAccount[] = [];
-	public cards: ICard[] = [];
 	public defaultCurrency?: ICurrency;
 	public accountCreating: boolean = false;
 	public roles: string[] = Object.values(EUserRole);
 	public groups: IGroup[] = [];
 	public passwordAgain: string;
 
-	public newCards: ICard[] = [];
 	public isLoading: boolean = false;
 	public isEdit: boolean = false;
 
@@ -66,7 +61,6 @@ export class UserDetailComponent implements OnInit {
 		protected groupsService: GroupsService,
 		protected route: ActivatedRoute,
 		protected router: Router,
-		protected dialog: MatDialog,
 		protected alertService: AlertService,
 	) {
 	}
@@ -108,16 +102,10 @@ export class UserDetailComponent implements OnInit {
 		}
 
 		try {
-			let user: IUser;
-
 			if(this.isEdit) {
-				user = await this.editUser();
+				await this.editUser();
 			} else {
-				user = await this.addUser();
-			}
-
-			if(user.id) {
-				await this.addCards(user.id);
+				await this.addUser();
 			}
 
 			this.alertService.success(this.isEdit ? 'Uživatel uložen' : 'Uživatel přidán');
@@ -144,68 +132,6 @@ export class UserDetailComponent implements OnInit {
 				}
 			} else {
 				this.alertService.error('Uživatele se nepodařilo přidat');
-			}
-		}
-	}
-
-	protected openCardDetailDialog(): void {
-		const newCard = {
-			description: '',
-			type: EUserCardType.CARD,
-		};
-		const dialog = this.dialog.open<CardDetailComponent, ICard>(CardDetailComponent, {
-			width: '350px',
-			minWidth: '250px',
-			autoFocus: 'dialog',
-			data: newCard,
-		});
-
-		dialog.afterClosed().subscribe(async (result) => {
-			if(!result) {
-				return;
-			}
-
-			try {
-				if(this.user?.id) {
-					const card = await this.usersService.addUserCard(this.user.id, result.uid, result.description);
-					result.id = card.id;
-				} else {
-					this.newCards.push(result);
-				}
-				this.cards.push(result);
-			} catch(e) {
-				if(e instanceof HttpErrorResponse) {
-					this.alertService.error(e.error.Message ?? 'Chyba při přidávání čipu');
-				}
-			}
-		});
-	}
-
-	protected async deleteCard(card: ICard): Promise<void> {
-		// card not yet added, so we only remove it from list
-		if(!card.id) {
-			this.cards = this.cards.filter((c) => c.uid !== card.uid);
-			return;
-		}
-
-		const cardId = card.id;
-		try {
-			if(this.user?.id) {
-				await this.usersService.deleteUserCard(cardId);
-			}
-			this.cards = this.cards.filter((c) => c.id !== cardId);
-			this.newCards = this.cards;
-		} catch(e) {
-			if(e instanceof HttpErrorResponse) {
-				this.alertService.error(e.error.Message ?? 'Nepodarilo se odstranit čip');
-			}
-		}
-	}
-
-	private async addCards(userId: number): Promise<void> {
-		for(const card of this.newCards) {
-			if(card.uid) {
-				await this.usersService.addUserCard(userId, card.uid);
 			}
 		}
 	}
@@ -262,7 +188,6 @@ export class UserDetailComponent implements OnInit {
 				user = Object.assign({}, await this.usersService.getUser(userId));
 				user.roles = user.roles ?? [];
 
-				this.cards = (await this.usersService.getUserCards(userId)).data;
 				this.accounts = await this.usersService.getUserCurrencyAccounts(userId);
 				this.defaultCurrency = await this.currencyService.getDefaultCurrency();
 
