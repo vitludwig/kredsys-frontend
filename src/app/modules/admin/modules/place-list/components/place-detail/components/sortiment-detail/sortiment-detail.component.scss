@@ -2,6 +2,11 @@
   ::ng-deep {
    .mat-mdc-select-panel {
      max-height: 60vh !important;
+
+     // Roztáhne obsah optionu na plnou šířku, aby fungoval justify-content-between
+     .mdc-list-item__primary-text {
+       width: 100%;
+     }
    }
   }
 //}

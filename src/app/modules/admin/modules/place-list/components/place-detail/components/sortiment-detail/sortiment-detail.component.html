@@ -16,7 +16,12 @@
         <ngx-mat-select-search [noEntriesFoundLabel]="'Žádné výsledky'" [placeholderLabel]="'Vyhledat'" [formControl]="selectedOptionsFilter" />
       </mat-option>
       @for (item of filteredGoods | async; track $index) {
-        <mat-option [value]="item">{{item.name}}</mat-option>
+        <mat-option [value]="item">
+          <div class="d-flex justify-content-between">
+            <span>{{item.name}}</span>
+            <span>{{item.price}},-</span>
+          </div>
+        </mat-option>
       }
     </mat-select>
 	</mat-form-field>
