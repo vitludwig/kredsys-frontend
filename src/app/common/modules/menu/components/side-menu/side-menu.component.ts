@@ -30,6 +30,7 @@ export class SideMenuComponent implements OnInit, OnDestroy {
   protected bottomMoreMenuOpened: boolean = false;
   protected adminMenuOpened: boolean = false;
   protected groupsMenuOpened: boolean = false;
+  protected adminOthersMenuOpened: boolean = false;
   protected userRoles: EUserRole[] = [];
   protected user: IUser | null = null;
   protected placeRole: EPlaceRole | null;

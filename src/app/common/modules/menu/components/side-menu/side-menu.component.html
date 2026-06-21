@@ -22,27 +22,7 @@
       @if (adminMenuOpened) {
         <div
           class="sub-menu"
-          >
-          @if (userRoles | canAccessRoute: ERoute.ADMIN_PLACES) {
-            <a
-              [class.active]="router.url === '/' + ERoute.ADMIN + '/' + ERoute.ADMIN_PLACES"
-              [routerLink]="[ERoute.ADMIN, ERoute.ADMIN_PLACES]"
-              mat-list-item
-              data-testid="nav-admin-places"
-              >
-              Místa
-            </a>
-          }
-          @if (userRoles | canAccessRoute: ERoute.ADMIN_USERS) {
-            <a
-              [class.active]="router.url === '/' + ERoute.ADMIN + '/' + ERoute.ADMIN_USERS"
-              [routerLink]="[ERoute.ADMIN, ERoute.ADMIN_USERS]"
-              mat-list-item
-              data-testid="nav-admin-users"
-              >
-              Uživatelé
-            </a>
-          }
+        >
           @if (userRoles | canAccessRoute: ERoute.ADMIN_USER_INFO) {
             <a
               [class.active]="router.url.startsWith('/' + ERoute.ADMIN + '/' + ERoute.ADMIN_USER_INFO)"
@@ -51,6 +31,40 @@
               Infostánek
             </a>
           }
+
+          @if (userRoles | canAccessRoute: ERoute.ADMIN_PLACES) {
+            <a
+              [class.active]="router.url === '/' + ERoute.ADMIN + '/' + ERoute.ADMIN_PLACES"
+              [routerLink]="[ERoute.ADMIN, ERoute.ADMIN_PLACES]"
+              mat-list-item
+              data-testid="nav-admin-places"
+            >
+              Místa
+            </a>
+          }
+
+          @if (userRoles | canAccessRoute: ERoute.ADMIN_GOODS) {
+            <a
+              [class.active]="router.url === '/' + ERoute.ADMIN + '/' + ERoute.ADMIN_GOODS"
+              [routerLink]="[ERoute.ADMIN, ERoute.ADMIN_GOODS]"
+              mat-list-item
+              data-testid="nav-admin-goods"
+            >
+              Zboží
+            </a>
+          }
+
+          @if (userRoles | canAccessRoute: ERoute.ADMIN_TRANSACTIONS) {
+            <a
+              [class.active]="router.url === '/' + ERoute.ADMIN + '/' + ERoute.ADMIN_TRANSACTIONS"
+              [routerLink]="[ERoute.ADMIN, ERoute.ADMIN_TRANSACTIONS]"
+              mat-list-item
+              data-testid="nav-admin-transactions"
+            >
+              Transakce
+            </a>
+          }
+
           @if(userRoles | canAccessRoute: ERoute.ADMIN_GROUPS) {
             <mat-list-item (click)="groupsMenuOpened = !groupsMenuOpened"
               class="expandable"
@@ -79,55 +93,61 @@
               </div>
             }
           }
-          @if (userRoles | canAccessRoute: ERoute.ADMIN_GOODS) {
-            <a
-              [class.active]="router.url === '/' + ERoute.ADMIN + '/' + ERoute.ADMIN_GOODS"
-              [routerLink]="[ERoute.ADMIN, ERoute.ADMIN_GOODS]"
-              mat-list-item
-              data-testid="nav-admin-goods"
-              >
-              Zboží
-            </a>
-          }
-          @if (userRoles | canAccessRoute: ERoute.ADMIN_TRANSACTIONS) {
-            <a
-              [class.active]="router.url === '/' + ERoute.ADMIN + '/' + ERoute.ADMIN_TRANSACTIONS"
-              [routerLink]="[ERoute.ADMIN, ERoute.ADMIN_TRANSACTIONS]"
-              mat-list-item
-              data-testid="nav-admin-transactions"
-              >
-              Transakce
-            </a>
-          }
-          @if (userRoles | canAccessRoute: ERoute.ADMIN_CURRENCIES) {
-            <a
-              [class.active]="router.url === '/' + ERoute.ADMIN + '/' + ERoute.ADMIN_CURRENCIES"
-              [routerLink]="[ERoute.ADMIN, ERoute.ADMIN_CURRENCIES]"
-              mat-list-item
-              data-testid="nav-admin-currencies"
-              >
-              Měny
-            </a>
-          }
-          @if (userRoles | canAccessRoute: ERoute.ADMIN_CHARGE) {
-            <a
-              [class.active]="router.url === '/' + ERoute.ADMIN + '/' + ERoute.ADMIN_CHARGE"
-              [routerLink]="[ERoute.ADMIN, ERoute.ADMIN_CHARGE]"
-              mat-list-item
-              data-testid="nav-admin-charge"
-              >
-              Nabíjedlo
-            </a>
-          }
-          @if (userRoles | canAccessRoute: ERoute.ADMIN_SETTINGS) {
-            <a
-              [class.active]="router.url === '/' + ERoute.ADMIN + '/' + ERoute.ADMIN_SETTINGS"
-              [routerLink]="[ERoute.ADMIN, ERoute.ADMIN_SETTINGS]"
-              mat-list-item
-              data-testid="nav-admin-settings"
-              >
-              Nastavení
-            </a>
+
+          <mat-list-item (click)="adminOthersMenuOpened = !adminOthersMenuOpened"
+                         class="expandable"
+          >
+            <mat-icon matListItemIcon> {{ adminOthersMenuOpened ? 'expand_more' : 'chevron_right' }}</mat-icon>
+            <div matListItemTitle>Ostatní</div>
+          </mat-list-item>
+          @if (adminOthersMenuOpened) {
+            <div
+              class="sub-menu"
+              style="margin-left: 15px"
+            >
+              @if (userRoles | canAccessRoute: ERoute.ADMIN_USERS) {
+                <a
+                  [class.active]="router.url === '/' + ERoute.ADMIN + '/' + ERoute.ADMIN_USERS"
+                  [routerLink]="[ERoute.ADMIN, ERoute.ADMIN_USERS]"
+                  mat-list-item
+                  data-testid="nav-admin-users"
+                >
+                  Uživatelé
+                </a>
+              }
+
+              @if (userRoles | canAccessRoute: ERoute.ADMIN_CURRENCIES) {
+                <a
+                  [class.active]="router.url === '/' + ERoute.ADMIN + '/' + ERoute.ADMIN_CURRENCIES"
+                  [routerLink]="[ERoute.ADMIN, ERoute.ADMIN_CURRENCIES]"
+                  mat-list-item
+                  data-testid="nav-admin-currencies"
+                >
+                  Měny
+                </a>
+              }
+              @if (userRoles | canAccessRoute: ERoute.ADMIN_CHARGE) {
+                <a
+                  [class.active]="router.url === '/' + ERoute.ADMIN + '/' + ERoute.ADMIN_CHARGE"
+                  [routerLink]="[ERoute.ADMIN, ERoute.ADMIN_CHARGE]"
+                  mat-list-item
+                  data-testid="nav-admin-charge"
+                >
+                  Nabíjedlo
+                </a>
+              }
+
+              @if (userRoles | canAccessRoute: ERoute.ADMIN_SETTINGS) {
+                <a
+                  [class.active]="router.url === '/' + ERoute.ADMIN + '/' + ERoute.ADMIN_SETTINGS"
+                  [routerLink]="[ERoute.ADMIN, ERoute.ADMIN_SETTINGS]"
+                  mat-list-item
+                  data-testid="nav-admin-settings"
+                >
+                  Nastavení
+                </a>
+              }
+            </div>
           }
         </div>
       }
