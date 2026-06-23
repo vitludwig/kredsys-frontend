@@ -104,6 +104,9 @@ export class TopMenuComponent implements OnInit, OnDestroy {
 	}
 
 	protected openDepositReturnDialog(): void {
+		if (this.amountLoading) {
+			return;
+		}
 		const dialogRef = this.dialog.open<DepositReturnDialogComponent, void, IDepositReturnResult>(
 			DepositReturnDialogComponent, {
 				width: '440px',

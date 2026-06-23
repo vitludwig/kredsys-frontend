@@ -354,4 +354,25 @@ describe('CustomerService', () => {
 
 		expect(caughtError).toBeDefined();
 	}));
+
+	it('returnDeposit should not throw when customer logs out after deposit succeeds', fakeAsync(() => {
+		service.customer = mockUser;
+		tick();
+
+		let resolveDeposit!: (v: any) => void;
+		transactionServiceSpy.deposit.and.returnValue(new Promise(resolve => { resolveDeposit = resolve; }));
+
+		let rejected = false;
+		service.returnDeposit(75, mockPlace, 'Vrácení zálohy: 1× Kelímek').catch(() => { rejected = true; });
+
+		// operator logs out while the deposit POST is in flight
+		service.logout();
+		tick();
+
+		resolveDeposit({} as any);
+		tick();
+
+		expect(rejected).toBeFalse();
+		expect(usersServiceSpy.getUserCurrencyAccounts).toHaveBeenCalledWith(1);
+	}));
 });

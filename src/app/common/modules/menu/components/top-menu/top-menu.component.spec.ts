@@ -7,7 +7,7 @@ import {of, BehaviorSubject} from 'rxjs';
 import {clearAllCaches} from '../../../../decorators/cache';
 import {AuthService} from '../../../../../modules/login/services/auth/auth.service';
 import {MatSnackBarModule} from '@angular/material/snack-bar';
-import {MatDialogModule} from '@angular/material/dialog';
+import {MatDialog, MatDialogModule} from '@angular/material/dialog';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('TopMenuComponent', () => {
@@ -40,5 +40,15 @@ describe('TopMenuComponent', () => {
 
 	it('should create', () => {
 		expect(component).toBeTruthy();
+	});
+
+	it('should not open deposit return dialog while a money operation is in progress', () => {
+		const dialog = TestBed.inject(MatDialog);
+		spyOn(dialog, 'open').and.returnValue({ afterClosed: () => of(undefined) } as any);
+
+		(component as any).amountLoading = true;
+		(component as any).openDepositReturnDialog();
+
+		expect(dialog.open).not.toHaveBeenCalled();
 	});
 });

@@ -88,7 +88,7 @@
           mat-raised-button
           color="accent"
           class="ms-3"
-          [disabled]="customerService.cardExpired"
+          [disabled]="customerService.cardExpired || amountLoading"
           [matTooltip]="customerService.cardExpired ? 'Čip je expirovaný — dobití není možné' : ''"
           (click)="openChargeDialog()"
   >
@@ -101,6 +101,7 @@
           mat-raised-button
           color="accent"
           class="ms-3"
+          [disabled]="amountLoading"
           (click)="openDepositReturnDialog()"
           data-testid="top-menu-deposit-return"
   >
@@ -114,6 +115,7 @@
           color="warn"
           class="ms-3"
           style="background: #f44336; color: white"
+          [disabled]="amountLoading"
           (click)="openDischargeDialog()"
   >
     Vybít
@@ -125,6 +127,7 @@
           mat-raised-button
           color="warn"
           class="ms-3"
+          [disabled]="amountLoading"
           (click)="openStornoDialog()"
   >
     Storno
