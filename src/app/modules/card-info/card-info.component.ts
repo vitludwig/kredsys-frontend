@@ -69,6 +69,7 @@ export class CardInfoComponent {
   }
 
   public async setCardId(id: number): Promise<void> {
+  	let loadOk = false;
   	try {
   		this.isLoading = true;
 
@@ -96,11 +97,17 @@ export class CardInfoComponent {
   		if (this.cardInfoConfig.showPaymentQR) {
   			this.paymentString = await this.getPaymentString();
   		}
+
+  		loadOk = true;
   	} catch (e) {
   		console.error('Cannot display user currency data: ', e);
   	} finally {
   		this.isLoading = false;
-  		this.cardLoaded = true;
+  		this.cardLoaded = loadOk;
+  	}
+
+  	if (!loadOk) {
+  		return;
   	}
 
   	this.resetTimeout = window.setTimeout(() => {
