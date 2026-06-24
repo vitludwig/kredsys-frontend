@@ -77,7 +77,9 @@ export class CardInfoComponent {
   		if (!this.user && !this.userPublic) {
   			return;
   		}
-  		this.userId = this.user!.id!;
+  		if (this.user) {
+  			this.userId = this.user.id!;
+  		}
 
   		if (this.user?.groups?.[0]) {
   			this.userGroup$ = this.groupsService.getGroup(this.user.groups[0]);
