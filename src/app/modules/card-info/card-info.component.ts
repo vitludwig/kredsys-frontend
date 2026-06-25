@@ -76,6 +76,7 @@ export class CardInfoComponent {
   		await this.loadUserInfo(id);
 
   		if (!this.user && !this.userPublic) {
+  			this.alertService.error('Nepodařilo se načíst čip');
   			return;
   		}
   		if (this.user) {
@@ -90,7 +91,7 @@ export class CardInfoComponent {
   			this.selectedGroupId = null;
   		}
 
-  		if (this.cardInfoConfig.showWalletConnection && this.currencyAccount && this.userId !== null) {
+  		if (this.cardInfoConfig.showWalletConnection && this.userId !== null) {
   			this.walletCode = await this.getWalletCode();
   		}
 
@@ -101,6 +102,7 @@ export class CardInfoComponent {
   		loadOk = true;
   	} catch (e) {
   		console.error('Cannot display user currency data: ', e);
+  		this.alertService.error('Nepodařilo se načíst čip');
   	} finally {
   		this.isLoading = false;
   		this.cardLoaded = loadOk;

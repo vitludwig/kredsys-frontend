@@ -1,7 +1,7 @@
 <div class="row justify-content-center p-3">
 
-  @if (authService.user?.roles | canAccessRoute: ERoute.ADMIN) {
-    <div class="d-flex justify-content-end">
+  @if ((authService.user?.roles | canAccessRoute: ERoute.ADMIN) || isPublic) {
+    <div class="d-flex justify-content-end" [class.config-btn-public]="isPublic">
       <button mat-icon-button class="config-btn" (click)="openConfigDialog()">
         <mat-icon>settings</mat-icon>
       </button>
@@ -43,7 +43,7 @@
         }
         @if (cardInfoConfig.showWalletConnection && walletCode) {
           <div class="qrcode mt-5" data-testid="card-info-qr">
-            <h2>Načtěte tento kód ve vaší mobilní aplikaci pro propojení peněženky</h2>
+            <h4>Načtěte tento kód ve vaší mobilní aplikaci pro propojení peněženky</h4>
             <qrcode [errorCorrectionLevel]="'M'" [qrdata]="walletCode" [width]="256"></qrcode>
             <h1 class="text-center"
             style="letter-spacing: 12px; font-size: 40px; margin-top: 16px">{{ walletCode }}</h1>

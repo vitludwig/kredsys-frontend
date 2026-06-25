@@ -9,6 +9,15 @@
     }
   }
 }
+.config-btn-public {
+  opacity: 0;
+  transition: opacity 0.2s;
+
+  &:hover {
+    opacity: 1;
+  }
+}
+
 .very-big {
   font-size: 80px;
   line-height: 80px;
