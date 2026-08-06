@@ -1,41 +1,52 @@
 # Kredsys
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 13.2.2.
+Angular app for a cashless system used at events.
+Users hold an account with a balance, top it up, and pay with it at places
+(bars, shops) through a point-of-sale screen. The app also covers transaction
+history, multi-role access, and an admin panel.
 
-## Instalation
-- Download latest NPM (>=8.5.5)
-- Install Angular CLI globally `npm install -g @angular/cli`
-- npm i
-- You can change proxy to server in /src/proxy.conf.json (due to CORS, only for development)
+It talks to the Kredsys backend over its REST API (`/api/v1.1/`) and
+authenticates with a JWT.
+
+## Requirements
+
+- Node.js 20+
+- npm
+
+## Getting started
+
+```bash
+npm install
+ng serve           # -> http://localhost:4200
+```
+
+(`npx ng serve` works without a global Angular CLI.) API calls to `/api/v1.1` are proxied
+to `http://localhost:8080`, so a local backend is expected there — change the
+target in `src/proxy.conf.json` if yours runs elsewhere.
 
 ## Configuration
-- Values in environment files can be overridden in runtime by setting value in /assets/config.json
-- Overridable properties
-  - apiUrl
-  - debug
-  - walletApiSecret
-  - cruciblePrice
 
-## Development server
-
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
-
-## Code scaffolding
-
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+Defaults live in `src/environments/`. Any of them can be overridden at runtime,
+without rebuilding, by putting the key in `src/assets/config.json`:
 
 ## Build
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+```bash
+npm run build      # production build -> dist/kredsys/
+```
 
-## Running unit tests
+Serve the result with any static server; `server/server.js` (Express, gzip, SPA
+fallback) is included for that:
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+```bash
+npm start          # = node server/server.js, port 80, override with PORT
+```
 
-## Running end-to-end tests
+## Tests
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+```bash
+npm test           # unit tests (Karma/Jasmine), watch mode
+npm run test:ci    # unit tests, single run
+npm run e2e        # end-to-end tests (Playwright)
+npm run lint       # ESLint
+```
